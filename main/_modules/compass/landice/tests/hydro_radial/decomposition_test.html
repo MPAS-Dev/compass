@@ -119,36 +119,36 @@
 <div class="viewcode-block" id="DecompositionTest">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.hydro_radial.decomposition_test.DecompositionTest.html#compass.landice.tests.hydro_radial.decomposition_test.DecompositionTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DecompositionTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test case for performing two MALI runs of a radially symmetric</span>
 <span class="sd">    hydrological setup, one with one core and one with three.  The test case</span>
 <span class="sd">    verifies that the results of the two runs are identical.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DecompositionTest.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.hydro_radial.decomposition_test.DecompositionTest.html#compass.landice.tests.hydro_radial.decomposition_test.DecompositionTest.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_group : compass.landice.tests.hydro_radial.HydroRadial</span>
 <span class="sd">            The test group that this test case belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;decomposition_test&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'decomposition_test'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
-            <span class="n">SetupMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;exact&#39;</span><span class="p">))</span>
+            <span class="n">SetupMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_condition</span><span class="o">=</span><span class="s1">'exact'</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">procs</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">proc_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">proc_run'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
                 <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="n">procs</span><span class="p">,</span>
                          <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
             <span class="n">input_dir</span> <span class="o">=</span> <span class="n">name</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;visualize_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">'visualize_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="n">step</span> <span class="o">=</span> <span class="n">Visualize</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                              <span class="n">input_dir</span><span class="o">=</span><span class="n">input_dir</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>
@@ -159,14 +159,14 @@
     <span class="c1"># no run() method is needed</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;waterThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;waterPressure&#39;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'waterThickness'</span><span class="p">,</span> <span class="s1">'waterPressure'</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;1proc_run/output.nc&#39;</span><span class="p">,</span>
-                          <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;3proc_run/output.nc&#39;</span><span class="p">)</span></div>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">'1proc_run/output.nc'</span><span class="p">,</span>
+                          <span class="n">filename2</span><span class="o">=</span><span class="s1">'3proc_run/output.nc'</span><span class="p">)</span></div>
 
 </pre></div>
 

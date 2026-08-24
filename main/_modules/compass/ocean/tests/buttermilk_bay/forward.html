@@ -116,17 +116,17 @@
 <div class="viewcode-block" id="Forward">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.buttermilk_bay.forward.Forward.html#compass.ocean.tests.buttermilk_bay.forward.Forward">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MPAS-Ocean runs as part of buttermilk bay</span>
 <span class="sd">    test cases.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Forward.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.buttermilk_bay.forward.Forward.html#compass.ocean.tests.buttermilk_bay.forward.Forward.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span>
                  <span class="n">name</span><span class="p">,</span>
-                 <span class="n">coord_type</span><span class="o">=</span><span class="s1">&#39;single_layer&#39;</span><span class="p">,</span>
-                 <span class="n">wetdry</span><span class="o">=</span><span class="s1">&#39;standard&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">coord_type</span><span class="o">=</span><span class="s1">'single_layer'</span><span class="p">,</span>
+                 <span class="n">wetdry</span><span class="o">=</span><span class="s1">'standard'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -145,70 +145,70 @@
 
 <span class="sd">        coord_type : str, optional</span>
 <span class="sd">            Vertical coordinate configuration</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.buttermilk_bay&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.buttermilk_bay'</span><span class="p">,</span>
+                               <span class="s1">'namelist.forward'</span><span class="p">)</span>
 
-        <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">m&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.buttermilk_bay&#39;</span><span class="p">,</span>
-                               <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="n">coord_type</span><span class="si">}</span><span class="s1">.forward&#39;</span><span class="p">)</span>
+        <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">m'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.buttermilk_bay'</span><span class="p">,</span>
+                               <span class="sa">f</span><span class="s1">'namelist.</span><span class="si">{</span><span class="n">coord_type</span><span class="si">}</span><span class="s1">.forward'</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">wetdry</span> <span class="o">==</span> <span class="s1">&#39;subgrid&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.buttermilk_bay&#39;</span><span class="p">,</span>
-                                   <span class="s1">&#39;namelist.subgrid.forward&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.buttermilk_bay&#39;</span><span class="p">,</span>
-                                  <span class="s1">&#39;streams.subgrid.forward&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">wetdry</span> <span class="o">==</span> <span class="s1">'subgrid'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.buttermilk_bay'</span><span class="p">,</span>
+                                   <span class="s1">'namelist.subgrid.forward'</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.buttermilk_bay'</span><span class="p">,</span>
+                                  <span class="s1">'streams.subgrid.forward'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.buttermilk_bay&#39;</span><span class="p">,</span>
-                                  <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
-        <span class="n">input_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;../initial_state_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/ocean.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/culled_graph.info&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;forcing.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/init_mode_forcing_data.nc&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.buttermilk_bay'</span><span class="p">,</span>
+                                  <span class="s1">'streams.forward'</span><span class="p">)</span>
+        <span class="n">input_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'../initial_state_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'mesh.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'init.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/ocean.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/culled_graph.info'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'forcing.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/init_mode_forcing_data.nc'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Forward.setup">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.buttermilk_bay.forward.Forward.setup.html#compass.ocean.tests.buttermilk_bay.forward.Forward.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set namelist options based on config options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dt</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">({</span><span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="n">dt</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">({</span><span class="s1">'config_dt'</span><span class="p">:</span> <span class="n">dt</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_cores</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update resources at runtime from config options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_cores</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Forward.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.buttermilk_bay.forward.Forward.run.html#compass.ocean.tests.buttermilk_bay.forward.Forward.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the testcase</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># update dt in case the user has changed dt_per_m</span>
         <span class="n">dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dt</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="n">dt</span><span class="p">},</span>
-                                        <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">'config_dt'</span><span class="p">:</span> <span class="n">dt</span><span class="p">},</span>
+                                        <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.ocean'</span><span class="p">)</span>
 
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
@@ -216,17 +216,17 @@
 <div class="viewcode-block" id="Forward.get_dt">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.buttermilk_bay.forward.Forward.get_dt.html#compass.ocean.tests.buttermilk_bay.forward.Forward.get_dt">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the time step</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dt : str</span>
 <span class="sd">            the time step in HH:MM:SS</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="c1"># dt is proportional to resolution</span>
-        <span class="n">dt_per_m</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;buttermilk_bay&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_per_m&#39;</span><span class="p">)</span>
+        <span class="n">dt_per_m</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'buttermilk_bay'</span><span class="p">,</span> <span class="s1">'dt_per_m'</span><span class="p">)</span>
 
         <span class="n">dt</span> <span class="o">=</span> <span class="n">dt_per_m</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
         <span class="n">dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_seconds</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -246,18 +246,18 @@
         <span class="n">secs</span> <span class="o">=</span> <span class="n">remaining</span> <span class="o">%</span> <span class="mi">60</span>
 
         <span class="c1"># Format the string with specified decimal places</span>
-        <span class="n">sign</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span> <span class="k">if</span> <span class="n">is_negative</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
-        <span class="n">time</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sign</span><span class="si">}{</span><span class="n">hours</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">minutes</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">:&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">secs</span><span class="si">:</span><span class="s2">0</span><span class="si">{</span><span class="mi">3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">decimal_places</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">decimal_places</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="s1">'-'</span> <span class="k">if</span> <span class="n">is_negative</span> <span class="k">else</span> <span class="s1">''</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">sign</span><span class="si">}{</span><span class="n">hours</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">minutes</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">:"</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">secs</span><span class="si">:</span><span class="s2">0</span><span class="si">{</span><span class="mi">3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">decimal_places</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">decimal_places</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">time</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; get the these properties from the config options &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" get the these properties from the config options """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;buttermilk_bay&#39;</span><span class="p">,</span>
-                                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="si">}</span><span class="s1">m_ntasks&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;buttermilk_bay&#39;</span><span class="p">,</span>
-                                       <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="si">}</span><span class="s1">m_min_tasks&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'buttermilk_bay'</span><span class="p">,</span>
+                                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="si">}</span><span class="s1">m_ntasks'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'buttermilk_bay'</span><span class="p">,</span>
+                                       <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="si">}</span><span class="s1">m_min_tasks'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="mi">1</span></div>
 
 </pre></div>

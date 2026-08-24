@@ -118,17 +118,17 @@
 <div class="viewcode-block" id="Forward">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.forward.Forward.html#compass.ocean.tests.drying_slope.forward.Forward">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MPAS-Ocean runs as part of drying slope</span>
 <span class="sd">    test cases.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Forward.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.forward.Forward.html#compass.ocean.tests.drying_slope.forward.Forward.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">input_path</span><span class="o">=</span><span class="s1">&#39;../initial_state&#39;</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">input_path</span><span class="o">=</span><span class="s1">'../initial_state'</span><span class="p">,</span>
                  <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">damping_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">coord_type</span><span class="o">=</span><span class="s1">&#39;sigma&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">damping_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">coord_type</span><span class="o">=</span><span class="s1">'sigma'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a forward step</span>
 
 <span class="sd">        Parameters</span>
@@ -163,7 +163,7 @@
 <span class="sd">        coord_type: string, optional</span>
 <span class="sd">            the coordinate type</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">min_tasks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">ntasks</span>
 
@@ -172,34 +172,34 @@
                          <span class="n">openmp_threads</span><span class="o">=</span><span class="n">openmp_threads</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.drying_slope&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;single_layer&#39;</span> <span class="ow">or</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;sigma&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.drying_slope&#39;</span><span class="p">,</span>
-                                   <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="n">coord_type</span><span class="si">}</span><span class="s1">.forward&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.drying_slope'</span><span class="p">,</span>
+                               <span class="s1">'namelist.forward'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">'single_layer'</span> <span class="ow">or</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">'sigma'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.drying_slope'</span><span class="p">,</span>
+                                   <span class="sa">f</span><span class="s1">'namelist.</span><span class="si">{</span><span class="n">coord_type</span><span class="si">}</span><span class="s1">.forward'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">damping_coeff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># update the Rayleigh damping coeff to the requested value</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_Rayleigh_damping_coeff&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">damping_coeff</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_Rayleigh_damping_coeff'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">damping_coeff</span><span class="si">}</span><span class="s1">'</span><span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.drying_slope&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.drying_slope'</span><span class="p">,</span>
+                              <span class="s1">'streams.forward'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'mesh.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/initial_state.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'init.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/initial_state.nc'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;forcing.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/forcing.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'forcing.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/forcing.nc'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/culled_graph.info&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/culled_graph.info'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">)</span></div>
 
 
     <span class="c1"># no setup() is needed</span>
@@ -207,36 +207,36 @@
 <div class="viewcode-block" id="Forward.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.forward.Forward.run.html#compass.ocean.tests.drying_slope.forward.Forward.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dt</span><span class="p">()</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">]</span>
-        <span class="n">thin_film_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;thin_film_thickness&#39;</span><span class="p">)</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
-                   <span class="s1">&#39;config_drying_min_cell_height&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">thin_film_thickness</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'vertical_grid'</span><span class="p">]</span>
+        <span class="n">thin_film_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'thin_film_thickness'</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_dt'</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                   <span class="s1">'config_drying_min_cell_height'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">thin_film_thickness</span><span class="si">}</span><span class="s1">'</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
-                                        <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
+                                        <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.ocean'</span><span class="p">)</span>
 
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the time step</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dt : str</span>
 <span class="sd">            the time step in HH:MM:SS</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="c1"># dt is proportional to resolution</span>
-        <span class="n">dt_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;drying_slope&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_per_km&#39;</span><span class="p">)</span>
+        <span class="n">dt_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'drying_slope'</span><span class="p">,</span> <span class="s1">'dt_per_km'</span><span class="p">)</span>
 
         <span class="n">dt</span> <span class="o">=</span> <span class="n">dt_per_km</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
         <span class="c1"># https://stackoverflow.com/a/1384565/7728169</span>
-        <span class="n">dt</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">(</span><span class="n">dt</span><span class="p">))</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%H:%M:%S'</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">(</span><span class="n">dt</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">dt</span></div>
 

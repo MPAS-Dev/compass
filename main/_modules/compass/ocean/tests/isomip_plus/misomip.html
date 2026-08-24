@@ -123,7 +123,7 @@
 <div class="viewcode-block" id="Misomip">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.misomip.Misomip.html#compass.ocean.tests.isomip_plus.misomip.Misomip">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Misomip</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for interpolating output to the MISOMIP1 grid from an ISOMIP+</span>
 <span class="sd">    simulation</span>
 
@@ -132,13 +132,13 @@
 <span class="sd">    resolution : float</span>
 <span class="sd">        The horizontal resolution (km) of the test case</span>
 
-<span class="sd">    experiment : {&#39;Ocean0&#39;, &#39;Ocean1&#39;, &#39;Ocean2&#39;}</span>
+<span class="sd">    experiment : {'Ocean0', 'Ocean1', 'Ocean2'}</span>
 <span class="sd">        The ISOMIP+ experiment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Misomip.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.misomip.Misomip.html#compass.ocean.tests.isomip_plus.misomip.Misomip.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">experiment</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -149,40 +149,40 @@
 <span class="sd">        resolution : float</span>
 <span class="sd">            The horizontal resolution (km) of the test case</span>
 
-<span class="sd">        experiment : {&#39;Ocean0&#39;, &#39;Ocean1&#39;, &#39;Ocean2&#39;}</span>
+<span class="sd">        experiment : {'Ocean0', 'Ocean1', 'Ocean2'}</span>
 <span class="sd">            The ISOMIP+ experiment</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;misomip&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'misomip'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">experiment</span> <span class="o">=</span> <span class="n">experiment</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="s1">&#39;../simulation/init.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="s1">'../simulation/init.nc'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="s1">&#39;../simulation/timeSeriesStatsMonthly.0001-01-01.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="s1">&#39;../streamfunction/barotropicStreamfunction.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="s1">&#39;../streamfunction/overturningStreamfunction.nc&#39;</span><span class="p">)</span>
+            <span class="s1">'../simulation/timeSeriesStatsMonthly.0001-01-01.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="s1">'../streamfunction/barotropicStreamfunction.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="s1">'../streamfunction/overturningStreamfunction.nc'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">resolution</span> <span class="o">==</span> <span class="mf">2.</span><span class="p">:</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;COM&#39;</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">'COM'</span>
         <span class="k">elif</span> <span class="n">resolution</span> <span class="o">==</span> <span class="mf">5.</span><span class="p">:</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;TYP&#39;</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">'TYP'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected resolution </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
-        <span class="n">out_file_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_MPAS-Ocean.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">experiment</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unexpected resolution </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+        <span class="n">out_file_name</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_MPAS-Ocean.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">experiment</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">out_file_name</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Misomip.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.misomip.Misomip.run.html#compass.ocean.tests.isomip_plus.misomip.Misomip.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">in_dir</span> <span class="o">=</span> <span class="s1">&#39;../simulation&#39;</span>
-        <span class="n">sf_dir</span> <span class="o">=</span> <span class="s1">&#39;../streamfunction&#39;</span>
+        <span class="n">in_dir</span> <span class="o">=</span> <span class="s1">'../simulation'</span>
+        <span class="n">sf_dir</span> <span class="o">=</span> <span class="s1">'../streamfunction'</span>
 
-        <span class="c1"># show progress only if we&#39;re not writing to a log file</span>
+        <span class="c1"># show progress only if we're not writing to a log file</span>
         <span class="n">show_progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span> <span class="ow">is</span> <span class="kc">None</span>
 
         <span class="n">_compute_misomip_interp_coeffs</span><span class="p">(</span><span class="n">in_dir</span><span class="o">=</span><span class="n">in_dir</span><span class="p">,</span>
@@ -200,8 +200,8 @@
         <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
             <span class="n">pbar</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span>
                 <span class="n">widgets</span><span class="o">=</span><span class="p">[</span>
-                    <span class="s1">&#39;compute MPAS and MISOMIP </span><span class="si">{}</span><span class="s1"> transect &#39;</span>
-                    <span class="s1">&#39;intersections&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">axis</span><span class="p">),</span>
+                    <span class="s1">'compute MPAS and MISOMIP </span><span class="si">{}</span><span class="s1"> transect '</span>
+                    <span class="s1">'intersections'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">axis</span><span class="p">),</span>
                     <span class="n">Percentage</span><span class="p">(),</span>
                     <span class="n">Bar</span><span class="p">(),</span>
                     <span class="n">ETA</span><span class="p">()],</span>
@@ -209,7 +209,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">pbar</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">'x'</span><span class="p">:</span>
             <span class="n">slicePos</span> <span class="o">=</span> <span class="n">xTransect</span>
             <span class="n">outNOther</span> <span class="o">=</span> <span class="n">outNy</span>
             <span class="n">outOtherAxis</span> <span class="o">=</span> <span class="n">y</span>
@@ -230,7 +230,7 @@
             <span class="n">xVert</span> <span class="o">=</span> <span class="n">xVertex</span><span class="p">[</span><span class="n">verts</span><span class="p">]</span>
             <span class="n">yVert</span> <span class="o">=</span> <span class="n">yVertex</span><span class="p">[</span><span class="n">verts</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">'x'</span><span class="p">:</span>
                 <span class="n">sliceAxisVerts</span> <span class="o">=</span> <span class="n">xVert</span>
                 <span class="n">otherAxisVerts</span> <span class="o">=</span> <span class="n">yVert</span>
             <span class="k">else</span><span class="p">:</span>
@@ -239,7 +239,7 @@
 
             <span class="k">if</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">sliceAxisVerts</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">slicePos</span><span class="p">)</span> <span class="ow">or</span> \
                     <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">sliceAxisVerts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">slicePos</span><span class="p">):</span>
-                <span class="c1"># this polygon doesn&#39;t intersect the slice</span>
+                <span class="c1"># this polygon doesn't intersect the slice</span>
                 <span class="k">continue</span>
 
             <span class="n">mpasPolygon</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">xVert</span><span class="p">,</span> <span class="n">yVert</span><span class="p">))</span>
@@ -259,7 +259,7 @@
                 <span class="n">upper</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="k">for</span> <span class="n">otherIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">'x'</span><span class="p">:</span>
                     <span class="n">vertices</span> <span class="o">=</span> <span class="p">((</span><span class="n">slicePos</span><span class="p">,</span> <span class="n">outOtherAxis</span><span class="p">[</span><span class="n">otherIndex</span><span class="p">]),</span>
                                 <span class="p">(</span><span class="n">slicePos</span><span class="p">,</span> <span class="n">outOtherAxis</span><span class="p">[</span><span class="n">otherIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -302,45 +302,45 @@
             <span class="n">sortedIndices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">sortedIndices</span><span class="p">,</span> <span class="n">intersectionsInSlice</span><span class="p">[</span><span class="n">indices</span><span class="p">])</span>
 
-        <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF4&#39;</span><span class="p">)</span>
-        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cellIndices</span><span class="p">))</span>
-        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;cellIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
-        <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
-            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;yIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+        <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'NETCDF4'</span><span class="p">)</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'nIntersections'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cellIndices</span><span class="p">))</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'cellIndices'</span><span class="p">,</span> <span class="s1">'i4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nIntersections'</span><span class="p">,))</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">'x'</span><span class="p">:</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'yIndices'</span><span class="p">,</span> <span class="s1">'i4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nIntersections'</span><span class="p">,))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;xIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
-        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;sliceIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'xIndices'</span><span class="p">,</span> <span class="s1">'i4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nIntersections'</span><span class="p">,))</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'sliceIndices'</span><span class="p">,</span> <span class="s1">'i4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nIntersections'</span><span class="p">,))</span>
         <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-            <span class="s1">&#39;mpasToMisomipWeights&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+            <span class="s1">'mpasToMisomipWeights'</span><span class="p">,</span> <span class="s1">'f8'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nIntersections'</span><span class="p">,))</span>
 
         <span class="n">outVars</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">variables</span>
-        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;cellIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">cellIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
-            <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;yIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">otherIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">'cellIndices'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">cellIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">'x'</span><span class="p">:</span>
+            <span class="n">outVars</span><span class="p">[</span><span class="s1">'yIndices'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">otherIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;xIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">otherIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+            <span class="n">outVars</span><span class="p">[</span><span class="s1">'xIndices'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">otherIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
 
-        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;sliceIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">sliceIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
-        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;mpasToMisomipWeights&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">'sliceIndices'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">sliceIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">'mpasToMisomipWeights'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
 
         <span class="n">outFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="n">meshFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/init.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">in_dir</span><span class="p">)</span>
-    <span class="n">interpWeightsFileName</span> <span class="o">=</span> <span class="s1">&#39;horiz_map.nc&#39;</span>
-    <span class="n">xTransectFileName</span> <span class="o">=</span> <span class="s1">&#39;x_trans_map.nc&#39;</span>
-    <span class="n">yTransectFileName</span> <span class="o">=</span> <span class="s1">&#39;y_trans_map.nc&#39;</span>
+    <span class="n">meshFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/init.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">in_dir</span><span class="p">)</span>
+    <span class="n">interpWeightsFileName</span> <span class="o">=</span> <span class="s1">'horiz_map.nc'</span>
+    <span class="n">xTransectFileName</span> <span class="o">=</span> <span class="s1">'x_trans_map.nc'</span>
+    <span class="n">yTransectFileName</span> <span class="o">=</span> <span class="s1">'y_trans_map.nc'</span>
 
     <span class="n">outNx</span><span class="p">,</span> <span class="n">outNy</span><span class="p">,</span> <span class="n">outNz</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">xTransect</span><span class="p">,</span> <span class="n">yTransect</span><span class="p">,</span> <span class="n">outDx</span><span class="p">,</span> <span class="n">outDz</span> <span class="o">=</span> \
         <span class="n">_get_out_grid</span><span class="p">(</span><span class="n">corners</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">meshFileName</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">meshFileName</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
 
-    <span class="n">nCells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
+    <span class="n">nCells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nCells'</span><span class="p">])</span>
     <span class="n">inVars</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span>
-    <span class="n">nEdgesOnCell</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">][:]</span>
-    <span class="n">verticesOnCell</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;verticesOnCell&#39;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">-</span> <span class="mi">1</span>
-    <span class="n">xVertex</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;xIsomipVertex&#39;</span><span class="p">][:]</span>
-    <span class="n">yVertex</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;yIsomipVertex&#39;</span><span class="p">][:]</span>
+    <span class="n">nEdgesOnCell</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'nEdgesOnCell'</span><span class="p">][:]</span>
+    <span class="n">verticesOnCell</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'verticesOnCell'</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">xVertex</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'xIsomipVertex'</span><span class="p">][:]</span>
+    <span class="n">yVertex</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'yIsomipVertex'</span><span class="p">][:]</span>
 
     <span class="n">inFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">interpWeightsFileName</span><span class="p">):</span>
@@ -356,7 +356,7 @@
         <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
             <span class="n">pbar</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span>
                 <span class="n">widgets</span><span class="o">=</span><span class="p">[</span>
-                    <span class="s1">&#39;compute MPAS and MISOMIP intersections&#39;</span><span class="p">,</span>
+                    <span class="s1">'compute MPAS and MISOMIP intersections'</span><span class="p">,</span>
                     <span class="n">Percentage</span><span class="p">(),</span>
                     <span class="n">Bar</span><span class="p">(),</span>
                     <span class="n">ETA</span><span class="p">()],</span>
@@ -442,29 +442,29 @@
             <span class="n">sortedIndices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">sortedIndices</span><span class="p">,</span> <span class="n">intersectionsInSlice</span><span class="p">[</span><span class="n">indices</span><span class="p">])</span>
 
-        <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">interpWeightsFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF4&#39;</span><span class="p">)</span>
-        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cellIndices</span><span class="p">))</span>
-        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;cellIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
-        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;xIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
-        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;yIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
-        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;sliceIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+        <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">interpWeightsFileName</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'NETCDF4'</span><span class="p">)</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'nIntersections'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cellIndices</span><span class="p">))</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'cellIndices'</span><span class="p">,</span> <span class="s1">'i4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nIntersections'</span><span class="p">,))</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'xIndices'</span><span class="p">,</span> <span class="s1">'i4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nIntersections'</span><span class="p">,))</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'yIndices'</span><span class="p">,</span> <span class="s1">'i4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nIntersections'</span><span class="p">,))</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'sliceIndices'</span><span class="p">,</span> <span class="s1">'i4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nIntersections'</span><span class="p">,))</span>
         <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-            <span class="s1">&#39;mpasToMisomipWeights&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+            <span class="s1">'mpasToMisomipWeights'</span><span class="p">,</span> <span class="s1">'f8'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nIntersections'</span><span class="p">,))</span>
 
         <span class="n">outVars</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">variables</span>
-        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;cellIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">cellIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
-        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;xIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">xIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
-        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;yIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">yIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
-        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;sliceIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">sliceIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
-        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;mpasToMisomipWeights&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">'cellIndices'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">cellIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">'xIndices'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">xIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">'yIndices'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">yIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">'sliceIndices'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">sliceIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">'mpasToMisomipWeights'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
 
         <span class="n">outFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">xTransectFileName</span><span class="p">):</span>
-        <span class="n">getTransectWeights</span><span class="p">(</span><span class="n">xTransectFileName</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+        <span class="n">getTransectWeights</span><span class="p">(</span><span class="n">xTransectFileName</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">'x'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">yTransectFileName</span><span class="p">):</span>
-        <span class="n">getTransectWeights</span><span class="p">(</span><span class="n">yTransectFileName</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="n">getTransectWeights</span><span class="p">(</span><span class="n">yTransectFileName</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">'y'</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_interp_misomip</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">sf_dir</span><span class="p">,</span> <span class="n">out_file_name</span><span class="p">,</span>  <span class="c1"># noqa: C901</span>
@@ -573,7 +573,7 @@
                                               <span class="n">mask</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">varMask</span><span class="p">))</span>
         <span class="nb">vars</span><span class="p">[</span><span class="n">varName</span><span class="p">][</span><span class="n">tIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">maskedVar</span>
 
-    <span class="n">inFileNames</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/timeSeriesStatsMonthly.*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">inFileNames</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">/timeSeriesStatsMonthly.*.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">in_dir</span><span class="p">)))</span>
 
     <span class="n">rho_fw</span> <span class="o">=</span> <span class="mf">1000.</span>
@@ -584,191 +584,191 @@
     <span class="n">outNx</span><span class="p">,</span> <span class="n">outNy</span><span class="p">,</span> <span class="n">outNz</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">xTransect</span><span class="p">,</span> <span class="n">yTransect</span><span class="p">,</span> <span class="n">outDx</span><span class="p">,</span> <span class="n">outDz</span> <span class="o">=</span> \
         <span class="n">_get_out_grid</span><span class="p">(</span><span class="n">corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;horiz_map.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s1">'horiz_map.nc'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
     <span class="n">inVars</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span>
-    <span class="n">xyCellIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;cellIndices&#39;</span><span class="p">][:]</span>
-    <span class="n">xyXIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;xIndices&#39;</span><span class="p">][:]</span>
-    <span class="n">xyYIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;yIndices&#39;</span><span class="p">][:]</span>
-    <span class="n">xySliceIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;sliceIndices&#39;</span><span class="p">][:]</span>
-    <span class="n">xyMpasToMisomipWeights</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;mpasToMisomipWeights&#39;</span><span class="p">][:]</span>
+    <span class="n">xyCellIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'cellIndices'</span><span class="p">][:]</span>
+    <span class="n">xyXIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'xIndices'</span><span class="p">][:]</span>
+    <span class="n">xyYIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'yIndices'</span><span class="p">][:]</span>
+    <span class="n">xySliceIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'sliceIndices'</span><span class="p">][:]</span>
+    <span class="n">xyMpasToMisomipWeights</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'mpasToMisomipWeights'</span><span class="p">][:]</span>
     <span class="n">inFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">xyNSlices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">xySliceIndices</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
 
-    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;x_trans_map.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s1">'x_trans_map.nc'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
     <span class="n">inVars</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span>
-    <span class="n">yzCellIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;cellIndices&#39;</span><span class="p">][:]</span>
-    <span class="n">yzYIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;yIndices&#39;</span><span class="p">][:]</span>
-    <span class="n">yzSliceIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;sliceIndices&#39;</span><span class="p">][:]</span>
-    <span class="n">yzMpasToMisomipWeights</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;mpasToMisomipWeights&#39;</span><span class="p">][:]</span>
+    <span class="n">yzCellIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'cellIndices'</span><span class="p">][:]</span>
+    <span class="n">yzYIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'yIndices'</span><span class="p">][:]</span>
+    <span class="n">yzSliceIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'sliceIndices'</span><span class="p">][:]</span>
+    <span class="n">yzMpasToMisomipWeights</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'mpasToMisomipWeights'</span><span class="p">][:]</span>
     <span class="n">inFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">yzNSlices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">yzSliceIndices</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
 
-    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;y_trans_map.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s1">'y_trans_map.nc'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
     <span class="n">inVars</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span>
-    <span class="n">xzCellIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;cellIndices&#39;</span><span class="p">][:]</span>
-    <span class="n">xzXIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;xIndices&#39;</span><span class="p">][:]</span>
-    <span class="n">xzSliceIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;sliceIndices&#39;</span><span class="p">][:]</span>
-    <span class="n">xzMpasToMisomipWeights</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;mpasToMisomipWeights&#39;</span><span class="p">][:]</span>
+    <span class="n">xzCellIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'cellIndices'</span><span class="p">][:]</span>
+    <span class="n">xzXIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'xIndices'</span><span class="p">][:]</span>
+    <span class="n">xzSliceIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'sliceIndices'</span><span class="p">][:]</span>
+    <span class="n">xzMpasToMisomipWeights</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'mpasToMisomipWeights'</span><span class="p">][:]</span>
     <span class="n">inFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">xzNSlices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">xzSliceIndices</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
 
     <span class="n">dynamicTopo</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="n">initFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s1">&#39;init.nc&#39;</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-    <span class="n">osfFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sf_dir</span><span class="p">,</span> <span class="s1">&#39;overturningStreamfunction.nc&#39;</span><span class="p">),</span>
-                      <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-    <span class="n">bsfFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sf_dir</span><span class="p">,</span> <span class="s1">&#39;barotropicStreamfunction.nc&#39;</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">initFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s1">'init.nc'</span><span class="p">),</span> <span class="s1">'r'</span><span class="p">)</span>
+    <span class="n">osfFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sf_dir</span><span class="p">,</span> <span class="s1">'overturningStreamfunction.nc'</span><span class="p">),</span>
+                      <span class="s1">'r'</span><span class="p">)</span>
+    <span class="n">bsfFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sf_dir</span><span class="p">,</span> <span class="s1">'barotropicStreamfunction.nc'</span><span class="p">),</span> <span class="s1">'r'</span><span class="p">)</span>
     <span class="n">continueOutput</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">out_file_name</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">continueOutput</span><span class="p">:</span>
-        <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">out_file_name</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF4&#39;</span><span class="p">)</span>
+        <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">out_file_name</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'NETCDF4'</span><span class="p">)</span>
         <span class="nb">vars</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">variables</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">out_file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF4&#39;</span><span class="p">)</span>
+        <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">out_file_name</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'NETCDF4'</span><span class="p">)</span>
 
-        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">,</span> <span class="n">outNx</span><span class="p">)</span>
-        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="n">outNy</span><span class="p">)</span>
-        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nz&#39;</span><span class="p">,</span> <span class="n">outNz</span><span class="p">)</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'nx'</span><span class="p">,</span> <span class="n">outNx</span><span class="p">)</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'ny'</span><span class="p">,</span> <span class="n">outNy</span><span class="p">)</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'nz'</span><span class="p">,</span> <span class="n">outNz</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">varName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]:</span>
-            <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="n">varName</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;n</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">varName</span><span class="p">,))</span>
-            <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
-            <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> location of cell centers&#39;</span> <span class="o">%</span> <span class="n">varName</span>
+        <span class="k">for</span> <span class="n">varName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">]:</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="n">varName</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'n</span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="n">varName</span><span class="p">,))</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'m'</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'</span><span class="si">%s</span><span class="s1"> location of cell centers'</span> <span class="o">%</span> <span class="n">varName</span>
         <span class="nb">vars</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">variables</span>
-        <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">x</span>
-        <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">y</span>
-        <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">z</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="s1">'x'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="s1">'y'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="s1">'z'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">z</span>
 
-        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;s&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;time since start of simulation&#39;</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'time'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'s'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'time since start of simulation'</span>
 
-        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;meanMeltRate&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m/s&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;mean melt rate averaged over area of floating &#39;</span> \
-                          <span class="s1">&#39;ice, positive for melting&#39;</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'meanMeltRate'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'m/s'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'mean melt rate averaged over area of floating '</span> \
+                          <span class="s1">'ice, positive for melting'</span>
 
-        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;totalMeltFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;kg/s&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;total flux of melt water summed over area of &#39;</span> \
-                          <span class="s1">&#39;floating ice, positive for melting&#39;</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'totalMeltFlux'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'kg/s'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'total flux of melt water summed over area of '</span> \
+                          <span class="s1">'floating ice, positive for melting'</span>
 
-        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;totalOceanVolume&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m^3&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;total volume of ocean&#39;</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'totalOceanVolume'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'m^3'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'total volume of ocean'</span>
 
-        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;meanTemperature&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;deg C&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;the potential temperature averaged over the &#39;</span> \
-                          <span class="s1">&#39;ocean volume&#39;</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'meanTemperature'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'deg C'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'the potential temperature averaged over the '</span> \
+                          <span class="s1">'ocean volume'</span>
 
-        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;meanSalinity&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;PSU&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;the salinity averaged over the ocean volume&#39;</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'meanSalinity'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'PSU'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'the salinity averaged over the ocean volume'</span>
 
         <span class="k">if</span> <span class="n">dynamicTopo</span><span class="p">:</span>
-            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;iceDraft&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
-            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;bathymetry&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'iceDraft'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'ny'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'bathymetry'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'ny'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;iceDraft&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
-            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;bathymetry&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'iceDraft'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'ny'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'bathymetry'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'ny'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
 
-        <span class="n">var</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;iceDraft&#39;</span><span class="p">]</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;elevation of the ice-ocean interface&#39;</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">[</span><span class="s1">'iceDraft'</span><span class="p">]</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'m'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'elevation of the ice-ocean interface'</span>
 
-        <span class="n">var</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;bathymetry&#39;</span><span class="p">]</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;elevation of the bathymetry&#39;</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">[</span><span class="s1">'bathymetry'</span><span class="p">]</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'m'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'elevation of the bathymetry'</span>
 
-        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;meltRate&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m/s&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;melt rate, positive for melting&#39;</span>
-
-        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-            <span class="s1">&#39;frictionVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m/s&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;friction velocity u* used in melt calculations&#39;</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'meltRate'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'ny'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'m/s'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'melt rate, positive for melting'</span>
 
         <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-            <span class="s1">&#39;thermalDriving&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;deg C&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;thermal driving used in the melt calculation&#39;</span>
+            <span class="s1">'frictionVelocity'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'ny'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'m/s'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'friction velocity u* used in melt calculations'</span>
 
         <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-            <span class="s1">&#39;halineDriving&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;PSU&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;haline driving used in the melt calculation&#39;</span>
+            <span class="s1">'thermalDriving'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'ny'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'deg C'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'thermal driving used in the melt calculation'</span>
 
         <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-            <span class="s1">&#39;uBoundaryLayer&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m/s&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;x-velocity in the boundary layer used to compute u*&#39;</span>
+            <span class="s1">'halineDriving'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'ny'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'PSU'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'haline driving used in the melt calculation'</span>
 
         <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-            <span class="s1">&#39;vBoundaryLayer&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m/s&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;y-velocity in the boundary layer used to compute u*&#39;</span>
+            <span class="s1">'uBoundaryLayer'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'ny'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'m/s'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'x-velocity in the boundary layer used to compute u*'</span>
 
         <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-            <span class="s1">&#39;barotropicStreamfunction&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m^3/s&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;barotropic streamfunction&#39;</span>
+            <span class="s1">'vBoundaryLayer'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'ny'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'m/s'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'y-velocity in the boundary layer used to compute u*'</span>
 
         <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-            <span class="s1">&#39;overturningStreamfunction&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;nz&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m^3/s&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;overturning (meridional) streamfunction&#39;</span>
+            <span class="s1">'barotropicStreamfunction'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'ny'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'m^3/s'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'barotropic streamfunction'</span>
 
         <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-            <span class="s1">&#39;bottomTemperature&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;deg C&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;temperature in the bottom grid cell of each &#39;</span> \
-                          <span class="s1">&#39;ocean column&#39;</span>
+            <span class="s1">'overturningStreamfunction'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'nz'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'m^3/s'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'overturning (meridional) streamfunction'</span>
 
         <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-            <span class="s1">&#39;bottomSalinity&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;PSU&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;salinity in the bottom grid cell of each ocean &#39;</span> \
-                          <span class="s1">&#39;column&#39;</span>
+            <span class="s1">'bottomTemperature'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'ny'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'deg C'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'temperature in the bottom grid cell of each '</span> \
+                          <span class="s1">'ocean column'</span>
 
         <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-            <span class="s1">&#39;temperatureXZ&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;nz&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;deg C&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;temperature slice in x-z plane through the center&#39;</span> \
-                          <span class="s1">&#39; of the domain (y = 40 km)&#39;</span>
-
-        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;salinityXZ&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span>
-                                     <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;nz&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;PSU&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;salinity slice in x-z plane through the center of&#39;</span> \
-                          <span class="s1">&#39; the domain (y = 40 km)&#39;</span>
+            <span class="s1">'bottomSalinity'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'ny'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'PSU'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'salinity in the bottom grid cell of each ocean '</span> \
+                          <span class="s1">'column'</span>
 
         <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-            <span class="s1">&#39;temperatureYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;nz&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;deg C&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;temperature slice in y-z plane through x = 500 km&#39;</span>
+            <span class="s1">'temperatureXZ'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'nz'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'deg C'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'temperature slice in x-z plane through the center'</span> \
+                          <span class="s1">' of the domain (y = 40 km)'</span>
 
-        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;salinityYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span>
-                                     <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;nz&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,))</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;PSU&#39;</span>
-        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;salinity slice in y-z plane through x = 500 km&#39;</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'salinityXZ'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span>
+                                     <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'nz'</span><span class="p">,</span> <span class="s1">'nx'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'PSU'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'salinity slice in x-z plane through the center of'</span> \
+                          <span class="s1">' the domain (y = 40 km)'</span>
 
-    <span class="n">nCells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">initFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
-    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">initFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">])</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+            <span class="s1">'temperatureYZ'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'nz'</span><span class="p">,</span> <span class="s1">'ny'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'deg C'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'temperature slice in y-z plane through x = 500 km'</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'salinityYZ'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">,</span>
+                                     <span class="p">(</span><span class="s1">'nTime'</span><span class="p">,</span> <span class="s1">'nz'</span><span class="p">,</span> <span class="s1">'ny'</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">'PSU'</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">'salinity slice in y-z plane through x = 500 km'</span>
+
+    <span class="n">nCells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">initFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nCells'</span><span class="p">])</span>
+    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">initFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">])</span>
     <span class="n">nTimeIn</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inFileNames</span><span class="p">)</span>
-    <span class="n">nTimeIn</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">nTimeIn</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">bsfFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]))</span>
-    <span class="n">nTimeIn</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">nTimeIn</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">osfFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]))</span>
+    <span class="n">nTimeIn</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">nTimeIn</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">bsfFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]))</span>
+    <span class="n">nTimeIn</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">nTimeIn</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">osfFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]))</span>
 
     <span class="k">if</span> <span class="n">continueOutput</span><span class="p">:</span>
-        <span class="n">nTimeOut</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">outFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nTime&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">nTimeOut</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">outFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nTime'</span><span class="p">])</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">nTimeOut</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="n">areaCell</span> <span class="o">=</span> <span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">][:]</span>
-    <span class="n">bathymetry</span> <span class="o">=</span> <span class="o">-</span><span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">][:]</span>
-    <span class="n">minLevelCell</span> <span class="o">=</span> <span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;minLevelCell&#39;</span><span class="p">][:]</span> <span class="o">-</span> <span class="mi">1</span>
-    <span class="n">maxLevelCell</span> <span class="o">=</span> <span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;maxLevelCell&#39;</span><span class="p">][:]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">areaCell</span> <span class="o">=</span> <span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'areaCell'</span><span class="p">][:]</span>
+    <span class="n">bathymetry</span> <span class="o">=</span> <span class="o">-</span><span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'bottomDepth'</span><span class="p">][:]</span>
+    <span class="n">minLevelCell</span> <span class="o">=</span> <span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'minLevelCell'</span><span class="p">][:]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">maxLevelCell</span> <span class="o">=</span> <span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'maxLevelCell'</span><span class="p">][:]</span> <span class="o">-</span> <span class="mi">1</span>
 
     <span class="n">cellMask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nCells</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">iCell</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nCells</span><span class="p">):</span>
@@ -779,9 +779,9 @@
     <span class="n">xyOceanMask</span> <span class="o">=</span> <span class="n">xyOceanFraction</span> <span class="o">&gt;</span> <span class="n">normalizationThreshold</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">dynamicTopo</span> <span class="ow">and</span> <span class="p">(</span><span class="n">nTimeOut</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;iceDraft&#39;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">interpHorizOcean</span><span class="p">(</span>
-            <span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
-        <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;bathymetry&#39;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">interpHorizOcean</span><span class="p">(</span><span class="n">bathymetry</span><span class="p">)</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="s1">'iceDraft'</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">interpHorizOcean</span><span class="p">(</span>
+            <span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="s1">'bathymetry'</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">interpHorizOcean</span><span class="p">(</span><span class="n">bathymetry</span><span class="p">)</span>
 
     <span class="n">initFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
@@ -791,7 +791,7 @@
     <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
         <span class="n">pbar</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span>
             <span class="n">widgets</span><span class="o">=</span><span class="p">[</span>
-                <span class="s1">&#39;interpolate from MPAS to MISOMIP&#39;</span><span class="p">,</span>
+                <span class="s1">'interpolate from MPAS to MISOMIP'</span><span class="p">,</span>
                 <span class="n">Percentage</span><span class="p">(),</span>
                 <span class="n">Bar</span><span class="p">(),</span>
                 <span class="n">ETA</span><span class="p">()],</span>
@@ -800,80 +800,80 @@
         <span class="n">pbar</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">for</span> <span class="n">tIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTimeOut</span><span class="p">,</span> <span class="n">nTimeIn</span><span class="p">):</span>
-        <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">inFileNames</span><span class="p">[</span><span class="n">tIndex</span><span class="p">],</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">inFileNames</span><span class="p">[</span><span class="n">tIndex</span><span class="p">],</span> <span class="s1">'r'</span><span class="p">)</span>
         <span class="n">inVars</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span>
         <span class="n">days</span> <span class="o">=</span> <span class="mi">365</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">tIndex</span> <span class="o">/</span> <span class="mi">12</span><span class="p">)</span> <span class="o">+</span> <span class="n">daysBeforeMonth</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">tIndex</span><span class="p">,</span> <span class="mi">12</span><span class="p">)]</span>
-        <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">][</span><span class="n">tIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">secPerDay</span> <span class="o">*</span> <span class="n">days</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="s1">'time'</span><span class="p">][</span><span class="n">tIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">secPerDay</span> <span class="o">*</span> <span class="n">days</span>
 
-        <span class="n">freshwaterFlux</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFlux&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">freshwaterFlux</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'timeMonthly_avg_landIceFreshwaterFlux'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">inCavityFraction</span> <span class="o">=</span> \
-            <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceFloatingFraction&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">inVars</span><span class="p">[</span><span class="s1">'timeMonthly_avg_landIceFloatingFraction'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">outCavityFraction</span> <span class="o">=</span> <span class="n">interpHoriz</span><span class="p">(</span><span class="n">inCavityFraction</span><span class="p">)</span>
         <span class="n">outCavityMask</span> <span class="o">=</span> <span class="n">outCavityFraction</span> <span class="o">&gt;</span> <span class="n">normalizationThreshold</span>
         <span class="n">meltRate</span> <span class="o">=</span> <span class="n">freshwaterFlux</span> <span class="o">/</span> <span class="n">rho_fw</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">inCavityFraction</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">):</span>
-            <span class="n">writeMetric</span><span class="p">(</span><span class="s1">&#39;meanMeltRate&#39;</span><span class="p">,</span>
+            <span class="n">writeMetric</span><span class="p">(</span><span class="s1">'meanMeltRate'</span><span class="p">,</span>
                         <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">meltRate</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">)</span> <span class="o">/</span>
                         <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">inCavityFraction</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">))</span>
 
-        <span class="n">writeMetric</span><span class="p">(</span><span class="s1">&#39;totalMeltFlux&#39;</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">freshwaterFlux</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">))</span>
+        <span class="n">writeMetric</span><span class="p">(</span><span class="s1">'totalMeltFlux'</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">freshwaterFlux</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">))</span>
 
-        <span class="n">ssh</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_ssh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">ssh</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'timeMonthly_avg_ssh'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">columnThickness</span> <span class="o">=</span> <span class="n">ssh</span> <span class="o">-</span> <span class="n">bathymetry</span>
 
-        <span class="n">writeMetric</span><span class="p">(</span><span class="s1">&#39;totalOceanVolume&#39;</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">columnThickness</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">))</span>
+        <span class="n">writeMetric</span><span class="p">(</span><span class="s1">'totalOceanVolume'</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">columnThickness</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">))</span>
 
-        <span class="n">thermalDriving</span> <span class="o">=</span> <span class="p">(</span><span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceBoundaryLayerTracers&#39;</span>
-                                 <span class="s1">&#39;_landIceBoundaryLayerTemperature&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span>
-                          <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceInterfaceTracers&#39;</span>
-                                 <span class="s1">&#39;_landIceInterfaceTemperature&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
-        <span class="n">halineDriving</span> <span class="o">=</span> <span class="p">(</span><span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceBoundaryLayerTracers&#39;</span>
-                                <span class="s1">&#39;_landIceBoundaryLayerSalinity&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span>
-                         <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceInterfaceTracers&#39;</span>
-                                <span class="s1">&#39;_landIceInterfaceSalinity&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">thermalDriving</span> <span class="o">=</span> <span class="p">(</span><span class="n">inVars</span><span class="p">[</span><span class="s1">'timeMonthly_avg_landIceBoundaryLayerTracers'</span>
+                                 <span class="s1">'_landIceBoundaryLayerTemperature'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span>
+                          <span class="n">inVars</span><span class="p">[</span><span class="s1">'timeMonthly_avg_landIceInterfaceTracers'</span>
+                                 <span class="s1">'_landIceInterfaceTemperature'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">halineDriving</span> <span class="o">=</span> <span class="p">(</span><span class="n">inVars</span><span class="p">[</span><span class="s1">'timeMonthly_avg_landIceBoundaryLayerTracers'</span>
+                                <span class="s1">'_landIceBoundaryLayerSalinity'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span>
+                         <span class="n">inVars</span><span class="p">[</span><span class="s1">'timeMonthly_avg_landIceInterfaceTracers'</span>
+                                <span class="s1">'_landIceInterfaceSalinity'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
         <span class="n">frictionVelocity</span> <span class="o">=</span> \
-            <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceFrictionVelocity&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">inVars</span><span class="p">[</span><span class="s1">'timeMonthly_avg_landIceFrictionVelocity'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
 
-        <span class="n">bsfCell</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="o">*</span> <span class="n">bsfFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bsfCell&#39;</span><span class="p">][</span><span class="n">tIndex</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">bsfCell</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="o">*</span> <span class="n">bsfFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'bsfCell'</span><span class="p">][</span><span class="n">tIndex</span><span class="p">,</span> <span class="p">:]</span>
 
         <span class="c1"># meltRate is already multiplied by inCavityFraction, so no in masking</span>
         <span class="n">writeVar</span><span class="p">(</span>
-            <span class="s1">&#39;meltRate&#39;</span><span class="p">,</span>
+            <span class="s1">'meltRate'</span><span class="p">,</span>
             <span class="n">interpHoriz</span><span class="p">(</span>
                 <span class="n">meltRate</span><span class="p">,</span>
                 <span class="n">inMask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">outFraction</span><span class="o">=</span><span class="n">outCavityFraction</span><span class="p">),</span>
             <span class="n">outCavityMask</span><span class="p">)</span>
         <span class="n">writeVar</span><span class="p">(</span>
-            <span class="s1">&#39;thermalDriving&#39;</span><span class="p">,</span>
+            <span class="s1">'thermalDriving'</span><span class="p">,</span>
             <span class="n">interpHorizCavity</span><span class="p">(</span><span class="n">thermalDriving</span><span class="p">),</span>
             <span class="n">outCavityMask</span><span class="p">)</span>
         <span class="n">writeVar</span><span class="p">(</span>
-            <span class="s1">&#39;halineDriving&#39;</span><span class="p">,</span>
+            <span class="s1">'halineDriving'</span><span class="p">,</span>
             <span class="n">interpHorizCavity</span><span class="p">(</span><span class="n">halineDriving</span><span class="p">),</span>
             <span class="n">outCavityMask</span><span class="p">)</span>
-        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;frictionVelocity&#39;</span><span class="p">,</span> <span class="n">interpHorizCavity</span><span class="p">(</span><span class="n">frictionVelocity</span><span class="p">),</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">'frictionVelocity'</span><span class="p">,</span> <span class="n">interpHorizCavity</span><span class="p">(</span><span class="n">frictionVelocity</span><span class="p">),</span>
                  <span class="n">outCavityMask</span><span class="p">)</span>
-        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;barotropicStreamfunction&#39;</span><span class="p">,</span> <span class="n">interpHorizOcean</span><span class="p">(</span><span class="n">bsfCell</span><span class="p">),</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">'barotropicStreamfunction'</span><span class="p">,</span> <span class="n">interpHorizOcean</span><span class="p">(</span><span class="n">bsfCell</span><span class="p">),</span>
                  <span class="n">xyOceanMask</span><span class="p">)</span>
 
         <span class="n">temperature</span> <span class="o">=</span> \
-            <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
-        <span class="n">salinity</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
-        <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+            <span class="n">inVars</span><span class="p">[</span><span class="s1">'timeMonthly_avg_activeTracers_temperature'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+        <span class="n">salinity</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'timeMonthly_avg_activeTracers_salinity'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+        <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'timeMonthly_avg_layerThickness'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
 
         <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nCells</span><span class="p">)</span>
         <span class="n">bottomTemperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">]</span>
         <span class="n">bottomSalinity</span> <span class="o">=</span> <span class="n">salinity</span><span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">]</span>
 
-        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;bottomTemperature&#39;</span><span class="p">,</span> <span class="n">interpHorizOcean</span><span class="p">(</span><span class="n">bottomTemperature</span><span class="p">),</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">'bottomTemperature'</span><span class="p">,</span> <span class="n">interpHorizOcean</span><span class="p">(</span><span class="n">bottomTemperature</span><span class="p">),</span>
                  <span class="n">xyOceanMask</span><span class="p">)</span>
-        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;bottomSalinity&#39;</span><span class="p">,</span> <span class="n">interpHorizOcean</span><span class="p">(</span><span class="n">bottomSalinity</span><span class="p">),</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">'bottomSalinity'</span><span class="p">,</span> <span class="n">interpHorizOcean</span><span class="p">(</span><span class="n">bottomSalinity</span><span class="p">),</span>
                  <span class="n">xyOceanMask</span><span class="p">)</span>
 
         <span class="n">writeMetric</span><span class="p">(</span>
-            <span class="s1">&#39;meanTemperature&#39;</span><span class="p">,</span>
+            <span class="s1">'meanTemperature'</span><span class="p">,</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
                 <span class="n">cellMask</span> <span class="o">*</span>
                 <span class="n">layerThickness</span> <span class="o">*</span>
@@ -882,7 +882,7 @@
                 <span class="n">cellMask</span> <span class="o">*</span>
                 <span class="n">layerThickness</span><span class="p">))</span>
         <span class="n">writeMetric</span><span class="p">(</span>
-            <span class="s1">&#39;meanSalinity&#39;</span><span class="p">,</span>
+            <span class="s1">'meanSalinity'</span><span class="p">,</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
                 <span class="n">cellMask</span> <span class="o">*</span>
                 <span class="n">layerThickness</span> <span class="o">*</span>
@@ -891,19 +891,19 @@
                 <span class="n">cellMask</span> <span class="o">*</span>
                 <span class="n">layerThickness</span><span class="p">))</span>
 
-        <span class="n">uTop</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_velocityX&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
-        <span class="n">vTop</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_velocityY&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
-        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;uBoundaryLayer&#39;</span><span class="p">,</span> <span class="n">interpHorizCavity</span><span class="p">(</span><span class="n">uTop</span><span class="p">),</span> <span class="n">outCavityMask</span><span class="p">)</span>
-        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;vBoundaryLayer&#39;</span><span class="p">,</span> <span class="n">interpHorizCavity</span><span class="p">(</span><span class="n">vTop</span><span class="p">),</span> <span class="n">outCavityMask</span><span class="p">)</span>
+        <span class="n">uTop</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'timeMonthly_avg_velocityX'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">vTop</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">'timeMonthly_avg_velocityY'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">'uBoundaryLayer'</span><span class="p">,</span> <span class="n">interpHorizCavity</span><span class="p">(</span><span class="n">uTop</span><span class="p">),</span> <span class="n">outCavityMask</span><span class="p">)</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">'vBoundaryLayer'</span><span class="p">,</span> <span class="n">interpHorizCavity</span><span class="p">(</span><span class="n">vTop</span><span class="p">),</span> <span class="n">outCavityMask</span><span class="p">)</span>
 
-        <span class="n">osf</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="o">*</span> <span class="n">osfFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;osf&#39;</span><span class="p">][</span><span class="n">tIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
-        <span class="n">osfX</span> <span class="o">=</span> <span class="n">osfFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][:]</span>
-        <span class="n">osfZ</span> <span class="o">=</span> <span class="n">osfFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">][:]</span>
+        <span class="n">osf</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="o">*</span> <span class="n">osfFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'osf'</span><span class="p">][</span><span class="n">tIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+        <span class="n">osfX</span> <span class="o">=</span> <span class="n">osfFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'x'</span><span class="p">][:]</span>
+        <span class="n">osfZ</span> <span class="o">=</span> <span class="n">osfFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'z'</span><span class="p">][:]</span>
         <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">osfX</span> <span class="o">==</span> <span class="n">x</span><span class="p">)</span>
         <span class="c1"># the first and last OSF z values have been tweaked...</span>
         <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">osfZ</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">z</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
-        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;overturningStreamfunction&#39;</span><span class="p">,</span> <span class="n">osf</span><span class="p">)</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">'overturningStreamfunction'</span><span class="p">,</span> <span class="n">osf</span><span class="p">)</span>
 
         <span class="n">xzOceanFraction</span> <span class="o">=</span> <span class="n">interpXZTransect</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">xzOceanMask</span> <span class="o">=</span> <span class="n">xzOceanFraction</span> <span class="o">&gt;</span> <span class="mf">0.001</span>
@@ -911,11 +911,11 @@
         <span class="n">yzOceanFraction</span> <span class="o">=</span> <span class="n">interpYZTransect</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">yzOceanMask</span> <span class="o">=</span> <span class="n">yzOceanFraction</span> <span class="o">&gt;</span> <span class="mf">0.001</span>
 
-        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;temperatureXZ&#39;</span><span class="p">,</span> <span class="n">interpXZTransect</span><span class="p">(</span><span class="n">temperature</span><span class="p">),</span> <span class="n">xzOceanMask</span><span class="p">)</span>
-        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;salinityXZ&#39;</span><span class="p">,</span> <span class="n">interpXZTransect</span><span class="p">(</span><span class="n">salinity</span><span class="p">),</span> <span class="n">xzOceanMask</span><span class="p">)</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">'temperatureXZ'</span><span class="p">,</span> <span class="n">interpXZTransect</span><span class="p">(</span><span class="n">temperature</span><span class="p">),</span> <span class="n">xzOceanMask</span><span class="p">)</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">'salinityXZ'</span><span class="p">,</span> <span class="n">interpXZTransect</span><span class="p">(</span><span class="n">salinity</span><span class="p">),</span> <span class="n">xzOceanMask</span><span class="p">)</span>
 
-        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;temperatureYZ&#39;</span><span class="p">,</span> <span class="n">interpYZTransect</span><span class="p">(</span><span class="n">temperature</span><span class="p">),</span> <span class="n">yzOceanMask</span><span class="p">)</span>
-        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;salinityYZ&#39;</span><span class="p">,</span> <span class="n">interpYZTransect</span><span class="p">(</span><span class="n">salinity</span><span class="p">),</span> <span class="n">yzOceanMask</span><span class="p">)</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">'temperatureYZ'</span><span class="p">,</span> <span class="n">interpYZTransect</span><span class="p">(</span><span class="n">temperature</span><span class="p">),</span> <span class="n">yzOceanMask</span><span class="p">)</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">'salinityYZ'</span><span class="p">,</span> <span class="n">interpYZTransect</span><span class="p">(</span><span class="n">salinity</span><span class="p">),</span> <span class="n">yzOceanMask</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
             <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 

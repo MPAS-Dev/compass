@@ -410,6 +410,21 @@ ismip7_forcing
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run
 
+   fracture.Fracture
+   fracture.Fracture.configure
+   fracture.remap_utils.extrapolate_source
+   fracture.remap_utils.open_rename_and_trim
+   fracture.remap_utils.add_xtime_and_write
+   fracture.process_excess_melt.ProcessExcessMelt
+   fracture.process_excess_melt.ProcessExcessMelt.setup
+   fracture.process_excess_melt.ProcessExcessMelt.run
+   fracture.process_lake_properties.ProcessLakeProperties
+   fracture.process_lake_properties.ProcessLakeProperties.setup
+   fracture.process_lake_properties.ProcessLakeProperties.run
+   fracture.process_shelf_collapse.ProcessShelfCollapse
+   fracture.process_shelf_collapse.ProcessShelfCollapse.setup
+   fracture.process_shelf_collapse.ProcessShelfCollapse.run
+
 isunnguata_sermia
 ~~~~~~~~~~~~~~~~~
 

@@ -113,7 +113,7 @@
 <div class="viewcode-block" id="log_method_call">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.logging.log_method_call.html#compass.logging.log_method_call">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">log_method_call</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Log the module path and file path of a call to a method, e.g.::</span>
 
 <span class="sd">      compass calling: compass.landice.tests.dome.decomposition_test.DecompositionTest.run()</span>
@@ -126,27 +126,27 @@
 
 <span class="sd">    logger: logging.Logger</span>
 <span class="sd">        The logger to log the method path and file path to</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">ismethod</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The &quot;method&quot; argument must be a method&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'The "method" argument must be a method'</span><span class="p">)</span>
 
     <span class="n">method_name</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="vm">__name__</span>
 
     <span class="c1"># the class of whatever object the method belongs to might not be the</span>
-    <span class="c1"># class where the method is implemented.  The &quot;child&quot; class is the class</span>
+    <span class="c1"># class where the method is implemented.  The "child" class is the class</span>
     <span class="c1"># of the object itself (typically a specific test case or step).  The</span>
-    <span class="c1"># &quot;actual&quot; class where the method is implemented could be that class or</span>
+    <span class="c1"># "actual" class where the method is implemented could be that class or</span>
     <span class="c1"># one of its parents.</span>
 
-    <span class="c1"># get the &quot;child&quot; class and its location (import sequence) from the method</span>
+    <span class="c1"># get the "child" class and its location (import sequence) from the method</span>
     <span class="n">child_class</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="vm">__self__</span><span class="o">.</span><span class="vm">__class__</span>
-    <span class="n">child_location</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">child_class</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">child_class</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">child_location</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">child_class</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">child_class</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">'</span>
 
     <span class="c1"># iterate over the classes that the child class descends from to find the</span>
     <span class="c1"># first one that actually implements the given method.</span>
     <span class="n">actual_class</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="c1"># inspect.getmro() returns a list of classes the child class descends from,</span>
-    <span class="c1"># starting with the child class itself and going &quot;back&quot; to the &quot;object&quot;</span>
+    <span class="c1"># starting with the child class itself and going "back" to the "object"</span>
     <span class="c1"># class that all python classes descend from.</span>
     <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmro</span><span class="p">(</span><span class="n">child_class</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
@@ -154,31 +154,31 @@
             <span class="k">break</span>
 
     <span class="k">if</span> <span class="n">actual_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Hmm, it seems that none of </span><span class="si">{</span><span class="n">child_location</span><span class="si">}</span><span class="s1"> or its &#39;</span>
-                         <span class="sa">f</span><span class="s1">&#39;parent classes implements</span><span class="se">\n</span><span class="s1"> the </span><span class="si">{</span><span class="n">method_name</span><span class="si">}</span><span class="s1"> &#39;</span>
-                         <span class="sa">f</span><span class="s1">&#39;method, how strange!&#39;</span><span class="p">)</span>
-    <span class="n">actual_location</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">actual_class</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">actual_class</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Hmm, it seems that none of </span><span class="si">{</span><span class="n">child_location</span><span class="si">}</span><span class="s1"> or its '</span>
+                         <span class="sa">f</span><span class="s1">'parent classes implements</span><span class="se">\n</span><span class="s1"> the </span><span class="si">{</span><span class="n">method_name</span><span class="si">}</span><span class="s1"> '</span>
+                         <span class="sa">f</span><span class="s1">'method, how strange!'</span><span class="p">)</span>
+    <span class="n">actual_location</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">actual_class</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">actual_class</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">'</span>
 
     <span class="c1"># not every class is defined in a file (e.g. python intrinsics) but we</span>
-    <span class="c1"># expect they always are in compass.  Still we&#39;ll check to make sure.</span>
+    <span class="c1"># expect they always are in compass.  Still we'll check to make sure.</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">class_file</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">actual_class</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
         <span class="n">class_file</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># log what we found out</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;compass calling: </span><span class="si">{</span><span class="n">child_location</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">method_name</span><span class="si">}</span><span class="s1">()&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'compass calling: </span><span class="si">{</span><span class="n">child_location</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">method_name</span><span class="si">}</span><span class="s1">()'</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">child_location</span> <span class="o">!=</span> <span class="n">actual_location</span><span class="p">:</span>
-        <span class="c1"># okay, so we&#39;re inheriting this method from somewhere else.  Better</span>
+        <span class="c1"># okay, so we're inheriting this method from somewhere else.  Better</span>
         <span class="c1"># let the user know.</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  inherited from: </span><span class="si">{</span><span class="n">actual_location</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">method_name</span><span class="si">}</span><span class="s1">()&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  inherited from: </span><span class="si">{</span><span class="n">actual_location</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">method_name</span><span class="si">}</span><span class="s1">()'</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">class_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  in </span><span class="si">{</span><span class="n">class_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  in </span><span class="si">{</span><span class="n">class_file</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">log_function_call</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Log the module path and file path of a call to a function, e.g.::</span>
 
 <span class="sd">      compass calling: compass.parallel.set_cores_per_node()</span>
@@ -191,16 +191,16 @@
 
 <span class="sd">    logger: logging.Logger</span>
 <span class="sd">        The logger to log the function path and file path to</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The &quot;function&quot; argument must be a function&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'The "function" argument must be a function'</span><span class="p">)</span>
 
     <span class="n">filename</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
 
     <span class="c1"># log what we found out</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;compass calling: &#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">()&#39;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  in </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'compass calling: '</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">()'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  in </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 </pre></div>
 
            </div>

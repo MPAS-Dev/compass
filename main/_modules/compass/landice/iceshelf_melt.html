@@ -115,7 +115,7 @@
 <div class="viewcode-block" id="calc_mean_TF">
 <a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.iceshelf_melt.calc_mean_TF.html#compass.landice.iceshelf_melt.calc_mean_TF">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">calc_mean_TF</span><span class="p">(</span><span class="n">geometry_file</span><span class="p">,</span> <span class="n">forcing_file</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Function to calculate mean thermal forcing across all floating ice in a</span>
 <span class="sd">    domain.</span>
 
@@ -126,25 +126,25 @@
 
 <span class="sd">    forcing_file : str</span>
 <span class="sd">        name of file containing MALI ocean forcing information</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">rhoi</span> <span class="o">=</span> <span class="mf">910.0</span>
     <span class="n">rhosw</span> <span class="o">=</span> <span class="mf">1028.0</span>
 
-    <span class="n">ff</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">forcing_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-    <span class="n">zOcean</span> <span class="o">=</span> <span class="n">ff</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;ismip6shelfMelt_zOcean&#39;</span><span class="p">][:]</span>
-    <span class="n">TFocean</span> <span class="o">=</span> <span class="n">ff</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;ismip6shelfMelt_3dThermalForcing&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+    <span class="n">ff</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">forcing_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+    <span class="n">zOcean</span> <span class="o">=</span> <span class="n">ff</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_zOcean'</span><span class="p">][:]</span>
+    <span class="n">TFocean</span> <span class="o">=</span> <span class="n">ff</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_3dThermalForcing'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
 
-    <span class="n">f</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">geometry_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-    <span class="n">thickness</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
-    <span class="n">bedTopography</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bedTopography&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">geometry_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+    <span class="n">thickness</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'thickness'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">bedTopography</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'bedTopography'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
 
     <span class="n">floatMask</span> <span class="o">=</span> <span class="p">((</span><span class="n">thickness</span> <span class="o">*</span> <span class="n">rhoi</span> <span class="o">/</span> <span class="n">rhosw</span> <span class="o">+</span> <span class="n">bedTopography</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> \
                 <span class="p">(</span><span class="n">thickness</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">)</span>
     <span class="c1"># Note: next line only works for floating areas</span>
     <span class="n">lowerSurface</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">rhoi</span> <span class="o">/</span> <span class="n">rhosw</span> <span class="o">*</span> <span class="n">thickness</span>
-    <span class="n">nCells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
-    <span class="n">areaCell</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">][:]</span>
+    <span class="n">nCells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nCells'</span><span class="p">])</span>
+    <span class="n">areaCell</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'areaCell'</span><span class="p">][:]</span>
 
     <span class="n">TFdraft</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nCells</span><span class="p">,))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
     <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">floatMask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>

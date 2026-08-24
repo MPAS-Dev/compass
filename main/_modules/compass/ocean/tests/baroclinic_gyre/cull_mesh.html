@@ -120,63 +120,63 @@
 <div class="viewcode-block" id="CullMesh">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.cull_mesh.CullMesh.html#compass.ocean.tests.baroclinic_gyre.cull_mesh.CullMesh">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CullMesh</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Cull a global mesh to only a single basin</span>
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="CullMesh.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.cull_mesh.CullMesh.html#compass.ocean.tests.baroclinic_gyre.cull_mesh.CullMesh.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.TestCase</span>
 <span class="sd">            The test case this step belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cull_mesh&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'cull_mesh'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../base_mesh/base_mesh.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'base_mesh.nc'</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">'../base_mesh/base_mesh.nc'</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'culled_mesh.nc'</span><span class="p">,</span> <span class="s1">'culled_graph.info'</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CullMesh.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.cull_mesh.CullMesh.run.html#compass.ocean.tests.baroclinic_gyre.cull_mesh.CullMesh.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;baroclinic_gyre&#39;</span><span class="p">]</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'baroclinic_gyre'</span><span class="p">]</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
-        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'base_mesh.nc'</span><span class="p">)</span>
         <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
 
         <span class="n">lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">lonCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
         <span class="n">lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">latCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-        <span class="n">lon_min</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;lon_min&#39;</span><span class="p">)</span>
-        <span class="n">lon_max</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;lon_max&#39;</span><span class="p">)</span>
-        <span class="n">lat_min</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;lat_min&#39;</span><span class="p">)</span>
-        <span class="n">lat_max</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;lat_max&#39;</span><span class="p">)</span>
+        <span class="n">lon_min</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'lon_min'</span><span class="p">)</span>
+        <span class="n">lon_max</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'lon_max'</span><span class="p">)</span>
+        <span class="n">lat_min</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'lat_min'</span><span class="p">)</span>
+        <span class="n">lat_max</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'lat_max'</span><span class="p">)</span>
 
         <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
             <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">lon</span> <span class="o">&gt;=</span> <span class="n">lon_min</span><span class="p">,</span> <span class="n">lon</span> <span class="o">&lt;=</span> <span class="n">lon_max</span><span class="p">),</span>
             <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">lat</span> <span class="o">&gt;=</span> <span class="n">lat_min</span><span class="p">,</span> <span class="n">lat</span> <span class="o">&lt;=</span> <span class="n">lat_max</span><span class="p">))</span>
 
-        <span class="n">n_cells</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
-        <span class="n">ds_mask</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nRegions&#39;</span><span class="p">),</span>
+        <span class="n">n_cells</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nCells'</span><span class="p">]</span>
+        <span class="n">ds_mask</span><span class="p">[</span><span class="s1">'regionCellMasks'</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">'nCells'</span><span class="p">,</span> <span class="s1">'nRegions'</span><span class="p">),</span>
                                       <span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
         <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">dsInverse</span><span class="o">=</span><span class="n">ds_mask</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">'culled_graph.info'</span><span class="p">,</span>
                           <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span></div>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="s1">'culled_mesh.nc'</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

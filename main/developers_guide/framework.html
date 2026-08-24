@@ -259,13 +259,13 @@ options. Examples of this can be found in many test cases as well as
 <a class="reference internal" href="generated/compass.setup.setup_case.html#compass.setup.setup_case" title="compass.setup.setup_case"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.setup.setup_case()</span></code></a>. Here is a typical example from
 <a class="reference internal" href="ocean/generated/compass.ocean.tests.global_ocean.mesh.Mesh.configure.html#compass.ocean.tests.global_ocean.mesh.Mesh.configure" title="compass.ocean.tests.global_ocean.mesh.Mesh.configure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.Mesh.configure()</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Modify the configuration options for this test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span>
-        <span class="s1">&#39;compass.mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="s1">'compass.mesh'</span><span class="p">,</span> <span class="s1">'mesh.cfg'</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span>
-        <span class="s1">&#39;compass.ocean.mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;remap_topography.cfg&#39;</span><span class="p">,</span>
+        <span class="s1">'compass.ocean.mesh'</span><span class="p">,</span> <span class="s1">'remap_topography.cfg'</span><span class="p">,</span>
         <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -282,8 +282,8 @@ cases in a configuration, as in this example from
 <a class="reference internal" href="generated/compass.setup.setup_case.html#compass.setup.setup_case" title="compass.setup.setup_case"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.setup.setup_case()</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># add the config options for the test group (if defined)</span>
 <span class="n">test_group</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span>
-<span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">.tests.</span><span class="si">{</span><span class="n">test_group</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">test_group</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="sa">f</span><span class="s1">'compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">.tests.</span><span class="si">{</span><span class="n">test_group</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">test_group</span><span class="si">}</span><span class="s1">.cfg'</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If a test group doesn’t have any config options, nothing will happen.</p>
@@ -344,13 +344,13 @@ functions.  Here is a code snippet from
 
 <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="o">...</span>
-    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;dome&#39;</span><span class="p">]</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'dome'</span><span class="p">]</span>
     <span class="o">...</span>
-    <span class="n">levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;levels&#39;</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_landice_grid_from_generic_mpas_grid&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_grid.nc&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="n">levels</span><span class="p">]</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'levels'</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'create_landice_grid_from_generic_mpas_grid'</span><span class="p">,</span>
+            <span class="s1">'-i'</span><span class="p">,</span> <span class="s1">'mpas_grid.nc'</span><span class="p">,</span>
+            <span class="s1">'-o'</span><span class="p">,</span> <span class="s1">'landice_grid.nc'</span><span class="p">,</span>
+            <span class="s1">'-l'</span><span class="p">,</span> <span class="n">levels</span><span class="p">]</span>
 
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
     <span class="o">...</span>
@@ -376,9 +376,9 @@ README file that the user might want to have available) using
 
 <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
     <span class="o">...</span>
-    <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.global_ocean.files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;README&#39;</span><span class="p">)</span> <span class="k">as</span> \
+    <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">'compass.ocean.tests.global_ocean.files_for_e3sm'</span><span class="p">,</span> <span class="s1">'README'</span><span class="p">)</span> <span class="k">as</span> \
             <span class="n">target</span><span class="p">:</span>
-        <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/README&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">]))</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/README'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">testcase</span><span class="p">[</span><span class="s1">'work_dir'</span><span class="p">]))</span>
 </pre></div>
 </div>
 <p>In this example, we get the path to a README file within <code class="docutils literal notranslate"><span class="pre">compass</span></code> and make
@@ -402,22 +402,22 @@ and adding it as an input to the step.  No current test cases use
 <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
     <span class="n">step_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
-    <span class="n">database_root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;database_root&#39;</span><span class="p">)</span>
-    <span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="s1">&#39;mpas-ocean&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
+    <span class="n">database_root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'paths'</span><span class="p">,</span> <span class="s1">'database_root'</span><span class="p">)</span>
+    <span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="s1">'mpas-ocean'</span><span class="p">,</span>
+                                 <span class="s1">'bathymetry_database'</span><span class="p">)</span>
 
     <span class="n">remote_filename</span> <span class="o">=</span> \
-        <span class="s1">&#39;BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc&#39;</span>
-    <span class="n">local_filename</span> <span class="o">=</span> <span class="s1">&#39;topography.nc&#39;</span>
+        <span class="s1">'BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc'</span>
+    <span class="n">local_filename</span> <span class="o">=</span> <span class="s1">'topography.nc'</span>
 
     <span class="n">download</span><span class="p">(</span>
         <span class="n">file_name</span><span class="o">=</span><span class="n">remote_filename</span><span class="p">,</span>
-        <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/&#39;</span>
-            <span class="s1">&#39;mpas-ocean/bathymetry_database&#39;</span><span class="p">,</span>
+        <span class="n">url</span><span class="o">=</span><span class="s1">'https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/'</span>
+            <span class="s1">'mpas-ocean/bathymetry_database'</span><span class="p">,</span>
         <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">dest_path</span><span class="o">=</span><span class="n">download_path</span><span class="p">)</span>
 
     <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">download_path</span><span class="p">,</span> <span class="n">remote_filename</span><span class="p">),</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="s1">&#39;topography.nc&#39;</span><span class="p">))</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="s1">'topography.nc'</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>In this example, the remote file
@@ -505,7 +505,7 @@ with a given number of subdivisions:</p>
 <span class="na">plot_cell_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 <span class="na">cell_width_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">cellWidthVsLatLon.nc</span>
 <span class="na">cell_width_image_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">cellWidthGlobal.png</span>
-<span class="na">cell_width_colormap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;3Wbgy5&#39;</span>
+<span class="na">cell_width_colormap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'3Wbgy5'</span>
 
 <span class="c1"># whether to add the mesh density to the file</span>
 <span class="na">add_mesh_density</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
@@ -596,9 +596,9 @@ to baselines.</p>
 compare variables in a file with a given relative path (<code class="docutils literal notranslate"><span class="pre">filename1</span></code>) with
 the same variables in another file (<code class="docutils literal notranslate"><span class="pre">filename2</span></code>) and/or against a baseline.</p>
 <p>As a simple example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
-<span class="n">compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">],</span>
-                  <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output.nc&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'temperature'</span><span class="p">,</span> <span class="s1">'salinity'</span><span class="p">,</span> <span class="s1">'layerThickness'</span><span class="p">,</span> <span class="s1">'normalVelocity'</span><span class="p">]</span>
+<span class="n">compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="n">testcase</span><span class="p">[</span><span class="s1">'work_dir'</span><span class="p">],</span>
+                  <span class="n">filename1</span><span class="o">=</span><span class="s1">'forward/output.nc'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In this case, comparison will only take place if a baseline run is provided
@@ -608,10 +608,10 @@ provided.  If a baseline is provided, the 4 prognostic variables are compared
 between the file <code class="docutils literal notranslate"><span class="pre">forward/output.nc</span></code> and the same file in the corresponding
 location within the baseline.</p>
 <p>Here is a slightly more complex example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
-<span class="n">compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">],</span>
-                  <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;4proc/output.nc&#39;</span><span class="p">,</span>
-                  <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;8proc/output.nc&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'temperature'</span><span class="p">,</span> <span class="s1">'salinity'</span><span class="p">,</span> <span class="s1">'layerThickness'</span><span class="p">,</span> <span class="s1">'normalVelocity'</span><span class="p">]</span>
+<span class="n">compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="n">testcase</span><span class="p">[</span><span class="s1">'work_dir'</span><span class="p">],</span>
+                  <span class="n">filename1</span><span class="o">=</span><span class="s1">'4proc/output.nc'</span><span class="p">,</span>
+                  <span class="n">filename2</span><span class="o">=</span><span class="s1">'8proc/output.nc'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In this case, we compare the 4 prognostic variables in <code class="docutils literal notranslate"><span class="pre">4proc/output.nc</span></code>
@@ -631,7 +631,7 @@ not run the step involved in the validation.</p>
 <code class="docutils literal notranslate"><span class="pre">validation</span></code> attribute of the test case, and a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised
 later by the framework, terminating execution of the test case.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">quiet=False</span></code>, typical output will look like this:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Beginning variable comparisons for all time levels of field &#39;temperature&#39;. Note any time levels reported are 0-based.
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Beginning variable comparisons for all time levels of field 'temperature'. Note any time levels reported are 0-based.
     Pass thresholds are:
        L1: 0.00000000000000e+00
        L2: 0.00000000000000e+00
@@ -641,7 +641,7 @@ later by the framework, terminating execution of the test case.</p>
 2:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
  ** PASS Comparison of temperature between /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc and
     /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
-Beginning variable comparisons for all time levels of field &#39;salinity&#39;. Note any time levels reported are 0-based.
+Beginning variable comparisons for all time levels of field 'salinity'. Note any time levels reported are 0-based.
     Pass thresholds are:
        L1: 0.00000000000000e+00
        L2: 0.00000000000000e+00
@@ -651,7 +651,7 @@ Beginning variable comparisons for all time levels of field &#39;salinity&#39;. 
 2:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
  ** PASS Comparison of salinity between /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc and
     /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
-Beginning variable comparisons for all time levels of field &#39;layerThickness&#39;. Note any time levels reported are 0-based.
+Beginning variable comparisons for all time levels of field 'layerThickness'. Note any time levels reported are 0-based.
     Pass thresholds are:
        L1: 0.00000000000000e+00
        L2: 0.00000000000000e+00
@@ -661,7 +661,7 @@ Beginning variable comparisons for all time levels of field &#39;layerThickness&
 2:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
  ** PASS Comparison of layerThickness between /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc and
     /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
-Beginning variable comparisons for all time levels of field &#39;normalVelocity&#39;. Note any time levels reported are 0-based.
+Beginning variable comparisons for all time levels of field 'normalVelocity'. Note any time levels reported are 0-based.
     Pass thresholds are:
        L1: 0.00000000000000e+00
        L2: 0.00000000000000e+00
@@ -771,8 +771,8 @@ large enough to indicate performance problems.</p>
 timers to compare and at least 1 directory where MPAS has been run and timers
 for the run are available.</p>
 <p>Here is a typical call:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">timers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time integration&#39;</span><span class="p">]</span>
-<span class="n">compare_timers</span><span class="p">(</span><span class="n">timers</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">rundir1</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">timers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'time integration'</span><span class="p">]</span>
+<span class="n">compare_timers</span><span class="p">(</span><span class="n">timers</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">rundir1</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Typical output will look like:</p>

@@ -119,7 +119,7 @@
 <div class="viewcode-block" id="init_vertical_coord">
 <a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.vertical.init_vertical_coord.html#compass.ocean.vertical.init_vertical_coord">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">init_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a vertical coordinate based on the config options in the</span>
 <span class="sd">    ``vertical_grid`` section and the ``bottomDepth`` and ``ssh`` variables of</span>
 <span class="sd">    the mesh data set.</span>
@@ -168,55 +168,55 @@
 <span class="sd">    ds : xarray.Dataset</span>
 <span class="sd">        A data set containing ``bottomDepth`` and ``ssh`` variables used to</span>
 <span class="sd">        construct the vertical coordinate</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'bottomDepth'</span><span class="p">,</span> <span class="s1">'ssh'</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> must be added to ds before this call.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1"> must be added to ds before this call.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">var</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-        <span class="c1"># drop it for now, we&#39;ll add it back at the end</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">'Time'</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="c1"># drop it for now, we'll add it back at the end</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="n">coord_type</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;coord_type&#39;</span><span class="p">)</span>
+    <span class="n">coord_type</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'vertical_grid'</span><span class="p">,</span> <span class="s1">'coord_type'</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;z-level&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">'z-level'</span><span class="p">:</span>
         <span class="n">init_z_level_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;z-star&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">'z-star'</span><span class="p">:</span>
         <span class="n">init_z_star_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;sigma&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">'sigma'</span><span class="p">:</span>
         <span class="n">init_sigma_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;haney-number&#39;</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Haney Number coordinate not yet supported.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">'haney-number'</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Haney Number coordinate not yet supported.'</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown coordinate type </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coord_type</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown coordinate type </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coord_type</span><span class="p">))</span>
 
     <span class="c1"># recompute the cell mask since min/max indices may have changed</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;cellMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_cell_mask</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">minLevelCell</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
-                                       <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">])</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'cellMask'</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_cell_mask</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">minLevelCell</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
+                                       <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">])</span>
 
     <span class="c1"># mask layerThickness and restingThickness</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">layerThickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">cellMask</span><span class="p">)</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;restingThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">restingThickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">cellMask</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'layerThickness'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">layerThickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">cellMask</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'restingThickness'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">restingThickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">cellMask</span><span class="p">)</span>
 
     <span class="c1"># add (back) Time dimension</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">layerThickness</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;restingThickness&#39;</span><span class="p">]</span> <span class="o">=</span> \
-        <span class="n">ds</span><span class="o">.</span><span class="n">restingThickness</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'layerThickness'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">layerThickness</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'restingThickness'</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">ds</span><span class="o">.</span><span class="n">restingThickness</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;zMid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_zmid_from_layer_thickness</span><span class="p">(</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'zMid'</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_zmid_from_layer_thickness</span><span class="p">(</span>
         <span class="n">ds</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">cellMask</span><span class="p">)</span>
 
     <span class="c1"># fortran 1-based indexing</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;minLevelCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">minLevelCell</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;maxLevelCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">maxLevelCell</span> <span class="o">+</span> <span class="mi">1</span></div>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'minLevelCell'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">minLevelCell</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'maxLevelCell'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">maxLevelCell</span> <span class="o">+</span> <span class="mi">1</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_cell_mask</span><span class="p">(</span><span class="n">minLevelCell</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute cellMask for any vertical coordinate</span>
 
 <span class="sd">    Parameters</span>
@@ -235,19 +235,19 @@
 <span class="sd">    cellMask : xarray.DataArray</span>
 <span class="sd">        An ``nCells`` x ``nVertLevels`` mask that is 1 where the ocean is</span>
 <span class="sd">        valid and 0 elsewhere</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">cellMask</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">zIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">):</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">zIndex</span> <span class="o">&gt;=</span> <span class="n">minLevelCell</span><span class="p">,</span>
                                  <span class="n">zIndex</span> <span class="o">&lt;=</span> <span class="n">maxLevelCell</span><span class="p">)</span>
         <span class="n">cellMask</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-    <span class="n">cellMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
-    <span class="n">cellMask</span> <span class="o">=</span> <span class="n">cellMask</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+    <span class="n">cellMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">'nVertLevels'</span><span class="p">)</span>
+    <span class="n">cellMask</span> <span class="o">=</span> <span class="n">cellMask</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">'nCells'</span><span class="p">,</span> <span class="s1">'nVertLevels'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cellMask</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_ssh_from_layer_thickness</span><span class="p">(</span><span class="n">layerThickness</span><span class="p">,</span> <span class="n">bottomDepth</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the sea surface height by integrating layer thickness up from the</span>
 <span class="sd">    ocean bottom</span>
 
@@ -266,11 +266,11 @@
 <span class="sd">    -------</span>
 <span class="sd">    ssh : xarray.DataArray</span>
 <span class="sd">        The sea surface height</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># include the same Time dimension as layerThickness</span>
     <span class="n">zBot</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">layerThickness</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nVertLevels</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
     <span class="n">zBot</span> <span class="o">-=</span> <span class="n">bottomDepth</span>
-    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">zIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">):</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">cellMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nVertLevels</span><span class="o">=</span><span class="n">zIndex</span><span class="p">)</span>
         <span class="n">thickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nVertLevels</span><span class="o">=</span><span class="n">zIndex</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
@@ -280,7 +280,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_zmid_from_layer_thickness</span><span class="p">(</span><span class="n">layerThickness</span><span class="p">,</span> <span class="n">ssh</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute zMid from ssh and layerThickness for any vertical coordinate</span>
 
 <span class="sd">    Parameters</span>
@@ -298,10 +298,10 @@
 <span class="sd">    -------</span>
 <span class="sd">    zMid : xarray.DataArray</span>
 <span class="sd">        The elevation of layer centers</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">zTop</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">]</span>
     <span class="n">zMid</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">zIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">):</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">cellMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nVertLevels</span><span class="o">=</span><span class="n">zIndex</span><span class="p">)</span>
@@ -309,8 +309,8 @@
         <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">zTop</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">thickness</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
         <span class="n">zMid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">zTop</span> <span class="o">-=</span> <span class="n">thickness</span>
-    <span class="n">zMid</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">zMid</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">,</span>
-                                                            <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+    <span class="n">zMid</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">zMid</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">'nVertLevels'</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="s1">'nCells'</span><span class="p">,</span>
+                                                            <span class="s1">'nVertLevels'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">zMid</span>
 </pre></div>
 

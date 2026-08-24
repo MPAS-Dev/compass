@@ -123,7 +123,7 @@
 <div class="viewcode-block" id="Analysis">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.analysis.Analysis.html#compass.ocean.tests.drying_slope.analysis.Analysis">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for analyzing the convergence of drying slope results and producing</span>
 <span class="sd">    a convergence plot.</span>
 
@@ -137,11 +137,11 @@
 
 <span class="sd">    times : list of float</span>
 <span class="sd">        The times at which to compare to the analytical solution</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Analysis.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.analysis.Analysis.html#compass.ocean.tests.drying_slope.analysis.Analysis.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">,</span> <span class="n">damping_coeff</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a forward step</span>
 
 <span class="sd">        Parameters</span>
@@ -154,41 +154,41 @@
 
 <span class="sd">        damping_coeff: float</span>
 <span class="sd">            the value of the rayleigh damping coefficient</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;analysis&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'analysis'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">damping_coeff</span> <span class="o">=</span> <span class="n">damping_coeff</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="n">resolutions</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">times</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.05&#39;</span><span class="p">,</span> <span class="s1">&#39;0.15&#39;</span><span class="p">,</span> <span class="s1">&#39;0.25&#39;</span><span class="p">,</span> <span class="s1">&#39;0.30&#39;</span><span class="p">,</span> <span class="s1">&#39;0.40&#39;</span><span class="p">,</span> <span class="s1">&#39;0.50&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">times</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'0.05'</span><span class="p">,</span> <span class="s1">'0.15'</span><span class="p">,</span> <span class="s1">'0.25'</span><span class="p">,</span> <span class="s1">'0.30'</span><span class="p">,</span> <span class="s1">'0.40'</span><span class="p">,</span> <span class="s1">'0.50'</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="n">resolutions</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">resolution</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="p">:</span>
-                <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="o">*</span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">m&#39;</span>
+                <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="o">*</span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">m'</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">km&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">,</span>
-                                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../forward_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">/output.nc&#39;</span><span class="p">)</span>
+                <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">km'</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'output_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'../forward_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">/output.nc'</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">times</span><span class="p">:</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;r</span><span class="si">{</span><span class="n">damping_coeff</span><span class="si">}</span><span class="s1">d</span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s1">-analytical&#39;</span>\
-                       <span class="s1">&#39;.csv&#39;</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'r</span><span class="si">{</span><span class="n">damping_coeff</span><span class="si">}</span><span class="s1">d</span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s1">-analytical'</span>\
+                       <span class="s1">'.csv'</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
-                                <span class="n">database</span><span class="o">=</span><span class="s1">&#39;drying_slope&#39;</span><span class="p">)</span>
+                                <span class="n">database</span><span class="o">=</span><span class="s1">'drying_slope'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;convergence.png&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'convergence.png'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Analysis.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.analysis.Analysis.run.html#compass.ocean.tests.drying_slope.analysis.Analysis.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_plot_convergence</span><span class="p">()</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_rmse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the time step</span>
 
 <span class="sd">        Parameters</span>
@@ -203,14 +203,14 @@
 <span class="sd">        rmse : float</span>
 <span class="sd">            the root-mean-squared-error of the MPAS output relative to the</span>
 <span class="sd">            analytical solution at time t</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">x_exact</span><span class="p">,</span> <span class="n">ssh_exact</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exact_solution</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
         <span class="n">tidx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.2</span> <span class="o">+</span> <span class="mf">1e-16</span><span class="p">)</span> <span class="o">*</span> <span class="mf">24.0</span><span class="p">)</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">([</span><span class="n">j</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">],</span>
-                                       <span class="p">[</span><span class="s1">&#39;yCell&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">]))</span>
+                                       <span class="p">[</span><span class="s1">'yCell'</span><span class="p">,</span> <span class="s1">'ssh'</span><span class="p">]))</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">tidx</span><span class="p">)</span>
-        <span class="n">drying_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;drying_slope&#39;</span><span class="p">,</span> <span class="s1">&#39;ly_analysis&#39;</span><span class="p">)</span>
+        <span class="n">drying_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'drying_slope'</span><span class="p">,</span> <span class="s1">'ly_analysis'</span><span class="p">)</span>
         <span class="n">drying_length</span> <span class="o">=</span> <span class="n">drying_length</span> <span class="o">*</span> <span class="mf">1e3</span>
         <span class="n">x_offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">-</span> <span class="n">drying_length</span>
         <span class="n">x_mpas</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> <span class="n">x_offset</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.0</span>
@@ -226,20 +226,20 @@
         <span class="k">return</span> <span class="n">rmse</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_plot_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Plot convergence curves</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">comparisons</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">cases</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;standard&#39;</span><span class="p">:</span> <span class="s1">&#39;../../../standard/convergence/analysis&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;ramp&#39;</span><span class="p">:</span> <span class="s1">&#39;../../../ramp/convergence/analysis&#39;</span><span class="p">}</span>
+        <span class="n">cases</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'standard'</span><span class="p">:</span> <span class="s1">'../../../standard/convergence/analysis'</span><span class="p">,</span>
+                 <span class="s1">'ramp'</span><span class="p">:</span> <span class="s1">'../../../ramp/convergence/analysis'</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span><span class="p">:</span>
             <span class="n">include</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">resolution</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="p">:</span>
-                    <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="o">*</span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">m&#39;</span>
+                    <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="o">*</span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">m'</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">km&#39;</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cases</span><span class="p">[</span><span class="n">case</span><span class="p">]</span><span class="si">}</span><span class="s1">/output_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">):</span>
+                    <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">km'</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">cases</span><span class="p">[</span><span class="n">case</span><span class="p">]</span><span class="si">}</span><span class="s1">/output_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">):</span>
                     <span class="n">include</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="n">include</span><span class="p">:</span>
                 <span class="n">comparisons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">case</span><span class="p">)</span>
@@ -251,18 +251,18 @@
             <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">times</span><span class="p">)))</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">resolution</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="p">:</span>
-                    <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="o">*</span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">m&#39;</span>
+                    <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="o">*</span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">m'</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">km&#39;</span>
+                    <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">km'</span>
                 <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cases</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span><span class="si">}</span><span class="s1">/output_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">)</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">cases</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span><span class="si">}</span><span class="s1">/output_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">times</span><span class="p">):</span>
                     <span class="n">rmse</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_rmse</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
             <span class="n">rmse_tav</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">rmse_tav</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_rmse</span><span class="p">:</span>
                 <span class="n">max_rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">rmse_tav</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">,</span> <span class="n">rmse_tav</span><span class="p">,</span>
-                      <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">comp</span><span class="p">)</span>
+                      <span class="n">linestyle</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'o'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">comp</span><span class="p">)</span>
 
         <span class="n">rmse_1st_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">))</span>
         <span class="n">rmse_1st_order</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_rmse</span>
@@ -270,22 +270,22 @@
             <span class="n">rmse_1st_order</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">rmse_1st_order</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span>
 
         <span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">rmse_1st_order</span><span class="p">),</span>
-                  <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;1st order&#39;</span><span class="p">)</span>
+                  <span class="n">linestyle</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'1st order'</span><span class="p">)</span>
 
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Cell size (km)&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;RMSE (m)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Cell size (km)'</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'RMSE (m)'</span><span class="p">)</span>
 
-        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;SSH convergence&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'lower right'</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'SSH convergence'</span><span class="p">)</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;convergence.png&#39;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'convergence.png'</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_exact_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Returns distance, ssh of the analytic solution</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">datafile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;./r</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">damping_coeff</span><span class="si">}</span><span class="s1">d</span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s1">-&#39;</span>\
-                   <span class="sa">f</span><span class="s1">&#39;analytical.csv&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">datafile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'./r</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">damping_coeff</span><span class="si">}</span><span class="s1">d</span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s1">-'</span>\
+                   <span class="sa">f</span><span class="s1">'analytical.csv'</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">datafile</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
 

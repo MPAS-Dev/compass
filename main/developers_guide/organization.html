@@ -235,15 +235,15 @@ in this example from <a class="reference internal" href="ocean/generated/compass
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Ocean</span><span class="p">(</span><span class="n">MpasCore</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The collection of all test case for the MPAS-Ocean core</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the collection of MPAS-Ocean test cases</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">BaroclinicChannel</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">GlobalOcean</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
@@ -339,7 +339,7 @@ file for the <code class="docutils literal notranslate"><span class="pre">dome</
 <span class="c1"># number of levels in the mesh</span>
 <span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
 
-<span class="c1"># the dome type (&#39;halfar&#39; or &#39;cism&#39;)</span>
+<span class="c1"># the dome type ('halfar' or 'cism')</span>
 <span class="na">dome_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">halfar</span>
 
 <span class="c1"># Whether to center the dome in the center of the cell that is closest to the</span>
@@ -387,17 +387,17 @@ example, the <a class="reference internal" href="landice/generated/compass.landi
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Dome</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test group for dome test cases</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        mpas_core : compass.landice.Landice</span>
 <span class="sd">            the MPAS core that this test group belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;dome&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'dome'</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">mesh_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;2000m&#39;</span><span class="p">,</span> <span class="s1">&#39;variable_resolution&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">mesh_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'2000m'</span><span class="p">,</span> <span class="s1">'variable_resolution'</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
                 <span class="n">SmokeTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
@@ -418,7 +418,7 @@ complicated to simply add to the <code class="docutils literal notranslate"><spa
 <p>An example of a shared <code class="docutils literal notranslate"><span class="pre">configure()</span></code> function is
 <a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.configure.html#compass.ocean.tests.baroclinic_channel.configure" title="compass.ocean.tests.baroclinic_channel.configure"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.configure()</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Modify the configuration options for one of the baroclinic test cases</span>
 
 <span class="sd">    Parameters</span>
@@ -428,23 +428,23 @@ complicated to simply add to the <code class="docutils literal notranslate"><spa
 
 <span class="sd">    config : configparser.ConfigParser</span>
 <span class="sd">        Configuration options for this test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-                           <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
-                           <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">10e3</span><span class="p">},</span>
-                  <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
-                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">126</span><span class="p">,</span>
-                          <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">4e3</span><span class="p">},</span>
-                  <span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
-                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-                          <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">}}</span>
+<span class="sd">    """</span>
+    <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'10km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'nx'</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+                           <span class="s1">'ny'</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+                           <span class="s1">'dc'</span><span class="p">:</span> <span class="mf">10e3</span><span class="p">},</span>
+                  <span class="s1">'4km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'nx'</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+                          <span class="s1">'ny'</span><span class="p">:</span> <span class="mi">126</span><span class="p">,</span>
+                          <span class="s1">'dc'</span><span class="p">:</span> <span class="mf">4e3</span><span class="p">},</span>
+                  <span class="s1">'1km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'nx'</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
+                          <span class="s1">'ny'</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                          <span class="s1">'dc'</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">}}</span>
 
     <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: &#39;</span>
-                         <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: '</span>
+                         <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
     <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]))</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'baroclinic_channel'</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]))</span>
 </pre></div>
 </div>
 <p>In the <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test group, 3 resolutions are supported:
@@ -538,7 +538,7 @@ that the test case or its steps will need.  As an example,
 <a class="reference internal" href="landice/generated/compass.landice.tests.dome.smoke_test.SmokeTest.html#compass.landice.tests.dome.smoke_test.SmokeTest" title="compass.landice.tests.dome.smoke_test.SmokeTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.dome.smoke_test.SmokeTest</span></code></a> keeps track of the
 mesh type and the velocity solver an attributes:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SmokeTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The default test case for the dome test group simply creates the mesh and</span>
 <span class="sd">    initial condition, then performs a short forward run on 4 cores.</span>
 
@@ -547,12 +547,12 @@ mesh type and the velocity solver an attributes:</p>
 <span class="sd">    mesh_type : str</span>
 <span class="sd">        The resolution or type of mesh of the test case</span>
 
-<span class="sd">    velo_solver : {&#39;sia&#39;, &#39;FO&#39;}</span>
+<span class="sd">    velo_solver : {'sia', 'FO'}</span>
 <span class="sd">        The velocity solver to use for the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">velo_solver</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -560,16 +560,16 @@ mesh type and the velocity solver an attributes:</p>
 <span class="sd">        test_group : compass.landice.tests.dome.Dome</span>
 <span class="sd">            The test group that this test case belongs to</span>
 
-<span class="sd">        velo_solver : {&#39;sia&#39;, &#39;FO&#39;}</span>
+<span class="sd">        velo_solver : {'sia', 'FO'}</span>
 <span class="sd">            The velocity solver to use for the test case</span>
 
 <span class="sd">        mesh_type : str</span>
 <span class="sd">            The resolution or type of mesh of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;smoke_test&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'smoke_test'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">=</span> <span class="n">mesh_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">=</span> <span class="n">velo_solver</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -577,11 +577,11 @@ mesh type and the velocity solver an attributes:</p>
             <span class="n">SetupMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">))</span>
 
         <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;run_step&#39;</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s1">'run_step'</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
                         <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;sia&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">'sia'</span><span class="p">:</span>
             <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span>
-                <span class="p">{</span><span class="s1">&#39;config_run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0200-00-00_00:00:00&#39;&quot;</span><span class="p">})</span>
+                <span class="p">{</span><span class="s1">'config_run_duration'</span><span class="p">:</span> <span class="s2">"'0200-00-00_00:00:00'"</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 
         <span class="n">step</span> <span class="o">=</span> <span class="n">Visualize</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">)</span>
@@ -620,7 +620,7 @@ associated with these steps until the point where the step is being set up in</p
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.baroclinic_channel.rpe_test.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Analysis</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RpeTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The reference potential energy (RPE) test case for the baroclinic channel</span>
 <span class="sd">    test group performs a 20-day integration of the model forward in time at</span>
 <span class="sd">    5 different values of the viscosity at the given resolution.</span>
@@ -629,10 +629,10 @@ associated with these steps until the point where the step is being set up in</p
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -642,22 +642,22 @@ associated with these steps until the point where the step is being set up in</p
 
 <span class="sd">        resolution : str</span>
 <span class="sd">            The resolution of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test&#39;</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'rpe_test'</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="n">nus</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
 
-        <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ntasks&#39;</span><span class="p">:</span> <span class="mi">144</span><span class="p">,</span> <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">},</span>
-                      <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ntasks&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span> <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">},</span>
-                      <span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ntasks&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}}</span>
+        <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'1km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'ntasks'</span><span class="p">:</span> <span class="mi">144</span><span class="p">,</span> <span class="s1">'min_tasks'</span><span class="p">:</span> <span class="mi">36</span><span class="p">},</span>
+                      <span class="s1">'4km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'ntasks'</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span> <span class="s1">'min_tasks'</span><span class="p">:</span> <span class="mi">8</span><span class="p">},</span>
+                      <span class="s1">'10km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'ntasks'</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">'min_tasks'</span><span class="p">:</span> <span class="mi">4</span><span class="p">}}</span>
 
         <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">. Supported values are: &#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s1">'Unsupported resolution </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">. Supported values are: '</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="n">params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
 
@@ -667,18 +667,18 @@ associated with these steps until the point where the step is being set up in</p
             <span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">nu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nus</span><span class="p">):</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">'rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
             <span class="n">step</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span>
                 <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-                <span class="n">ntasks</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;ntasks&#39;</span><span class="p">],</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;min_tasks&#39;</span><span class="p">],</span>
+                <span class="n">ntasks</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'ntasks'</span><span class="p">],</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'min_tasks'</span><span class="p">],</span>
                 <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">nu</span><span class="p">))</span>
 
             <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.rpe_test&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+                <span class="s1">'compass.ocean.tests.baroclinic_channel.rpe_test'</span><span class="p">,</span>
+                <span class="s1">'namelist.forward'</span><span class="p">)</span>
             <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.rpe_test&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+                <span class="s1">'compass.ocean.tests.baroclinic_channel.rpe_test'</span><span class="p">,</span>
+                <span class="s1">'streams.forward'</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
@@ -734,9 +734,9 @@ simply calls the shared function in its test group,
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Modify the configuration options for this test case.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">baroclinic_channel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -751,13 +751,13 @@ as in <a class="reference internal" href="ocean/generated/compass.ocean.tests.gl
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Modify the configuration options for this test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
-    <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.global_ocean.files_for_e3sm&#39;</span>
-    <span class="k">with</span> <span class="n">package_path</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;README&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">target</span><span class="p">:</span>
-        <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/README&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">))</span>
+    <span class="n">package</span> <span class="o">=</span> <span class="s1">'compass.ocean.tests.global_ocean.files_for_e3sm'</span>
+    <span class="k">with</span> <span class="n">package_path</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">'README'</span><span class="p">)</span> <span class="k">as</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/README'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method is not the right place for adding or modifying steps
@@ -783,20 +783,20 @@ timers from the MPAS model.</p>
 <p>In  <code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.Init.validate()</span></code>, we see
 examples of validation of variables from output files:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Test cases can override this method to perform validation of variables</span>
 <span class="sd">    and timers</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span>
 
-    <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span>
+    <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'temperature'</span><span class="p">,</span> <span class="s1">'salinity'</span><span class="p">,</span> <span class="s1">'layerThickness'</span><span class="p">]</span>
     <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                      <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;initial_state/initial_state.nc&#39;</span><span class="p">)</span>
+                      <span class="n">filename1</span><span class="o">=</span><span class="s1">'initial_state/initial_state.nc'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;landIcePressure&#39;</span><span class="p">]</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'ssh'</span><span class="p">,</span> <span class="s1">'landIcePressure'</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;ssh_adjustment/adjusted_init.nc&#39;</span><span class="p">)</span>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">'ssh_adjustment/adjusted_init.nc'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If you leave the default keyword argument <code class="docutils literal notranslate"><span class="pre">skip_if_step_not_run=True</span></code>,
@@ -930,16 +930,16 @@ mesh type as an attribute:</p>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">SetupMesh</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating a mesh and initial condition for dome test cases</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    mesh_type : str</span>
 <span class="sd">        The resolution or mesh type of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update the dictionary of step properties</span>
 
 <span class="sd">        Parameters</span>
@@ -949,19 +949,19 @@ mesh type as an attribute:</p>
 
 <span class="sd">        mesh_type : str</span>
 <span class="sd">            The resolution or mesh type of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;setup_mesh&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'setup_mesh'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">=</span> <span class="n">mesh_type</span>
 
-        <span class="k">if</span> <span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;variable_resolution&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">'variable_resolution'</span><span class="p">:</span>
             <span class="c1"># download and link the mesh</span>
             <span class="c1"># the empty database is a trick for downloading to the root of</span>
             <span class="c1"># the local MALI file cache</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mpas_grid.nc&#39;</span><span class="p">,</span>
-                                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;dome_varres_grid.nc&#39;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'mpas_grid.nc'</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="s1">'dome_varres_grid.nc'</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -999,7 +999,7 @@ set up, so each takes a negligible amount of time.</p>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MPAS-Ocean runs as part of baroclinic</span>
 <span class="sd">    channel test cases.</span>
 
@@ -1007,10 +1007,10 @@ set up, so each takes a negligible amount of time.</p>
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="sd">    """</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -1041,36 +1041,36 @@ set up, so each takes a negligible amount of time.</p>
 
 <span class="sd">        nu : float, optional</span>
 <span class="sd">            the viscosity (if different from the default for the test group)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="k">if</span> <span class="n">min_tasks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">ntasks</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">min_tasks</span><span class="p">,</span>
                          <span class="n">openmp_threads</span><span class="o">=</span><span class="n">openmp_threads</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">.forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.baroclinic_channel'</span><span class="p">,</span>
+                               <span class="s1">'namelist.forward'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.baroclinic_channel'</span><span class="p">,</span>
+                               <span class="s1">'namelist.</span><span class="si">{}</span><span class="s1">.forward'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">nu</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># update the viscosity to the requested value</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_mom_del2&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nu</span><span class="p">)}</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_mom_del2'</span><span class="p">:</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nu</span><span class="p">)}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
         <span class="c1"># make sure output is double precision</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.output&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.streams'</span><span class="p">,</span> <span class="s1">'streams.output'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.baroclinic_channel'</span><span class="p">,</span>
+                              <span class="s1">'streams.forward'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/ocean.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/culled_graph.info&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'init.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../initial_state/ocean.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../initial_state/culled_graph.info'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Several parameters are passed into the constructor (with defaults if they
@@ -1148,16 +1148,16 @@ other than downloading files.  Time-consuming work should be saved for
 <p>As an example, here is
 <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.mesh.MeshStep.setup()</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Set up the test case in the work directory, including downloading any</span>
 <span class="sd">    dependencies.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># get the these properties from the config options</span>
     <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
-                                       <span class="s1">&#39;mesh_cpus_per_task&#39;</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
-                                           <span class="s1">&#39;mesh_min_cpus_per_task&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span>
+                                       <span class="s1">'mesh_cpus_per_task'</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span>
+                                           <span class="s1">'mesh_min_cpus_per_task'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Some parts of the mesh computation (creating masks for culling) are done using
@@ -1197,35 +1197,35 @@ is quite involved:</p>
 <span class="k">class</span><span class="w"> </span><span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
     <span class="o">...</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">]</span>
-        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">)</span>
-        <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;dc&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'baroclinic_channel'</span><span class="p">]</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'nx'</span><span class="p">)</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'ny'</span><span class="p">)</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'dc'</span><span class="p">)</span>
 
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span> <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                       <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">'base_mesh.nc'</span><span class="p">)</span>
 
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">'culled_graph.info'</span><span class="p">,</span>
                          <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">'culled_mesh.nc'</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">]</span>
-        <span class="n">use_distances</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;use_distances&#39;</span><span class="p">)</span>
-        <span class="n">gradient_width_dist</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;gradient_width_dist&#39;</span><span class="p">)</span>
-        <span class="n">gradient_width_frac</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;gradient_width_frac&#39;</span><span class="p">)</span>
-        <span class="n">bottom_temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_temperature&#39;</span><span class="p">)</span>
-        <span class="n">surface_temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;surface_temperature&#39;</span><span class="p">)</span>
-        <span class="n">temperature_difference</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;temperature_difference&#39;</span><span class="p">)</span>
-        <span class="n">salinity</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;salinity&#39;</span><span class="p">)</span>
-        <span class="n">coriolis_parameter</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;coriolis_parameter&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'baroclinic_channel'</span><span class="p">]</span>
+        <span class="n">use_distances</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'use_distances'</span><span class="p">)</span>
+        <span class="n">gradient_width_dist</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'gradient_width_dist'</span><span class="p">)</span>
+        <span class="n">gradient_width_frac</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'gradient_width_frac'</span><span class="p">)</span>
+        <span class="n">bottom_temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'bottom_temperature'</span><span class="p">)</span>
+        <span class="n">surface_temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'surface_temperature'</span><span class="p">)</span>
+        <span class="n">temperature_difference</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'temperature_difference'</span><span class="p">)</span>
+        <span class="n">salinity</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'salinity'</span><span class="p">)</span>
+        <span class="n">coriolis_parameter</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'coriolis_parameter'</span><span class="p">)</span>
 
         <span class="n">ds</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
@@ -1234,9 +1234,9 @@ is quite involved:</p>
         <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">vert_levels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">interfaces</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;refBottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;refZMid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;vertCoordMovementWeights&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'refBottomDepth'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'refZMid'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'vertCoordMovementWeights'</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="p">)</span>
 
         <span class="n">xCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xCell</span>
         <span class="n">yCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">yCell</span>
@@ -1271,7 +1271,7 @@ is quite involved:</p>
                             <span class="n">frac</span><span class="p">)</span>
 
         <span class="n">temperature</span> <span class="o">=</span> <span class="n">temp_vert</span> <span class="o">-</span> <span class="n">temperature_difference</span> <span class="o">*</span> <span class="n">frac</span>
-        <span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">'nCells'</span><span class="p">,</span> <span class="s1">'nVertLevels'</span><span class="p">)</span>
 
         <span class="c1"># Determine yOffset for 3rd crest in sin wave</span>
         <span class="n">yOffset</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">perturbationWidth</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span>
@@ -1287,31 +1287,31 @@ is quite involved:</p>
                        <span class="n">mask</span> <span class="o">*</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="p">((</span><span class="n">yCell</span> <span class="o">-</span> <span class="p">(</span><span class="n">yMid</span> <span class="o">-</span> <span class="n">yOffset</span><span class="p">))</span> <span class="o">/</span>
                                            <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">perturbationWidth</span><span class="p">))))</span>
 
-        <span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-                                          <span class="n">dims</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+                                          <span class="n">dims</span><span class="o">=</span><span class="s1">'nVertLevels'</span><span class="p">)</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">xCell</span><span class="p">,</span> <span class="n">layerThickness</span><span class="p">)</span>
-        <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
-        <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">'nCells'</span><span class="p">,</span> <span class="s1">'nVertLevels'</span><span class="p">)</span>
+        <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
         <span class="n">normalVelocity</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">normalVelocity</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="p">)</span>
-        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;nEdges&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
-        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">'nEdges'</span><span class="p">,</span> <span class="s1">'nVertLevels'</span><span class="p">)</span>
+        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temperature</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;salinity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinity</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalVelocity</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layerThickness</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;restingThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layerThickness</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bottom_depth</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;maxLevelCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vert_levels</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fEdge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fVertex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xVertex</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'temperature'</span><span class="p">]</span> <span class="o">=</span> <span class="n">temperature</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'salinity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinity</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'normalVelocity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalVelocity</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'layerThickness'</span><span class="p">]</span> <span class="o">=</span> <span class="n">layerThickness</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'restingThickness'</span><span class="p">]</span> <span class="o">=</span> <span class="n">layerThickness</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'bottomDepth'</span><span class="p">]</span> <span class="o">=</span> <span class="n">bottom_depth</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'maxLevelCell'</span><span class="p">]</span> <span class="o">=</span> <span class="n">vert_levels</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'fCell'</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'fEdge'</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'fVertex'</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xVertex</span><span class="p">)</span>
 
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;ocean.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">'ocean.nc'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Without going into all the details of this method, it creates a mesh that
@@ -1325,9 +1325,9 @@ like this:</p>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Run this step of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1395,7 +1395,7 @@ this case, the file name is either an absolute path or a relative path with
 respect to the step’s work directory:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
     <span class="o">...</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;../setup_mesh/landice_grid.nc&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'../setup_mesh/landice_grid.nc'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This is not typically how <code class="docutils literal notranslate"><span class="pre">add_input_file()</span></code> is used because input files are
@@ -1412,14 +1412,14 @@ you to refer to a short, local name for the file rather than its full path:</p>
 
 <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
     <span class="o">...</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
-                        <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../setup_mesh/landice_grid.nc&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">,</span>
+                        <span class="n">target</span><span class="o">=</span><span class="s1">'../setup_mesh/landice_grid.nc'</span><span class="p">)</span>
 
 <span class="o">...</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
    <span class="o">...</span>
-   <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+   <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'landice_grid.nc'</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
        <span class="o">...</span>
 </pre></div>
 </div>
@@ -1438,20 +1438,20 @@ not yet known at init). Here is an example taken from
     <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mesh_step</span><span class="o">.</span><span class="n">path</span>
 
     <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-        <span class="n">initial_state_target</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/ssh_adjustment/adjusted_init.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">initial_state_target</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/ssh_adjustment/adjusted_init.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">initial_state_target</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/initial_state/initial_state.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">initial_state_target</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/initial_state/initial_state.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'init.nc'</span><span class="p">,</span>
                         <span class="n">work_dir_target</span><span class="o">=</span><span class="n">initial_state_target</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-        <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;forcing_data.nc&#39;</span><span class="p">,</span>
-        <span class="n">work_dir_target</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/initial_state/init_mode_forcing_data.nc&#39;</span>
-                        <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s1">'forcing_data.nc'</span><span class="p">,</span>
+        <span class="n">work_dir_target</span><span class="o">=</span><span class="s1">'</span><span class="si">{}</span><span class="s1">/initial_state/init_mode_forcing_data.nc'</span>
+                        <span class="s1">''</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-        <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-        <span class="n">work_dir_target</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/culled_graph.info&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_path</span><span class="p">))</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span>
+        <span class="n">work_dir_target</span><span class="o">=</span><span class="s1">'</span><span class="si">{}</span><span class="s1">/culled_graph.info'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_path</span><span class="p">))</span>
 </pre></div>
 </div>
 </section>
@@ -1465,8 +1465,8 @@ test case:</p>
 <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
     <span class="o">...</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-        <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;enthA_analy_result.mat&#39;</span><span class="p">,</span>
-        <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.enthalpy_benchmark.A&#39;</span><span class="p">)</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s1">'enthA_analy_result.mat'</span><span class="p">,</span>
+        <span class="n">package</span><span class="o">=</span><span class="s1">'compass.landice.tests.enthalpy_benchmark.A'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Here, we supply the name of the package that the file is in.  The <code class="docutils literal notranslate"><span class="pre">compass</span></code>
@@ -1483,9 +1483,9 @@ a location where they can be shared between users and reused over time.  These
 <p>To add an input file from a database, call
 <a class="reference internal" href="generated/compass.Step.add_input_file.html#compass.Step.add_input_file" title="compass.Step.add_input_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_input_file()</span></code></a> with the <code class="docutils literal notranslate"><span class="pre">database</span></code> argument:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-    <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
-    <span class="n">target</span><span class="o">=</span><span class="s1">&#39;BedMachineAntarctica_v3_and_GEBCO_2023_0.0125_degree_20230831.nc&#39;</span><span class="p">,</span>
-    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
+    <span class="n">filename</span><span class="o">=</span><span class="s1">'topography.nc'</span><span class="p">,</span>
+    <span class="n">target</span><span class="o">=</span><span class="s1">'BedMachineAntarctica_v3_and_GEBCO_2023_0.0125_degree_20230831.nc'</span><span class="p">,</span>
+    <span class="n">database</span><span class="o">=</span><span class="s1">'bathymetry_database'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In this example from
@@ -1499,18 +1499,18 @@ the config file.  The <code class="docutils literal notranslate"><span class="pr
 of the <a class="reference internal" href="../users_guide/machines/index.html#supported-machines"><span class="std std-ref">Supported Machines</span></a> or in the user’s config file.</p>
 <p>You can also specify the <code class="docutils literal notranslate"><span class="pre">database_component</span></code> parameter to choose to get
 files from a database belonging to another component, e.g.:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;icePresent_QU60km_polar.nc&#39;</span><span class="p">,</span>
-                    <span class="n">target</span><span class="o">=</span><span class="s1">&#39;icePresent_QU60km_polar.nc&#39;</span><span class="p">,</span>
-                    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;partition&#39;</span><span class="p">,</span>
-                    <span class="n">database_component</span><span class="o">=</span><span class="s1">&#39;seaice&#39;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'icePresent_QU60km_polar.nc'</span><span class="p">,</span>
+                    <span class="n">target</span><span class="o">=</span><span class="s1">'icePresent_QU60km_polar.nc'</span><span class="p">,</span>
+                    <span class="n">database</span><span class="o">=</span><span class="s1">'partition'</span><span class="p">,</span>
+                    <span class="n">database_component</span><span class="o">=</span><span class="s1">'seaice'</span>
 </pre></div>
 </div>
 <p>It is also possible to download files directly from a URL and store them in
 the step’s working directory:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-    <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;dome_varres_grid.nc&#39;</span><span class="p">,</span>
-    <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/&#39;</span>
-        <span class="s1">&#39;mpas-albany-landice/dome_varres_grid.nc&#39;</span><span class="p">)</span>
+    <span class="n">filename</span><span class="o">=</span><span class="s1">'dome_varres_grid.nc'</span><span class="p">,</span>
+    <span class="n">url</span><span class="o">=</span><span class="s1">'https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/'</span>
+        <span class="s1">'mpas-albany-landice/dome_varres_grid.nc'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We recommend against this practice except for very small files.</p>
@@ -1524,8 +1524,8 @@ local modifications), simply add the keyword argument <code class="docutils lite
 to <code class="docutils literal notranslate"><span class="pre">self.add_input_file()</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
     <span class="o">...</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
-                        <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../setup_mesh/landice_grid.nc&#39;</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">,</span>
+                        <span class="n">target</span><span class="o">=</span><span class="s1">'../setup_mesh/landice_grid.nc'</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In this case, a copy of <code class="docutils literal notranslate"><span class="pre">landice_grid.nc</span></code> will be made in the step’s work
@@ -1537,7 +1537,7 @@ directory.</p>
 are allowed to use as inputs.  This helps us keep track of dependencies and
 will be used in the future to enable steps to run in parallel as long as they
 don’t depend on each other.  Adding an output file is pretty straightforward:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output_file.nc&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output_file.nc'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><a class="reference internal" href="generated/compass.Step.add_output_file.html#compass.Step.add_output_file" title="compass.Step.add_output_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_output_file()</span></code></a> can be called in a step’s
@@ -1638,7 +1638,7 @@ get set up or run.)</p>
 <p>The format of the namelist file is simply a list of namelist options and
 the replacement values:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_write_output_on_startup = .false.
-config_run_duration = &#39;0000_00:15:00&#39;
+config_run_duration = '0000_00:15:00'
 config_use_mom_del2 = .true.
 config_implicit_bottom_drag_coeff = 1.0e-2
 config_use_cvmix_background = .true.
@@ -1651,8 +1651,8 @@ which specific namelist within the file each belongs to.</p>
 <p>A typical namelist file is added by passing a package where the namelist file
 is located and the name of the input namelist file within that package
 as arguments to <a class="reference internal" href="generated/compass.Step.add_namelist_file.html#compass.Step.add_namelist_file" title="compass.Step.add_namelist_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_namelist_file()</span></code></a>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.baroclinic_channel'</span><span class="p">,</span>
+                       <span class="s1">'namelist.forward'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If the namelist should have a different name than the default
@@ -1677,13 +1677,13 @@ with replacements from files, in the order they are added.  Thus, you could
 add replacements from a namelist file for the test group, test case, or step,
 then override them with namelist options in a dictionary for the test case or
 step, as in this example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
-<span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">.forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.baroclinic_channel'</span><span class="p">,</span>
+                       <span class="s1">'namelist.forward'</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.baroclinic_channel'</span><span class="p">,</span>
+                       <span class="s1">'namelist.</span><span class="si">{}</span><span class="s1">.forward'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s1">'resolution'</span><span class="p">]))</span>
 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># update the viscosity to the requested value</span>
-    <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_mom_del2&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;nu&#39;</span><span class="p">])}</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_mom_del2'</span><span class="p">:</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s1">'nu'</span><span class="p">])}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1705,8 +1705,8 @@ options related to the number of MPI tasks, CPUs per task, and OpenMP threads.
 In such cases, call <a class="reference internal" href="generated/compass.Step.update_namelist_at_runtime.html#compass.Step.update_namelist_at_runtime" title="compass.Step.update_namelist_at_runtime"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.update_namelist_at_runtime()</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
-<span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_pio_num_iotasks&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pio_num_iotasks</span><span class="p">),</span>
-                <span class="s1">&#39;config_pio_stride&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pio_stride</span><span class="p">)}</span>
+<span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_pio_num_iotasks'</span><span class="p">:</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pio_num_iotasks</span><span class="p">),</span>
+                <span class="s1">'config_pio_stride'</span><span class="p">:</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pio_stride</span><span class="p">)}</span>
 
 <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">replacements</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="n">namelist</span><span class="p">)</span>
 </pre></div>
@@ -1727,24 +1727,24 @@ init even if that test case will never get set up or run.)</p>
 generated streams file, e.g.:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;mesh&quot;</span>
-<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"mesh"</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">"init.nc"</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;input&quot;</span>
-<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"input"</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">"init.nc"</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;restart&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"restart"</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output&quot;</span>
-<span class="w">        </span><span class="na">type=</span><span class="s">&quot;output&quot;</span>
-<span class="w">        </span><span class="na">filename_template=</span><span class="s">&quot;output.nc&quot;</span>
-<span class="w">        </span><span class="na">output_interval=</span><span class="s">&quot;0000_00:00:01&quot;</span>
-<span class="w">        </span><span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"output"</span>
+<span class="w">        </span><span class="na">type=</span><span class="s">"output"</span>
+<span class="w">        </span><span class="na">filename_template=</span><span class="s">"output.nc"</span>
+<span class="w">        </span><span class="na">output_interval=</span><span class="s">"0000_00:00:01"</span>
+<span class="w">        </span><span class="na">clobber_mode=</span><span class="s">"truncate"</span><span class="nt">&gt;</span>
 
-<span class="w">    </span><span class="nt">&lt;var_struct</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;tracers&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;xtime&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;normalVelocity&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var_struct</span><span class="w"> </span><span class="na">name=</span><span class="s">"tracers"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"xtime"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"normalVelocity"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"layerThickness"</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/stream&gt;</span>
 
 <span class="nt">&lt;/streams&gt;</span>
@@ -1762,8 +1762,8 @@ confusing and difficult to keep synchronized with the MPAS code.)</p>
 <p>A typical streams file is added by calling
 <a class="reference internal" href="generated/compass.Step.add_streams_file.html#compass.Step.add_streams_file" title="compass.Step.add_streams_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_streams_file()</span></code></a> with a package where the streams
 file is located and the name of the input streams file within that package:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.baroclinic_channel'</span><span class="p">,</span>
+                      <span class="s1">'streams.forward'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If the streams file should have a different name than the default
@@ -1784,28 +1784,28 @@ using the provided replacements.  Here is an example of such a template streams
 file:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
 
-<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output&quot;</span>
-<span class="w">        </span><span class="na">output_interval=</span><span class="s">&quot;{{ output_interval }}&quot;</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;restart&quot;</span>
-<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;../restarts/rst.$Y-$M-$D_$h.$m.$s.nc&quot;</span>
-<span class="w">                  </span><span class="na">output_interval=</span><span class="s">&quot;{{ restart_interval }}&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"output"</span>
+<span class="w">        </span><span class="na">output_interval=</span><span class="s">"{{ output_interval }}"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"restart"</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">"../restarts/rst.$Y-$M-$D_$h.$m.$s.nc"</span>
+<span class="w">                  </span><span class="na">output_interval=</span><span class="s">"{{ restart_interval }}"</span><span class="nt">/&gt;</span>
 
 <span class="nt">&lt;/streams&gt;</span>
 </pre></div>
 </div>
 <p>And here is how it would be added, along with replacements:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-01_00:00:00&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;restart_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-01_00:00:00&#39;</span><span class="p">}</span>
-<span class="n">add_streams_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span>
+    <span class="s1">'output_interval'</span><span class="p">:</span> <span class="s1">'00-00-01_00:00:00'</span><span class="p">,</span>
+    <span class="s1">'restart_interval'</span><span class="p">:</span> <span class="s1">'00-00-01_00:00:00'</span><span class="p">}</span>
+<span class="n">add_streams_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s1">'streams.template'</span><span class="p">,</span>
                  <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
 
 <span class="o">...</span>
 
 <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-01_00:00:00&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;restart_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-01_00:00:00&#39;</span><span class="p">}</span>
-<span class="n">add_streams_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span>
+    <span class="s1">'output_interval'</span><span class="p">:</span> <span class="s1">'00-00-01_00:00:00'</span><span class="p">,</span>
+    <span class="s1">'restart_interval'</span><span class="p">:</span> <span class="s1">'00-00-01_00:00:00'</span><span class="p">}</span>
+<span class="n">add_streams_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s1">'streams.template'</span><span class="p">,</span>
                  <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1836,19 +1836,19 @@ with the new run duration:</p>
 
 <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 <span class="c1"># the duration (hours) of the run</span>
-<span class="n">duration</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">3600</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;planar_convergence&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">))</span>
+<span class="n">duration</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">3600</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'planar_convergence'</span><span class="p">,</span> <span class="s1">'duration'</span><span class="p">))</span>
 <span class="n">delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">duration</span><span class="p">)</span>
 <span class="n">hours</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">seconds</span><span class="o">//</span><span class="mi">3600</span>
 <span class="n">minutes</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">seconds</span><span class="o">//</span><span class="mi">60</span> <span class="o">%</span> <span class="mi">60</span>
 <span class="n">seconds</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">seconds</span> <span class="o">%</span> <span class="mi">60</span>
-<span class="n">duration</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">delta</span><span class="o">.</span><span class="n">days</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">hours</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">minutes</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="n">duration</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">delta</span><span class="o">.</span><span class="n">days</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">hours</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">minutes</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">'</span>
 
-<span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="n">duration</span><span class="p">}</span>
+<span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'output_interval'</span><span class="p">:</span> <span class="n">duration</span><span class="p">}</span>
 
 <span class="bp">self</span><span class="o">.</span><span class="n">update_streams_at_runtime</span><span class="p">(</span>
-    <span class="s1">&#39;compass.ocean.tests.planar_convergence&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span> <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">,</span>
-    <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.ocean&#39;</span><span class="p">)</span>
+    <span class="s1">'compass.ocean.tests.planar_convergence'</span><span class="p">,</span>
+    <span class="s1">'streams.template'</span><span class="p">,</span> <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">,</span>
+    <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.ocean'</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

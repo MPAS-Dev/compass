@@ -127,13 +127,13 @@
 <div class="viewcode-block" id="Mesh">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.mesh.Mesh.html#compass.ocean.tests.hurricane.mesh.Mesh">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Mesh</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test case for creating a global MPAS-Ocean mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Mesh.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.mesh.Mesh.html#compass.ocean.tests.hurricane.mesh.Mesh.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create test case for creating a global MPAS-Ocean mesh</span>
 
 <span class="sd">        Parameters</span>
@@ -146,48 +146,48 @@
 
 <span class="sd">        use_lts: bool</span>
 <span class="sd">            Whether local time-stepping is used</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span> <span class="o">=</span> <span class="n">mesh_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_lts</span> <span class="o">=</span> <span class="n">use_lts</span>
 
-        <span class="k">if</span> <span class="n">use_lts</span> <span class="o">==</span> <span class="s1">&#39;LTS&#39;</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh_lts&#39;</span>
-        <span class="k">elif</span> <span class="n">use_lts</span> <span class="o">==</span> <span class="s1">&#39;FB_LTS&#39;</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh_fblts&#39;</span>
+        <span class="k">if</span> <span class="n">use_lts</span> <span class="o">==</span> <span class="s1">'LTS'</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">'mesh_lts'</span>
+        <span class="k">elif</span> <span class="n">use_lts</span> <span class="o">==</span> <span class="s1">'FB_LTS'</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">'mesh_fblts'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh&#39;</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">'mesh'</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="n">pixel_step</span> <span class="o">=</span> <span class="n">CreatePixelFile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">pixel_step</span><span class="p">)</span>
 
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;base_mesh&#39;</span>
-        <span class="k">if</span> <span class="n">mesh_name</span> <span class="o">==</span> <span class="s1">&#39;DEQU120at30cr10rr2&#39;</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'base_mesh'</span>
+        <span class="k">if</span> <span class="n">mesh_name</span> <span class="o">==</span> <span class="s1">'DEQU120at30cr10rr2'</span><span class="p">:</span>
             <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">DEQU120at30cr10rr2BaseMesh</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">mesh_lower</span> <span class="o">=</span> <span class="s1">&#39;dequ120at30cr10rr2&#39;</span>
-        <span class="k">elif</span> <span class="n">mesh_name</span> <span class="o">==</span> <span class="s1">&#39;DEQU120at30cr10rr2WD&#39;</span><span class="p">:</span>
+            <span class="n">mesh_lower</span> <span class="o">=</span> <span class="s1">'dequ120at30cr10rr2'</span>
+        <span class="k">elif</span> <span class="n">mesh_name</span> <span class="o">==</span> <span class="s1">'DEQU120at30cr10rr2WD'</span><span class="p">:</span>
             <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">DEQU120at30cr10rr2BaseMesh</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">mesh_lower</span> <span class="o">=</span> <span class="s1">&#39;dequ120at30cr10rr2&#39;</span>
-        <span class="k">elif</span> <span class="n">mesh_name</span> <span class="o">==</span> <span class="s1">&#39;DEVR45to5rr1&#39;</span><span class="p">:</span>
+            <span class="n">mesh_lower</span> <span class="o">=</span> <span class="s1">'dequ120at30cr10rr2'</span>
+        <span class="k">elif</span> <span class="n">mesh_name</span> <span class="o">==</span> <span class="s1">'DEVR45to5rr1'</span><span class="p">:</span>
             <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">DEVR45to5rr1BaseMesh</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">pixel_step</span><span class="p">,</span>
-                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">elev_file</span><span class="o">=</span><span class="s1">&#39;RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc&#39;</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">'base_mesh'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">elev_file</span><span class="o">=</span><span class="s1">'RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc'</span><span class="p">,</span>
                 <span class="n">spac_dhdx</span><span class="o">=</span><span class="mf">0.125</span><span class="p">,</span> <span class="n">spac_hmin</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">spac_hmax</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">spac_hbar</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>
                 <span class="n">ncell_nwav</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">ncell_nslp</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
                 <span class="n">filt_sdev</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">filt_halo</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">filt_plev</span><span class="o">=</span><span class="mf">0.325</span><span class="p">)</span>
-            <span class="n">mesh_lower</span> <span class="o">=</span> <span class="s1">&#39;devr45to5rr1&#39;</span>
-        <span class="k">elif</span> <span class="n">mesh_name</span> <span class="o">==</span> <span class="s1">&#39;RRS6to18&#39;</span><span class="p">:</span>
+            <span class="n">mesh_lower</span> <span class="o">=</span> <span class="s1">'devr45to5rr1'</span>
+        <span class="k">elif</span> <span class="n">mesh_name</span> <span class="o">==</span> <span class="s1">'RRS6to18'</span><span class="p">:</span>
             <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">RRS6to18BaseMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pixel_step</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
-            <span class="n">mesh_lower</span> <span class="o">=</span> <span class="s1">&#39;rrs6to18&#39;</span>
+            <span class="n">mesh_lower</span> <span class="o">=</span> <span class="s1">'rrs6to18'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unexpected mesh name </span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Unexpected mesh name </span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">package</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;compass.ocean.tests.hurricane.mesh.</span><span class="si">{</span><span class="n">mesh_lower</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_config_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_lower</span><span class="si">}</span><span class="s1">.cfg&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">package</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'compass.ocean.tests.hurricane.mesh.</span><span class="si">{</span><span class="n">mesh_lower</span><span class="si">}</span><span class="s1">'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_config_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mesh_lower</span><span class="si">}</span><span class="s1">.cfg'</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">base_mesh_step</span><span class="p">)</span>
 
@@ -203,11 +203,11 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">cull_mesh_step</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">use_lts</span> <span class="o">==</span> <span class="s1">&#39;LTS&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">use_lts</span> <span class="o">==</span> <span class="s1">'LTS'</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">LTSRegionsStep</span><span class="p">(</span>
                           <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">cull_mesh_step</span><span class="o">=</span><span class="n">cull_mesh_step</span><span class="p">,</span>
                           <span class="n">num_interface_adjacent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="n">use_lts</span> <span class="o">==</span> <span class="s1">&#39;FB_LTS&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">use_lts</span> <span class="o">==</span> <span class="s1">'FB_LTS'</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">LTSRegionsStep</span><span class="p">(</span>
                           <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">cull_mesh_step</span><span class="o">=</span><span class="n">cull_mesh_step</span><span class="p">,</span>
                           <span class="n">num_interface_adjacent</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span></div>
@@ -216,9 +216,9 @@
 <div class="viewcode-block" id="Mesh.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.mesh.Mesh.configure.html#compass.ocean.tests.hurricane.mesh.Mesh.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Modify the configuration options for this test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">configure_hurricane</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
 </div>
 

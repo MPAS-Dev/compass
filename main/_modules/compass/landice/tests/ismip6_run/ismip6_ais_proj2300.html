@@ -123,16 +123,16 @@
 <div class="viewcode-block" id="Ismip6AisProj2300">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_run.ismip6_ais_proj2300.Ismip6AisProj2300.html#compass.landice.tests.ismip6_run.ismip6_ais_proj2300.Ismip6AisProj2300">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Ismip6AisProj2300</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test case for automated setup of a suite of standardized</span>
 <span class="sd">    simulations for ISMIP6-Projections2300-Antarctica</span>
 <span class="sd">    See: https://www.climate-cryosphere.org/wiki/index.php?title=ISMIP6-Projections2300-Antarctica)  # noqa</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="Ismip6AisProj2300.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_run.ismip6_ais_proj2300.Ismip6AisProj2300.html#compass.landice.tests.ismip6_run.ismip6_ais_proj2300.Ismip6AisProj2300.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -140,8 +140,8 @@
 <span class="sd">        test_group : compass.landice.tests.ismip6_run.Ismip6Run</span>
 <span class="sd">            The test group that this test case belongs to</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;ismip6_ais_proj2300&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'ismip6_ais_proj2300'</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
@@ -150,7 +150,7 @@
 <div class="viewcode-block" id="Ismip6AisProj2300.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_run.ismip6_ais_proj2300.Ismip6AisProj2300.configure.html#compass.landice.tests.ismip6_run.ismip6_ais_proj2300.Ismip6AisProj2300.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up the desired ISMIP6 AIS 2300 experiments.</span>
 
 <span class="sd">        Read the list from the config of which experiments the</span>
@@ -159,31 +159,31 @@
 <span class="sd">        in the constructor, but they are done here so that the list to set up</span>
 <span class="sd">        can be adjusted in the config, and the config is not available until</span>
 <span class="sd">        this point.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="c1"># user can specify any of: &#39;all&#39;, &#39;tier1&#39;, &#39;tier2&#39;, or a</span>
+        <span class="c1"># user can specify any of: 'all', 'tier1', 'tier2', or a</span>
         <span class="c1"># comma-delimited list (or a single experiment)</span>
-        <span class="n">exp_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ismip6_run_ais_2300&#39;</span><span class="p">,</span> <span class="s1">&#39;exp_list&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">exp_list</span> <span class="o">==</span> <span class="s2">&quot;tier1&quot;</span><span class="p">:</span>
-            <span class="n">exp_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hist&#39;</span><span class="p">,</span> <span class="s1">&#39;ctrlAE&#39;</span><span class="p">]</span> <span class="o">+</span> \
-                       <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;expAE</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">02</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)]</span>
-        <span class="k">elif</span> <span class="n">exp_list</span> <span class="o">==</span> <span class="s2">&quot;tier2&quot;</span><span class="p">:</span>
-            <span class="n">exp_list</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;expAE</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">02</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">15</span><span class="p">)]</span>
-        <span class="k">elif</span> <span class="n">exp_list</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
-            <span class="n">exp_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hist&#39;</span><span class="p">,</span> <span class="s1">&#39;ctrlAE&#39;</span><span class="p">]</span> <span class="o">+</span> \
-                       <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;expAE</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">02</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">)]</span>
+        <span class="n">exp_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ismip6_run_ais_2300'</span><span class="p">,</span> <span class="s1">'exp_list'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">exp_list</span> <span class="o">==</span> <span class="s2">"tier1"</span><span class="p">:</span>
+            <span class="n">exp_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'hist'</span><span class="p">,</span> <span class="s1">'ctrlAE'</span><span class="p">]</span> <span class="o">+</span> \
+                       <span class="p">[</span><span class="sa">f</span><span class="s1">'expAE</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">02</span><span class="si">}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)]</span>
+        <span class="k">elif</span> <span class="n">exp_list</span> <span class="o">==</span> <span class="s2">"tier2"</span><span class="p">:</span>
+            <span class="n">exp_list</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">'expAE</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">02</span><span class="si">}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">15</span><span class="p">)]</span>
+        <span class="k">elif</span> <span class="n">exp_list</span> <span class="o">==</span> <span class="s2">"all"</span><span class="p">:</span>
+            <span class="n">exp_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'hist'</span><span class="p">,</span> <span class="s1">'ctrlAE'</span><span class="p">]</span> <span class="o">+</span> \
+                       <span class="p">[</span><span class="sa">f</span><span class="s1">'expAE</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">02</span><span class="si">}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">)]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">exp_list</span> <span class="o">=</span> <span class="n">exp_list</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-        <span class="n">mesh_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ismip6_run_ais_2300&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh_res&#39;</span><span class="p">)</span>
+            <span class="n">exp_list</span> <span class="o">=</span> <span class="n">exp_list</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span>
+        <span class="n">mesh_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'ismip6_run_ais_2300'</span><span class="p">,</span> <span class="s1">'mesh_res'</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">exp</span> <span class="ow">in</span> <span class="n">exp_list</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">exp</span><span class="p">)):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: </span><span class="si">{</span><span class="n">exp</span><span class="si">}</span><span class="s2"> path already exists; skipping.  &quot;</span>
-                      <span class="s2">&quot;Please remove the directory &quot;</span>
-                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span><span class="w"> </span><span class="n">exp</span><span class="p">)</span><span class="si">}</span><span class="s2"> and execute &quot;</span>
-                      <span class="s2">&quot;&#39;compass setup&#39; again to set this experiment up.&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"WARNING: </span><span class="si">{</span><span class="n">exp</span><span class="si">}</span><span class="s2"> path already exists; skipping.  "</span>
+                      <span class="s2">"Please remove the directory "</span>
+                      <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span><span class="w"> </span><span class="n">exp</span><span class="p">)</span><span class="si">}</span><span class="s2"> and execute "</span>
+                      <span class="s2">"'compass setup' again to set this experiment up."</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">exp_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">exp</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">mesh_res</span><span class="si">:</span><span class="s1">02</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">exp_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">exp</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">mesh_res</span><span class="si">:</span><span class="s1">02</span><span class="si">}</span><span class="s1">'</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
                     <span class="n">SetUpExperiment</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">exp_name</span><span class="p">,</span>
                                     <span class="n">subdir</span><span class="o">=</span><span class="n">exp_name</span><span class="p">,</span> <span class="n">exp</span><span class="o">=</span><span class="n">exp</span><span class="p">))</span>
@@ -191,36 +191,36 @@
         <span class="c1"># each experiment (step) should be run manually</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">sea_level_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;ismip6_run_ais_2300&#39;</span><span class="p">,</span>
-                                                 <span class="s1">&#39;sea_level_model&#39;</span><span class="p">)</span>
+        <span class="n">sea_level_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'ismip6_run_ais_2300'</span><span class="p">,</span>
+                                                 <span class="s1">'sea_level_model'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">sea_level_model</span><span class="p">:</span>
-            <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;mapping_files&#39;</span>
+            <span class="n">subdir</span> <span class="o">=</span> <span class="s1">'mapping_files'</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">subdir</span><span class="p">)):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: </span><span class="si">{</span><span class="n">subdir</span><span class="si">}</span><span class="s2"> path already exists; skipping.  &quot;</span>
-                      <span class="s2">&quot;Please remove the directory &quot;</span>
-                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span><span class="w"> </span><span class="n">subdir</span><span class="p">)</span><span class="si">}</span><span class="s2"> and execute &quot;</span>
-                      <span class="s2">&quot;&#39;compass setup&#39; again to set this experiment up.&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"WARNING: </span><span class="si">{</span><span class="n">subdir</span><span class="si">}</span><span class="s2"> path already exists; skipping.  "</span>
+                      <span class="s2">"Please remove the directory "</span>
+                      <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span><span class="w"> </span><span class="n">subdir</span><span class="p">)</span><span class="si">}</span><span class="s2"> and execute "</span>
+                      <span class="s2">"'compass setup' again to set this experiment up."</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
                     <span class="n">CreateSlmMappingFiles</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                          <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mapping_files&#39;</span><span class="p">,</span>
+                                          <span class="n">name</span><span class="o">=</span><span class="s1">'mapping_files'</span><span class="p">,</span>
                                           <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;mapping_files&#39;</span><span class="p">)</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'mapping_files'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Ismip6AisProj2300.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_run.ismip6_ais_proj2300.Ismip6AisProj2300.run.html#compass.landice.tests.ismip6_run.ismip6_ais_proj2300.Ismip6AisProj2300.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        A dummy run method</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ERROR: &#39;compass run&#39; has no functionality at the &quot;</span>
-                         <span class="s2">&quot;test case level for this test.  &quot;</span>
-                         <span class="s2">&quot;Please submit the job script in &quot;</span>
-                         <span class="s2">&quot;each experiment&#39;s subdirectory manually instead.&quot;</span>
-                         <span class="s2">&quot;To create Sea-Level Model mapping files, submit&quot;</span>
-                         <span class="s2">&quot;job script or execute &#39;compass run&#39; from the&quot;</span>
-                         <span class="s2">&quot;&#39;mapping_files&#39; subdirectory.&quot;</span><span class="p">)</span></div>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"ERROR: 'compass run' has no functionality at the "</span>
+                         <span class="s2">"test case level for this test.  "</span>
+                         <span class="s2">"Please submit the job script in "</span>
+                         <span class="s2">"each experiment's subdirectory manually instead."</span>
+                         <span class="s2">"To create Sea-Level Model mapping files, submit"</span>
+                         <span class="s2">"job script or execute 'compass run' from the"</span>
+                         <span class="s2">"'mapping_files' subdirectory."</span><span class="p">)</span></div>
 </div>
 
 

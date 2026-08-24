@@ -119,7 +119,7 @@
 <div class="viewcode-block" id="Forward">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.forward.Forward.html#compass.ocean.tests.tides.forward.Forward">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test case for performing a forward run for a tidal case</span>
 
 <span class="sd">    Attributes</span>
@@ -129,11 +129,11 @@
 
 <span class="sd">    init : compass.ocean.tests.tides.init.Init</span>
 <span class="sd">        The test case that produces the initial condition for this run</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Forward.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.forward.Forward.html#compass.ocean.tests.tides.forward.Forward.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create test case</span>
 
 <span class="sd">        Parameters</span>
@@ -146,8 +146,8 @@
 
 <span class="sd">        init : compass.ocean.tests.tides.init.Init</span>
 <span class="sd">            The test case that produces the initial condition for this run</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;forward&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'forward'</span>
         <span class="n">mesh_name</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mesh_name</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span>
@@ -157,8 +157,8 @@
 
         <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">)</span>
 
-        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output/output.nc&#39;</span><span class="p">)</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;analysis_members/harmonicAnalysis.nc&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output/output.nc'</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'analysis_members/harmonicAnalysis.nc'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 
         <span class="n">step</span> <span class="o">=</span> <span class="n">Analysis</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
@@ -168,9 +168,9 @@
 <div class="viewcode-block" id="Forward.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.forward.Forward.configure.html#compass.ocean.tests.tides.forward.Forward.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Modify the configuration options for this test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">configure_tides</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">)</span></div>
 </div>
 

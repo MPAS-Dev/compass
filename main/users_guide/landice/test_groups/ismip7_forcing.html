@@ -69,6 +69,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#atmosphere">atmosphere</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ocean-thermal">ocean_thermal</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fracture">fracture</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ismip7_run.html">ismip7_run</a></li>
@@ -156,7 +157,8 @@ Intercomparison for CMIP7 (ISMIP7) protocol. The processed data is used to
 force MALI in its simulations under the ISMIP7 experimental protocol.
 The test group supports both the Antarctic Ice Sheet (AIS) and the Greenland
 Ice Sheet (GrIS), controlled by a single <code class="docutils literal notranslate"><span class="pre">ice_sheet</span></code> config option.</p>
-<p>The test group includes two test cases: <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code> and <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code>.</p>
+<p>The test group includes three test cases: <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code>, <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">fracture</span></code>.</p>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code> test case has five steps:
 <code class="docutils literal notranslate"><span class="pre">process_smb</span></code>, <code class="docutils literal notranslate"><span class="pre">process_temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">process_smb_gradient</span></code>,
@@ -166,10 +168,15 @@ For AIS this produces 3D thermal forcing (with 30 ocean depth layers); for
 GrIS it produces 2D (depth-averaged) thermal forcing. The step can also
 process the observational ocean thermal forcing climatology (Zhou et al.)
 for AIS, controlled by the <code class="docutils literal notranslate"><span class="pre">process_ocean_climatology</span></code> config option.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">fracture</span></code> test case has three steps: <code class="docutils literal notranslate"><span class="pre">process_excess_melt</span></code>
+(Path A), <code class="docutils literal notranslate"><span class="pre">process_lake_properties</span></code> (Path B), and
+<code class="docutils literal notranslate"><span class="pre">process_shelf_collapse</span></code> (Path C). It processes the ISMIP7
+surface-melt-driven ice shelf collapse forcing (AIS only).</p></li>
 </ul>
 <p>(For more details on the steps of each test case, see
-<a class="reference internal" href="#landice-ismip7-forcing-atmosphere"><span class="std std-ref">atmosphere</span></a> and
-<a class="reference internal" href="#landice-ismip7-forcing-ocean-thermal"><span class="std std-ref">ocean_thermal</span></a>.)</p>
+<a class="reference internal" href="#landice-ismip7-forcing-atmosphere"><span class="std std-ref">atmosphere</span></a>,
+<a class="reference internal" href="#landice-ismip7-forcing-ocean-thermal"><span class="std std-ref">ocean_thermal</span></a>, and
+<a class="reference internal" href="#landice-ismip7-forcing-fracture"><span class="std std-ref">fracture</span></a>.)</p>
 <section id="usage">
 <span id="landice-ismip7-forcing-usage"></span><h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
 <p>To use this test group, users need to:</p>
@@ -179,6 +186,9 @@ for AIS, controlled by the <code class="docutils literal notranslate"><span clas
 <li><p>Provide the path to the ISMIP7 forcing data (<code class="docutils literal notranslate"><span class="pre">base_path_ismip7</span></code>).</p></li>
 <li><p>Run the <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code> test case for each model and scenario combination.</p></li>
 <li><p>Run the <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code> test case for each model and scenario combination.</p></li>
+<li><p>Run the <code class="docutils literal notranslate"><span class="pre">fracture</span></code> test case (AIS only) for each model and scenario
+combination to process the surface-melt-driven ice shelf collapse
+pathways (excess melt, lake properties, and the ice shelf collapse mask).</p></li>
 </ol>
 <p>Example user config files are provided in the source tree for local testing:</p>
 <ul class="simple">
@@ -212,6 +222,10 @@ mrro/v2/mrro_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
 </div>
 <p>For AIS ocean thermal climatology (8km, 30 depth levels, static):</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{base_path_climatology}/tf/v3/tf_AIS_obs_ocean_climatology_*.nc
+</pre></div>
+</div>
+<p>For AIS fracture / ice shelf collapse mask (8km, annual, Path C):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>fracture/v2/ice_shelf_collapse_mask_*.nc
 </pre></div>
 </div>
 <p>For GrIS atmosphere (1km, polar stereographic EPSG:3413):</p>
@@ -299,6 +313,31 @@ values are:</p>
 
 <span class="c1"># Base path to observational climatology data</span>
 <span class="na">base_path_climatology</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/path/to/ISMIP7/forcing/AIS/obs/zhou_annual_06_nov</span>
+
+<span class="c1"># config options for ismip7 fracture (Path C, ice shelf collapse) forcing</span>
+<span class="k">[ismip7_fracture]</span>
+
+<span class="c1"># Remapping method for each pathway. Set a method to None to skip</span>
+<span class="c1"># processing that pathway's file.</span>
+
+<span class="c1"># Remapping method for the ice shelf collapse mask (Path C).</span>
+<span class="c1"># neareststod preserves the 0/1 mask values</span>
+<span class="na">method_remap_shelf_collapse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">neareststod</span>
+
+<span class="c1"># Remapping method for the excess meltwater field (Path A), a flux</span>
+<span class="na">method_remap_excess_melt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">conserve</span>
+
+<span class="c1"># Remapping method for the supraglacial lake properties (Path B)</span>
+<span class="na">method_remap_lake_properties</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">bilinear</span>
+
+<span class="c1"># Version subdirectory of the fracture forcing data</span>
+<span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">v2</span>
+
+<span class="c1"># Start year for processing</span>
+<span class="na">start_year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1850</span>
+
+<span class="c1"># End year for processing</span>
+<span class="na">end_year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2014</span>
 </pre></div>
 </div>
 <p>All <code class="docutils literal notranslate"><span class="pre">NotAvailable</span></code> options must be overridden in a user config file passed
@@ -355,6 +394,54 @@ but without a Time dimension, producing a single static file.</p>
 <p>For <strong>GrIS</strong>, thermal forcing is 2D (depth-averaged), with monthly temporal
 resolution and yearly input files. The output variable is
 <code class="docutils literal notranslate"><span class="pre">ismip6_2dThermalForcing</span></code>.</p>
+</section>
+<section id="fracture">
+<span id="landice-ismip7-forcing-fracture"></span><h2>fracture<a class="headerlink" href="#fracture" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/ismip7_forcing/fracture</span></code> test case processes the ISMIP7
+surface-melt-driven ice shelf collapse forcing (AIS only). It implements the
+three ISMIP7 pathways as separate steps, each remapping annual fields from
+the native 8km polar stereographic grid onto the MALI unstructured mesh.</p>
+<p>All three source files are discovered from the <code class="docutils literal notranslate"><span class="pre">fracture/{version}/</span></code>
+subdirectory of <code class="docutils literal notranslate"><span class="pre">base_path_ismip7</span></code>.</p>
+<p>Each pathway is run independently and can be skipped by setting its
+remapping-method config option to <code class="docutils literal notranslate"><span class="pre">None</span></code> in the <code class="docutils literal notranslate"><span class="pre">[ismip7_fracture]</span></code>
+section (for example, <code class="docutils literal notranslate"><span class="pre">method_remap_excess_melt</span> <span class="pre">=</span> <span class="pre">None</span></code> skips Path A). This
+is useful when only some of the pathway source files are available.</p>
+<ul class="simple">
+<li><p><strong>process_excess_melt</strong> (Path A): Remaps the excess meltwater field
+(melt + rain after firn air content depletion), matching
+<code class="docutils literal notranslate"><span class="pre">excess_melt_*.nc</span></code>. The output variable is <code class="docutils literal notranslate"><span class="pre">ismip7ExcessMelt</span></code>
+(converted from mm w.e. yr-1 to SI units of kg m-2 s-1) and is written to
+<code class="docutils literal notranslate"><span class="pre">{output_base_path}/excess_melt/{model}_{scenario}/</span></code>. Conservative
+remapping is used by default since this is a flux. This source file has no
+<code class="docutils literal notranslate"><span class="pre">x</span></code>/<code class="docutils literal notranslate"><span class="pre">y</span></code> coordinate variables and its array is flipped along the y axis
+relative to the other fracture files, so the step reconstructs the source
+grid (borrowing <code class="docutils literal notranslate"><span class="pre">x</span></code>/<code class="docutils literal notranslate"><span class="pre">y</span></code> from a sibling fracture file and flipping the
+data to match) before remapping.</p></li>
+<li><p><strong>process_lake_properties</strong> (Path B): Remaps the supraglacial lake mean
+depth and area fraction from the Grau et al. (2025) parameterization,
+matching <code class="docutils literal notranslate"><span class="pre">lake_properties_*.nc</span></code>. The output variables are
+<code class="docutils literal notranslate"><span class="pre">ismip7LakeDepth</span></code> (m) and <code class="docutils literal notranslate"><span class="pre">ismip7LakeAreaFraction</span></code> (unitless), written
+to <code class="docutils literal notranslate"><span class="pre">{output_base_path}/lake_properties/{model}_{scenario}/</span></code>. Bilinear
+remapping is used by default.</p></li>
+<li><p><strong>process_shelf_collapse</strong> (Path C): Remaps the annual ice shelf collapse
+mask, matching <code class="docutils literal notranslate"><span class="pre">ice_shelf_collapse_mask_*.nc</span></code>.
+An ice shelf grid cell is flagged as collapsed (mask value 1) when excess
+meltwater, computed after firn air content depletion, exceeds 72.5 mm/yr for
+10 consecutive years; otherwise the mask value is 0. The mask is applied on
+floating areas only, similar to ISMIP6, and ice shelves collapse on
+January 1st of each year. The remapping uses <code class="docutils literal notranslate"><span class="pre">neareststod</span></code> by default so
+that the 0/1 mask values are preserved, and the remapped mask is rounded to
+0/1. The output variable is <code class="docutils literal notranslate"><span class="pre">calvingMask</span></code> with an accompanying <code class="docutils literal notranslate"><span class="pre">xtime</span></code>
+variable, and the result is written to
+<code class="docutils literal notranslate"><span class="pre">{output_base_path}/shelf_collapse/{model}_{scenario}/</span></code>.</p></li>
+</ul>
+<p>All three pathways produce continuous fields (Paths A and B) or a discrete
+mask (Path C) with an accompanying <code class="docutils literal notranslate"><span class="pre">xtime</span></code> variable. The output variable
+names for Paths A and B (<code class="docutils literal notranslate"><span class="pre">ismip7ExcessMelt</span></code>, <code class="docutils literal notranslate"><span class="pre">ismip7LakeDepth</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ismip7LakeAreaFraction</span></code>) are descriptive placeholders and may need to be
+aligned with the MALI Registry once the corresponding model input fields are
+defined.</p>
 </section>
 </section>
 

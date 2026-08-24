@@ -121,23 +121,23 @@
 <div class="viewcode-block" id="HorizontalAdvectionThickness">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">HorizontalAdvectionThickness</span><span class="p">(</span><span class="n">ConvTestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test case for testing horizontal advection of thickness in MALI with</span>
 <span class="sd">    planar, doubly periodic meshes</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="HorizontalAdvectionThickness.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create test case for creating a MALI mesh</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_group : compass.landice.tests.mesh_convergence.MeshConvergence</span>
 <span class="sd">            The landice test group that this test case belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span>
-                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;horizontal_advection_thickness&#39;</span><span class="p">)</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s1">'horizontal_advection_thickness'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Analysis</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolutions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">))</span></div>
 
@@ -145,7 +145,7 @@
 <div class="viewcode-block" id="HorizontalAdvectionThickness.create_init">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.create_init.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.create_init">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Child class must override this to return an instance of a</span>
 <span class="sd">        ConvInit step</span>
 
@@ -158,7 +158,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        init : compass.landice.tests.mesh_convergence.conv_init.ConvInit</span>
 <span class="sd">            The init step object</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">return</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span></div>
 
@@ -166,7 +166,7 @@
 <div class="viewcode-block" id="HorizontalAdvectionThickness.create_analysis">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.create_analysis.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.create_analysis">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Child class must override this to return an instance of a</span>
 <span class="sd">        ConvergenceInit step</span>
@@ -180,7 +180,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        analysis : compass.landice.tests.mesh_convergence.conv_analysis.ConvAnalysis  # noqa</span>
 <span class="sd">            The init step object</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">return</span> <span class="n">Analysis</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolutions</span><span class="o">=</span><span class="n">resolutions</span><span class="p">)</span></div>
 </div>

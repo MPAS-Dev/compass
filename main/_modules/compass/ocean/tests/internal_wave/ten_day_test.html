@@ -119,32 +119,32 @@
 <div class="viewcode-block" id="TenDayTest">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.internal_wave.ten_day_test.TenDayTest.html#compass.ocean.tests.internal_wave.ten_day_test.TenDayTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TenDayTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The default test case for the internal wave test</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="TenDayTest.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.internal_wave.ten_day_test.TenDayTest.html#compass.ocean.tests.internal_wave.ten_day_test.TenDayTest.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_group : compass.ocean.tests.internal_wave.InternalWave</span>
 <span class="sd">            The test group that this test case belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;ten_day_test&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'ten_day_test'</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
 
         <span class="n">step</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.ocean.tests.internal_wave.ten_day_test&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+            <span class="s1">'compass.ocean.tests.internal_wave.ten_day_test'</span><span class="p">,</span>
+            <span class="s1">'namelist.forward'</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.ocean.tests.internal_wave.ten_day_test&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+            <span class="s1">'compass.ocean.tests.internal_wave.ten_day_test'</span><span class="p">,</span>
+            <span class="s1">'streams.forward'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Viz</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">),</span> <span class="n">run_by_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
@@ -153,12 +153,12 @@
 <div class="viewcode-block" id="TenDayTest.validate">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.internal_wave.ten_day_test.TenDayTest.validate.html#compass.ocean.tests.internal_wave.ten_day_test.TenDayTest.validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Validate variables against a baseline</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                          <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">],</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output.nc&#39;</span><span class="p">)</span></div>
+                          <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">'layerThickness'</span><span class="p">,</span> <span class="s1">'normalVelocity'</span><span class="p">],</span>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">'forward/output.nc'</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

@@ -123,7 +123,7 @@
 <div class="viewcode-block" id="EnsembleManager">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager.html#compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">EnsembleManager</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for an ensemble manager.</span>
 <span class="sd">    The individual runs are other steps of this test case of class</span>
 <span class="sd">    EnsembleMember</span>
@@ -132,21 +132,21 @@
 <span class="sd">    ----------</span>
 <span class="sd">    name : str</span>
 <span class="sd">        the name of this step</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="EnsembleManager.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager.html#compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Creates an ensemble manager</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.TestCase</span>
 <span class="sd">            The test case this step belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># define step name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;ensemble_manager&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">'ensemble_manager'</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
@@ -154,25 +154,25 @@
 <div class="viewcode-block" id="EnsembleManager.setup">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager.setup.html#compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Sets up the ensemble manager</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Link viz script</span>
-        <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">&#39;compass.landice.tests.ensemble_generator&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;plot_ensemble.py&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">target</span><span class="p">:</span>
-            <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/plot_ensemble.py&#39;</span><span class="p">)</span></div>
+        <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">'compass.landice.tests.ensemble_generator'</span><span class="p">,</span>
+                  <span class="s1">'plot_ensemble.py'</span><span class="p">)</span> <span class="k">as</span> <span class="n">target</span><span class="p">:</span>
+            <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/plot_ensemble.py'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="EnsembleManager.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager.run.html#compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Use the ensemble manager to manage and launch jobs for each run</span>
 <span class="sd">        Each ensemble member is a step of the test case.</span>
 <span class="sd">        The ensemble manager submits a job script for each run so that they</span>
 <span class="sd">        are run in parallel through SLURM.</span>
 <span class="sd">        Eventually we want this function to handle restarts.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
         <span class="c1"># Determine list of runs (steps) to loop over</span>
@@ -183,30 +183,30 @@
 
         <span class="c1"># Now loop over runs and process each</span>
         <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">:</span>
-            <span class="c1"># Get step object from &#39;steps&#39; dictionary</span>
+            <span class="c1"># Get step object from 'steps' dictionary</span>
             <span class="n">runStep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
             <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">runStep</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
 
             <span class="c1"># Skip run if an error is detected</span>
-            <span class="n">err_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;log.landice.*.err&#39;</span><span class="p">)</span>
+            <span class="n">err_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'log.landice.*.err'</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">err_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> created an error log file in the &#39;</span>
-                      <span class="s1">&#39;previous job and will not be restarted.&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> created an error log file in the '</span>
+                      <span class="s1">'previous job and will not be restarted.'</span><span class="p">)</span>
                 <span class="k">continue</span>
             <span class="c1"># Skip run if completed</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;restart_timestamp&#39;</span><span class="p">):</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;restart_timestamp&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">'restart_timestamp'</span><span class="p">):</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'restart_timestamp'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                     <span class="n">curr_time</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-                <span class="n">namelist</span> <span class="o">=</span> <span class="n">compass</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">ingest</span><span class="p">(</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
-                <span class="n">stop_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">namelist</span><span class="p">[</span><span class="s1">&#39;time_management&#39;</span><span class="p">]</span>
-                             <span class="p">[</span><span class="s1">&#39;config_stop_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">))</span>
+                <span class="n">namelist</span> <span class="o">=</span> <span class="n">compass</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">ingest</span><span class="p">(</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
+                <span class="n">stop_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">namelist</span><span class="p">[</span><span class="s1">'time_management'</span><span class="p">]</span>
+                             <span class="p">[</span><span class="s1">'config_stop_time'</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"'"</span><span class="p">))</span>
                 <span class="k">if</span> <span class="n">curr_time</span> <span class="o">==</span> <span class="n">stop_time</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> has reached stop time.  Skipping.&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> has reached stop time.  Skipping.'</span><span class="p">)</span>
                     <span class="k">continue</span>
-            <span class="c1"># If we didn&#39;t skip this run, submit it</span>
-            <span class="n">check_call</span><span class="p">([</span><span class="s1">&#39;sbatch&#39;</span><span class="p">,</span> <span class="s1">&#39;job_script.sh&#39;</span><span class="p">],</span> <span class="n">logger</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> submitted.&#39;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;All runs submitted.&#39;</span><span class="p">)</span></div>
+            <span class="c1"># If we didn't skip this run, submit it</span>
+            <span class="n">check_call</span><span class="p">([</span><span class="s1">'sbatch'</span><span class="p">,</span> <span class="s1">'job_script.sh'</span><span class="p">],</span> <span class="n">logger</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> submitted.'</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'All runs submitted.'</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

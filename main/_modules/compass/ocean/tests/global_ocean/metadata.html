@@ -123,7 +123,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_author_and_email_from_git</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the author and email address config options from git if they are set to</span>
 <span class="sd">    autodetect</span>
 
@@ -131,36 +131,36 @@
 <span class="sd">    ----------</span>
 <span class="sd">    config : compass.config.CompassConfigParser</span>
 <span class="sd">        Configuration options for this test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">author</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">author</span> <span class="o">==</span> <span class="s1">&#39;autodetect&#39;</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'author'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">author</span> <span class="o">==</span> <span class="s1">'autodetect'</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">author</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span>
-                <span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;user.name&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="p">[</span><span class="s1">'git'</span><span class="p">,</span> <span class="s1">'config'</span><span class="p">,</span> <span class="s1">'user.name'</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;It appears you have not set up a git username &#39;</span>
-                             <span class="s1">&#39;yet.  Please do so or provide a config file &#39;</span>
-                             <span class="s1">&#39;that sets config option &quot;author&quot; in &#39;</span>
-                             <span class="s1">&#39;[global_ocean].&#39;</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">,</span> <span class="n">author</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'It appears you have not set up a git username '</span>
+                             <span class="s1">'yet.  Please do so or provide a config file '</span>
+                             <span class="s1">'that sets config option "author" in '</span>
+                             <span class="s1">'[global_ocean].'</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'author'</span><span class="p">,</span> <span class="n">author</span><span class="p">)</span>
 
-    <span class="n">email</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">email</span> <span class="o">==</span> <span class="s1">&#39;autodetect&#39;</span><span class="p">:</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'email'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">email</span> <span class="o">==</span> <span class="s1">'autodetect'</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">email</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span>
-                <span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;user.email&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="p">[</span><span class="s1">'git'</span><span class="p">,</span> <span class="s1">'config'</span><span class="p">,</span> <span class="s1">'user.email'</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;It appears you have not set your email in git &#39;</span>
-                             <span class="s1">&#39;yet.  Please do so or provide a config file &#39;</span>
-                             <span class="s1">&#39;that sets config option &quot;email&quot; in &#39;</span>
-                             <span class="s1">&#39;[global_ocean].&#39;</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="n">email</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'It appears you have not set your email in git '</span>
+                             <span class="s1">'yet.  Please do so or provide a config file '</span>
+                             <span class="s1">'that sets config option "email" in '</span>
+                             <span class="s1">'[global_ocean].'</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'email'</span><span class="p">,</span> <span class="n">email</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="get_e3sm_mesh_names">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names.html#compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_e3sm_mesh_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">levels</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get short and long E3SM mesh name from config options and the given number</span>
 <span class="sd">    of vertical levels (typically taken from an initial condition or restart</span>
 <span class="sd">    file).</span>
@@ -180,23 +180,23 @@
 
 <span class="sd">    long_mesh_name : str</span>
 <span class="sd">        The long E3SM name of the ocean and sea-ice mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;levels&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">mesh_prefix</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;prefix&#39;</span><span class="p">)</span>
-    <span class="n">min_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;min_res&#39;</span><span class="p">)</span>
-    <span class="n">max_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;max_res&#39;</span><span class="p">)</span>
-    <span class="n">e3sm_version</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;e3sm_version&#39;</span><span class="p">)</span>
-    <span class="n">mesh_revision</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh_revision&#39;</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'levels'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">mesh_prefix</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'prefix'</span><span class="p">)</span>
+    <span class="n">min_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'min_res'</span><span class="p">)</span>
+    <span class="n">max_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'max_res'</span><span class="p">)</span>
+    <span class="n">e3sm_version</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'e3sm_version'</span><span class="p">)</span>
+    <span class="n">mesh_revision</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'mesh_revision'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">min_res</span> <span class="o">==</span> <span class="n">max_res</span><span class="p">:</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">min_res</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">min_res</span><span class="si">}</span><span class="s1">to</span><span class="si">{</span><span class="n">max_res</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">min_res</span><span class="si">}</span><span class="s1">to</span><span class="si">{</span><span class="n">max_res</span><span class="si">}</span><span class="s1">'</span>
 
-    <span class="n">short_mesh_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}{</span><span class="n">res</span><span class="si">}</span><span class="s1">E</span><span class="si">{</span><span class="n">e3sm_version</span><span class="si">}</span><span class="s1">r</span><span class="si">{</span><span class="n">mesh_revision</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">short_mesh_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}{</span><span class="n">res</span><span class="si">}</span><span class="s1">E</span><span class="si">{</span><span class="n">e3sm_version</span><span class="si">}</span><span class="s1">r</span><span class="si">{</span><span class="n">mesh_revision</span><span class="si">}</span><span class="s1">'</span>
     <span class="n">long_mesh_name</span> <span class="o">=</span> \
-        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}{</span><span class="n">res</span><span class="si">}</span><span class="s1">kmL</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">E3SMv</span><span class="si">{</span><span class="n">e3sm_version</span><span class="si">}</span><span class="s1">r</span><span class="si">{</span><span class="n">mesh_revision</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}{</span><span class="n">res</span><span class="si">}</span><span class="s1">kmL</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">E3SMv</span><span class="si">{</span><span class="n">e3sm_version</span><span class="si">}</span><span class="s1">r</span><span class="si">{</span><span class="n">mesh_revision</span><span class="si">}</span><span class="s1">'</span>
 
     <span class="k">return</span> <span class="n">short_mesh_name</span><span class="p">,</span> <span class="n">long_mesh_name</span></div>
 
@@ -205,7 +205,7 @@
 <div class="viewcode-block" id="add_mesh_and_init_metadata">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.metadata.add_mesh_and_init_metadata.html#compass.ocean.tests.global_ocean.metadata.add_mesh_and_init_metadata">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_mesh_and_init_metadata</span><span class="p">(</span><span class="n">output_filenames</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">init_filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Add MPAS mesh and initial condition metadata to NetCDF outputs of the given</span>
 <span class="sd">    step</span>
 
@@ -220,19 +220,19 @@
 <span class="sd">    init_filename : str</span>
 <span class="sd">        The name of an initial condition file to get the number of vertical</span>
 <span class="sd">        levels and maximum depth from</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;add_metadata&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'add_metadata'</span><span class="p">):</span>
         <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">init_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsInit</span><span class="p">:</span>
             <span class="n">metadata</span> <span class="o">=</span> <span class="n">_get_metadata</span><span class="p">(</span><span class="n">dsInit</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">output_filenames</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.nc&#39;</span><span class="p">):</span>
-                <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncks&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">'.nc'</span><span class="p">):</span>
+                <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'ncks'</span><span class="p">]</span>
                 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;--glb_att_add&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+                    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'--glb_att_add'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">'</span><span class="p">])</span>
                 <span class="n">name</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-                <span class="n">new_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_with_metadata</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">new_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_with_metadata</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">'</span>
                 <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">filename</span><span class="p">,</span> <span class="n">new_filename</span><span class="p">])</span>
                 <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
                 <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">new_filename</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
@@ -240,119 +240,119 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_metadata</span><span class="p">(</span><span class="n">dsInit</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; add metadata to a given dataset &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" add metadata to a given dataset """</span>
 
-    <span class="n">author</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">)</span>
-    <span class="n">email</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">)</span>
-    <span class="n">creation_date</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;creation_date&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">creation_date</span> <span class="o">==</span> <span class="s1">&#39;autodetect&#39;</span><span class="p">:</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'author'</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'email'</span><span class="p">)</span>
+    <span class="n">creation_date</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'creation_date'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">creation_date</span> <span class="o">==</span> <span class="s1">'autodetect'</span><span class="p">:</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-        <span class="n">creation_date</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;creation_date&#39;</span><span class="p">,</span> <span class="n">creation_date</span><span class="p">)</span>
+        <span class="n">creation_date</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y%m</span><span class="si">%d</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'creation_date'</span><span class="p">,</span> <span class="n">creation_date</span><span class="p">)</span>
 
     <span class="n">max_depth</span> <span class="o">=</span> <span class="n">dsInit</span><span class="o">.</span><span class="n">bottomDepth</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
     <span class="c1"># round to the nearest 0.1 m</span>
     <span class="n">max_depth</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">max_depth</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;max_depth&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">max_depth</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'max_depth'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">max_depth</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
-    <span class="n">mesh_prefix</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;prefix&#39;</span><span class="p">)</span>
-    <span class="n">min_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;min_res&#39;</span><span class="p">)</span>
-    <span class="n">max_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;max_res&#39;</span><span class="p">)</span>
-    <span class="n">levels</span> <span class="o">=</span> <span class="n">dsInit</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;levels&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">e3sm_version</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;e3sm_version&#39;</span><span class="p">)</span>
-    <span class="n">mesh_revision</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh_revision&#39;</span><span class="p">)</span>
-    <span class="n">pull_request</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;pull_request&#39;</span><span class="p">)</span>
+    <span class="n">mesh_prefix</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'prefix'</span><span class="p">)</span>
+    <span class="n">min_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'min_res'</span><span class="p">)</span>
+    <span class="n">max_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'max_res'</span><span class="p">)</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">dsInit</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">]</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'levels'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">e3sm_version</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'e3sm_version'</span><span class="p">)</span>
+    <span class="n">mesh_revision</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'mesh_revision'</span><span class="p">)</span>
+    <span class="n">pull_request</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'pull_request'</span><span class="p">)</span>
 
     <span class="n">short_name</span><span class="p">,</span> <span class="n">long_name</span> <span class="o">=</span> <span class="n">get_e3sm_mesh_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">levels</span><span class="p">)</span>
 
     <span class="n">descriptions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
-    <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;&lt;&lt;&lt;levels&gt;&gt;&gt;&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;&lt;&lt;&lt;max_depth&gt;&gt;&gt;&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">max_depth</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;&lt;&lt;&lt;creation_date&gt;&gt;&gt;&#39;</span><span class="p">:</span> <span class="n">creation_date</span><span class="p">}</span>
+    <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'&lt;&lt;&lt;levels&gt;&gt;&gt;'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                    <span class="s1">'&lt;&lt;&lt;max_depth&gt;&gt;&gt;'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">max_depth</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                    <span class="s1">'&lt;&lt;&lt;creation_date&gt;&gt;&gt;'</span><span class="p">:</span> <span class="n">creation_date</span><span class="p">}</span>
 
-    <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;init&#39;</span><span class="p">,</span> <span class="s1">&#39;bathy&#39;</span><span class="p">,</span> <span class="s1">&#39;bgc&#39;</span><span class="p">,</span> <span class="s1">&#39;wisc&#39;</span><span class="p">]:</span>
-        <span class="n">option</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_description&#39;</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
-            <span class="n">description</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
-            <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">description</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)])</span>
+    <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'mesh'</span><span class="p">,</span> <span class="s1">'init'</span><span class="p">,</span> <span class="s1">'bathy'</span><span class="p">,</span> <span class="s1">'bgc'</span><span class="p">,</span> <span class="s1">'wisc'</span><span class="p">]:</span>
+        <span class="n">option</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_description'</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">description</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)])</span>
             <span class="k">for</span> <span class="n">placeholder</span><span class="p">,</span> <span class="n">replacement</span> <span class="ow">in</span> <span class="n">replacements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">placeholder</span> <span class="ow">in</span> <span class="n">description</span><span class="p">:</span>
                     <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">placeholder</span><span class="p">,</span>
                                                       <span class="n">replacement</span><span class="p">)</span>
             <span class="n">descriptions</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
 
-    <span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;MPAS_Mesh_</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'MPAS_Mesh_</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}</span><span class="s1">'</span>
 
-    <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;MPAS_Mesh_Short_Name&#39;</span><span class="p">:</span> <span class="n">short_name</span><span class="p">,</span>
-                <span class="s1">&#39;MPAS_Mesh_Long_Name&#39;</span><span class="p">:</span> <span class="n">long_name</span><span class="p">,</span>
-                <span class="s1">&#39;MPAS_Mesh_Prefix&#39;</span><span class="p">:</span> <span class="n">mesh_prefix</span><span class="p">,</span>
-                <span class="s1">&#39;MPAS_Mesh_E3SM_Version&#39;</span><span class="p">:</span> <span class="n">e3sm_version</span><span class="p">,</span>
-                <span class="s1">&#39;MPAS_Mesh_Pull_Request&#39;</span><span class="p">:</span> <span class="n">pull_request</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Revision&#39;</span><span class="p">:</span> <span class="n">mesh_revision</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Version_Author&#39;</span><span class="p">:</span> <span class="n">author</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Version_Author_Email&#39;</span><span class="p">:</span> <span class="n">email</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Version_Creation_Date&#39;</span><span class="p">:</span> <span class="n">creation_date</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Minimum_Resolution_km&#39;</span><span class="p">:</span> <span class="n">min_res</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Maximum_Resolution_km&#39;</span><span class="p">:</span> <span class="n">max_res</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Maximum_Depth_m&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">max_depth</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Number_of_Levels&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;MPAS_Mesh_Description&#39;</span><span class="p">:</span> <span class="n">descriptions</span><span class="p">[</span><span class="s1">&#39;mesh&#39;</span><span class="p">],</span>
-                <span class="s1">&#39;MPAS_Mesh_Bathymetry&#39;</span><span class="p">:</span> <span class="n">descriptions</span><span class="p">[</span><span class="s1">&#39;bathy&#39;</span><span class="p">],</span>
-                <span class="s1">&#39;MPAS_Initial_Condition&#39;</span><span class="p">:</span> <span class="n">descriptions</span><span class="p">[</span><span class="s1">&#39;init&#39;</span><span class="p">]}</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'MPAS_Mesh_Short_Name'</span><span class="p">:</span> <span class="n">short_name</span><span class="p">,</span>
+                <span class="s1">'MPAS_Mesh_Long_Name'</span><span class="p">:</span> <span class="n">long_name</span><span class="p">,</span>
+                <span class="s1">'MPAS_Mesh_Prefix'</span><span class="p">:</span> <span class="n">mesh_prefix</span><span class="p">,</span>
+                <span class="s1">'MPAS_Mesh_E3SM_Version'</span><span class="p">:</span> <span class="n">e3sm_version</span><span class="p">,</span>
+                <span class="s1">'MPAS_Mesh_Pull_Request'</span><span class="p">:</span> <span class="n">pull_request</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Revision'</span><span class="p">:</span> <span class="n">mesh_revision</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Version_Author'</span><span class="p">:</span> <span class="n">author</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Version_Author_Email'</span><span class="p">:</span> <span class="n">email</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Version_Creation_Date'</span><span class="p">:</span> <span class="n">creation_date</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Minimum_Resolution_km'</span><span class="p">:</span> <span class="n">min_res</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Maximum_Resolution_km'</span><span class="p">:</span> <span class="n">max_res</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Maximum_Depth_m'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">max_depth</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Number_of_Levels'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                <span class="s1">'MPAS_Mesh_Description'</span><span class="p">:</span> <span class="n">descriptions</span><span class="p">[</span><span class="s1">'mesh'</span><span class="p">],</span>
+                <span class="s1">'MPAS_Mesh_Bathymetry'</span><span class="p">:</span> <span class="n">descriptions</span><span class="p">[</span><span class="s1">'bathy'</span><span class="p">],</span>
+                <span class="s1">'MPAS_Initial_Condition'</span><span class="p">:</span> <span class="n">descriptions</span><span class="p">[</span><span class="s1">'init'</span><span class="p">]}</span>
 
-    <span class="k">if</span> <span class="s1">&#39;wisc&#39;</span> <span class="ow">in</span> <span class="n">descriptions</span><span class="p">:</span>
-        <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;MPAS_Mesh_Ice_Shelf_Cavities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">descriptions</span><span class="p">[</span><span class="s1">&#39;wisc&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">'wisc'</span> <span class="ow">in</span> <span class="n">descriptions</span><span class="p">:</span>
+        <span class="n">metadata</span><span class="p">[</span><span class="s1">'MPAS_Mesh_Ice_Shelf_Cavities'</span><span class="p">]</span> <span class="o">=</span> <span class="n">descriptions</span><span class="p">[</span><span class="s1">'wisc'</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="s1">&#39;bgc&#39;</span> <span class="ow">in</span> <span class="n">descriptions</span><span class="p">:</span>
-        <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;MPAS_Mesh_Biogeochemistry&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">descriptions</span><span class="p">[</span><span class="s1">&#39;bgc&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">'bgc'</span> <span class="ow">in</span> <span class="n">descriptions</span><span class="p">:</span>
+        <span class="n">metadata</span><span class="p">[</span><span class="s1">'MPAS_Mesh_Biogeochemistry'</span><span class="p">]</span> <span class="o">=</span> <span class="n">descriptions</span><span class="p">[</span><span class="s1">'bgc'</span><span class="p">]</span>
 
     <span class="c1"># JIGSAW is built as part of the jigsawpy package so the two share a</span>
     <span class="c1"># version</span>
-    <span class="n">packages</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;compass&#39;</span><span class="p">:</span> <span class="s1">&#39;compass&#39;</span><span class="p">,</span> <span class="s1">&#39;JIGSAW&#39;</span><span class="p">:</span> <span class="s1">&#39;jigsawpy&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;JIGSAW_Python&#39;</span><span class="p">:</span> <span class="s1">&#39;jigsawpy&#39;</span><span class="p">,</span> <span class="s1">&#39;MPAS_Tools&#39;</span><span class="p">:</span> <span class="s1">&#39;mpas_tools&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;NCO&#39;</span><span class="p">:</span> <span class="s1">&#39;nco&#39;</span><span class="p">,</span> <span class="s1">&#39;ESMF&#39;</span><span class="p">:</span> <span class="s1">&#39;esmf&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;geometric_features&#39;</span><span class="p">:</span> <span class="s1">&#39;geometric_features&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;Metis&#39;</span><span class="p">:</span> <span class="s1">&#39;metis&#39;</span><span class="p">,</span> <span class="s1">&#39;pyremap&#39;</span><span class="p">:</span> <span class="s1">&#39;pyremap&#39;</span><span class="p">}</span>
+    <span class="n">packages</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'compass'</span><span class="p">:</span> <span class="s1">'compass'</span><span class="p">,</span> <span class="s1">'JIGSAW'</span><span class="p">:</span> <span class="s1">'jigsawpy'</span><span class="p">,</span>
+                <span class="s1">'JIGSAW_Python'</span><span class="p">:</span> <span class="s1">'jigsawpy'</span><span class="p">,</span> <span class="s1">'MPAS_Tools'</span><span class="p">:</span> <span class="s1">'mpas_tools'</span><span class="p">,</span>
+                <span class="s1">'NCO'</span><span class="p">:</span> <span class="s1">'nco'</span><span class="p">,</span> <span class="s1">'ESMF'</span><span class="p">:</span> <span class="s1">'esmf'</span><span class="p">,</span>
+                <span class="s1">'geometric_features'</span><span class="p">:</span> <span class="s1">'geometric_features'</span><span class="p">,</span>
+                <span class="s1">'Metis'</span><span class="p">:</span> <span class="s1">'metis'</span><span class="p">,</span> <span class="s1">'pyremap'</span><span class="p">:</span> <span class="s1">'pyremap'</span><span class="p">}</span>
 
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
         <span class="n">package</span> <span class="o">=</span> <span class="n">packages</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-        <span class="n">metadata</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;MPAS_Mesh_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_Version&#39;</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">metadata</span><span class="p">[</span><span class="sa">f</span><span class="s1">'MPAS_Mesh_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_Version'</span><span class="p">]</span> <span class="o">=</span> \
             <span class="n">_get_package_version</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">metadata</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_package_version</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the version of a package in the pixi environment, either from the</span>
 <span class="sd">    conda package records or, for packages installed with pip (such as compass</span>
 <span class="sd">    itself), from the python package metadata</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">version</span> <span class="o">=</span> <span class="n">_get_conda_package_version</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">version</span> <span class="o">=</span> <span class="n">_get_python_package_version</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;not found&#39;</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="s1">'not found'</span>
     <span class="k">return</span> <span class="n">version</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_conda_package_version</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Get the version of a conda package installed in this environment &quot;&quot;&quot;</span>
-    <span class="n">pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="s1">&#39;conda-meta&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s1">-*.json&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">""" Get the version of a conda package installed in this environment """</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="s1">'conda-meta'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s1">-*.json'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">)):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
             <span class="n">record</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">package</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;version&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'name'</span><span class="p">)</span> <span class="o">==</span> <span class="n">package</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'version'</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="kc">None</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_python_package_version</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Get the version of a python package installed in this environment &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Get the version of a python package installed in this environment """</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">version</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">PackageNotFoundError</span><span class="p">:</span>

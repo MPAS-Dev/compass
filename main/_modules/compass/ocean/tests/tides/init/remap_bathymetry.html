@@ -121,18 +121,18 @@
 <div class="viewcode-block" id="RemapBathymetry">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.init.remap_bathymetry.RemapBathymetry.html#compass.ocean.tests.tides.init.remap_bathymetry.RemapBathymetry">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RemapBathymetry</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for remapping bathymetric data onto the MPAS-Ocean mesh</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    plot : bool</span>
 <span class="sd">        Whether to produce plots of remapped data</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="RemapBathymetry.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.init.remap_bathymetry.RemapBathymetry.html#compass.ocean.tests.tides.init.remap_bathymetry.RemapBathymetry.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">limit_bathy_outside_refinement</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -142,25 +142,25 @@
 
 <span class="sd">        mesh : compass.ocean.tests.tides.mesh.Mesh</span>
 <span class="sd">            The test case that creates the mesh used by this test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;remap&#39;</span><span class="p">,</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'remap'</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">plot</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="n">cull_mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;cull_mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
-        <span class="n">base_mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
-        <span class="n">pixel_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;pixel&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">cull_mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">'cull_mesh'</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">base_mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">'base_mesh'</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">pixel_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">'pixel'</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cull_mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'mesh.nc'</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">cull_mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_mesh_path</span><span class="si">}</span><span class="s1">/base_mesh.nc&#39;</span><span class="p">)</span>
-        <span class="n">pixel_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pixel_path</span><span class="si">}</span><span class="s1">/RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc&#39;</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'base_mesh.nc'</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">base_mesh_path</span><span class="si">}</span><span class="s1">/base_mesh.nc'</span><span class="p">)</span>
+        <span class="n">pixel_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">pixel_path</span><span class="si">}</span><span class="s1">/RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;bathy.nc&#39;</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'bathy.nc'</span><span class="p">,</span>
             <span class="n">work_dir_target</span><span class="o">=</span><span class="n">pixel_file</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">limit_bathy_outside_refinement</span> <span class="o">=</span> <span class="n">limit_bathy_outside_refinement</span></div>
@@ -169,31 +169,31 @@
 <div class="viewcode-block" id="RemapBathymetry.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.init.remap_bathymetry.RemapBathymetry.run.html#compass.ocean.tests.tides.init.remap_bathymetry.RemapBathymetry.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">dem_remap</span><span class="o">.</span><span class="n">dem_remap</span><span class="p">(</span><span class="s1">&#39;bathy.nc&#39;</span><span class="p">,</span>
-                            <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
-        <span class="n">dem_trnsf</span><span class="o">.</span><span class="n">dem_trnsf</span><span class="p">(</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh.nc&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">dem_remap</span><span class="o">.</span><span class="n">dem_remap</span><span class="p">(</span><span class="s1">'bathy.nc'</span><span class="p">,</span>
+                            <span class="s1">'base_mesh.nc'</span><span class="p">)</span>
+        <span class="n">dem_trnsf</span><span class="o">.</span><span class="n">dem_trnsf</span><span class="p">(</span><span class="s1">'base_mesh.nc'</span><span class="p">,</span> <span class="s1">'mesh.nc'</span><span class="p">)</span>
 
         <span class="c1"># Create new NetCDF variables in mesh file, if necessary</span>
-        <span class="n">nc_mesh</span> <span class="o">=</span> <span class="n">nc4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+        <span class="n">nc_mesh</span> <span class="o">=</span> <span class="n">nc4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s1">'mesh.nc'</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">)</span>
         <span class="n">nc_vars</span> <span class="o">=</span> <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;bottomDepthObserved&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nc_vars</span><span class="p">:</span>
-            <span class="n">nc_mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">'bottomDepthObserved'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nc_vars</span><span class="p">:</span>
+            <span class="n">nc_mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'bottomDepthObserved'</span><span class="p">,</span> <span class="s1">'f8'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nCells'</span><span class="p">))</span>
 
-        <span class="n">bottomDepthObserved</span> <span class="o">=</span> <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">][:]</span>
+        <span class="n">bottomDepthObserved</span> <span class="o">=</span> <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'bed_elevation'</span><span class="p">][:]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit_bathy_outside_refinement</span><span class="p">:</span>
             <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;floodplain_resolution&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">'spherical_mesh'</span><span class="p">,</span> <span class="s1">'floodplain_resolution'</span><span class="p">):</span>
                 <span class="n">floodplain_resolution</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
-                    <span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;floodplain_resolution&#39;</span><span class="p">)</span>
+                    <span class="s1">'spherical_mesh'</span><span class="p">,</span>
+                    <span class="s1">'floodplain_resolution'</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">floodplain_resolution</span> <span class="o">=</span> <span class="mf">1e10</span>
 
-            <span class="n">h</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">][:]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'areaCell'</span><span class="p">][:]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
             <span class="n">h</span> <span class="o">=</span> <span class="n">h</span> <span class="o">/</span> <span class="mf">1000.0</span>
             <span class="n">floodplain</span> <span class="o">=</span> <span class="n">h</span> <span class="o">&lt;</span> <span class="n">floodplain_resolution</span>
 
@@ -201,7 +201,7 @@
                 <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">bottomDepthObserved</span><span class="p">[</span><span class="o">~</span><span class="n">floodplain</span><span class="p">],</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">)</span>
 
         <span class="c1"># Write to mesh file</span>
-        <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">bottomDepthObserved</span>
+        <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'bottomDepthObserved'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">bottomDepthObserved</span>
         <span class="n">nc_mesh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 </div>
 

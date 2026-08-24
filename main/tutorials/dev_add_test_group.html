@@ -235,15 +235,15 @@ imported with:</p>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">BaroclinicChannel</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test group for baroclinic channel test cases</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        mpas_core : compass.MpasCore</span>
 <span class="sd">            the MPAS core that this test group belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'baroclinic_channel'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The method (a function for a class) called <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> is the constructor
@@ -277,15 +277,15 @@ groups in the ocean core:</p>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Ocean</span><span class="p">(</span><span class="n">MpasCore</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test group for General Ocean Turbulence Model (GOTM) test cases</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the collection of MPAS-Ocean test cases</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">)</span>
 
 <span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">BaroclinicChannel</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
 </span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">GlobalConvergence</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
@@ -313,22 +313,22 @@ you’re interested).</p>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The default test case for the baroclinic channel test group simply creates</span>
 <span class="sd">    the mesh and initial condition, then performs a short forward run on 4</span>
 <span class="sd">    cores.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel</span>
 <span class="sd">            The test group that this test case belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'default'</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -365,7 +365,7 @@ test case:</p>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The default test case for the baroclinic channel test group simply creates</span>
 <span class="sd">    the mesh and initial condition, then performs a short forward run on 4</span>
 <span class="sd">    cores.</span>
@@ -374,10 +374,10 @@ test case:</p>
 </span><span class="hll"><span class="sd">    ----------</span>
 </span><span class="hll"><span class="sd">    resolution : str</span>
 </span><span class="hll"><span class="sd">        The resolution of the test case</span>
-</span><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class="sd">    """</span>
 
 <span class="hll">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -387,10 +387,10 @@ test case:</p>
 
 <span class="hll"><span class="sd">        resolution : str</span>
 </span><span class="hll"><span class="sd">            The resolution of the test case</span>
-</span><span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+</span><span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'default'</span>
 <span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
-</span><span class="hll">        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+</span><span class="hll">        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 </span><span class="hll">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
 </span><span class="hll">                         <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 </span></pre></div>
@@ -412,17 +412,17 @@ see how the resolution will be specified.  We add the following to the file
 </span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">BaroclinicChannel</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test group for baroclinic channel test cases</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        mpas_core : compass.MpasCore</span>
 <span class="sd">            the MPAS core that this test group belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'baroclinic_channel'</span><span class="p">)</span>
 
-<span class="hll">        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;10km&#39;</span><span class="p">]:</span>
+<span class="hll">        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'10km'</span><span class="p">]:</span>
 </span><span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
 </span><span class="hll">                <span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
 </span></pre></div>
@@ -447,7 +447,7 @@ that descends from <code class="docutils literal notranslate"><span class="pre">
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating a mesh and initial condition for baroclinic channel</span>
 <span class="sd">    test cases</span>
 
@@ -455,9 +455,9 @@ that descends from <code class="docutils literal notranslate"><span class="pre">
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -467,8 +467,8 @@ that descends from <code class="docutils literal notranslate"><span class="pre">
 
 <span class="sd">        resolution : str</span>
 <span class="sd">            The resolution of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'initial_state'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
 </pre></div>
 </div>
@@ -506,25 +506,25 @@ direction but not in y. The number of cells in mesh comes from config options
 <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">]</span>
-        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">)</span>
-        <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;dc&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'baroclinic_channel'</span><span class="p">]</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'nx'</span><span class="p">)</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'ny'</span><span class="p">)</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'dc'</span><span class="p">)</span>
 
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span> <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                       <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">'base_mesh.nc'</span><span class="p">)</span>
 
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">'culled_graph.info'</span><span class="p">,</span>
                          <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">'culled_mesh.nc'</span><span class="p">)</span>
 
         <span class="o">...</span>
 </pre></div>
@@ -555,28 +555,28 @@ options:</p>
 <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Modify the configuration options for this test case.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-                               <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
-                               <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">10e3</span><span class="p">},</span>
-                      <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
-                              <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">126</span><span class="p">,</span>
-                              <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">4e3</span><span class="p">},</span>
-                      <span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
-                              <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-                              <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">}}</span>
+        <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'10km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'nx'</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+                               <span class="s1">'ny'</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+                               <span class="s1">'dc'</span><span class="p">:</span> <span class="mf">10e3</span><span class="p">},</span>
+                      <span class="s1">'4km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'nx'</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+                              <span class="s1">'ny'</span><span class="p">:</span> <span class="mi">126</span><span class="p">,</span>
+                              <span class="s1">'dc'</span><span class="p">:</span> <span class="mf">4e3</span><span class="p">},</span>
+                      <span class="s1">'1km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'nx'</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
+                              <span class="s1">'ny'</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                              <span class="s1">'dc'</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">}}</span>
 
         <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: &#39;</span>
-                             <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: '</span>
+                             <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
         <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]))</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'baroclinic_channel'</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]))</span>
 </pre></div>
 </div>
 <p>As noted above, we only support 3 resolutions (<code class="docutils literal notranslate"><span class="pre">'10km'</span></code>, <code class="docutils literal notranslate"><span class="pre">'4km'</span></code> and
@@ -607,10 +607,10 @@ snippet below is an example of how to make use of the
         <span class="n">ds</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">xCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xCell</span>
 
-        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
+        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'vertical_grid'</span><span class="p">,</span> <span class="s1">'bottom_depth'</span><span class="p">)</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bottom_depth</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'bottomDepth'</span><span class="p">]</span> <span class="o">=</span> <span class="n">bottom_depth</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
 
         <span class="n">init_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
 </pre></div>
@@ -638,7 +638,7 @@ the config file for each test case as part of setup:</p>
 <span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span>
 <span class="na">coord_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">z-star</span>
 
-<span class="c1"># Whether to use &quot;partial&quot; or &quot;full&quot;, or &quot;None&quot; to not alter the topography</span>
+<span class="c1"># Whether to use "partial" or "full", or "None" to not alter the topography</span>
 <span class="na">partial_cell_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
 
 <span class="c1"># The minimum fraction of a layer for partial cells</span>
@@ -662,15 +662,15 @@ define the initial condition:</p>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="o">...</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">]</span>
-        <span class="n">use_distances</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;use_distances&#39;</span><span class="p">)</span>
-        <span class="n">gradient_width_dist</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;gradient_width_dist&#39;</span><span class="p">)</span>
-        <span class="n">gradient_width_frac</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;gradient_width_frac&#39;</span><span class="p">)</span>
-        <span class="n">bottom_temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_temperature&#39;</span><span class="p">)</span>
-        <span class="n">surface_temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;surface_temperature&#39;</span><span class="p">)</span>
-        <span class="n">temperature_difference</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;temperature_difference&#39;</span><span class="p">)</span>
-        <span class="n">salinity</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;salinity&#39;</span><span class="p">)</span>
-        <span class="n">coriolis_parameter</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;coriolis_parameter&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'baroclinic_channel'</span><span class="p">]</span>
+        <span class="n">use_distances</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'use_distances'</span><span class="p">)</span>
+        <span class="n">gradient_width_dist</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'gradient_width_dist'</span><span class="p">)</span>
+        <span class="n">gradient_width_frac</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'gradient_width_frac'</span><span class="p">)</span>
+        <span class="n">bottom_temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'bottom_temperature'</span><span class="p">)</span>
+        <span class="n">surface_temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'surface_temperature'</span><span class="p">)</span>
+        <span class="n">temperature_difference</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'temperature_difference'</span><span class="p">)</span>
+        <span class="n">salinity</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'salinity'</span><span class="p">)</span>
+        <span class="n">coriolis_parameter</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'coriolis_parameter'</span><span class="p">)</span>
 
         <span class="o">...</span>
 
@@ -704,7 +704,7 @@ define the initial condition:</p>
                             <span class="n">frac</span><span class="p">)</span>
 
         <span class="n">temperature</span> <span class="o">=</span> <span class="n">temp_vert</span> <span class="o">-</span> <span class="n">temperature_difference</span> <span class="o">*</span> <span class="n">frac</span>
-        <span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">'nCells'</span><span class="p">,</span> <span class="s1">'nVertLevels'</span><span class="p">)</span>
 
         <span class="c1"># Determine yOffset for 3rd crest in sin wave</span>
         <span class="n">yOffset</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">perturbationWidth</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span>
@@ -720,21 +720,21 @@ define the initial condition:</p>
                        <span class="n">mask</span> <span class="o">*</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="p">((</span><span class="n">yCell</span> <span class="o">-</span> <span class="p">(</span><span class="n">yMid</span> <span class="o">-</span> <span class="n">yOffset</span><span class="p">))</span> <span class="o">/</span>
                                            <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">perturbationWidth</span><span class="p">))))</span>
 
-        <span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
         <span class="n">normalVelocity</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">normalVelocity</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="p">)</span>
-        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;nEdges&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
-        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">'nEdges'</span><span class="p">,</span> <span class="s1">'nVertLevels'</span><span class="p">)</span>
+        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temperature</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;salinity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinity</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalVelocity</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fEdge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fVertex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xVertex</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'temperature'</span><span class="p">]</span> <span class="o">=</span> <span class="n">temperature</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'salinity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinity</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'normalVelocity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalVelocity</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'fCell'</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'fEdge'</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'fVertex'</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xVertex</span><span class="p">)</span>
 
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;ocean.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">'ocean.nc'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The details aren’t critical for the purpose of this tutorial, though you may
@@ -794,8 +794,8 @@ constructor:</p>
     <span class="o">...</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
         <span class="o">...</span>
-        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;ocean.nc&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'base_mesh.nc'</span><span class="p">,</span> <span class="s1">'culled_mesh.nc'</span><span class="p">,</span> <span class="s1">'culled_graph.info'</span><span class="p">,</span>
+                     <span class="s1">'ocean.nc'</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -817,7 +817,7 @@ number of cores, minimum number of cores, and number of threads (the
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MPAS-Ocean runs as part of baroclinic</span>
 <span class="sd">    channel test cases.</span>
 
@@ -825,10 +825,10 @@ number of cores, minimum number of cores, and number of threads (the
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="sd">    """</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -859,7 +859,7 @@ number of cores, minimum number of cores, and number of threads (the
 
 <span class="sd">        nu : float, optional</span>
 <span class="sd">            the viscosity (if different from the default for the test group)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="k">if</span> <span class="n">min_tasks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">ntasks</span>
@@ -903,7 +903,7 @@ config options from the config file (see above).</p>
 case’s python package similar to the resulting namelist file.  Here is the
 <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code> file from the <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test group:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_write_output_on_startup = .false.
-config_run_duration = &#39;0000_00:15:00&#39;
+config_run_duration = '0000_00:15:00'
 config_use_mom_del2 = .true.
 config_implicit_bottom_drag_coeff = 1.0e-2
 config_use_cvmix_background = .true.
@@ -914,8 +914,8 @@ config_cvmix_background_viscosity = 1.0e-4
 <p>Some namelist options are specific to a given resolution, so it is handy to
 define namelist files for each resolution.  As an example, here is
 <code class="docutils literal notranslate"><span class="pre">namelist.10km.forward</span></code>:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_dt = &#39;00:05:00&#39;
-config_btr_dt = &#39;00:00:15&#39;
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_dt = '00:05:00'
+config_btr_dt = '00:00:15'
 config_mom_del2 = 10.0
 </pre></div>
 </div>
@@ -923,14 +923,14 @@ config_mom_del2 = 10.0
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
     <span class="o">...</span>
-<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="o">...</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">.forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.baroclinic_channel'</span><span class="p">,</span>
+                               <span class="s1">'namelist.forward'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.baroclinic_channel'</span><span class="p">,</span>
+                               <span class="s1">'namelist.</span><span class="si">{}</span><span class="s1">.forward'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>The first argument to <a class="reference internal" href="../developers_guide/generated/compass.Step.add_namelist_file.html#compass.Step.add_namelist_file" title="compass.Step.add_namelist_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_namelist_file()</span></code></a> is the
@@ -946,13 +946,13 @@ into the constructor (if it is not <code class="docutils literal notranslate"><s
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
     <span class="o">...</span>
-<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="o">...</span>
 
         <span class="k">if</span> <span class="n">nu</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># update the viscosity to the requested value</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_mom_del2&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nu</span><span class="p">)}</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_mom_del2'</span><span class="p">:</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nu</span><span class="p">)}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -965,24 +965,24 @@ is set up. In the <code class="docutils literal notranslate"><span class="pre">b
 <code class="docutils literal notranslate"><span class="pre">streams.forward</span></code> file that looks like this:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;mesh&quot;</span>
-<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"mesh"</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">"init.nc"</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;input&quot;</span>
-<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"input"</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">"init.nc"</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;restart&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"restart"</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output&quot;</span>
-<span class="w">        </span><span class="na">type=</span><span class="s">&quot;output&quot;</span>
-<span class="w">        </span><span class="na">filename_template=</span><span class="s">&quot;output.nc&quot;</span>
-<span class="w">        </span><span class="na">output_interval=</span><span class="s">&quot;0000_00:00:01&quot;</span>
-<span class="w">        </span><span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"output"</span>
+<span class="w">        </span><span class="na">type=</span><span class="s">"output"</span>
+<span class="w">        </span><span class="na">filename_template=</span><span class="s">"output.nc"</span>
+<span class="w">        </span><span class="na">output_interval=</span><span class="s">"0000_00:00:01"</span>
+<span class="w">        </span><span class="na">clobber_mode=</span><span class="s">"truncate"</span><span class="nt">&gt;</span>
 
-<span class="w">    </span><span class="nt">&lt;var_struct</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;tracers&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;xtime&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;normalVelocity&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var_struct</span><span class="w"> </span><span class="na">name=</span><span class="s">"tracers"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"xtime"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"normalVelocity"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"layerThickness"</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/stream&gt;</span>
 
 <span class="nt">&lt;/streams&gt;</span>
@@ -992,22 +992,22 @@ is set up. In the <code class="docutils literal notranslate"><span class="pre">b
 will use the default attributes defined by the MPAS component unless they are
 explicitly replaced in the streams file.  As an example, on setting up the
 step, the stream <code class="docutils literal notranslate"><span class="pre">mesh</span></code> in the <code class="docutils literal notranslate"><span class="pre">streams.ocean</span></code> file becomes:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;mesh&quot;</span>
-<span class="w">                  </span><span class="na">type=</span><span class="s">&quot;input&quot;</span>
-<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span>
-<span class="w">                  </span><span class="na">input_interval=</span><span class="s">&quot;initial_only&quot;</span><span class="nt">/&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"mesh"</span>
+<span class="w">                  </span><span class="na">type=</span><span class="s">"input"</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">"init.nc"</span>
+<span class="w">                  </span><span class="na">input_interval=</span><span class="s">"initial_only"</span><span class="nt">/&gt;</span>
 </pre></div>
 </div>
 <p>In the <code class="docutils literal notranslate"><span class="pre">forward</span></code> step, we add these streams file as follows:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
     <span class="o">...</span>
-<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="o">...</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.baroclinic_channel'</span><span class="p">,</span>
+                              <span class="s1">'streams.forward'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Similarly to namelists, the first argument to
@@ -1026,9 +1026,9 @@ implement the <code class="docutils literal notranslate"><span class="pre">run()
 <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1049,7 +1049,7 @@ which MPAS core this test case belongs to, and so on.</p>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The default test case for the baroclinic channel test group simply creates</span>
 <span class="sd">    the mesh and initial condition, then performs a short forward run on 4</span>
 <span class="sd">    cores.</span>
@@ -1058,10 +1058,10 @@ which MPAS core this test case belongs to, and so on.</p>
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -1071,10 +1071,10 @@ which MPAS core this test case belongs to, and so on.</p>
 
 <span class="sd">        resolution : str</span>
 <span class="sd">            The resolution of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'default'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -1122,7 +1122,7 @@ group as a whole, serving to validate the code in a specific context.</p>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RpeTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The reference potential energy (RPE) test case for the baroclinic channel</span>
 <span class="sd">    test group performs a 20-day integration of the model forward in time at</span>
 <span class="sd">    5 different values of the viscosity at the given resolution.</span>
@@ -1131,10 +1131,10 @@ group as a whole, serving to validate the code in a specific context.</p>
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -1144,9 +1144,9 @@ group as a whole, serving to validate the code in a specific context.</p>
 
 <span class="sd">        resolution : str</span>
 <span class="sd">            The resolution of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test&#39;</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'rpe_test'</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
@@ -1164,20 +1164,20 @@ tet case. We add the following to the file <code class="docutils literal notrans
 </span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">BaroclinicChannel</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test group for baroclinic channel test cases</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        mpas_core : compass.MpasCore</span>
 <span class="sd">            the MPAS core that this test group belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'baroclinic_channel'</span><span class="p">)</span>
 
-<span class="hll">        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;1km&#39;</span><span class="p">,</span> <span class="s1">&#39;4km&#39;</span><span class="p">,</span> <span class="s1">&#39;10km&#39;</span><span class="p">]:</span>
+<span class="hll">        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'1km'</span><span class="p">,</span> <span class="s1">'4km'</span><span class="p">,</span> <span class="s1">'10km'</span><span class="p">]:</span>
 </span><span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
 </span><span class="hll">                <span class="n">RpeTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
-</span>        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;10km&#39;</span><span class="p">]:</span>
+</span>        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'10km'</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
                 <span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
 </pre></div>
@@ -1195,7 +1195,7 @@ be run at all three supported resolutions.</p>
 </span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RpeTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The reference potential energy (RPE) test case for the baroclinic channel</span>
 <span class="sd">    test group performs a 20-day integration of the model forward in time at</span>
 <span class="sd">    5 different values of the viscosity at the given resolution.</span>
@@ -1204,10 +1204,10 @@ be run at all three supported resolutions.</p>
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -1217,22 +1217,22 @@ be run at all three supported resolutions.</p>
 
 <span class="sd">        resolution : str</span>
 <span class="sd">            The resolution of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test&#39;</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'rpe_test'</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
 <span class="hll">        <span class="n">nus</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
 </span><span class="hll">
-</span><span class="hll">        <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ntasks&#39;</span><span class="p">:</span> <span class="mi">144</span><span class="p">,</span> <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">},</span>
-</span><span class="hll">                      <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ntasks&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span> <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">},</span>
-</span><span class="hll">                      <span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ntasks&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}}</span>
+</span><span class="hll">        <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'1km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'ntasks'</span><span class="p">:</span> <span class="mi">144</span><span class="p">,</span> <span class="s1">'min_tasks'</span><span class="p">:</span> <span class="mi">36</span><span class="p">},</span>
+</span><span class="hll">                      <span class="s1">'4km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'ntasks'</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span> <span class="s1">'min_tasks'</span><span class="p">:</span> <span class="mi">8</span><span class="p">},</span>
+</span><span class="hll">                      <span class="s1">'10km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'ntasks'</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">'min_tasks'</span><span class="p">:</span> <span class="mi">4</span><span class="p">}}</span>
 </span><span class="hll">
 </span><span class="hll">        <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
 </span><span class="hll">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span class="hll">                <span class="sa">f</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">. Supported values are: &#39;</span>
-</span><span class="hll">                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span><span class="hll">                <span class="sa">f</span><span class="s1">'Unsupported resolution </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">. Supported values are: '</span>
+</span><span class="hll">                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 </span><span class="hll">
 </span><span class="hll">        <span class="n">params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
 </span>
@@ -1242,18 +1242,18 @@ be run at all three supported resolutions.</p>
 </span><span class="hll">            <span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
 </span><span class="hll">
 </span><span class="hll">        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">nu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nus</span><span class="p">):</span>
-</span><span class="hll">            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
+</span><span class="hll">            <span class="n">name</span> <span class="o">=</span> <span class="s1">'rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
 </span><span class="hll">            <span class="n">step</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span>
 </span><span class="hll">                <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-</span><span class="hll">                <span class="n">ntasks</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;ntasks&#39;</span><span class="p">],</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;min_tasks&#39;</span><span class="p">],</span>
+</span><span class="hll">                <span class="n">ntasks</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'ntasks'</span><span class="p">],</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'min_tasks'</span><span class="p">],</span>
 </span><span class="hll">                <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">nu</span><span class="p">))</span>
 </span><span class="hll">
 </span><span class="hll">            <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-</span><span class="hll">                <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.rpe_test&#39;</span><span class="p">,</span>
-</span><span class="hll">                <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+</span><span class="hll">                <span class="s1">'compass.ocean.tests.baroclinic_channel.rpe_test'</span><span class="p">,</span>
+</span><span class="hll">                <span class="s1">'namelist.forward'</span><span class="p">)</span>
 </span><span class="hll">            <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-</span><span class="hll">                <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.rpe_test&#39;</span><span class="p">,</span>
-</span><span class="hll">                <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+</span><span class="hll">                <span class="s1">'compass.ocean.tests.baroclinic_channel.rpe_test'</span><span class="p">,</span>
+</span><span class="hll">                <span class="s1">'streams.forward'</span><span class="p">)</span>
 </span><span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 </span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
@@ -1273,12 +1273,12 @@ test case is the only one to use the <code class="docutils literal notranslate">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
 <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">nu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nus</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">'rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
     <span class="n">step</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span>
         <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-        <span class="n">ntasks</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;ntasks&#39;</span><span class="p">],</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;min_tasks&#39;</span><span class="p">],</span>
+        <span class="n">ntasks</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'ntasks'</span><span class="p">],</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'min_tasks'</span><span class="p">],</span>
         <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
-    <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_mom_del2&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">nu</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_mom_del2'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">nu</span><span class="si">}</span><span class="s1">'</span><span class="p">}</span>
     <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
     <span class="o">...</span>
@@ -1292,23 +1292,23 @@ test case is the only one to use the <code class="docutils literal notranslate">
 accommodate the longer run and to modify the variables that are written out.
 We add these namelist options within <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code> in the test case’s
 directory:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_run_duration = &#39;20_00:00:00&#39;
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_run_duration = '20_00:00:00'
 </pre></div>
 </div>
 <p>and the following stream in <code class="docutils literal notranslate"><span class="pre">streams.forward</span></code>:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
 
-<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output&quot;</span>
-<span class="w">        </span><span class="na">type=</span><span class="s">&quot;output&quot;</span>
-<span class="w">        </span><span class="na">filename_template=</span><span class="s">&quot;output.nc&quot;</span>
-<span class="w">        </span><span class="na">output_interval=</span><span class="s">&quot;0000-00-20_00:00:00&quot;</span>
-<span class="w">        </span><span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"output"</span>
+<span class="w">        </span><span class="na">type=</span><span class="s">"output"</span>
+<span class="w">        </span><span class="na">filename_template=</span><span class="s">"output.nc"</span>
+<span class="w">        </span><span class="na">output_interval=</span><span class="s">"0000-00-20_00:00:00"</span>
+<span class="w">        </span><span class="na">clobber_mode=</span><span class="s">"truncate"</span><span class="nt">&gt;</span>
 
-<span class="w">    </span><span class="nt">&lt;var_struct</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;tracers&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;xtime&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;density&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;daysSinceStartOfSim&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;relativeVorticity&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var_struct</span><span class="w"> </span><span class="na">name=</span><span class="s">"tracers"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"xtime"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"density"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"daysSinceStartOfSim"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"relativeVorticity"</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/stream&gt;</span>
 
 <span class="nt">&lt;/streams&gt;</span>
@@ -1334,7 +1334,7 @@ each simulation.  The full analysis step looks like this:</p>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for plotting the results of a series of RPE runs in the baroclinic</span>
 <span class="sd">    channel test group</span>
 
@@ -1345,9 +1345,9 @@ each simulation.  The full analysis step looks like this:</p>
 
 <span class="sd">    nus : list of float</span>
 <span class="sd">        A list of viscosities</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">nus</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -1360,31 +1360,31 @@ each simulation.  The full analysis step looks like this:</p>
 
 <span class="sd">        nus : list of float</span>
 <span class="sd">            A list of viscosities</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;analysis&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'analysis'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nus</span> <span class="o">=</span> <span class="n">nus</span>
 
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">nu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nus</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
-                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">))</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">'output_</span><span class="si">{}</span><span class="s1">.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">target</span><span class="o">=</span><span class="s1">'../rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">/output.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;sections_baroclinic_channel_</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'sections_baroclinic_channel_</span><span class="si">{}</span><span class="s1">.png'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">]</span>
-        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'baroclinic_channel'</span><span class="p">]</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'nx'</span><span class="p">)</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'ny'</span><span class="p">)</span>
         <span class="n">_plot</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">nus</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_plot</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">nus</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot section of the baroclinic channel at different viscosities</span>
 
 <span class="sd">    Parameters</span>
@@ -1400,7 +1400,7 @@ each simulation.  The full analysis step looks like this:</p>
 
 <span class="sd">    nus : list of float</span>
 <span class="sd">        The viscosity values</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="o">...</span>
 </pre></div>
@@ -1418,7 +1418,7 @@ that it writes out.</p>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RpeTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The reference potential energy (RPE) test case for the baroclinic channel</span>
 <span class="sd">    test group performs a 20-day integration of the model forward in time at</span>
 <span class="sd">    5 different values of the viscosity at the given resolution.</span>
@@ -1427,10 +1427,10 @@ that it writes out.</p>
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -1440,9 +1440,9 @@ that it writes out.</p>
 
 <span class="sd">        resolution : str</span>
 <span class="sd">            The resolution of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test&#39;</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'rpe_test'</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -1467,7 +1467,7 @@ module called <code class="docutils literal notranslate"><span class="pre">confi
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Modify the configuration options for one of the baroclinic test cases</span>
 
 <span class="sd">    Parameters</span>
@@ -1477,23 +1477,23 @@ module called <code class="docutils literal notranslate"><span class="pre">confi
 
 <span class="sd">    config : configparser.ConfigParser</span>
 <span class="sd">        Configuration options for this test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-                           <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
-                           <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">10e3</span><span class="p">},</span>
-                  <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
-                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">126</span><span class="p">,</span>
-                          <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">4e3</span><span class="p">},</span>
-                  <span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
-                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-                          <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">}}</span>
+<span class="sd">    """</span>
+    <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'10km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'nx'</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+                           <span class="s1">'ny'</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+                           <span class="s1">'dc'</span><span class="p">:</span> <span class="mf">10e3</span><span class="p">},</span>
+                  <span class="s1">'4km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'nx'</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+                          <span class="s1">'ny'</span><span class="p">:</span> <span class="mi">126</span><span class="p">,</span>
+                          <span class="s1">'dc'</span><span class="p">:</span> <span class="mf">4e3</span><span class="p">},</span>
+                  <span class="s1">'1km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'nx'</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
+                          <span class="s1">'ny'</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                          <span class="s1">'dc'</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">}}</span>
 
     <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: &#39;</span>
-                         <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: '</span>
+                         <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
     <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]))</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'baroclinic_channel'</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]))</span>
 </pre></div>
 </div>
 <p>Since <code class="docutils literal notranslate"><span class="pre">configure()</span></code> is no longer a method of a class descending from
@@ -1509,9 +1509,9 @@ function must take the attributes from the test case that it needs:
 <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Modify the configuration options for this test case.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">baroclinic_channel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1525,9 +1525,9 @@ the function but give it a new name:</p>
 <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Modify the configuration options for this test case.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">bc_configure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
 </pre></div>
 </div>

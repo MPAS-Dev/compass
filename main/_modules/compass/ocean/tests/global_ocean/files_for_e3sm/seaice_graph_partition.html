@@ -130,138 +130,138 @@
 <div class="viewcode-block" id="SeaiceGraphPartition">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition.SeaiceGraphPartition.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition.SeaiceGraphPartition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SeaiceGraphPartition</span><span class="p">(</span><span class="n">FilesForE3SMStep</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating graph partition files for the sea-ice mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="SeaiceGraphPartition.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition.SeaiceGraphPartition.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition.SeaiceGraphPartition.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new step</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM</span>
 <span class="sd">            The test case this step belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+<span class="sd">        """</span>  <span class="c1"># noqa: E501</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;seaice_graph_partition&#39;</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'seaice_graph_partition'</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span>
                          <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;icePresent_QU60km_polar.nc&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;seaice_QU60km_polar.nc&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'icePresent_QU60km_polar.nc'</span><span class="p">,</span>
+                         <span class="s1">'seaice_QU60km_polar.nc'</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
                                 <span class="n">target</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
-                                <span class="n">database</span><span class="o">=</span><span class="s1">&#39;partition&#39;</span><span class="p">,</span>
-                                <span class="n">database_component</span><span class="o">=</span><span class="s1">&#39;seaice&#39;</span><span class="p">)</span></div>
+                                <span class="n">database</span><span class="o">=</span><span class="s1">'partition'</span><span class="p">,</span>
+                                <span class="n">database_component</span><span class="o">=</span><span class="s1">'seaice'</span><span class="p">)</span></div>
 
 
-        <span class="c1"># for now, we won&#39;t define any outputs because they include the mesh</span>
+        <span class="c1"># for now, we won't define any outputs because they include the mesh</span>
         <span class="c1"># short name, which is not known at setup time.  Currently, this is</span>
         <span class="c1"># safe because no other steps depend on the outputs of this one.</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        setup input files based on config options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
-        <span class="n">graph_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;graph_filename&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">graph_filename</span> <span class="o">!=</span> <span class="s1">&#39;autodetect&#39;</span><span class="p">:</span>
+        <span class="n">graph_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'files_for_e3sm'</span><span class="p">,</span> <span class="s1">'graph_filename'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">graph_filename</span> <span class="o">!=</span> <span class="s1">'autodetect'</span><span class="p">:</span>
             <span class="n">graph_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">graph_filename</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">graph_filename</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">graph_filename</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SeaiceGraphPartition.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition.SeaiceGraphPartition.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition.SeaiceGraphPartition.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the testcase</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">plotting</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span>
-                                     <span class="s1">&#39;plot_seaice_partitions&#39;</span><span class="p">)</span>
+        <span class="n">plotting</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'files_for_e3sm'</span><span class="p">,</span>
+                                     <span class="s1">'plot_seaice_partitions'</span><span class="p">)</span>
         <span class="n">creation_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span>
 
-        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
+        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">'restart.nc'</span>
         <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
-            <span class="n">ncells</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
+            <span class="n">ncells</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nCells'</span><span class="p">]</span>
             <span class="c1"># cullCell causes problems when the sea-ice partition tool tries</span>
             <span class="c1"># to add it again</span>
-            <span class="k">if</span> <span class="s1">&#39;cullCell&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
-                <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s1">&#39;cullCell&#39;</span><span class="p">])</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;mesh.nc&#39;</span><span class="p">)</span>
-                <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;mesh.nc&#39;</span>
+            <span class="k">if</span> <span class="s1">'cullCell'</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+                <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s1">'cullCell'</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">'mesh.nc'</span><span class="p">)</span>
+                <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">'mesh.nc'</span>
 
-        <span class="n">max_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span>
-                                           <span class="s1">&#39;max_cells_per_core&#39;</span><span class="p">)</span>
-        <span class="n">min_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span>
-                                           <span class="s1">&#39;min_cells_per_core&#39;</span><span class="p">)</span>
+        <span class="n">max_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'files_for_e3sm'</span><span class="p">,</span>
+                                           <span class="s1">'max_cells_per_core'</span><span class="p">)</span>
+        <span class="n">min_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'files_for_e3sm'</span><span class="p">,</span>
+                                           <span class="s1">'min_cells_per_core'</span><span class="p">)</span>
         <span class="n">cores</span> <span class="o">=</span> <span class="n">get_core_list</span><span class="p">(</span><span class="n">ncells</span><span class="o">=</span><span class="n">ncells</span><span class="p">,</span>
                               <span class="n">max_cells_per_core</span><span class="o">=</span><span class="n">max_cells_per_core</span><span class="p">,</span>
                               <span class="n">min_cells_per_core</span><span class="o">=</span><span class="n">min_cells_per_core</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Creating graph files between </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">cores</span><span class="p">)</span><span class="si">}</span><span class="s1"> and &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">cores</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Creating graph files between </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">cores</span><span class="p">)</span><span class="si">}</span><span class="s1"> and '</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">cores</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="mi">1</span> <span class="ow">in</span> <span class="n">cores</span><span class="p">:</span>
-            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;touch&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;mpas-seaice.graph.info.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.part.1&#39;</span><span class="p">]</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'touch'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'mpas-seaice.graph.info.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.part.1'</span><span class="p">]</span>
             <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
         <span class="n">mapping_filename</span> <span class="o">=</span> <span class="n">_make_mapping_file</span><span class="p">(</span>
-            <span class="n">in_mesh_filename</span><span class="o">=</span><span class="s1">&#39;seaice_QU60km_polar.nc&#39;</span><span class="p">,</span>
-            <span class="n">in_mesh_name</span><span class="o">=</span><span class="s1">&#39;QU60km&#39;</span><span class="p">,</span>
+            <span class="n">in_mesh_filename</span><span class="o">=</span><span class="s1">'seaice_QU60km_polar.nc'</span><span class="p">,</span>
+            <span class="n">in_mesh_name</span><span class="o">=</span><span class="s1">'QU60km'</span><span class="p">,</span>
             <span class="n">out_mesh_filename</span><span class="o">=</span><span class="n">mesh_filename</span><span class="p">,</span>
             <span class="n">out_mesh_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_short_name</span><span class="p">,</span>
             <span class="n">ntasks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span>
             <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
             <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-            <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">)</span>
+            <span class="n">method</span><span class="o">=</span><span class="s1">'bilinear'</span><span class="p">)</span>
 
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;prepare_seaice_partitions&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;seaice_QU60km_polar.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;icePresent_QU60km_polar.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
-                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="n">mapping_filename</span><span class="p">]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'prepare_seaice_partitions'</span><span class="p">,</span>
+                <span class="s1">'-i'</span><span class="p">,</span> <span class="s1">'seaice_QU60km_polar.nc'</span><span class="p">,</span>
+                <span class="s1">'-p'</span><span class="p">,</span> <span class="s1">'icePresent_QU60km_polar.nc'</span><span class="p">,</span>
+                <span class="s1">'-m'</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
+                <span class="s1">'-o'</span><span class="p">,</span> <span class="s1">'.'</span><span class="p">,</span>
+                <span class="s1">'-w'</span><span class="p">,</span> <span class="n">mapping_filename</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_seaice_partitions&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
-                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;mpas-seaice.graph.info.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="s1">&#39;gpmetis&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-n&#39;</span><span class="p">]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'create_seaice_partitions'</span><span class="p">,</span>
+                <span class="s1">'-m'</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
+                <span class="s1">'-o'</span><span class="p">,</span> <span class="s1">'.'</span><span class="p">,</span>
+                <span class="s1">'-p'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'mpas-seaice.graph.info.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                <span class="s1">'-g'</span><span class="p">,</span> <span class="s1">'gpmetis'</span><span class="p">,</span>
+                <span class="s1">'-n'</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">plotting</span><span class="p">:</span>
-            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;--plotting&#39;</span><span class="p">)</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'--plotting'</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">ncores</span> <span class="ow">in</span> <span class="n">cores</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ncores</span> <span class="o">&gt;</span> <span class="n">ncells</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Can</span><span class="se">\t</span><span class="s1"> have more tasks than cells in a &#39;</span>
-                                 <span class="s1">&#39;partition file.&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Can</span><span class="se">\t</span><span class="s1"> have more tasks than cells in a '</span>
+                                 <span class="s1">'partition file.'</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">ncores</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Can</span><span class="se">\t</span><span class="s1"> make a partition for </span><span class="si">{</span><span class="n">ncores</span><span class="si">}</span><span class="s1"> tasks.&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Can</span><span class="se">\t</span><span class="s1"> make a partition for </span><span class="si">{</span><span class="n">ncores</span><span class="si">}</span><span class="s1"> tasks.'</span><span class="p">)</span>
             <span class="n">out_filename</span> <span class="o">=</span> \
-                <span class="sa">f</span><span class="s1">&#39;mpas-seaice.graph.info.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.part.</span><span class="si">{</span><span class="n">ncores</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="sa">f</span><span class="s1">'mpas-seaice.graph.info.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.part.</span><span class="si">{</span><span class="n">ncores</span><span class="si">}</span><span class="s1">'</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">out_filename</span><span class="p">):</span>
                 <span class="k">continue</span>
 
             <span class="k">if</span> <span class="n">ncores</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ncores</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">ncores</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># create link in assembled files directory</span>
-        <span class="n">inputdata_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seaice_inputdata_dir</span><span class="p">,</span> <span class="s1">&#39;partitions&#39;</span><span class="p">)</span>
+        <span class="n">inputdata_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seaice_inputdata_dir</span><span class="p">,</span> <span class="s1">'partitions'</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">inputdata_dir</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
             <span class="k">pass</span>
-        <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;mpas-seaice.graph.info.*&#39;</span><span class="p">)</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">'mpas-seaice.graph.info.*'</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
             <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file</span><span class="p">),</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">inputdata_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">inputdata_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span></div>
 </div>
 
 
@@ -270,9 +270,9 @@
                        <span class="n">out_mesh_name</span><span class="p">,</span> <span class="n">ntasks</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
                        <span class="n">method</span><span class="p">):</span>
 
-    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>
+    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'parallel'</span><span class="p">,</span> <span class="s1">'parallel_executable'</span><span class="p">)</span>
 
-    <span class="n">mapping_file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;map_</span><span class="si">{</span><span class="n">in_mesh_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">out_mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+    <span class="n">mapping_file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'map_</span><span class="si">{</span><span class="n">in_mesh_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">out_mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc'</span>
 
     <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">in_mesh_filename</span><span class="p">,</span> <span class="n">in_mesh_name</span><span class="p">)</span>
     <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">out_mesh_filename</span><span class="p">,</span> <span class="n">out_mesh_name</span><span class="p">)</span>

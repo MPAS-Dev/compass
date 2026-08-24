@@ -127,7 +127,7 @@
 <div class="viewcode-block" id="EnsembleMember">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.html#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">EnsembleMember</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for setting up a single ensemble member</span>
 
 <span class="sd">    Attributes</span>
@@ -158,7 +158,7 @@
 
 <span class="sd">    deltaT : float</span>
 <span class="sd">        value of deltaT to use in ISMIP6 ice-shelf basal melt param.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="EnsembleMember.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.html#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.__init__">[docs]</a>
@@ -172,7 +172,7 @@
                  <span class="n">gamma0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">meltflux</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">deltaT</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Creates a new run within an ensemble</span>
 
 <span class="sd">        Parameters</span>
@@ -209,7 +209,7 @@
 
 <span class="sd">        deltaT : float</span>
 <span class="sd">            value of deltaT to use in ISMIP6 ice-shelf basal melt param.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_num</span> <span class="o">=</span> <span class="n">run_num</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resource_module</span> <span class="o">=</span> <span class="n">resource_module</span>
         <span class="k">if</span> <span class="n">namelist_option_values</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -228,7 +228,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">deltaT</span> <span class="o">=</span> <span class="n">deltaT</span>
 
         <span class="c1"># define step (run) name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;run</span><span class="si">{</span><span class="n">run_num</span><span class="si">:</span><span class="s1">03</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'run</span><span class="si">{</span><span class="n">run_num</span><span class="si">:</span><span class="s1">03</span><span class="si">}</span><span class="s1">'</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
@@ -236,47 +236,47 @@
 <div class="viewcode-block" id="EnsembleMember.setup">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.setup.html#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up this run by setting up a baseline run configuration</span>
 <span class="sd">        and then modifying parameters for this ensemble member based on</span>
 <span class="sd">        an externally provided unit parameter vector</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Setting up run number </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">run_num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;namelist.landice&#39;</span><span class="p">)):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s2"> already created; skipping.  &quot;</span>
-                  <span class="s2">&quot;Please remove the directory &quot;</span>
-                  <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s2"> and execute &quot;</span>
-                  <span class="s2">&quot;&#39;compass setup&#39; again to set this experiment up.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Setting up run number </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">run_num</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'namelist.landice'</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"WARNING: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s2"> already created; skipping.  "</span>
+                  <span class="s2">"Please remove the directory "</span>
+                  <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s2"> and execute "</span>
+                  <span class="s2">"'compass setup' again to set this experiment up."</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="n">resource_module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource_module</span>
 
         <span class="c1"># Get config for info needed for setting up simulation</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ensemble_generator&#39;</span><span class="p">]</span>
-        <span class="n">spinup_section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;spinup_ensemble&#39;</span><span class="p">]</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ensemble_generator'</span><span class="p">]</span>
+        <span class="n">spinup_section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'spinup_ensemble'</span><span class="p">]</span>
 
         <span class="c1"># Create a python config (not compass config) file</span>
         <span class="c1"># for run-specific info useful for analysis/viz</span>
         <span class="c1"># (Could put these in compass step cfg file, but may be safer to</span>
         <span class="c1"># not mess with it.)</span>
         <span class="n">run_info_cfg</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
-        <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">)</span>
-        <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;run_num&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">run_num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="s1">'run_info'</span><span class="p">)</span>
+        <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'run_info'</span><span class="p">,</span> <span class="s1">'run_num'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">run_num</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="c1"># Below we set values for each parameter being used in this ensemble</span>
 
         <span class="c1"># save number of tasks to use</span>
         <span class="c1"># eventually compass could determine this, but for now we want</span>
         <span class="c1"># explicit control</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ntasks&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'ntasks'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span>
 
         <span class="c1"># Set up base run configuration</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">resource_module</span><span class="p">,</span> <span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">resource_module</span><span class="p">,</span> <span class="s1">'namelist.landice'</span><span class="p">)</span>
 
         <span class="c1"># albany_input.yaml is optional unless fric_exp perturbations are used.</span>
-        <span class="n">albany_input_name</span> <span class="o">=</span> <span class="s1">&#39;albany_input.yaml&#39;</span>
+        <span class="n">albany_input_name</span> <span class="o">=</span> <span class="s1">'albany_input.yaml'</span>
         <span class="n">albany_input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">albany_input_name</span><span class="p">)</span>
         <span class="n">albany_source</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="n">files</span><span class="p">(</span><span class="n">resource_module</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span>
             <span class="n">albany_input_name</span><span class="p">)</span>
@@ -294,32 +294,32 @@
 
         <span class="c1"># CFL fraction is set from the cfg to force the user to make a</span>
         <span class="c1"># conscious decision about its value</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cfl_fraction</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;cfl_fraction&#39;</span><span class="p">)</span>
-        <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_adaptive_timestep_CFL_fraction&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cfl_fraction</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfl_fraction</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'cfl_fraction'</span><span class="p">)</span>
+        <span class="n">options</span><span class="p">[</span><span class="s1">'config_adaptive_timestep_CFL_fraction'</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cfl_fraction</span><span class="si">}</span><span class="s1">'</span>
 
         <span class="c1"># apply generic namelist float parameter perturbations</span>
         <span class="k">for</span> <span class="n">option_name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist_option_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">options</span><span class="p">[</span><span class="n">option_name</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">options</span><span class="p">[</span><span class="n">option_name</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">'</span>
         <span class="k">for</span> <span class="n">parameter_name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist_parameter_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="n">parameter_name</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'run_info'</span><span class="p">,</span> <span class="n">parameter_name</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="c1"># adjust basal friction exponent</span>
         <span class="c1"># rename and copy base file</span>
-        <span class="n">input_file_path</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input_file_path&#39;</span><span class="p">)</span>
-        <span class="n">input_file_name</span> <span class="o">=</span> <span class="n">input_file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">base_fname</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">new_input_fname</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_fname</span><span class="si">}</span><span class="s1">_MODIFIED_run</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">run_num</span><span class="si">:</span><span class="s1">03</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+        <span class="n">input_file_path</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'input_file_path'</span><span class="p">)</span>
+        <span class="n">input_file_name</span> <span class="o">=</span> <span class="n">input_file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">base_fname</span> <span class="o">=</span> <span class="s2">"."</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'.'</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">new_input_fname</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">base_fname</span><span class="si">}</span><span class="s1">_MODIFIED_run</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">run_num</span><span class="si">:</span><span class="s1">03</span><span class="si">}</span><span class="s1">.nc'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_file_name</span> <span class="o">=</span> <span class="n">new_input_fname</span>  <span class="c1"># store for run method</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
                                                   <span class="n">new_input_fname</span><span class="p">))</span>
         <span class="c1"># set input filename in streams and create streams file</span>
-        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;input_file_init_cond&#39;</span><span class="p">:</span> <span class="n">new_input_fname</span><span class="p">}</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;spinup_ensemble&#39;</span><span class="p">,</span> <span class="s1">&#39;fric_samples_file&#39;</span><span class="p">):</span>
-            <span class="n">fric_samples_file</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fric_samples_file&#39;</span><span class="p">)</span>
-            <span class="n">fric_map_file</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fric_map_file&#39;</span><span class="p">)</span>
-            <span class="n">mpas_cellid_file</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mpas_cellid_file&#39;</span><span class="p">)</span>
-            <span class="n">fric_sample_scale</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;fric_sample_scale&#39;</span><span class="p">)</span>
+        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'input_file_init_cond'</span><span class="p">:</span> <span class="n">new_input_fname</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">'spinup_ensemble'</span><span class="p">,</span> <span class="s1">'fric_samples_file'</span><span class="p">):</span>
+            <span class="n">fric_samples_file</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'fric_samples_file'</span><span class="p">)</span>
+            <span class="n">fric_map_file</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'fric_map_file'</span><span class="p">)</span>
+            <span class="n">mpas_cellid_file</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mpas_cellid_file'</span><span class="p">)</span>
+            <span class="n">fric_sample_scale</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'fric_sample_scale'</span><span class="p">)</span>
             <span class="n">_apply_fric_sample</span><span class="p">(</span>
                 <span class="n">sample_num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">run_num</span><span class="p">,</span>
                 <span class="n">sample_file</span><span class="o">=</span><span class="n">fric_samples_file</span><span class="p">,</span>
@@ -327,81 +327,81 @@
                 <span class="n">mpas_cellid_file</span><span class="o">=</span><span class="n">mpas_cellid_file</span><span class="p">,</span>
                 <span class="n">ic_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">new_input_fname</span><span class="p">),</span>
                 <span class="n">scaling</span><span class="o">=</span><span class="n">fric_sample_scale</span><span class="p">)</span>
-            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;fric_sample_num&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">run_num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'run_info'</span><span class="p">,</span> <span class="s1">'fric_sample_num'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">run_num</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basal_fric_exp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">has_albany_input</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Parameter &#39;fric_exp&#39; requires &#39;albany_input.yaml&#39; &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;in template package &#39;</span><span class="si">{</span><span class="n">resource_module</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+                    <span class="s2">"Parameter 'fric_exp' requires 'albany_input.yaml' "</span>
+                    <span class="sa">f</span><span class="s2">"in template package '</span><span class="si">{</span><span class="n">resource_module</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
             <span class="c1"># adjust mu and exponent</span>
-            <span class="n">orig_fric_exp</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;orig_fric_exp&#39;</span><span class="p">)</span>
+            <span class="n">orig_fric_exp</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'orig_fric_exp'</span><span class="p">)</span>
             <span class="n">_adjust_friction_exponent</span><span class="p">(</span><span class="n">orig_fric_exp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">basal_fric_exp</span><span class="p">,</span>
                                       <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
                                                    <span class="n">new_input_fname</span><span class="p">),</span>
                                       <span class="n">albany_input_path</span><span class="p">)</span>
-            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;basal_fric_exp&#39;</span><span class="p">,</span>
-                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">basal_fric_exp</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'run_info'</span><span class="p">,</span> <span class="s1">'basal_fric_exp'</span><span class="p">,</span>
+                             <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">basal_fric_exp</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="c1"># mu scale</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu_scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">new_input_fname</span><span class="p">),</span>
-                                <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;muFriction&#39;</span><span class="p">][:]</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu_scale</span>
+                                <span class="s1">'r+'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'muFriction'</span><span class="p">][:]</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu_scale</span>
             <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;mu_scale&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mu_scale</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'run_info'</span><span class="p">,</span> <span class="s1">'mu_scale'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mu_scale</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="c1"># stiff scale</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stiff_scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">new_input_fname</span><span class="p">),</span>
-                                <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;stiffnessFactor&#39;</span><span class="p">][:]</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stiff_scale</span>
+                                <span class="s1">'r+'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'stiffnessFactor'</span><span class="p">][:]</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stiff_scale</span>
             <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;stiff_scale&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stiff_scale</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'run_info'</span><span class="p">,</span> <span class="s1">'stiff_scale'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stiff_scale</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="c1"># adjust gamma0 and deltaT (if a basal melt parameter file is used)</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;spinup_ensemble&#39;</span><span class="p">,</span> <span class="s1">&#39;basal_melt_param_file_path&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">'spinup_ensemble'</span><span class="p">,</span> <span class="s1">'basal_melt_param_file_path'</span><span class="p">):</span>
             <span class="n">basal_melt_param_file_path</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="s1">&#39;basal_melt_param_file_path&#39;</span><span class="p">)</span>
+                <span class="s1">'basal_melt_param_file_path'</span><span class="p">)</span>
             <span class="n">basal_melt_param_file_name</span> <span class="o">=</span> \
-                <span class="n">basal_melt_param_file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">base_fname</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">basal_melt_param_file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">new_fname</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_fname</span><span class="si">}</span><span class="s1">_MODIFIED_run</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">run_num</span><span class="si">:</span><span class="s1">03</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+                <span class="n">basal_melt_param_file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">base_fname</span> <span class="o">=</span> <span class="s2">"."</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">basal_melt_param_file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'.'</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">new_fname</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">base_fname</span><span class="si">}</span><span class="s1">_MODIFIED_run</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">run_num</span><span class="si">:</span><span class="s1">03</span><span class="si">}</span><span class="s1">.nc'</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">basal_melt_param_file_path</span><span class="p">,</span>
                         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">new_fname</span><span class="p">))</span>
             <span class="n">_adjust_basal_melt_params</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">new_fname</span><span class="p">),</span>
                                       <span class="bp">self</span><span class="o">.</span><span class="n">gamma0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltaT</span><span class="p">)</span>
-            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;basal_melt_param_file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_fname</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">'basal_melt_param_file_name'</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_fname</span>
         <span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span>
                  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">meltflux</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltaT</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Parameters &#39;gamma0&#39; and/or &#39;meltflux&#39; require &quot;</span>
-                <span class="s2">&quot;&#39;basal_melt_param_file_path&#39; in [spinup_ensemble].&quot;</span><span class="p">)</span>
+                <span class="s2">"Parameters 'gamma0' and/or 'meltflux' require "</span>
+                <span class="s2">"'basal_melt_param_file_path' in [spinup_ensemble]."</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;gamma0&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma0</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'run_info'</span><span class="p">,</span> <span class="s1">'gamma0'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma0</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltaT</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;meltflux&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">meltflux</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;deltaT&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">deltaT</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'run_info'</span><span class="p">,</span> <span class="s1">'meltflux'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">meltflux</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'run_info'</span><span class="p">,</span> <span class="s1">'deltaT'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">deltaT</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="c1"># set up forcing files (unmodified)</span>
-        <span class="n">TF_file_path</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;TF_file_path&#39;</span><span class="p">)</span>
-        <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;TF_file_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TF_file_path</span>
-        <span class="n">SMB_file_path</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SMB_file_path&#39;</span><span class="p">)</span>
-        <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;SMB_file_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SMB_file_path</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;spinup_ensemble&#39;</span><span class="p">,</span> <span class="s1">&#39;runoff_file_path&#39;</span><span class="p">):</span>
-            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;runoff_file_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="s1">&#39;runoff_file_path&#39;</span><span class="p">)</span>
+        <span class="n">TF_file_path</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'TF_file_path'</span><span class="p">)</span>
+        <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">'TF_file_path'</span><span class="p">]</span> <span class="o">=</span> <span class="n">TF_file_path</span>
+        <span class="n">SMB_file_path</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'SMB_file_path'</span><span class="p">)</span>
+        <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">'SMB_file_path'</span><span class="p">]</span> <span class="o">=</span> <span class="n">SMB_file_path</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">'spinup_ensemble'</span><span class="p">,</span> <span class="s1">'runoff_file_path'</span><span class="p">):</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">'runoff_file_path'</span><span class="p">]</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s1">'runoff_file_path'</span><span class="p">)</span>
 
         <span class="c1"># store accumulated namelist and streams options</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
-                                  <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">resource_module</span><span class="p">,</span> <span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
-                              <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
+                                  <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">resource_module</span><span class="p">,</span> <span class="s1">'streams.landice'</span><span class="p">,</span>
+                              <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.landice'</span><span class="p">,</span>
                               <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
 
         <span class="c1"># set job name to run number so it will get set in batch script</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;job&#39;</span><span class="p">,</span> <span class="s1">&#39;job_name&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;uq_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">machine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;deploy&#39;</span><span class="p">,</span> <span class="s1">&#39;machine&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'job'</span><span class="p">,</span> <span class="s1">'job_name'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'uq_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'deploy'</span><span class="p">,</span> <span class="s1">'machine'</span><span class="p">)</span>
         <span class="n">write_job_script</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span>
                          <span class="n">target_cores</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span><span class="p">,</span>
                          <span class="n">work_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
@@ -409,7 +409,7 @@
         <span class="n">symlink_load_script</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
 
         <span class="c1"># save run info for analysis/viz</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;run_info.cfg&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> \
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'run_info.cfg'</span><span class="p">),</span> <span class="s1">'w'</span><span class="p">)</span> \
              <span class="k">as</span> <span class="n">run_config_file</span><span class="p">:</span>
             <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">run_config_file</span><span class="p">)</span></div>
 
@@ -417,13 +417,13 @@
 <div class="viewcode-block" id="EnsembleMember.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run.html#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this member of the ensemble.</span>
 <span class="sd">        Eventually we want this function to handle restarts.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_file_name</span><span class="p">,</span>
-                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
+                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">)</span>
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 </div>
 
@@ -431,88 +431,88 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_adjust_friction_exponent</span><span class="p">(</span><span class="n">orig_fric_exp</span><span class="p">,</span> <span class="n">new_fric_exp</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span>
                               <span class="n">albany_input_yaml</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Function to adjust the basal friction parameter by adjusting muFriction</span>
 <span class="sd">    field in an input file to maintain the same basal shear stress, and</span>
 <span class="sd">    then set the desired exponent value in the albany_input.yaml file.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">set_auto_mask</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">mu</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;muFriction&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
-    <span class="n">uX</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;uReconstructX&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">uY</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;uReconstructY&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'muFriction'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">uX</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'uReconstructX'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">uY</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'uReconstructY'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">spd</span> <span class="o">=</span> <span class="p">(</span><span class="n">uX</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">uY</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mf">60.</span> <span class="o">*</span> <span class="mf">60.</span> <span class="o">*</span> <span class="mf">24.</span> <span class="o">*</span> <span class="mf">365.</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">spd</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;uReconstructX/Y yielding max speed of 0&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"uReconstructX/Y yielding max speed of 0"</span><span class="p">)</span>
     <span class="n">mu</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">*</span> <span class="n">spd</span><span class="o">**</span><span class="p">(</span><span class="n">orig_fric_exp</span> <span class="o">-</span> <span class="n">new_fric_exp</span><span class="p">)</span>
     <span class="c1"># The previous step leads to infs or nans in ice-free areas.</span>
     <span class="c1"># Set them all to 0.0 for the extrapolation step</span>
     <span class="n">mu</span><span class="p">[</span><span class="n">spd</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;muFriction&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mu</span><span class="p">[:]</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'muFriction'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mu</span><span class="p">[:]</span>
     <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="n">extrapolate_variable</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;muFriction&#39;</span><span class="p">,</span>
-                         <span class="n">extrap_method</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">,</span>
-                         <span class="n">valid_region_method</span><span class="o">=</span><span class="s1">&#39;positive_val&#39;</span><span class="p">)</span>
+    <span class="n">extrapolate_variable</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'muFriction'</span><span class="p">,</span>
+                         <span class="n">extrap_method</span><span class="o">=</span><span class="s1">'min'</span><span class="p">,</span>
+                         <span class="n">valid_region_method</span><span class="o">=</span><span class="s1">'positive_val'</span><span class="p">)</span>
 
     <span class="c1"># now set exp in albany yaml file</span>
     <span class="c1"># using text replacement rather than yaml parser because yaml</span>
     <span class="c1"># parser can sometimes mangle Albany yaml files due to formatting not</span>
     <span class="c1"># being fully yaml-compliant.  It also writes out the yaml in an</span>
     <span class="c1"># arbitrary ordering, which is inconvenient.</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">albany_input_yaml</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">albany_input_yaml</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
         <span class="n">yamldata</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">linenum</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">yamldata</span><span class="p">)):</span>
         <span class="n">line</span> <span class="o">=</span> <span class="n">yamldata</span><span class="p">[</span><span class="n">linenum</span><span class="p">]</span>
-        <span class="k">if</span> <span class="s1">&#39;Power Exponent&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-            <span class="n">yamldata</span><span class="p">[</span><span class="n">linenum</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>
-                                 <span class="sa">f</span><span class="s1">&#39;: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">new_fric_exp</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">albany_input_yaml</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'Power Exponent'</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">yamldata</span><span class="p">[</span><span class="n">linenum</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">':'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>
+                                 <span class="sa">f</span><span class="s1">': </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">new_fric_exp</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">albany_input_yaml</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
         <span class="n">file</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">yamldata</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_adjust_basal_melt_params</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">gamma0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">deltaT</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Function to adjust gamma0 and deltaT in a MALI input file for basal melt</span>
 <span class="sd">    parameters.</span>
 <span class="sd">    Currently assumes this is a regional mesh, and there is a single value of</span>
 <span class="sd">    deltaT that should be used everywhere in the domain.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">set_auto_mask</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">gamma0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;ismip6shelfMelt_gamma0&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">gamma0</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_gamma0'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">gamma0</span>
     <span class="k">if</span> <span class="n">deltaT</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;ismip6shelfMelt_deltaT&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">deltaT</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_deltaT'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">deltaT</span>
     <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_apply_fric_sample</span><span class="p">(</span><span class="n">sample_num</span><span class="p">,</span> <span class="n">sample_file</span><span class="p">,</span> <span class="n">mu_opt_file</span><span class="p">,</span>
                        <span class="n">mpas_cellid_file</span><span class="p">,</span> <span class="n">ic_file</span><span class="p">,</span> <span class="n">scaling</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply a precomputed friction sample to ``muFriction`` in IC file.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Apply a precomputed friction sample to ``muFriction`` in IC file."""</span>
     <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sample_file</span><span class="p">)</span>
     <span class="n">sample</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="n">sample_num</span><span class="p">,</span> <span class="p">:]</span>
 
     <span class="n">log_mu_opt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">mu_opt_file</span><span class="p">)</span>
     <span class="n">log_mu_opt</span> <span class="o">=</span> <span class="n">log_mu_opt</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># skip first row containing array size</span>
 
-    <span class="n">mpas_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">mpas_cellid_file</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+    <span class="n">mpas_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">mpas_cellid_file</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'int'</span><span class="p">)</span>
     <span class="n">mpas_map</span> <span class="o">=</span> <span class="n">mpas_map</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># skip first row containing array size</span>
 
-    <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">ic_file</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">ic_file</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">set_auto_mask</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">n_cells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
+    <span class="n">n_cells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nCells'</span><span class="p">])</span>
 
     <span class="c1"># Set baseline mu outside of the Albany inverse region.</span>
     <span class="n">mu</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_cells</span><span class="p">)</span>
     <span class="n">mu</span><span class="p">[</span><span class="n">mpas_map</span><span class="p">[:]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">scaling</span> <span class="o">*</span> <span class="n">sample</span> <span class="o">+</span> <span class="n">log_mu_opt</span><span class="p">)</span>
 
-    <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;muFriction&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mu</span><span class="p">[:]</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'muFriction'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mu</span><span class="p">[:]</span>
     <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="n">extrapolate_variable</span><span class="p">(</span><span class="n">ic_file</span><span class="p">,</span> <span class="s1">&#39;muFriction&#39;</span><span class="p">,</span>
-                         <span class="n">extrap_method</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">,</span>
-                         <span class="n">valid_region_method</span><span class="o">=</span><span class="s1">&#39;positive_val&#39;</span><span class="p">)</span>
+    <span class="n">extrapolate_variable</span><span class="p">(</span><span class="n">ic_file</span><span class="p">,</span> <span class="s1">'muFriction'</span><span class="p">,</span>
+                         <span class="n">extrap_method</span><span class="o">=</span><span class="s1">'min'</span><span class="p">,</span>
+                         <span class="n">valid_region_method</span><span class="o">=</span><span class="s1">'positive_val'</span><span class="p">)</span>
 </pre></div>
 
            </div>

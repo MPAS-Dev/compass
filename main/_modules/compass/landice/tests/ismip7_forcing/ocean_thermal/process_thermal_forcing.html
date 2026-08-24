@@ -130,40 +130,40 @@
 <div class="viewcode-block" id="ProcessThermalForcing">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.html#compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ProcessThermalForcing</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for processing ISMIP7 ocean thermal forcing (tf) data.</span>
 <span class="sd">    For AIS: Remaps annual 3D thermal forcing from the ISMIP7 8km polar</span>
 <span class="sd">    stereographic grid to the MALI unstructured mesh, preserving</span>
 <span class="sd">    the 30 vertical ocean layers.</span>
 <span class="sd">    For GrIS: Remaps monthly 2D thermal forcing from the ISMIP7 1km</span>
 <span class="sd">    grid to the MALI unstructured mesh.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ProcessThermalForcing.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.html#compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal  # noqa</span>
 <span class="sd">            The test case this step belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span>
-                         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;process_thermal_forcing&quot;</span><span class="p">)</span></div>
+                         <span class="n">name</span><span class="o">=</span><span class="s2">"process_thermal_forcing"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProcessThermalForcing.setup">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup.html#compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip7&quot;</span><span class="p">]</span>
-        <span class="n">base_path_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;base_path_mali&quot;</span><span class="p">)</span>
-        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_file&quot;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip7"</span><span class="p">]</span>
+        <span class="n">base_path_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"base_path_mali"</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_file"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
                             <span class="n">target</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_mali</span><span class="p">,</span>
@@ -173,58 +173,58 @@
 <div class="viewcode-block" id="ProcessThermalForcing.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run.html#compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip7&quot;</span><span class="p">]</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip7"</span><span class="p">]</span>
 
         <span class="c1"># Check if we should process climatology data</span>
-        <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">&quot;process_ocean_climatology&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">"process_ocean_climatology"</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_run_climatology</span><span class="p">()</span>
 
         <span class="c1"># Check if we should process scenario (time-varying) data</span>
-        <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">&quot;process_ocean_thermal&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">"process_ocean_thermal"</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_run_scenario</span><span class="p">()</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_run_scenario</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process time-varying ocean thermal forcing from an ESM</span>
 <span class="sd">        (e.g., CESM2-WACCM historical or ssp585).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">params</span> <span class="o">=</span> <span class="n">get_params</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip7&quot;</span><span class="p">]</span>
-        <span class="n">base_path_ismip7</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;base_path_ismip7&quot;</span><span class="p">)</span>
-        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_name&quot;</span><span class="p">)</span>
-        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_file&quot;</span><span class="p">)</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
-        <span class="n">scenario</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scenario&quot;</span><span class="p">)</span>
-        <span class="n">output_base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_base_path&quot;</span><span class="p">)</span>
-        <span class="n">ice_sheet</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ice_sheet&quot;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip7"</span><span class="p">]</span>
+        <span class="n">base_path_ismip7</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"base_path_ismip7"</span><span class="p">)</span>
+        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_name"</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_file"</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model"</span><span class="p">)</span>
+        <span class="n">scenario</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"scenario"</span><span class="p">)</span>
+        <span class="n">output_base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_base_path"</span><span class="p">)</span>
+        <span class="n">ice_sheet</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ice_sheet"</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip7_ocean_thermal&quot;</span><span class="p">]</span>
-        <span class="n">method_remap</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method_remap&quot;</span><span class="p">)</span>
-        <span class="n">start_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">&quot;start_year&quot;</span><span class="p">)</span>
-        <span class="n">end_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">&quot;end_year&quot;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip7_ocean_thermal"</span><span class="p">]</span>
+        <span class="n">method_remap</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"method_remap"</span><span class="p">)</span>
+        <span class="n">start_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">"start_year"</span><span class="p">)</span>
+        <span class="n">end_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">"end_year"</span><span class="p">)</span>
 
         <span class="c1"># Discover input files</span>
-        <span class="n">prefix</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span>
-        <span class="n">ocean_version</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;ocean_version&#39;</span><span class="p">]</span>
-        <span class="n">ocean_3d</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;ocean_3d&#39;</span><span class="p">]</span>
-        <span class="n">input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_ismip7</span><span class="p">,</span> <span class="s2">&quot;ocean&quot;</span><span class="p">,</span> <span class="s2">&quot;tf&quot;</span><span class="p">,</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'prefix'</span><span class="p">]</span>
+        <span class="n">ocean_version</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'ocean_version'</span><span class="p">]</span>
+        <span class="n">ocean_3d</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'ocean_3d'</span><span class="p">]</span>
+        <span class="n">input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_ismip7</span><span class="p">,</span> <span class="s2">"ocean"</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span>
                                   <span class="n">ocean_version</span><span class="p">)</span>
-        <span class="n">file_pattern</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tf_</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_&quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;ocean_</span><span class="si">{</span><span class="n">ocean_version</span><span class="si">}</span><span class="s2">_*.nc&quot;</span><span class="p">)</span>
+        <span class="n">file_pattern</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"tf_</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_"</span>
+                        <span class="sa">f</span><span class="s2">"ocean_</span><span class="si">{</span><span class="n">ocean_version</span><span class="si">}</span><span class="s2">_*.nc"</span><span class="p">)</span>
         <span class="n">all_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">file_pattern</span><span class="p">)))</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">all_files</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;No ocean thermal forcing files found matching pattern:</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span><span class="w"> </span><span class="n">file_pattern</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s2">"No ocean thermal forcing files found matching pattern:</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span><span class="w"> </span><span class="n">file_pattern</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Filter to files that overlap with the requested year range.</span>
         <span class="c1"># AIS files are named with decade ranges (e.g., 1850-1859).</span>
@@ -232,8 +232,8 @@
         <span class="n">input_files</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">all_files</span><span class="p">:</span>
             <span class="c1"># Extract year range from filename (last part before .nc)</span>
-            <span class="n">year_str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.nc&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">parts</span> <span class="o">=</span> <span class="n">year_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+            <span class="n">year_str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">".nc"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="n">year_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"-"</span><span class="p">)</span>
             <span class="n">file_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">file_end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># same as start for single-year files</span>
             <span class="k">if</span> <span class="n">file_end</span> <span class="o">&gt;=</span> <span class="n">start_year</span> <span class="ow">and</span> <span class="n">file_start</span> <span class="o">&lt;=</span> <span class="n">end_year</span><span class="p">:</span>
@@ -241,18 +241,18 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">input_files</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;No ocean thermal forcing files for year range &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s2">"No ocean thermal forcing files for year range "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">input_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> ocean thermal forcing files &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;overlapping years </span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">input_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> ocean thermal forcing files "</span>
+                    <span class="sa">f</span><span class="s2">"overlapping years </span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Build mapping file using the first input file as grid template.</span>
-        <span class="n">mapping_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;map_ismip7_</span><span class="si">{</span><span class="n">ice_sheet</span><span class="si">}</span><span class="s2">_ocean_to_&quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">.nc&quot;</span><span class="p">)</span>
+        <span class="n">mapping_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"map_ismip7_</span><span class="si">{</span><span class="n">ice_sheet</span><span class="si">}</span><span class="s2">_ocean_to_"</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Building mapping file for ocean grid...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Building mapping file for ocean grid..."</span><span class="p">)</span>
             <span class="n">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
                                <span class="n">input_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mapping_file</span><span class="p">,</span>
                                <span class="n">mali_mesh_file</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
@@ -262,26 +262,26 @@
         <span class="n">remapped_files</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">input_file</span> <span class="ow">in</span> <span class="n">input_files</span><span class="p">:</span>
             <span class="n">basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
-            <span class="n">remapped_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;remapped_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">remapped_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"remapped_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
             <span class="n">remapped_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">):</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Remapped file exists, skipping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Remapped file exists, skipping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                 <span class="k">continue</span>
 
             <span class="c1"># Extrapolate fill values on source grid before remapping</span>
-            <span class="c1"># so they don&#39;t pollute neighboring cells during interpolation</span>
-            <span class="n">extrap_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;extrap_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="c1"># so they don't pollute neighboring cells during interpolation</span>
+            <span class="n">extrap_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"extrap_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">&quot;tf&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span>
                                          <span class="n">logger</span><span class="p">)</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Remapping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ncremap&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span>
-                    <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">,</span>
-                    <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
-                    <span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;tf&quot;</span><span class="p">]</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Remapping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncremap"</span><span class="p">,</span>
+                    <span class="s2">"-i"</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span>
+                    <span class="s2">"-o"</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">,</span>
+                    <span class="s2">"-m"</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+                    <span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">]</span>
 
             <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
@@ -289,9 +289,9 @@
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">)</span>
 
         <span class="c1"># Combine remapped files and rename to MALI conventions</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Combining remapped files and renaming variables...&quot;</span><span class="p">)</span>
-        <span class="n">output_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_thermal_forcing_</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_&quot;</span>
-                       <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">.nc&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Combining remapped files and renaming variables..."</span><span class="p">)</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_thermal_forcing_</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_"</span>
+                       <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ocean_3d</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_combine_and_rename_3d</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
@@ -301,62 +301,62 @@
                                         <span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span><span class="p">)</span>
 
         <span class="c1"># Clean up remapped files</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cleaning up temporary remapped files...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Cleaning up temporary remapped files..."</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">remapped_files</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
         <span class="c1"># Place output in appropriate directory</span>
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="s2">&quot;ocean_thermal_forcing&quot;</span><span class="p">,</span>
-                                   <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="s2">"ocean_thermal_forcing"</span><span class="p">,</span>
+                                   <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
 
         <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Done. Output: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done. Output: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_run_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process observational ocean thermal forcing climatology</span>
 <span class="sd">        (e.g., Zhou et al. for AIS). This is a static 3D field with</span>
 <span class="sd">        no time dimension.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip7&quot;</span><span class="p">]</span>
-        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_name&quot;</span><span class="p">)</span>
-        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_file&quot;</span><span class="p">)</span>
-        <span class="n">output_base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_base_path&quot;</span><span class="p">)</span>
-        <span class="n">ice_sheet</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ice_sheet&quot;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip7"</span><span class="p">]</span>
+        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_name"</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_file"</span><span class="p">)</span>
+        <span class="n">output_base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_base_path"</span><span class="p">)</span>
+        <span class="n">ice_sheet</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ice_sheet"</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip7_ocean_climatology&quot;</span><span class="p">]</span>
-        <span class="n">method_remap</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method_remap&quot;</span><span class="p">)</span>
-        <span class="n">base_path_climatology</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;base_path_climatology&quot;</span><span class="p">)</span>
-        <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;v3&#39;</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip7_ocean_climatology"</span><span class="p">]</span>
+        <span class="n">method_remap</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"method_remap"</span><span class="p">)</span>
+        <span class="n">base_path_climatology</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"base_path_climatology"</span><span class="p">)</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="s1">'v3'</span>
 
         <span class="c1"># Discover climatology TF file</span>
-        <span class="n">input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_climatology</span><span class="p">,</span> <span class="s2">&quot;tf&quot;</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
-        <span class="n">all_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="s2">&quot;tf_*.nc&quot;</span><span class="p">)))</span>
+        <span class="n">input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_climatology</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+        <span class="n">all_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="s2">"tf_*.nc"</span><span class="p">)))</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">all_files</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;No ocean climatology TF files found in:</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s2">"No ocean climatology TF files found in:</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Use the first (and likely only) file</span>
         <span class="n">input_file</span> <span class="o">=</span> <span class="n">all_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing ocean TF climatology: &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Processing ocean TF climatology: "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Build mapping file using the climatology file as grid template.</span>
-        <span class="n">mapping_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;map_ismip7_</span><span class="si">{</span><span class="n">ice_sheet</span><span class="si">}</span><span class="s2">_ocean_to_&quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">.nc&quot;</span><span class="p">)</span>
+        <span class="n">mapping_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"map_ismip7_</span><span class="si">{</span><span class="n">ice_sheet</span><span class="si">}</span><span class="s2">_ocean_to_"</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Building mapping file for ocean grid...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Building mapping file for ocean grid..."</span><span class="p">)</span>
             <span class="n">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
                                <span class="n">input_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
                                <span class="n">mali_mesh_file</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
@@ -364,20 +364,20 @@
 
         <span class="c1"># Extrapolate and remap</span>
         <span class="n">basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
-        <span class="n">remapped_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;remapped_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">remapped_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"remapped_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">):</span>
-            <span class="n">extrap_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;extrap_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">extrap_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"extrap_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">&quot;tf&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span>
                                          <span class="n">logger</span><span class="p">)</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Remapping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ncremap&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span>
-                    <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">,</span>
-                    <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
-                    <span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;tf&quot;</span><span class="p">]</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Remapping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncremap"</span><span class="p">,</span>
+                    <span class="s2">"-i"</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span>
+                    <span class="s2">"-o"</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">,</span>
+                    <span class="s2">"-m"</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+                    <span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">]</span>
 
             <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
@@ -385,9 +385,9 @@
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">)</span>
 
         <span class="c1"># Rename to MALI conventions</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Renaming variables to MALI conventions...&quot;</span><span class="p">)</span>
-        <span class="n">output_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_thermal_forcing_climatology_&quot;</span>
-                       <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">.nc&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Renaming variables to MALI conventions..."</span><span class="p">)</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_thermal_forcing_climatology_"</span>
+                       <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_rename_climatology_3d</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
 
@@ -396,19 +396,19 @@
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">)</span>
 
         <span class="c1"># Place output in appropriate directory</span>
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="s2">&quot;ocean_thermal_forcing&quot;</span><span class="p">,</span>
-                                   <span class="s2">&quot;climatology&quot;</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="s2">"ocean_thermal_forcing"</span><span class="p">,</span>
+                                   <span class="s2">"climatology"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
 
         <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Done. Output: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done. Output: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_combine_and_rename_3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remapped_files</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
                                <span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Combine decade-spanning remapped files (AIS), subset to the</span>
 <span class="sd">        requested year range, and rename variables/dimensions to MALI</span>
 <span class="sd">        conventions for 3D thermal forcing.</span>
@@ -426,103 +426,103 @@
 
 <span class="sd">        end_year : int</span>
 <span class="sd">            Last year to include in output</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">concat_dim</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span>
-                               <span class="n">combine</span><span class="o">=</span><span class="s2">&quot;nested&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;netcdf4&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">concat_dim</span><span class="o">=</span><span class="s2">"time"</span><span class="p">,</span>
+                               <span class="n">combine</span><span class="o">=</span><span class="s2">"nested"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">)</span>
 
         <span class="c1"># Subset to requested year range</span>
         <span class="n">years</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="p">(</span><span class="n">years</span> <span class="o">&gt;=</span> <span class="n">start_year</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">years</span> <span class="o">&lt;=</span> <span class="n">end_year</span><span class="p">))</span>
 
         <span class="c1"># Extract z coordinate and bounds before renaming</span>
-        <span class="n">z_ocean</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span>
-        <span class="n">z_bnds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;z_bnds&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="s2">&quot;time&quot;</span> <span class="ow">in</span> <span class="n">z_bnds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="n">z_ocean</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">"z"</span><span class="p">]</span>
+        <span class="n">z_bnds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">"z_bnds"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">"time"</span> <span class="ow">in</span> <span class="n">z_bnds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
             <span class="n">z_bnds</span> <span class="o">=</span> <span class="n">z_bnds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># Rename dimensions to MALI conventions</span>
         <span class="n">rename_dims</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="s2">&quot;time&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;ncol&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">&quot;ncol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;nCells&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;z&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;nISMIP6OceanLayers&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;bnds&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">&quot;bnds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;TWO&quot;</span>
+        <span class="k">if</span> <span class="s2">"time"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Time"</span>
+        <span class="k">if</span> <span class="s2">"ncol"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">"ncol"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"nCells"</span>
+        <span class="k">if</span> <span class="s2">"z"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">"z"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"nISMIP6OceanLayers"</span>
+        <span class="k">if</span> <span class="s2">"bnds"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">"bnds"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"TWO"</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">rename_dims</span><span class="p">)</span>
 
         <span class="c1"># Rename thermal forcing variable</span>
-        <span class="k">if</span> <span class="s2">&quot;tf&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
-            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;tf&quot;</span><span class="p">:</span> <span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="s2">"tf"</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">"tf"</span><span class="p">:</span> <span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">})</span>
 
         <span class="c1"># Set z coordinate and bounds as MALI-named variables</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_zOcean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;nISMIP6OceanLayers&quot;</span><span class="p">,</span> <span class="n">z_ocean</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_zBndsOcean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">(</span><span class="s2">&quot;TWO&quot;</span><span class="p">,</span> <span class="s2">&quot;nISMIP6OceanLayers&quot;</span><span class="p">),</span> <span class="n">z_bnds</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_zOcean"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">"nISMIP6OceanLayers"</span><span class="p">,</span> <span class="n">z_ocean</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_zBndsOcean"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="s2">"TWO"</span><span class="p">,</span> <span class="s2">"nISMIP6OceanLayers"</span><span class="p">),</span> <span class="n">z_bnds</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
         <span class="c1"># Transpose thermal forcing to MALI dimension order</span>
         <span class="c1"># Registry: nISMIP6OceanLayers nCells Time (Fortran order)</span>
         <span class="c1"># NetCDF (C order): Time, nCells, nISMIP6OceanLayers</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
-                <span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">,</span> <span class="s2">&quot;nISMIP6OceanLayers&quot;</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
+                <span class="s2">"Time"</span><span class="p">,</span> <span class="s2">"nCells"</span><span class="p">,</span> <span class="s2">"nISMIP6OceanLayers"</span><span class="p">)</span>
 
         <span class="c1"># Ensure double precision for MALI compatibility</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 
         <span class="c1"># Add xtime variable with annual timestamps</span>
         <span class="n">xtime</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">t_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">t_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">"Time"</span><span class="p">]):</span>
             <span class="n">date</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="p">[</span><span class="n">t_index</span><span class="p">]</span>
             <span class="n">yr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-            <span class="n">date_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">yr</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">-01-01_00:00:00&quot;</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+            <span class="n">date_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">yr</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">-01-01_00:00:00"</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
             <span class="n">xtime</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date_str</span><span class="p">)</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;xtime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="n">xtime</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;xtime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xtime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;S&quot;</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"xtime"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"Time"</span><span class="p">,</span> <span class="n">xtime</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"xtime"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xtime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"S"</span><span class="p">)</span>
 
         <span class="c1"># Set attributes</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;long_name&quot;</span><span class="p">:</span> <span class="s2">&quot;thermal forcing for ISMIP6 ice-shelf &quot;</span>
-                         <span class="s2">&quot;melting method&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;degC&quot;</span><span class="p">,</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"long_name"</span><span class="p">:</span> <span class="s2">"thermal forcing for ISMIP6 ice-shelf "</span>
+                         <span class="s2">"melting method"</span><span class="p">,</span>
+            <span class="s2">"units"</span><span class="p">:</span> <span class="s2">"degC"</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="c1"># Remove stale encoding (e.g. &#39;coordinates&#39; from ncremap)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_zOcean&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;long_name&quot;</span><span class="p">:</span> <span class="s2">&quot;depth coordinate for ocean thermal forcing&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+        <span class="c1"># Remove stale encoding (e.g. 'coordinates' from ncremap)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_zOcean"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"long_name"</span><span class="p">:</span> <span class="s2">"depth coordinate for ocean thermal forcing"</span><span class="p">,</span>
+            <span class="s2">"units"</span><span class="p">:</span> <span class="s2">"m"</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_zBndsOcean&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;long_name&quot;</span><span class="p">:</span> <span class="s2">&quot;bounds for ISMIP6 ocean layers&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_zBndsOcean"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"long_name"</span><span class="p">:</span> <span class="s2">"bounds for ISMIP6 ocean layers"</span><span class="p">,</span>
+            <span class="s2">"units"</span><span class="p">:</span> <span class="s2">"m"</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="c1"># Drop auxiliary variables from remapping</span>
-        <span class="n">vars_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;lon&quot;</span><span class="p">,</span> <span class="s2">&quot;lon_vertices&quot;</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;lat_vertices&quot;</span><span class="p">,</span> <span class="s2">&quot;lon_bnds&quot;</span><span class="p">,</span> <span class="s2">&quot;lat_bnds&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;area&quot;</span><span class="p">,</span> <span class="s2">&quot;z_bnds&quot;</span><span class="p">,</span> <span class="s2">&quot;time_bnds&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;x_bnds&quot;</span><span class="p">,</span> <span class="s2">&quot;y_bnds&quot;</span><span class="p">]</span>
+        <span class="n">vars_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"lon"</span><span class="p">,</span> <span class="s2">"lon_vertices"</span><span class="p">,</span> <span class="s2">"lat"</span><span class="p">,</span>
+                                    <span class="s2">"lat_vertices"</span><span class="p">,</span> <span class="s2">"lon_bnds"</span><span class="p">,</span> <span class="s2">"lat_bnds"</span><span class="p">,</span>
+                                    <span class="s2">"area"</span><span class="p">,</span> <span class="s2">"z_bnds"</span><span class="p">,</span> <span class="s2">"time_bnds"</span><span class="p">,</span>
+                                    <span class="s2">"x_bnds"</span><span class="p">,</span> <span class="s2">"y_bnds"</span><span class="p">]</span>
                         <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">vars_to_drop</span><span class="p">:</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="n">vars_to_drop</span><span class="p">)</span>
 
         <span class="c1"># Also drop the renamed z coordinate if it persists</span>
-        <span class="k">if</span> <span class="s2">&quot;nISMIP6OceanLayers&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
-            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">&quot;nISMIP6OceanLayers&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"nISMIP6OceanLayers"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">"nISMIP6OceanLayers"</span><span class="p">)</span>
 
         <span class="c1"># Drop Time coordinate values (keep as dimension only)</span>
-        <span class="k">if</span> <span class="s2">&quot;Time&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
-            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"Time"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">"Time"</span><span class="p">)</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_combine_and_rename_2d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remapped_files</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
                                <span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Combine yearly remapped files (GrIS), subset to the requested</span>
 <span class="sd">        year range, and rename variables/dimensions to MALI conventions</span>
 <span class="sd">        for 2D thermal forcing.</span>
@@ -540,9 +540,9 @@
 
 <span class="sd">        end_year : int</span>
 <span class="sd">            Last year to include in output</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">concat_dim</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span>
-                               <span class="n">combine</span><span class="o">=</span><span class="s2">&quot;nested&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;netcdf4&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">concat_dim</span><span class="o">=</span><span class="s2">"time"</span><span class="p">,</span>
+                               <span class="n">combine</span><span class="o">=</span><span class="s2">"nested"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">)</span>
 
         <span class="c1"># Subset to requested year range</span>
         <span class="n">years</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span>
@@ -550,61 +550,61 @@
 
         <span class="c1"># Rename dimensions to MALI conventions</span>
         <span class="n">rename_dims</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="s2">&quot;time&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;ncol&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">&quot;ncol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;nCells&quot;</span>
+        <span class="k">if</span> <span class="s2">"time"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Time"</span>
+        <span class="k">if</span> <span class="s2">"ncol"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">"ncol"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"nCells"</span>
         <span class="k">if</span> <span class="n">rename_dims</span><span class="p">:</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">rename_dims</span><span class="p">)</span>
 
         <span class="c1"># Rename thermal forcing variable</span>
-        <span class="k">if</span> <span class="s2">&quot;tf&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
-            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;tf&quot;</span><span class="p">:</span> <span class="s2">&quot;ismip6_2dThermalForcing&quot;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="s2">"tf"</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">"tf"</span><span class="p">:</span> <span class="s2">"ismip6_2dThermalForcing"</span><span class="p">})</span>
 
         <span class="c1"># Ensure double precision for MALI compatibility</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6_2dThermalForcing&quot;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6_2dThermalForcing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6_2dThermalForcing"</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6_2dThermalForcing"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 
         <span class="c1"># Add xtime variable with monthly timestamps</span>
         <span class="c1"># ISMIP7 files encode time at mid-month (e.g., Jan 15) but</span>
         <span class="c1"># this represents forcing for the full month (Jan 1-31).</span>
         <span class="c1"># MALI needs xtime at the start of each forcing interval.</span>
         <span class="n">xtime</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">t_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">t_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">"Time"</span><span class="p">]):</span>
             <span class="n">date</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="p">[</span><span class="n">t_index</span><span class="p">]</span>
             <span class="n">yr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
             <span class="n">mo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-            <span class="n">date_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">yr</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">mo</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">-01_00:00:00&quot;</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+            <span class="n">date_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">yr</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">mo</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">-01_00:00:00"</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
             <span class="n">xtime</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date_str</span><span class="p">)</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;xtime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="n">xtime</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;xtime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xtime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;S&quot;</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"xtime"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"Time"</span><span class="p">,</span> <span class="n">xtime</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"xtime"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xtime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"S"</span><span class="p">)</span>
 
         <span class="c1"># Set attributes</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6_2dThermalForcing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;long_name&quot;</span><span class="p">:</span> <span class="s2">&quot;2D thermal forcing for ISMIP6 ice-shelf &quot;</span>
-                         <span class="s2">&quot;melting parameterization&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;degC&quot;</span><span class="p">,</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6_2dThermalForcing"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"long_name"</span><span class="p">:</span> <span class="s2">"2D thermal forcing for ISMIP6 ice-shelf "</span>
+                         <span class="s2">"melting parameterization"</span><span class="p">,</span>
+            <span class="s2">"units"</span><span class="p">:</span> <span class="s2">"degC"</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="c1"># Remove stale encoding (e.g. &#39;coordinates&#39; from ncremap)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6_2dThermalForcing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="c1"># Remove stale encoding (e.g. 'coordinates' from ncremap)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6_2dThermalForcing"</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
         <span class="c1"># Drop auxiliary variables from remapping</span>
-        <span class="n">vars_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;lon&quot;</span><span class="p">,</span> <span class="s2">&quot;lon_vertices&quot;</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;lat_vertices&quot;</span><span class="p">,</span> <span class="s2">&quot;area&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;time_bnds&quot;</span><span class="p">,</span> <span class="s2">&quot;x_bnds&quot;</span><span class="p">,</span> <span class="s2">&quot;y_bnds&quot;</span><span class="p">]</span>
+        <span class="n">vars_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"lon"</span><span class="p">,</span> <span class="s2">"lon_vertices"</span><span class="p">,</span> <span class="s2">"lat"</span><span class="p">,</span>
+                                    <span class="s2">"lat_vertices"</span><span class="p">,</span> <span class="s2">"area"</span><span class="p">,</span>
+                                    <span class="s2">"time_bnds"</span><span class="p">,</span> <span class="s2">"x_bnds"</span><span class="p">,</span> <span class="s2">"y_bnds"</span><span class="p">]</span>
                         <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">vars_to_drop</span><span class="p">:</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="n">vars_to_drop</span><span class="p">)</span>
 
         <span class="c1"># Drop Time coordinate values (keep as dimension only)</span>
-        <span class="k">if</span> <span class="s2">&quot;Time&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
-            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"Time"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">"Time"</span><span class="p">)</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_rename_climatology_3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Rename dimensions and variables in a remapped 3D climatology</span>
 <span class="sd">        file (no time dimension) to MALI conventions.</span>
 
@@ -615,83 +615,83 @@
 
 <span class="sd">        output_file : str</span>
 <span class="sd">            Output file path</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;netcdf4&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">)</span>
 
         <span class="c1"># Extract z coordinate and bounds before renaming</span>
-        <span class="n">z_ocean</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span>
-        <span class="n">z_bnds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;z_bnds&quot;</span><span class="p">]</span>
+        <span class="n">z_ocean</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">"z"</span><span class="p">]</span>
+        <span class="n">z_bnds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">"z_bnds"</span><span class="p">]</span>
 
         <span class="c1"># Rename dimensions to MALI conventions</span>
         <span class="n">rename_dims</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="s2">&quot;ncol&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">&quot;ncol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;nCells&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;z&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;nISMIP6OceanLayers&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;bnds&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">&quot;bnds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;TWO&quot;</span>
+        <span class="k">if</span> <span class="s2">"ncol"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">"ncol"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"nCells"</span>
+        <span class="k">if</span> <span class="s2">"z"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">"z"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"nISMIP6OceanLayers"</span>
+        <span class="k">if</span> <span class="s2">"bnds"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">"bnds"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"TWO"</span>
         <span class="k">if</span> <span class="n">rename_dims</span><span class="p">:</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">rename_dims</span><span class="p">)</span>
 
         <span class="c1"># Rename thermal forcing variable</span>
-        <span class="k">if</span> <span class="s2">&quot;tf&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
-            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;tf&quot;</span><span class="p">:</span> <span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="s2">"tf"</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">"tf"</span><span class="p">:</span> <span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">})</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">]</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="s2">"Time"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># Set z coordinate and bounds as MALI-named variables</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_zOcean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;nISMIP6OceanLayers&quot;</span><span class="p">,</span> <span class="n">z_ocean</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_zBndsOcean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">(</span><span class="s2">&quot;TWO&quot;</span><span class="p">,</span> <span class="s2">&quot;nISMIP6OceanLayers&quot;</span><span class="p">),</span> <span class="n">z_bnds</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_zOcean"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">"nISMIP6OceanLayers"</span><span class="p">,</span> <span class="n">z_ocean</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_zBndsOcean"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="s2">"TWO"</span><span class="p">,</span> <span class="s2">"nISMIP6OceanLayers"</span><span class="p">),</span> <span class="n">z_bnds</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
         <span class="c1"># Transpose thermal forcing to MALI dimension order</span>
         <span class="c1"># NetCDF (C order): nCells, nISMIP6OceanLayers</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
-                <span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">,</span> <span class="s2">&quot;nISMIP6OceanLayers&quot;</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
+                <span class="s2">"Time"</span><span class="p">,</span> <span class="s2">"nCells"</span><span class="p">,</span> <span class="s2">"nISMIP6OceanLayers"</span><span class="p">)</span>
 
         <span class="c1"># Ensure double precision for MALI compatibility</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 
         <span class="c1"># Set attributes</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;long_name&quot;</span><span class="p">:</span> <span class="s2">&quot;thermal forcing for ISMIP6 ice-shelf &quot;</span>
-                         <span class="s2">&quot;melting method&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;degC&quot;</span><span class="p">,</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"long_name"</span><span class="p">:</span> <span class="s2">"thermal forcing for ISMIP6 ice-shelf "</span>
+                         <span class="s2">"melting method"</span><span class="p">,</span>
+            <span class="s2">"units"</span><span class="p">:</span> <span class="s2">"degC"</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_3dThermalForcing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_zOcean&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;long_name&quot;</span><span class="p">:</span> <span class="s2">&quot;depth coordinate for ocean thermal forcing&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_3dThermalForcing"</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_zOcean"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"long_name"</span><span class="p">:</span> <span class="s2">"depth coordinate for ocean thermal forcing"</span><span class="p">,</span>
+            <span class="s2">"units"</span><span class="p">:</span> <span class="s2">"m"</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_zBndsOcean&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;long_name&quot;</span><span class="p">:</span> <span class="s2">&quot;bounds for ISMIP6 ocean layers&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_zBndsOcean"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"long_name"</span><span class="p">:</span> <span class="s2">"bounds for ISMIP6 ocean layers"</span><span class="p">,</span>
+            <span class="s2">"units"</span><span class="p">:</span> <span class="s2">"m"</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="c1"># Drop auxiliary variables from remapping</span>
-        <span class="n">vars_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;lon&quot;</span><span class="p">,</span> <span class="s2">&quot;lon_vertices&quot;</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;lat_vertices&quot;</span><span class="p">,</span> <span class="s2">&quot;lon_bnds&quot;</span><span class="p">,</span> <span class="s2">&quot;lat_bnds&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;area&quot;</span><span class="p">,</span> <span class="s2">&quot;z_bnds&quot;</span><span class="p">,</span> <span class="s2">&quot;time_bnds&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;x_bnds&quot;</span><span class="p">,</span> <span class="s2">&quot;y_bnds&quot;</span><span class="p">]</span>
+        <span class="n">vars_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"lon"</span><span class="p">,</span> <span class="s2">"lon_vertices"</span><span class="p">,</span> <span class="s2">"lat"</span><span class="p">,</span>
+                                    <span class="s2">"lat_vertices"</span><span class="p">,</span> <span class="s2">"lon_bnds"</span><span class="p">,</span> <span class="s2">"lat_bnds"</span><span class="p">,</span>
+                                    <span class="s2">"area"</span><span class="p">,</span> <span class="s2">"z_bnds"</span><span class="p">,</span> <span class="s2">"time_bnds"</span><span class="p">,</span>
+                                    <span class="s2">"x_bnds"</span><span class="p">,</span> <span class="s2">"y_bnds"</span><span class="p">]</span>
                         <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">vars_to_drop</span><span class="p">:</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="n">vars_to_drop</span><span class="p">)</span>
 
         <span class="c1"># Drop the z coordinate if it persists</span>
-        <span class="k">if</span> <span class="s2">&quot;nISMIP6OceanLayers&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
-            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">&quot;nISMIP6OceanLayers&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"nISMIP6OceanLayers"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">"nISMIP6OceanLayers"</span><span class="p">)</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_extrapolate_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Extrapolate fill/missing values on the source polar stereographic</span>
 <span class="sd">        grid using nearest-neighbor interpolation from valid cells. This</span>
-<span class="sd">        must be done before remapping so that fill values don&#39;t contaminate</span>
+<span class="sd">        must be done before remapping so that fill values don't contaminate</span>
 <span class="sd">        the interpolation stencil.</span>
 
 <span class="sd">        Parameters</span>
@@ -703,15 +703,15 @@
 <span class="sd">            Path to write the extrapolated file</span>
 
 <span class="sd">        varname : str</span>
-<span class="sd">            Name of the variable to extrapolate (e.g., &quot;tf&quot;)</span>
+<span class="sd">            Name of the variable to extrapolate (e.g., "tf")</span>
 
 <span class="sd">        logger : logging.Logger</span>
 <span class="sd">            Logger for status messages</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Extrapolating fill values on source grid: &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Extrapolating fill values on source grid: "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;netcdf4&quot;</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span>
 
         <span class="c1"># Process each time step (and z level if 3D)</span>
@@ -738,8 +738,8 @@
         <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">attrs</span>
 
         <span class="c1"># Remove _FillValue encoding so output has no masked values</span>
-        <span class="k">if</span> <span class="s2">&quot;_FillValue&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="p">:</span>
-            <span class="k">del</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="p">[</span><span class="s2">&quot;_FillValue&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">"_FillValue"</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="p">[</span><span class="s2">"_FillValue"</span><span class="p">]</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span></div>
 

@@ -120,7 +120,7 @@
 <div class="viewcode-block" id="ConvInit">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.planar_convergence.conv_init.ConvInit.html#compass.ocean.tests.planar_convergence.conv_init.ConvInit">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConvInit</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating a mesh for a given resolution in a planar convergence</span>
 <span class="sd">    test case.  A child class of this step should then create an appropriate</span>
 <span class="sd">    initial condition.</span>
@@ -129,11 +129,11 @@
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : int</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="ConvInit.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.planar_convergence.conv_init.ConvInit.html#compass.ocean.tests.planar_convergence.conv_init.ConvInit.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -143,12 +143,12 @@
 
 <span class="sd">        resolution : int</span>
 <span class="sd">            The resolution of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span>
-                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">km_init&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
-                         <span class="n">subdir</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">km/init&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s1">'</span><span class="si">{}</span><span class="s1">km_init'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
+                         <span class="n">subdir</span><span class="o">=</span><span class="s1">'</span><span class="si">{}</span><span class="s1">km/init'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
 
-        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;graph.info&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'mesh.nc'</span><span class="p">,</span> <span class="s1">'graph.info'</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span></div>
@@ -157,15 +157,15 @@
 <div class="viewcode-block" id="ConvInit.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.planar_convergence.conv_init.ConvInit.run.html#compass.ocean.tests.planar_convergence.conv_init.ConvInit.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">resolution</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;planar_convergence&#39;</span><span class="p">]</span>
-        <span class="n">nx_1km</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx_1km&#39;</span><span class="p">)</span>
-        <span class="n">ny_1km</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny_1km&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'planar_convergence'</span><span class="p">]</span>
+        <span class="n">nx_1km</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'nx_1km'</span><span class="p">)</span>
+        <span class="n">ny_1km</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'ny_1km'</span><span class="p">)</span>
         <span class="n">nx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nx_1km</span><span class="o">/</span><span class="n">resolution</span><span class="p">)</span>
         <span class="n">ny</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ny_1km</span><span class="o">/</span><span class="n">resolution</span><span class="p">)</span>
         <span class="n">dc</span> <span class="o">=</span> <span class="n">resolution</span><span class="o">*</span><span class="mf">1e3</span>
@@ -176,8 +176,8 @@
 
         <span class="n">center</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">)</span>
 
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="s1">&#39;mesh.nc&#39;</span><span class="p">)</span>
-        <span class="n">make_graph_file</span><span class="p">(</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;graph.info&#39;</span><span class="p">)</span></div>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="s1">'mesh.nc'</span><span class="p">)</span>
+        <span class="n">make_graph_file</span><span class="p">(</span><span class="s1">'mesh.nc'</span><span class="p">,</span> <span class="s1">'graph.info'</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

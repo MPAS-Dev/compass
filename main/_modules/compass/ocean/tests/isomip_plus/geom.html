@@ -118,7 +118,7 @@
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask.html#compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">interpolate_ocean_mask</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">,</span>
                            <span class="n">thin_film_present</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Interpolate the ocean mask from the original BISICLES grid to the MPAS</span>
 <span class="sd">    mesh.  This is handled separately from other fields because the ocean mask</span>
 <span class="sd">    is needed to cull land cells from the MPAS mesh before interpolating the</span>
@@ -145,7 +145,7 @@
 <span class="sd">    ds_mask : xarray.Dataset</span>
 <span class="sd">        A dataset containing ``regionCellMasks``, a field with the ocean mask</span>
 <span class="sd">        that can be used to cull land cells from the mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x_cell</span><span class="p">,</span> <span class="n">y_cell</span><span class="p">,</span> <span class="n">ocean_fraction</span> <span class="o">=</span> <span class="n">_get_geom_fields</span><span class="p">(</span>
         <span class="n">ds_geom</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">)</span>
 
@@ -157,7 +157,7 @@
 
     <span class="n">x_cell</span> <span class="o">=</span> <span class="n">x_cell</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
     <span class="n">y_cell</span> <span class="o">=</span> <span class="n">y_cell</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
-    <span class="n">ocean_frac_observed</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
+    <span class="n">ocean_frac_observed</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nCells'</span><span class="p">])</span>
     <span class="n">ocean_frac_observed</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">=</span> <span class="n">interp_bilin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ocean_fraction</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
                                               <span class="n">x_cell</span><span class="p">,</span> <span class="n">y_cell</span><span class="p">)</span>
 
@@ -165,7 +165,7 @@
 
     <span class="n">n_cells</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="n">ds_mask</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nRegions&#39;</span><span class="p">),</span>
+    <span class="n">ds_mask</span><span class="p">[</span><span class="s1">'regionCellMasks'</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">'nCells'</span><span class="p">,</span> <span class="s1">'nRegions'</span><span class="p">),</span>
                                   <span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">ds_mask</span></div>
@@ -175,7 +175,7 @@
 <div class="viewcode-block" id="interpolate_geom">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.geom.interpolate_geom.html#compass.ocean.tests.isomip_plus.geom.interpolate_geom">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">interpolate_geom</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Interpolate the ice geometry from the original BISICLES grid to the MPAS</span>
 <span class="sd">    mesh.</span>
 
@@ -215,52 +215,52 @@
 <span class="sd">        * ``smoothedDraftMask`` -- a smoothed version of the floating mask that</span>
 <span class="sd">          may be useful for determining where to alter the vertical coordinate</span>
 <span class="sd">          to accommodate ice-shelf cavities</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x_cell</span><span class="p">,</span> <span class="n">y_cell</span><span class="p">,</span> <span class="n">ocean_fraction</span> <span class="o">=</span> <span class="n">_get_geom_fields</span><span class="p">(</span>
         <span class="n">ds_geom</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">)</span>
 
     <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">)</span>
     <span class="n">ds_out</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">attrs</span>
 
-    <span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;oceanFraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ocean_fraction</span>
-    <span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds_geom</span><span class="o">.</span><span class="n">landIceFloatingFraction</span> <span class="o">+</span>
+    <span class="n">ds_geom</span><span class="p">[</span><span class="s1">'oceanFraction'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ocean_fraction</span>
+    <span class="n">ds_geom</span><span class="p">[</span><span class="s1">'landIceFraction'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds_geom</span><span class="o">.</span><span class="n">landIceFloatingFraction</span> <span class="o">+</span>
                                   <span class="n">ds_geom</span><span class="o">.</span><span class="n">landIceGroundedFraction</span><span class="p">)</span>
 
     <span class="c1"># mask the topography to the ocean region before interpolation</span>
-    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Z_bed&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_ice_surface&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_ice_draft&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">,</span> <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">]:</span>
-        <span class="n">ds_geom</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_geom</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">*</span> <span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;oceanFraction&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'Z_bed'</span><span class="p">,</span> <span class="s1">'Z_ice_surface'</span><span class="p">,</span> <span class="s1">'Z_ice_draft'</span><span class="p">,</span> <span class="s1">'landIceFraction'</span><span class="p">,</span>
+                <span class="s1">'landIceFloatingFraction'</span><span class="p">,</span> <span class="s1">'smoothedDraftMask'</span><span class="p">]:</span>
+        <span class="n">ds_geom</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_geom</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">*</span> <span class="n">ds_geom</span><span class="p">[</span><span class="s1">'oceanFraction'</span><span class="p">]</span>
 
-    <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">:</span> <span class="s1">&#39;Z_bed&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;landIceThickness&#39;</span><span class="p">:</span> <span class="s1">&#39;iceThickness&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;ssh&#39;</span><span class="p">:</span> <span class="s1">&#39;Z_ice_draft&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">:</span> <span class="s1">&#39;oceanFraction&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;landIceFraction&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;landIceGroundedFraction&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceGroundedFraction&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">:</span> <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">}</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'bottomDepthObserved'</span><span class="p">:</span> <span class="s1">'Z_bed'</span><span class="p">,</span>
+              <span class="s1">'landIceThickness'</span><span class="p">:</span> <span class="s1">'iceThickness'</span><span class="p">,</span>
+              <span class="s1">'ssh'</span><span class="p">:</span> <span class="s1">'Z_ice_draft'</span><span class="p">,</span>
+              <span class="s1">'oceanFracObserved'</span><span class="p">:</span> <span class="s1">'oceanFraction'</span><span class="p">,</span>
+              <span class="s1">'landIceFraction'</span><span class="p">:</span> <span class="s1">'landIceFraction'</span><span class="p">,</span>
+              <span class="s1">'landIceGroundedFraction'</span><span class="p">:</span> <span class="s1">'landIceGroundedFraction'</span><span class="p">,</span>
+              <span class="s1">'landIceFloatingFraction'</span><span class="p">:</span> <span class="s1">'landIceFloatingFraction'</span><span class="p">,</span>
+              <span class="s1">'smoothedDraftMask'</span><span class="p">:</span> <span class="s1">'smoothedDraftMask'</span><span class="p">}</span>
 
     <span class="n">valid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
         <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">x_cell</span> <span class="o">&gt;=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_cell</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
         <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">y_cell</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_cell</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">valid</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Something went wrong with culling.  There are still &#39;</span>
-                         <span class="s1">&#39;out-of-range cells in the culled mesh.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Something went wrong with culling.  There are still '</span>
+                         <span class="s1">'out-of-range cells in the culled mesh.'</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">outfield</span><span class="p">,</span> <span class="n">infield</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">field</span> <span class="o">=</span> <span class="n">interp_bilin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">[</span><span class="n">infield</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">x_cell</span><span class="p">,</span> <span class="n">y_cell</span><span class="p">)</span>
-        <span class="n">ds_out</span><span class="p">[</span><span class="n">outfield</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nCells&#39;</span><span class="p">,),</span> <span class="n">field</span><span class="p">)</span>
+        <span class="n">ds_out</span><span class="p">[</span><span class="n">outfield</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">'nCells'</span><span class="p">,),</span> <span class="n">field</span><span class="p">)</span>
 
-    <span class="n">ocean_frac_observed</span> <span class="o">=</span> <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">]</span>
+    <span class="n">ocean_frac_observed</span> <span class="o">=</span> <span class="n">ds_out</span><span class="p">[</span><span class="s1">'oceanFracObserved'</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ocean_frac_observed</span> <span class="o">&gt;</span> <span class="n">min_ocean_fraction</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Something went wrong with culling.  There are still &#39;</span>
-                         <span class="s1">&#39;non-ocean cells in the culled mesh.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Something went wrong with culling.  There are still '</span>
+                         <span class="s1">'non-ocean cells in the culled mesh.'</span><span class="p">)</span>
 
     <span class="c1"># Do not include landIceFloatingFraction here so that fractional melt</span>
     <span class="c1"># fluxes are represented</span>
-    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'bottomDepthObserved'</span><span class="p">,</span> <span class="s1">'ssh'</span><span class="p">,</span> <span class="s1">'landIceFraction'</span><span class="p">,</span>
+                  <span class="s1">'smoothedDraftMask'</span><span class="p">]:</span>
         <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">/</span> <span class="n">ocean_frac_observed</span>
 
     <span class="k">return</span> <span class="n">ds_out</span></div>
@@ -274,10 +274,10 @@
     <span class="n">y_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">yIsomipCell</span><span class="o">.</span><span class="n">values</span>
 
     <span class="k">if</span> <span class="n">thin_film_present</span><span class="p">:</span>
-        <span class="n">ocean_fraction</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;Z_bed&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+        <span class="n">ocean_fraction</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds_geom</span><span class="p">[</span><span class="s1">'Z_bed'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">ocean_fraction</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">]</span> <span class="o">+</span>
-                          <span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;openOceanFraction&#39;</span><span class="p">])</span>
+        <span class="n">ocean_fraction</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds_geom</span><span class="p">[</span><span class="s1">'landIceFloatingFraction'</span><span class="p">]</span> <span class="o">+</span>
+                          <span class="n">ds_geom</span><span class="p">[</span><span class="s1">'openOceanFraction'</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x_cell</span><span class="p">,</span> <span class="n">y_cell</span><span class="p">,</span> <span class="n">ocean_fraction</span>
 </pre></div>

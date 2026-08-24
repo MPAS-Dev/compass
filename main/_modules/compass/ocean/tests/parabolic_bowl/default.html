@@ -123,7 +123,7 @@
 <div class="viewcode-block" id="Default">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.default.Default.html#compass.ocean.tests.parabolic_bowl.default.Default">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The default parabolic_bowl test case</span>
 
 <span class="sd">    Attributes</span>
@@ -139,12 +139,12 @@
 
 <span class="sd">    resolutions : list</span>
 <span class="sd">        List of resolutions to run</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="Default.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.default.Default.html#compass.ocean.tests.parabolic_bowl.default.Default.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">ramp_type</span><span class="p">,</span> <span class="n">wetdry</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -160,16 +160,16 @@
 
 <span class="sd">        use_lts : bool</span>
 <span class="sd">            Whether local time-stepping is used</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">_lts&#39;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">_lts'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">'</span>
 
         <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
-            <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">_lts&#39;</span>
+            <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">_lts'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">'</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -180,17 +180,17 @@
 
         <span class="c1"># add the steps with default resolutions so they can be listed</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">CompassConfigParser</span><span class="p">()</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
-                                <span class="s1">&#39;parabolic_bowl.cfg&#39;</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">'compass.ocean.tests.parabolic_bowl'</span><span class="p">,</span>
+                                <span class="s1">'parabolic_bowl.cfg'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_setup_steps</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Default.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.default.Default.configure.html#compass.ocean.tests.parabolic_bowl.default.Default.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set config options for the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">use_lts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_lts</span>
         <span class="c1"># set up the steps again in case a user has provided new resolutions</span>
@@ -202,19 +202,19 @@
 <div class="viewcode-block" id="Default.update_cores">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.default.Default.update_cores.html#compass.ocean.tests.parabolic_bowl.default.Default.update_cores">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_cores</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Update the number of cores and min_tasks for each forward step &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Update the number of cores and min_tasks for each forward step """</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="n">goal_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span>
-                                              <span class="s1">&#39;goal_cells_per_core&#39;</span><span class="p">)</span>
-        <span class="n">max_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span>
-                                             <span class="s1">&#39;max_cells_per_core&#39;</span><span class="p">)</span>
+        <span class="n">goal_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span>
+                                              <span class="s1">'goal_cells_per_core'</span><span class="p">)</span>
+        <span class="n">max_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span>
+                                             <span class="s1">'max_cells_per_core'</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">:</span>
 
-            <span class="n">lx</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span> <span class="s1">&#39;Lx&#39;</span><span class="p">)</span>
-            <span class="n">ly</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span> <span class="s1">&#39;Ly&#39;</span><span class="p">)</span>
+            <span class="n">lx</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span> <span class="s1">'Lx'</span><span class="p">)</span>
+            <span class="n">ly</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span> <span class="s1">'Ly'</span><span class="p">)</span>
 
             <span class="n">nx</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">lx</span> <span class="o">/</span> <span class="n">resolution</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
             <span class="n">ny</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">ly</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="o">/</span> <span class="n">resolution</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
@@ -228,31 +228,31 @@
             <span class="n">min_tasks</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
                             <span class="nb">round</span><span class="p">(</span><span class="n">approx_cells</span> <span class="o">/</span> <span class="n">max_cells_per_core</span><span class="p">))</span>
 
-            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">km&#39;</span>
-            <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;forward_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">km'</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="sa">f</span><span class="s1">'forward_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span>
             <span class="n">step</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">ntasks</span>
             <span class="n">step</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">min_tasks</span>
 
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">_ntasks&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ntasks</span><span class="p">),</span>
-                       <span class="n">comment</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Target core count for </span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1"> mesh&#39;</span><span class="p">)</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">_min_tasks&#39;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">_ntasks'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ntasks</span><span class="p">),</span>
+                       <span class="n">comment</span><span class="o">=</span><span class="sa">f</span><span class="s1">'Target core count for </span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1"> mesh'</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">_min_tasks'</span><span class="p">,</span>
                        <span class="nb">str</span><span class="p">(</span><span class="n">min_tasks</span><span class="p">),</span>
-                       <span class="n">comment</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Minimum core count for </span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1"> mesh&#39;</span><span class="p">)</span></div>
+                       <span class="n">comment</span><span class="o">=</span><span class="sa">f</span><span class="s1">'Minimum core count for </span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1"> mesh'</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_setup_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; setup steps given resolutions &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" setup steps given resolutions """</span>
 
-        <span class="n">default_resolutions</span> <span class="o">=</span> <span class="s1">&#39;20, 10, 5&#39;</span>
+        <span class="n">default_resolutions</span> <span class="o">=</span> <span class="s1">'20, 10, 5'</span>
 
         <span class="c1"># set the default values that a user may change before setup</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span> <span class="s1">&#39;resolutions&#39;</span><span class="p">,</span> <span class="n">default_resolutions</span><span class="p">,</span>
-                   <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;a list of resolutions (km) to test&#39;</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span> <span class="s1">'resolutions'</span><span class="p">,</span> <span class="n">default_resolutions</span><span class="p">,</span>
+                   <span class="n">comment</span><span class="o">=</span><span class="s1">'a list of resolutions (km) to test'</span><span class="p">)</span>
 
-        <span class="c1"># get the resolutions back, perhaps with values set in the user&#39;s</span>
+        <span class="c1"># get the resolutions back, perhaps with values set in the user's</span>
         <span class="c1"># config file</span>
-        <span class="n">resolutions</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span>
-                                     <span class="s1">&#39;resolutions&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">resolutions</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span>
+                                     <span class="s1">'resolutions'</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">==</span> <span class="n">resolutions</span><span class="p">:</span>
             <span class="k">return</span>
@@ -265,20 +265,20 @@
 
         <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">:</span>
 
-            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">km&#39;</span>
+            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">km'</span>
 
             <span class="n">init_step</span> <span class="o">=</span> <span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                     <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;initial_state_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                     <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'initial_state_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
                                      <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
                                      <span class="n">wetdry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">init_step</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">LTSRegions</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                                          <span class="n">init_step</span><span class="o">=</span><span class="n">init_step</span><span class="p">,</span>
-                                         <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;lts_regions_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                                         <span class="n">subdir</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;lts_regions_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
+                                         <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'lts_regions_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                                         <span class="n">subdir</span><span class="o">=</span><span class="sa">f</span><span class="s1">'lts_regions_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">'</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                  <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;forward_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                  <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'forward_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
                                   <span class="n">use_lts</span><span class="o">=</span><span class="n">use_lts</span><span class="p">,</span>
                                   <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
                                   <span class="n">ramp_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ramp_type</span><span class="p">,</span>
@@ -292,14 +292,14 @@
 <div class="viewcode-block" id="Default.validate">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.default.Default.validate.html#compass.ocean.tests.parabolic_bowl.default.Default.validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Validate variables against a baseline</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
-        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'layerThickness'</span><span class="p">,</span> <span class="s1">'normalVelocity'</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">:</span>
             <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;forward_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km/output.nc&#39;</span><span class="p">)</span></div>
+                              <span class="n">filename1</span><span class="o">=</span><span class="sa">f</span><span class="s1">'forward_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km/output.nc'</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

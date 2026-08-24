@@ -189,38 +189,38 @@ test group) and updated at runtime based on the config options in the
 <code class="docutils literal notranslate"><span class="pre">[ziso]</span></code> section of the config file.</p>
 <p>A dictionary <code class="docutils literal notranslate"><span class="pre">res_params</span></code> is used to set parameters like the number of cores
 and the time steps for each resolution:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;20km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-                       <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                       <span class="s1">&#39;cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-                       <span class="s1">&#39;min_cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
-                       <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:12:00&#39;&quot;</span><span class="p">,</span>
-                       <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:36&#39;&quot;</span><span class="p">,</span>
-                       <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;5.0e10&quot;</span><span class="p">,</span>
-                       <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:36:00&#39;&quot;</span><span class="p">},</span>
-              <span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>
-                       <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-                       <span class="s1">&#39;cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">130</span><span class="p">,</span>
-                       <span class="s1">&#39;min_cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
-                       <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:06:00&#39;&quot;</span><span class="p">,</span>
-                       <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:18&#39;&quot;</span><span class="p">,</span>
-                       <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;6.25e9&quot;</span><span class="p">,</span>
-                       <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:18:00&#39;&quot;</span><span class="p">},</span>
-              <span class="s1">&#39;5km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
-                      <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
-                      <span class="s1">&#39;cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-                      <span class="s1">&#39;min_cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-                      <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:03:00&#39;&quot;</span><span class="p">,</span>
-                      <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:09&#39;&quot;</span><span class="p">,</span>
-                      <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;7.8e8&quot;</span><span class="p">,</span>
-                      <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:09:00&#39;&quot;</span><span class="p">},</span>
-              <span class="s1">&#39;2.5km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">1200</span><span class="p">,</span>
-                        <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
-                        <span class="s1">&#39;cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">2100</span><span class="p">,</span>
-                        <span class="s1">&#39;min_cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">900</span><span class="p">,</span>
-                        <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:01:30&#39;&quot;</span><span class="p">,</span>
-                        <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:04&#39;&quot;</span><span class="p">,</span>
-                        <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;9.8e7&quot;</span><span class="p">,</span>
-                        <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:04:30&#39;&quot;</span><span class="p">}}</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'20km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'cores'</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+                       <span class="s1">'min_tasks'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                       <span class="s1">'cores_with_particles'</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+                       <span class="s1">'min_cores_with_particles'</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+                       <span class="s1">'dt'</span><span class="p">:</span> <span class="s2">"'00:12:00'"</span><span class="p">,</span>
+                       <span class="s1">'btr_dt'</span><span class="p">:</span> <span class="s2">"'00:00:36'"</span><span class="p">,</span>
+                       <span class="s1">'mom_del4'</span><span class="p">:</span> <span class="s2">"5.0e10"</span><span class="p">,</span>
+                       <span class="s1">'run_duration'</span><span class="p">:</span> <span class="s2">"'0000_00:36:00'"</span><span class="p">},</span>
+              <span class="s1">'10km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'cores'</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>
+                       <span class="s1">'min_tasks'</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                       <span class="s1">'cores_with_particles'</span><span class="p">:</span> <span class="mi">130</span><span class="p">,</span>
+                       <span class="s1">'min_cores_with_particles'</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+                       <span class="s1">'dt'</span><span class="p">:</span> <span class="s2">"'00:06:00'"</span><span class="p">,</span>
+                       <span class="s1">'btr_dt'</span><span class="p">:</span> <span class="s2">"'00:00:18'"</span><span class="p">,</span>
+                       <span class="s1">'mom_del4'</span><span class="p">:</span> <span class="s2">"6.25e9"</span><span class="p">,</span>
+                       <span class="s1">'run_duration'</span><span class="p">:</span> <span class="s2">"'0000_00:18:00'"</span><span class="p">},</span>
+              <span class="s1">'5km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'cores'</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+                      <span class="s1">'min_tasks'</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+                      <span class="s1">'cores_with_particles'</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                      <span class="s1">'min_cores_with_particles'</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+                      <span class="s1">'dt'</span><span class="p">:</span> <span class="s2">"'00:03:00'"</span><span class="p">,</span>
+                      <span class="s1">'btr_dt'</span><span class="p">:</span> <span class="s2">"'00:00:09'"</span><span class="p">,</span>
+                      <span class="s1">'mom_del4'</span><span class="p">:</span> <span class="s2">"7.8e8"</span><span class="p">,</span>
+                      <span class="s1">'run_duration'</span><span class="p">:</span> <span class="s2">"'0000_00:09:00'"</span><span class="p">},</span>
+              <span class="s1">'2.5km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'cores'</span><span class="p">:</span> <span class="mi">1200</span><span class="p">,</span>
+                        <span class="s1">'min_tasks'</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+                        <span class="s1">'cores_with_particles'</span><span class="p">:</span> <span class="mi">2100</span><span class="p">,</span>
+                        <span class="s1">'min_cores_with_particles'</span><span class="p">:</span> <span class="mi">900</span><span class="p">,</span>
+                        <span class="s1">'dt'</span><span class="p">:</span> <span class="s2">"'00:01:30'"</span><span class="p">,</span>
+                        <span class="s1">'btr_dt'</span><span class="p">:</span> <span class="s2">"'00:00:04'"</span><span class="p">,</span>
+                        <span class="s1">'mom_del4'</span><span class="p">:</span> <span class="s2">"9.8e7"</span><span class="p">,</span>
+                        <span class="s1">'run_duration'</span><span class="p">:</span> <span class="s2">"'0000_00:04:30'"</span><span class="p">}}</span>
 </pre></div>
 </div>
 <p>If <a class="reference internal" href="../framework.html#dev-ocean-framework-particles"><span class="std std-ref">Particles</span></a> are includes (in the <code class="docutils literal notranslate"><span class="pre">particles</span></code>
@@ -230,10 +230,10 @@ options):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_particles</span><span class="p">:</span>
     <span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cores</span>
     <span class="n">partition</span><span class="p">(</span><span class="n">cores</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
-    <span class="n">particles</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">init_filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
-                    <span class="n">particle_filename</span><span class="o">=</span><span class="s1">&#39;particles.nc&#39;</span><span class="p">,</span>
-                    <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info.part.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">),</span>
-                    <span class="n">types</span><span class="o">=</span><span class="s1">&#39;buoyancy&#39;</span><span class="p">)</span>
+    <span class="n">particles</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">init_filename</span><span class="o">=</span><span class="s1">'init.nc'</span><span class="p">,</span>
+                    <span class="n">particle_filename</span><span class="o">=</span><span class="s1">'particles.nc'</span><span class="p">,</span>
+                    <span class="n">graph_filename</span><span class="o">=</span><span class="s1">'graph.info.part.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">),</span>
+                    <span class="n">types</span><span class="o">=</span><span class="s1">'buoyancy'</span><span class="p">)</span>
     <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partition_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>

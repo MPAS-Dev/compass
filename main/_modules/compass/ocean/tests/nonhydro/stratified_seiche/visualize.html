@@ -115,66 +115,66 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
 
-<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">'Agg'</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Visualize">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.nonhydro.stratified_seiche.visualize.Visualize.html#compass.ocean.tests.nonhydro.stratified_seiche.visualize.Visualize">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Visualize</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for visualizing a cross-section through the internal wave</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="Visualize.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.nonhydro.stratified_seiche.visualize.Visualize.html#compass.ocean.tests.nonhydro.stratified_seiche.visualize.Visualize.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.TestCase</span>
 <span class="sd">            The test case this step belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;visualize&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'visualize'</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">grid</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;nonhydro&#39;</span><span class="p">,</span> <span class="s1">&#39;hydro&#39;</span><span class="p">]:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="n">grid</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">,</span>
-                                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">grid</span><span class="si">}</span><span class="s1">/output.nc&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;init_</span><span class="si">{</span><span class="n">grid</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">,</span>
-                                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">grid</span><span class="si">}</span><span class="s1">/init.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">&#39;plotVertAndHor.png&#39;</span><span class="p">)</span></div>
+        <span class="k">for</span> <span class="n">grid</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'nonhydro'</span><span class="p">,</span> <span class="s1">'hydro'</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'output_</span><span class="si">{</span><span class="n">grid</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'../</span><span class="si">{</span><span class="n">grid</span><span class="si">}</span><span class="s1">/output.nc'</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'init_</span><span class="si">{</span><span class="n">grid</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'../</span><span class="si">{</span><span class="n">grid</span><span class="si">}</span><span class="s1">/init.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">'plotVertAndHor.png'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Visualize.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.nonhydro.stratified_seiche.visualize.Visualize.run.html#compass.ocean.tests.nonhydro.stratified_seiche.visualize.Visualize.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">]</span>
-        <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;visualize&#39;</span><span class="p">]</span>
-        <span class="n">time</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plotTime&#39;</span><span class="p">)</span>
-        <span class="n">cell1_midEdge</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;cell1&#39;</span><span class="p">)</span>
-        <span class="n">cell2_midEdge</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;cell2&#39;</span><span class="p">)</span>
-        <span class="n">firstCell</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;firstCell&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'vertical_grid'</span><span class="p">]</span>
+        <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'vert_levels'</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'visualize'</span><span class="p">]</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'plotTime'</span><span class="p">)</span>
+        <span class="n">cell1_midEdge</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'cell1'</span><span class="p">)</span>
+        <span class="n">cell2_midEdge</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'cell2'</span><span class="p">)</span>
+        <span class="n">firstCell</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'firstCell'</span><span class="p">)</span>
 
-        <span class="n">initfile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;init_hydro.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">ncfileH</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;output_hydro.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">ncfileNH</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;output_nonhydro.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">normalVelocityH</span> <span class="o">=</span> <span class="n">ncfileH</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
-        <span class="n">vertAleTransportTopH</span> <span class="o">=</span> <span class="n">ncfileH</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;vertAleTransportTop&#39;</span><span class="p">]</span>
-        <span class="n">zMidH</span> <span class="o">=</span> <span class="n">ncfileH</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;zMid&#39;</span><span class="p">]</span>
-        <span class="n">normalVelocityNH</span> <span class="o">=</span> <span class="n">ncfileNH</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
-        <span class="n">vertAleTransportTopNH</span> <span class="o">=</span> <span class="n">ncfileNH</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;vertAleTransportTop&#39;</span><span class="p">]</span>
-        <span class="n">zMidNH</span> <span class="o">=</span> <span class="n">ncfileNH</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;zMid&#39;</span><span class="p">]</span>
-        <span class="n">edgesOnCell</span> <span class="o">=</span> <span class="n">initfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;edgesOnCell&#39;</span><span class="p">]</span>
+        <span class="n">initfile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">'init_hydro.nc'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+        <span class="n">ncfileH</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">'output_hydro.nc'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+        <span class="n">ncfileNH</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">'output_nonhydro.nc'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+        <span class="n">normalVelocityH</span> <span class="o">=</span> <span class="n">ncfileH</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'normalVelocity'</span><span class="p">]</span>
+        <span class="n">vertAleTransportTopH</span> <span class="o">=</span> <span class="n">ncfileH</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'vertAleTransportTop'</span><span class="p">]</span>
+        <span class="n">zMidH</span> <span class="o">=</span> <span class="n">ncfileH</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'zMid'</span><span class="p">]</span>
+        <span class="n">normalVelocityNH</span> <span class="o">=</span> <span class="n">ncfileNH</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'normalVelocity'</span><span class="p">]</span>
+        <span class="n">vertAleTransportTopNH</span> <span class="o">=</span> <span class="n">ncfileNH</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'vertAleTransportTop'</span><span class="p">]</span>
+        <span class="n">zMidNH</span> <span class="o">=</span> <span class="n">ncfileNH</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'zMid'</span><span class="p">]</span>
+        <span class="n">edgesOnCell</span> <span class="o">=</span> <span class="n">initfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'edgesOnCell'</span><span class="p">]</span>
 
         <span class="c1"># horizontal velocity</span>
         <span class="n">zMidEdge</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">zMidH</span><span class="p">[</span><span class="n">time</span><span class="p">,</span> <span class="n">cell1_midEdge</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span>
@@ -188,7 +188,7 @@
                 <span class="k">if</span> <span class="n">iEdge</span> <span class="o">==</span> <span class="n">jEdge</span><span class="p">:</span>
                     <span class="n">midEdge</span> <span class="o">=</span> <span class="n">iEdge</span>
         <span class="k">if</span> <span class="n">midEdge</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Could not find midEdge!&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Could not find midEdge!'</span><span class="p">)</span>
         <span class="n">normalVelocity1</span> <span class="o">=</span> \
             <span class="p">(</span><span class="n">normalVelocityH</span><span class="p">[</span><span class="n">time</span><span class="p">,</span> <span class="n">midEdge</span><span class="p">,</span> <span class="p">:]</span> <span class="o">/</span>
              <span class="nb">max</span><span class="p">(</span><span class="n">normalVelocityH</span><span class="p">[</span><span class="n">time</span><span class="p">,</span> <span class="n">midEdge</span><span class="p">,</span> <span class="p">:]))</span>
@@ -217,27 +217,27 @@
         <span class="c1"># plots</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">8.4</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">))</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">normalVelocity1</span><span class="p">,</span> <span class="n">zMidEdge1</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">normalVelocity2</span><span class="p">,</span> <span class="n">zMidEdge2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;u/u_max&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;z/H&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">normalVelocity1</span><span class="p">,</span> <span class="n">zMidEdge1</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">normalVelocity2</span><span class="p">,</span> <span class="n">zMidEdge2</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'u/u_max'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'z/H'</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Stratified Wave - hor profile&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Stratified Wave - hor profile'</span><span class="p">)</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">vertAleTransportTop_origin1</span><span class="p">,</span> <span class="n">zMid_origin1</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span>
-                 <span class="n">label</span><span class="o">=</span><span class="s1">&#39;H model&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">vertAleTransportTop_origin2</span><span class="p">,</span> <span class="n">zMid_origin2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span>
-                 <span class="n">label</span><span class="o">=</span><span class="s1">&#39;NH model&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">vertAleTransportTop_origin1</span><span class="p">,</span> <span class="n">zMid_origin1</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">,</span>
+                 <span class="n">label</span><span class="o">=</span><span class="s1">'H model'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">vertAleTransportTop_origin2</span><span class="p">,</span> <span class="n">zMid_origin2</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span>
+                 <span class="n">label</span><span class="o">=</span><span class="s1">'NH model'</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">])</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;w/w_max&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'w/w_max'</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Stratified Wave - vert profile&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Stratified Wave - vert profile'</span><span class="p">)</span>
 
         <span class="n">ncfileH</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">ncfileNH</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">initfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;plotVertAndHor.png&#39;</span><span class="p">)</span></div>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'plotVertAndHor.png'</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

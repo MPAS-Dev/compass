@@ -119,7 +119,7 @@
 <div class="viewcode-block" id="Moc">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.moc.Moc.html#compass.ocean.tests.baroclinic_gyre.moc.Moc">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Moc</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for computing the zonally-averaged meridional overturning</span>
 <span class="sd">    streamfunction in the single basin of the baroclinic gyre</span>
 
@@ -127,11 +127,11 @@
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : float</span>
 <span class="sd">        The horizontal resolution (km) of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Moc.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.moc.Moc.html#compass.ocean.tests.baroclinic_gyre.moc.Moc.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -141,61 +141,61 @@
 
 <span class="sd">        resolution : float</span>
 <span class="sd">            The horizontal resolution (km) of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;moc&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'moc'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="s1">&#39;../initial_state/initial_state.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="s1">'../initial_state/initial_state.nc'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="s1">&#39;../forward/output/timeSeriesStatsMonthly.0001-01-01.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">&#39;moc.nc&#39;</span><span class="p">)</span></div>
+            <span class="s1">'../forward/output/timeSeriesStatsMonthly.0001-01-01.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">'moc.nc'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Moc.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.moc.Moc.run.html#compass.ocean.tests.baroclinic_gyre.moc.Moc.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">in_dir</span> <span class="o">=</span> <span class="s1">&#39;../forward/output&#39;</span>
-        <span class="n">out_dir</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span>
+        <span class="n">in_dir</span> <span class="o">=</span> <span class="s1">'../forward/output'</span>
+        <span class="n">out_dir</span> <span class="o">=</span> <span class="s1">'.'</span>
 
-        <span class="n">lat_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;baroclinic_gyre&#39;</span><span class="p">,</span> <span class="s1">&#39;lat_min&#39;</span><span class="p">)</span>
-        <span class="n">lat_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;baroclinic_gyre&#39;</span><span class="p">,</span> <span class="s1">&#39;lat_max&#39;</span><span class="p">)</span>
-        <span class="n">dlat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;baroclinic_gyre_post&#39;</span><span class="p">,</span> <span class="s1">&#39;dlat&#39;</span><span class="p">)</span>
+        <span class="n">lat_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'baroclinic_gyre'</span><span class="p">,</span> <span class="s1">'lat_min'</span><span class="p">)</span>
+        <span class="n">lat_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'baroclinic_gyre'</span><span class="p">,</span> <span class="s1">'lat_max'</span><span class="p">)</span>
+        <span class="n">dlat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'baroclinic_gyre_post'</span><span class="p">,</span> <span class="s1">'dlat'</span><span class="p">)</span>
         <span class="n">latBins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lat_min</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">dlat</span><span class="p">,</span>
                             <span class="n">lat_max</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">dlat</span><span class="p">,</span> <span class="n">dlat</span><span class="p">)</span>
-        <span class="n">nz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
+        <span class="n">nz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'vertical_grid'</span><span class="p">,</span> <span class="s1">'vert_levels'</span><span class="p">)</span>
 
-        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;../initial_state/initial_state.nc&#39;</span><span class="p">)</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'../initial_state/initial_state.nc'</span><span class="p">)</span>
 
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">in_dir</span><span class="si">}</span><span class="s1">/timeSeriesStatsMonthly*.nc&#39;</span><span class="p">,</span>
-            <span class="n">concat_dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="s1">&#39;nested&#39;</span><span class="p">)</span>
+            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">in_dir</span><span class="si">}</span><span class="s1">/timeSeriesStatsMonthly*.nc'</span><span class="p">,</span>
+            <span class="n">concat_dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="s1">'nested'</span><span class="p">)</span>
 
         <span class="n">moc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_amoc</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">latBins</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
 
         <span class="n">dsMOC</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
-        <span class="n">dsMOC</span><span class="p">[</span><span class="s1">&#39;xtime_startMonthly&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xtime_startMonthly</span>
-        <span class="n">dsMOC</span><span class="p">[</span><span class="s1">&#39;xtime_endMonthly&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xtime_endMonthly</span>
-        <span class="n">dsMOC</span><span class="p">[</span><span class="s1">&#39;moc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">([</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;latBins&quot;</span><span class="p">,</span> <span class="s2">&quot;nVertLevelsP1&quot;</span><span class="p">],</span> <span class="n">moc</span><span class="p">)</span>
-        <span class="n">dsMOC</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;latBins&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">latBins</span>
-        <span class="n">dsMOC</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;nVertLevelsP1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nz</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">dsMOC</span><span class="o">.</span><span class="n">moc</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Sv&#39;</span>
-        <span class="n">dsMOC</span><span class="o">.</span><span class="n">moc</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="s1">&#39;zonally-averaged meridional overturning streamfunction&#39;</span>
+        <span class="n">dsMOC</span><span class="p">[</span><span class="s1">'xtime_startMonthly'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xtime_startMonthly</span>
+        <span class="n">dsMOC</span><span class="p">[</span><span class="s1">'xtime_endMonthly'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xtime_endMonthly</span>
+        <span class="n">dsMOC</span><span class="p">[</span><span class="s1">'moc'</span><span class="p">]</span> <span class="o">=</span> <span class="p">([</span><span class="s2">"Time"</span><span class="p">,</span> <span class="s2">"latBins"</span><span class="p">,</span> <span class="s2">"nVertLevelsP1"</span><span class="p">],</span> <span class="n">moc</span><span class="p">)</span>
+        <span class="n">dsMOC</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'latBins'</span><span class="p">]</span> <span class="o">=</span> <span class="n">latBins</span>
+        <span class="n">dsMOC</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'nVertLevelsP1'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nz</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">dsMOC</span><span class="o">.</span><span class="n">moc</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Sv'</span>
+        <span class="n">dsMOC</span><span class="o">.</span><span class="n">moc</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="s1">'zonally-averaged meridional overturning streamfunction'</span>
 
-        <span class="n">outputFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">out_dir</span><span class="si">}</span><span class="s1">/moc.nc&#39;</span>
+        <span class="n">outputFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">out_dir</span><span class="si">}</span><span class="s1">/moc.nc'</span>
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMOC</span><span class="p">,</span> <span class="n">outputFileName</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_amoc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">latBins</span><span class="p">,</span> <span class="n">nz</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        compute the overturning streamfunction for the given mesh</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">latCell</span> <span class="o">=</span> <span class="mf">180.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latCell&#39;</span><span class="p">][:]</span>
+        <span class="n">latCell</span> <span class="o">=</span> <span class="mf">180.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'latCell'</span><span class="p">][:]</span>
         <span class="n">nt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_vertVelocityTop</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">mocTop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nt</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">latBins</span><span class="p">),</span> <span class="n">nz</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
         <span class="n">indlat_all</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>

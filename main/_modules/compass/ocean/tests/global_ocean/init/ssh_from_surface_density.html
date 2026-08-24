@@ -123,7 +123,7 @@
 <div class="viewcode-block" id="SshFromSurfaceDensity">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.html#compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SshFromSurfaceDensity</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the sea surface height that is in approximate hydrostatic balance</span>
 <span class="sd">    with a given land-ice pressure using the density in the top layer of the</span>
 <span class="sd">    ocean</span>
@@ -132,11 +132,11 @@
 <span class="sd">    ----------</span>
 <span class="sd">    mesh : compass.ocean.tests.global_ocean.mesh.mesh.MeshStep</span>
 <span class="sd">        The step for creating the mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="SshFromSurfaceDensity.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.html#compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">init_path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -153,48 +153,48 @@
 
 <span class="sd">        subdir : str</span>
 <span class="sd">            The subdirectory for the step</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init_path</span><span class="si">}</span><span class="s1">/initial_state.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'init.nc'</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">init_path</span><span class="si">}</span><span class="s1">/initial_state.nc'</span><span class="p">)</span>
 
         <span class="n">mesh_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">get_cull_mesh_path</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'mesh.nc'</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;original_topograpy.nc&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/topography_culled.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'original_topograpy.nc'</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/topography_culled.nc'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'topography_culled.nc'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SshFromSurfaceDensity.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.run.html#compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the testcase</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-        <span class="n">convert_to_cdf5</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span>
-                                            <span class="s1">&#39;convert_to_cdf5&#39;</span><span class="p">)</span>
+        <span class="n">convert_to_cdf5</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'ssh_adjustment'</span><span class="p">,</span>
+                                            <span class="s1">'convert_to_cdf5'</span><span class="p">)</span>
 
-        <span class="n">g</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_G&#39;</span><span class="p">]</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">'SHR_CONST_G'</span><span class="p">]</span>
 
-        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;init.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_init</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'init.nc'</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_init</span><span class="p">:</span>
             <span class="n">ds_init</span> <span class="o">=</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="n">modify_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
                 <span class="n">ds_init</span><span class="o">.</span><span class="n">maxLevelCell</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
                 <span class="n">ds_init</span><span class="o">.</span><span class="n">sshAdjustmentMask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">land_ice_pressure</span> <span class="o">=</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIcePressure</span>
 
-            <span class="k">if</span> <span class="s1">&#39;minLevelCell&#39;</span> <span class="ow">in</span> <span class="n">ds_init</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">'minLevelCell'</span> <span class="ow">in</span> <span class="n">ds_init</span><span class="p">:</span>
                 <span class="n">min_level_cell</span> <span class="o">=</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">minLevelCell</span> <span class="o">-</span> <span class="mi">1</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">min_level_cell</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds_init</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">)</span>
@@ -205,19 +205,19 @@
                            <span class="o">-</span> <span class="n">land_ice_pressure</span> <span class="o">/</span> <span class="p">(</span><span class="n">top_density</span> <span class="o">*</span> <span class="n">g</span><span class="p">),</span>
                            <span class="mf">0.</span><span class="p">)</span>
 
-            <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;original_topograpy.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_topo</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'original_topograpy.nc'</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_topo</span><span class="p">:</span>
 
-                <span class="n">ds_topo</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span>
+                <span class="n">ds_topo</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span>
 
                 <span class="k">if</span> <span class="n">convert_to_cdf5</span><span class="p">:</span>
-                    <span class="n">write_filename</span> <span class="o">=</span> <span class="s1">&#39;topography_before_cdf5.nc&#39;</span>
+                    <span class="n">write_filename</span> <span class="o">=</span> <span class="s1">'topography_before_cdf5.nc'</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">write_filename</span> <span class="o">=</span> <span class="s1">&#39;topography_culled.nc&#39;</span>
+                    <span class="n">write_filename</span> <span class="o">=</span> <span class="s1">'topography_culled.nc'</span>
                 <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="n">write_filename</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">convert_to_cdf5</span><span class="p">:</span>
-                    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncks&#39;</span><span class="p">,</span> <span class="s1">&#39;-O&#39;</span><span class="p">,</span> <span class="s1">&#39;-5&#39;</span><span class="p">,</span> <span class="s1">&#39;topography_before_cdf5.nc&#39;</span><span class="p">,</span>
-                            <span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">]</span>
+                    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'ncks'</span><span class="p">,</span> <span class="s1">'-O'</span><span class="p">,</span> <span class="s1">'-5'</span><span class="p">,</span> <span class="s1">'topography_before_cdf5.nc'</span><span class="p">,</span>
+                            <span class="s1">'topography_culled.nc'</span><span class="p">]</span>
                     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 </div>
 

@@ -118,7 +118,7 @@
 <div class="viewcode-block" id="DecompositionTest">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.decomposition_test.DecompositionTest.html#compass.landice.tests.humboldt.decomposition_test.DecompositionTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DecompositionTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test case for performing two MALI runs of a Humboldt setup with</span>
 <span class="sd">    different decompositions. The larger decomposition targets 32 tasks,</span>
 <span class="sd">    subject to available resources, and the smaller decomposition is roughly</span>
@@ -153,14 +153,14 @@
 
 <span class="sd">    run_dirs : list of str</span>
 <span class="sd">        The names of the subdirectories for the two decomposition runs</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DecompositionTest.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.decomposition_test.DecompositionTest.html#compass.landice.tests.humboldt.decomposition_test.DecompositionTest.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">velo_solver</span><span class="p">,</span> <span class="n">calving_law</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">,</span>
                  <span class="n">damage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">face_melt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">depth_integrated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">hydro</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -168,13 +168,13 @@
 <span class="sd">        test_group : compass.landice.tests.humboldt.Humboldt</span>
 <span class="sd">            The test group that this test case belongs to</span>
 
-<span class="sd">        velo_solver : {&#39;sia&#39;, &#39;FO&#39;}</span>
+<span class="sd">        velo_solver : {'sia', 'FO'}</span>
 <span class="sd">            The velocity solver to use for the test case</span>
 
 <span class="sd">        calving_law : str</span>
 <span class="sd">            The calving law used for the test case</span>
 
-<span class="sd">        mesh_type : {&#39;1km&#39;, &#39;3km&#39;}</span>
+<span class="sd">        mesh_type : {'1km', '3km'}</span>
 <span class="sd">            The resolution or type of mesh of the test case</span>
 
 <span class="sd">        damage : str</span>
@@ -188,12 +188,12 @@
 
 <span class="sd">        hydro : bool</span>
 <span class="sd">            Whether to include subglacial hydrology</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;decomposition_test&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'decomposition_test'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">=</span> <span class="n">mesh_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">=</span> <span class="n">velo_solver</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;sia&#39;</span><span class="p">,</span> <span class="s1">&#39;FO&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">},</span> \
-            <span class="s2">&quot;Value of velo_solver must be one of {&#39;sia&#39;, &#39;FO&#39;, &#39;none&#39;}&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">'sia'</span><span class="p">,</span> <span class="s1">'FO'</span><span class="p">,</span> <span class="s1">'none'</span><span class="p">},</span> \
+            <span class="s2">"Value of velo_solver must be one of {'sia', 'FO', 'none'}"</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span> <span class="o">=</span> <span class="n">calving_law</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="o">=</span> <span class="n">damage</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">face_melt</span> <span class="o">=</span> <span class="n">face_melt</span>
@@ -206,18 +206,18 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># build dir name.  always include velo solver and calving law</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;mesh-</span><span class="si">{}</span><span class="s1">_decomposition_test/velo-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">'mesh-</span><span class="si">{}</span><span class="s1">_decomposition_test/velo-</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                  <span class="n">mesh_type</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-        <span class="k">if</span> <span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span> <span class="ow">and</span> <span class="n">depth_integrated</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">&#39;-depthInt&#39;</span>
-        <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">&#39;_calving-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">calving_law</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">'FO'</span> <span class="ow">and</span> <span class="n">depth_integrated</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">'-depthInt'</span>
+        <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">'_calving-</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">calving_law</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
         <span class="c1"># append damage and facemelt if provided</span>
         <span class="k">if</span> <span class="n">damage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">&#39;_damage-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">damage</span><span class="p">)</span>
+            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">'_damage-</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">damage</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">face_melt</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">&#39;_faceMelting&#39;</span>
+            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">'_faceMelting'</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">&#39;_subglacialhydro&#39;</span>
+            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">'_subglacialhydro'</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span></div>
 
@@ -225,17 +225,17 @@
 <div class="viewcode-block" id="DecompositionTest.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.decomposition_test.DecompositionTest.configure.html#compass.landice.tests.humboldt.decomposition_test.DecompositionTest.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Choose decomposition sizes from framework-detected resources and add</span>
 <span class="sd">        run steps.</span>
 
 <span class="sd">        The larger decomposition targets up to 32 tasks. FO runs require at</span>
 <span class="sd">        least 10 tasks; all others require at least 2 tasks.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Target a max of 32 tasks, but use fewer if not available.</span>
         <span class="n">target_max_tasks</span> <span class="o">=</span> <span class="mi">32</span>
         <span class="c1"># FO solver required more resources to be time-effective to run</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">'FO'</span><span class="p">:</span>
             <span class="n">smallest_acceptable_max_tasks</span> <span class="o">=</span> <span class="mi">10</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Need at least 2 tasks to test decomposition.</span>
@@ -248,9 +248,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">procs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc_list</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">proc_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">proc_run'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="p">:</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
                 <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="n">procs</span><span class="p">,</span>
@@ -269,100 +269,100 @@
 <div class="viewcode-block" id="DecompositionTest.validate">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.decomposition_test.DecompositionTest.validate.html#compass.landice.tests.humboldt.decomposition_test.DecompositionTest.validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">run_dir1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">run_dir2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;sia&#39;</span><span class="p">:</span>
-            <span class="n">var_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;surfaceSpeed&#39;</span><span class="p">)</span>
+        <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'thickness'</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">'sia'</span><span class="p">:</span>
+            <span class="n">var_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'surfaceSpeed'</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span> <span class="o">!=</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
-            <span class="n">var_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;calvingVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;calvingThickness&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span> <span class="o">!=</span> <span class="s1">'none'</span><span class="p">:</span>
+            <span class="n">var_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'calvingVelocity'</span><span class="p">,</span> <span class="s1">'calvingThickness'</span><span class="p">])</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="o">!=</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
-            <span class="n">var_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;damage&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="o">!=</span> <span class="s1">'none'</span><span class="p">:</span>
+            <span class="n">var_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'damage'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">face_melt</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">var_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;faceMeltingThickness&#39;</span><span class="p">)</span>
+            <span class="n">var_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'faceMeltingThickness'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">var_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;waterThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;hydropotential&#39;</span><span class="p">,</span> <span class="s1">&#39;waterFlux&#39;</span><span class="p">,</span>
-                             <span class="s1">&#39;channelDischarge&#39;</span><span class="p">,</span> <span class="s1">&#39;channelArea&#39;</span><span class="p">])</span>
+            <span class="n">var_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'waterThickness'</span><span class="p">,</span> <span class="s1">'hydropotential'</span><span class="p">,</span> <span class="s1">'waterFlux'</span><span class="p">,</span>
+                             <span class="s1">'channelDischarge'</span><span class="p">,</span> <span class="s1">'channelArea'</span><span class="p">])</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;sia&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">}:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">'sia'</span><span class="p">,</span> <span class="s1">'none'</span><span class="p">}:</span>
             <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                               <span class="n">variables</span><span class="o">=</span><span class="n">var_list</span><span class="p">,</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
-                              <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">)</span>
+                              <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">'/output.nc'</span><span class="p">,</span>
+                              <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">'/output.nc'</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">'FO'</span><span class="p">:</span>
             <span class="c1"># validate thickness</span>
-            <span class="n">variable</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span>
+            <span class="n">variable</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'thickness'</span><span class="p">]</span>
             <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-10</span>
             <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
             <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
             <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
-                              <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">'/output.nc'</span><span class="p">,</span>
+                              <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">'/output.nc'</span><span class="p">,</span>
                               <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
                               <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
             <span class="c1"># validate speed</span>
-            <span class="n">variable</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;surfaceSpeed&#39;</span><span class="p">]</span>
+            <span class="n">variable</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'surfaceSpeed'</span><span class="p">]</span>
             <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-15</span>
             <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-16</span>
             <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-17</span>
             <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
-                              <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">'/output.nc'</span><span class="p">,</span>
+                              <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">'/output.nc'</span><span class="p">,</span>
                               <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
                               <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="s1">&#39;calvingVelocity&#39;</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">'calvingVelocity'</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
                 <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
                 <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
                 <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
                 <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                  <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;calvingVelocity&#39;</span><span class="p">],</span>
-                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
-                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                                  <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">'calvingVelocity'</span><span class="p">],</span>
+                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">'/output.nc'</span><span class="p">,</span>
+                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">'/output.nc'</span><span class="p">,</span>
                                   <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
                                   <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="s1">&#39;calvingThickness&#39;</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">'calvingThickness'</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
                 <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-10</span>
                 <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-10</span>
                 <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
                 <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                  <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;calvingThickness&#39;</span><span class="p">],</span>
-                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
-                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                                  <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">'calvingThickness'</span><span class="p">],</span>
+                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">'/output.nc'</span><span class="p">,</span>
+                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">'/output.nc'</span><span class="p">,</span>
                                   <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
                                   <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="s1">&#39;damage&#39;</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">'damage'</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
                 <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
                 <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
                 <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
                 <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                  <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;damage&#39;</span><span class="p">],</span>
-                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
-                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                                  <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">'damage'</span><span class="p">],</span>
+                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">'/output.nc'</span><span class="p">,</span>
+                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">'/output.nc'</span><span class="p">,</span>
                                   <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
                                   <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="s1">&#39;faceMeltingThickness&#39;</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">'faceMeltingThickness'</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
                 <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
                 <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
                 <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
                 <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                  <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;faceMeltingThickness&#39;</span><span class="p">],</span>
-                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
-                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                                  <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">'faceMeltingThickness'</span><span class="p">],</span>
+                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">'/output.nc'</span><span class="p">,</span>
+                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">'/output.nc'</span><span class="p">,</span>
                                   <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
                                   <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 </div>

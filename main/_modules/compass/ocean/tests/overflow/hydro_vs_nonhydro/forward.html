@@ -117,7 +117,7 @@
 <div class="viewcode-block" id="Forward">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.hydro_vs_nonhydro.forward.Forward.html#compass.ocean.tests.overflow.hydro_vs_nonhydro.forward.Forward">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MPAS-Ocean runs as part of the</span>
 <span class="sd">    hydro vs nonhydro test case.</span>
 
@@ -125,12 +125,12 @@
 <span class="sd">    ----------</span>
 <span class="sd">    nonhydro_mode : bool</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Forward.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.hydro_vs_nonhydro.forward.Forward.html#compass.ocean.tests.overflow.hydro_vs_nonhydro.forward.Forward.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">nonhydro_mode</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
                  <span class="n">ntasks</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -153,37 +153,37 @@
 <span class="sd">        openmp_threads : int, optional</span>
 <span class="sd">            the number of threads the step will use</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nonhydro_mode</span> <span class="o">=</span> <span class="n">nonhydro_mode</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">min_tasks</span><span class="p">,</span>
                          <span class="n">openmp_threads</span><span class="o">=</span><span class="n">openmp_threads</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.ocean.tests.overflow.hydro_vs_nonhydro&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+            <span class="s1">'compass.ocean.tests.overflow.hydro_vs_nonhydro'</span><span class="p">,</span>
+            <span class="s1">'namelist.forward'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">nonhydro_mode</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.ocean.tests.overflow.hydro_vs_nonhydro&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;namelist.nonhydro&#39;</span><span class="p">)</span>
+                <span class="s1">'compass.ocean.tests.overflow.hydro_vs_nonhydro'</span><span class="p">,</span>
+                <span class="s1">'namelist.nonhydro'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.ocean.tests.overflow.hydro_vs_nonhydro&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;namelist.hydro&#39;</span><span class="p">)</span>
+                <span class="s1">'compass.ocean.tests.overflow.hydro_vs_nonhydro'</span><span class="p">,</span>
+                <span class="s1">'namelist.hydro'</span><span class="p">)</span>
 
         <span class="c1"># make sure output is double precision</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.output&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.streams'</span><span class="p">,</span> <span class="s1">'streams.output'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.overflow.hydro_vs_nonhydro&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.overflow.hydro_vs_nonhydro'</span><span class="p">,</span>
+                              <span class="s1">'streams.forward'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/initial_state.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/culled_graph.info&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'init.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../initial_state/initial_state.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../initial_state/culled_graph.info'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">)</span></div>
 
 
     <span class="c1"># no setup() is needed</span>
@@ -191,9 +191,9 @@
 <div class="viewcode-block" id="Forward.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.hydro_vs_nonhydro.forward.Forward.run.html#compass.ocean.tests.overflow.hydro_vs_nonhydro.forward.Forward.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 </div>
 

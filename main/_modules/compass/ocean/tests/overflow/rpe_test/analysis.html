@@ -121,7 +121,7 @@
 <div class="viewcode-block" id="Analysis">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.rpe_test.analysis.Analysis.html#compass.ocean.tests.overflow.rpe_test.analysis.Analysis">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for plotting the results of a series of RPE runs in the overflow</span>
 <span class="sd">    test group</span>
 
@@ -132,11 +132,11 @@
 
 <span class="sd">    nus : list of float</span>
 <span class="sd">        A list of viscosities</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Analysis.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.rpe_test.analysis.Analysis.html#compass.ocean.tests.overflow.rpe_test.analysis.Analysis.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">nus</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -149,31 +149,31 @@
 
 <span class="sd">        nus : list of float</span>
 <span class="sd">            A list of viscosities</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;analysis&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'analysis'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nus</span> <span class="o">=</span> <span class="n">nus</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;initial_state.nc&#39;</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/ocean.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'initial_state.nc'</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">'../initial_state/ocean.nc'</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">nu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nus</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">,</span>
-                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../rpe_test_</span><span class="si">{</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">_nu_</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">nu</span><span class="p">)</span><span class="si">}</span><span class="s1">/output.nc&#39;</span><span class="p">)</span>
+                <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'output_</span><span class="si">{</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'../rpe_test_</span><span class="si">{</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">_nu_</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">nu</span><span class="p">)</span><span class="si">}</span><span class="s1">/output.nc'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;sections_overflow_</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;rpe_t.png&#39;</span><span class="p">)</span></div>
+            <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'sections_overflow_</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">.png'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'rpe_t.png'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Analysis.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.rpe_test.analysis.Analysis.run.html#compass.ocean.tests.overflow.rpe_test.analysis.Analysis.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">rpe</span> <span class="o">=</span> <span class="n">compute_rpe</span><span class="p">()</span>
         <span class="n">_plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">nus</span><span class="p">,</span> <span class="n">rpe</span><span class="p">)</span></div>
 </div>
@@ -181,7 +181,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_plot</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">nus</span><span class="p">,</span> <span class="n">rpe</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot section of the overflow at different viscosities</span>
 
 <span class="sd">    Parameters</span>
@@ -195,14 +195,14 @@
 
 <span class="sd">    rpe : numpy.ndarray</span>
 <span class="sd">        The reference potential energy with size len(nu) x len(time)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">'Agg'</span><span class="p">)</span>
     <span class="n">nanosecondsPerDay</span> <span class="o">=</span> <span class="mf">8.64e13</span>
     <span class="n">num_files</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nus</span><span class="p">)</span>
     <span class="n">time</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">/</span> <span class="mi">24</span>
 
-    <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;output_1.nc&#39;</span><span class="p">)</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'output_1.nc'</span><span class="p">)</span>
     <span class="n">times</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">daysSinceStartOfSim</span><span class="o">.</span><span class="n">values</span>
     <span class="n">times</span> <span class="o">=</span> <span class="n">times</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">nanosecondsPerDay</span><span class="p">)</span>
@@ -211,20 +211,20 @@
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_files</span><span class="p">):</span>
         <span class="n">rpe_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">((</span><span class="n">rpe</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">rpe</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">rpe</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">rpe_norm</span><span class="p">,</span>
-                 <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">nu_h=$</span><span class="si">{</span><span class="n">nus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time, days&#39;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;RPE-RPE(0)/RPE(0)&#39;</span><span class="p">)</span>
+                 <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"$</span><span class="se">\\</span><span class="s2">nu_h=$</span><span class="si">{</span><span class="n">nus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Time, days'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'RPE-RPE(0)/RPE(0)'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;rpe_t.png&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'rpe_t.png'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
 
     <span class="c1"># prep mesh quantities</span>
-    <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;../initial_state/ocean.nc&#39;</span><span class="p">)</span>
-    <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sortby</span><span class="p">(</span><span class="s1">&#39;yEdge&#39;</span><span class="p">)</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'../initial_state/ocean.nc'</span><span class="p">)</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sortby</span><span class="p">(</span><span class="s1">'yEdge'</span><span class="p">)</span>
     <span class="n">x_edge</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span>
     <span class="n">y_edge</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">yEdge</span>
     <span class="n">cells_on_edge</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">cellsOnEdge</span>
-    <span class="n">n_vert_levels</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+    <span class="n">n_vert_levels</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">]</span>
 
     <span class="n">x_edge_mid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">x_edge</span><span class="p">)</span>
     <span class="n">edge_mask_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">x_edge</span><span class="p">,</span> <span class="n">x_edge_mid</span><span class="p">)</span>
@@ -236,21 +236,21 @@
 
     <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">num_files</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span>
         <span class="mf">5.0</span><span class="p">,</span> <span class="mf">2.1</span> <span class="o">*</span> <span class="n">num_files</span><span class="p">),</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Temperature, Overflow test case&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">'Temperature, Overflow test case'</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">iCol</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_files</span><span class="p">):</span>
 
         <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">iCol</span><span class="p">]</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="n">iCol</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">'output_</span><span class="si">{</span><span class="n">iCol</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span>
 
         <span class="c1"># Get the output times again</span>
-        <span class="c1"># Don&#39;t assume that the output times are the same for all files</span>
+        <span class="c1"># Don't assume that the output times are the same for all files</span>
         <span class="n">times</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">daysSinceStartOfSim</span><span class="o">.</span><span class="n">values</span>
         <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">times</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">nanosecondsPerDay</span><span class="p">)</span>
         <span class="n">t_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">times</span> <span class="o">-</span> <span class="n">time</span><span class="p">))</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">t_idx</span><span class="p">)</span>
 
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sortby</span><span class="p">(</span><span class="s1">&#39;yEdge&#39;</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sortby</span><span class="p">(</span><span class="s1">'yEdge'</span><span class="p">)</span>
 
         <span class="c1"># Compute the layer interfaces depths across the cross-section</span>
         <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">layerThickness</span>
@@ -282,16 +282,16 @@
         <span class="n">p</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">y_edges_mesh</span><span class="p">,</span> <span class="mf">1e3</span><span class="p">),</span>
                           <span class="n">z_interface</span><span class="p">,</span>
                           <span class="n">temperature_x</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
-                          <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;hour </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="n">t_idx</span><span class="p">]</span><span class="o">*</span><span class="mf">24.</span><span class="p">)</span><span class="si">}</span><span class="s1">, &#39;</span>
-                     <span class="sa">f</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">nu_h=$</span><span class="si">{</span><span class="n">nus</span><span class="p">[</span><span class="n">iCol</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                          <span class="n">cmap</span><span class="o">=</span><span class="s1">'viridis'</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'hour </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="n">t_idx</span><span class="p">]</span><span class="o">*</span><span class="mf">24.</span><span class="p">)</span><span class="si">}</span><span class="s1">, '</span>
+                     <span class="sa">f</span><span class="s1">'$</span><span class="se">\\</span><span class="s1">nu_h=$</span><span class="si">{</span><span class="n">nus</span><span class="p">[</span><span class="n">iCol</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;z (m)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'z (m)'</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">iCol</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">iCol</span> <span class="o">==</span> <span class="n">num_files</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;y (km)&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'y (km)'</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>

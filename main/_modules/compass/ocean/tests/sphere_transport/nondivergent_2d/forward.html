@@ -119,7 +119,7 @@
 <div class="viewcode-block" id="Forward">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.sphere_transport.nondivergent_2d.forward.Forward.html#compass.ocean.tests.sphere_transport.nondivergent_2d.forward.Forward">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MPAS-Ocean runs as part of the</span>
 <span class="sd">      nondivergent_2d test case.</span>
 
@@ -127,12 +127,12 @@
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : int</span>
 <span class="sd">        The resolution of the (uniform) mesh in km</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="Forward.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.sphere_transport.nondivergent_2d.forward.Forward.html#compass.ocean.tests.sphere_transport.nondivergent_2d.forward.Forward.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">dt_minutes</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new step</span>
 
 <span class="sd">        Parameters</span>
@@ -144,65 +144,65 @@
 <span class="sd">            The resolution of the (uniform) mesh in km</span>
 <span class="sd">        dt_minutes : int</span>
 <span class="sd">            The time step size in minutes.  **must divide 1 day (24*60)**</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+<span class="sd">        """</span>  <span class="c1"># noqa: E501</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span>
-                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
-                         <span class="n">subdir</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">/forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s1">'QU</span><span class="si">{}</span><span class="s1">_forward'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
+                         <span class="n">subdir</span><span class="o">=</span><span class="s1">'QU</span><span class="si">{}</span><span class="s1">/forward'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dt_minutes</span> <span class="o">=</span> <span class="n">dt_minutes</span>
 
-        <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.sphere_transport.nondivergent_2d&#39;</span>
+        <span class="n">package</span> <span class="o">=</span> <span class="s1">'compass.ocean.tests.sphere_transport.nondivergent_2d'</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.forward&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.forward&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">'namelist.forward'</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">'streams.forward'</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../init/initial_state.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../mesh/graph.info&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'init.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../init/initial_state.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../mesh/graph.info'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Forward.setup">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.sphere_transport.nondivergent_2d.forward.Forward.setup.html#compass.ocean.tests.sphere_transport.nondivergent_2d.forward.Forward.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set namelist options base on config options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">dtstr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_timestep_str</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">({</span><span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="n">dtstr</span><span class="p">,</span>
-                                   <span class="s1">&#39;config_time_integrator&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                                       <span class="s1">&#39;nondivergent_2d&#39;</span><span class="p">,</span> <span class="s1">&#39;time_integrator&#39;</span><span class="p">)})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">({</span><span class="s1">'config_dt'</span><span class="p">:</span> <span class="n">dtstr</span><span class="p">,</span>
+                                   <span class="s1">'config_time_integrator'</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                                       <span class="s1">'nondivergent_2d'</span><span class="p">,</span> <span class="s1">'time_integrator'</span><span class="p">)})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update resources at runtime from config options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Forward.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.sphere_transport.nondivergent_2d.forward.Forward.run.html#compass.ocean.tests.sphere_transport.nondivergent_2d.forward.Forward.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the testcase</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_timestep_str</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span>
             <span class="n">options</span><span class="o">=</span><span class="p">{</span>
-                <span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="n">dt</span><span class="p">,</span>
-                <span class="s1">&#39;config_time_integrator&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                    <span class="s1">&#39;nondivergent_2d&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;time_integrator&#39;</span><span class="p">)},</span>
-            <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
+                <span class="s1">'config_dt'</span><span class="p">:</span> <span class="n">dt</span><span class="p">,</span>
+                <span class="s1">'config_time_integrator'</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s1">'nondivergent_2d'</span><span class="p">,</span>
+                    <span class="s1">'time_integrator'</span><span class="p">)},</span>
+            <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.ocean'</span><span class="p">)</span>
 
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
@@ -210,35 +210,35 @@
 <div class="viewcode-block" id="Forward.get_timestep_str">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.sphere_transport.nondivergent_2d.forward.Forward.get_timestep_str.html#compass.ocean.tests.sphere_transport.nondivergent_2d.forward.Forward.get_timestep_str">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_timestep_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">          These tests expect the time step to be input in units of minutes,</span>
-<span class="sd">          but MPAS requires an &quot;HH:MM:SS&quot; string.  This function converts the</span>
+<span class="sd">          but MPAS requires an "HH:MM:SS" string.  This function converts the</span>
 <span class="sd">          time step input into the formatted string used by MPAS.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">dtminutes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt_minutes</span>
         <span class="n">dt</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">dtminutes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dtminutes</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">dtstr</span> <span class="o">=</span> <span class="s2">&quot;00:00:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">())[:</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">dtstr</span> <span class="o">=</span> <span class="s2">"00:00:"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">())[:</span><span class="mi">2</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">dtminutes</span> <span class="o">&gt;=</span> <span class="mi">60</span><span class="p">:</span>
             <span class="n">dthours</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">/</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">dthours</span><span class="p">))</span>
             <span class="n">dtminutes</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">/</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">dtminutes</span><span class="p">))</span>
-            <span class="n">dtstr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dthours</span><span class="p">))[:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dtminutes</span><span class="p">))[</span>
-                <span class="p">:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()))[:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">dtstr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dthours</span><span class="p">))[:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">":"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dtminutes</span><span class="p">))[</span>
+                <span class="p">:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">":"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()))[:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">dtminutes</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">/</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">dtstr</span> <span class="o">=</span> <span class="s2">&quot;00:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dtminutes</span><span class="p">))[:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;:00&quot;</span>
+            <span class="n">dtstr</span> <span class="o">=</span> <span class="s2">"00:"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dtminutes</span><span class="p">))[:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">":00"</span>
         <span class="k">return</span> <span class="n">dtstr</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nondivergent_2d&#39;</span><span class="p">,</span>
-                                    <span class="sa">f</span><span class="s1">&#39;QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_ntasks&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nondivergent_2d&#39;</span><span class="p">,</span>
-                                       <span class="sa">f</span><span class="s1">&#39;QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_min_tasks&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'nondivergent_2d'</span><span class="p">,</span>
+                                    <span class="sa">f</span><span class="s1">'QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_ntasks'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'nondivergent_2d'</span><span class="p">,</span>
+                                       <span class="sa">f</span><span class="s1">'QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_min_tasks'</span><span class="p">)</span></div>
 
 </pre></div>
 

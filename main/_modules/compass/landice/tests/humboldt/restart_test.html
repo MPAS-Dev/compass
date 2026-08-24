@@ -118,7 +118,7 @@
 <div class="viewcode-block" id="RestartTest">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.restart_test.RestartTest.html#compass.landice.tests.humboldt.restart_test.RestartTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RestartTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test case for performing two MALI runs of a Humboldt setup, one full</span>
 <span class="sd">    run and one run broken into two segments with a restart. The test case</span>
 <span class="sd">    verifies that the results of the two runs are identical.</span>
@@ -148,14 +148,14 @@
 
 <span class="sd">    hydro : bool</span>
 <span class="sd">        Whether to include subglacial hydrology</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="RestartTest.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.restart_test.RestartTest.html#compass.landice.tests.humboldt.restart_test.RestartTest.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">velo_solver</span><span class="p">,</span> <span class="n">calving_law</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">,</span>
                  <span class="n">damage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">face_melt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">depth_integrated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">hydro</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -163,13 +163,13 @@
 <span class="sd">        test_group : compass.landice.tests.humboldt.Humboldt</span>
 <span class="sd">            The test group that this test case belongs to</span>
 
-<span class="sd">        velo_solver : {&#39;sia&#39;, &#39;FO&#39;}</span>
+<span class="sd">        velo_solver : {'sia', 'FO'}</span>
 <span class="sd">            The velocity solver to use for the test case</span>
 
 <span class="sd">        calving_law : str</span>
 <span class="sd">            The calving law used for the test case</span>
 
-<span class="sd">        mesh_type : {&#39;1km&#39;, &#39;3km&#39;}</span>
+<span class="sd">        mesh_type : {'1km', '3km'}</span>
 <span class="sd">            The resolution or type of mesh of the test case</span>
 
 <span class="sd">        damage : str</span>
@@ -183,12 +183,12 @@
 
 <span class="sd">        hydro : bool</span>
 <span class="sd">            Whether to include subglacial hydrology</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;restart_test&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'restart_test'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">=</span> <span class="n">mesh_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">=</span> <span class="n">velo_solver</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;sia&#39;</span><span class="p">,</span> <span class="s1">&#39;FO&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">},</span> \
-            <span class="s2">&quot;Value of velo_solver must be one of {&#39;sia&#39;, &#39;FO&#39;, &#39;none&#39;}&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">'sia'</span><span class="p">,</span> <span class="s1">'FO'</span><span class="p">,</span> <span class="s1">'none'</span><span class="p">},</span> \
+            <span class="s2">"Value of velo_solver must be one of {'sia', 'FO', 'none'}"</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span> <span class="o">=</span> <span class="n">calving_law</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="o">=</span> <span class="n">damage</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">face_melt</span> <span class="o">=</span> <span class="n">face_melt</span>
@@ -199,22 +199,22 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># build dir name.  always include velo solver and calving law</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;mesh-</span><span class="si">{}</span><span class="s1">_restart_test/velo-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">'mesh-</span><span class="si">{}</span><span class="s1">_restart_test/velo-</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                  <span class="n">mesh_type</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-        <span class="k">if</span> <span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span> <span class="ow">and</span> <span class="n">depth_integrated</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">&#39;-depthInt&#39;</span>
-        <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">&#39;_calving-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">calving_law</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">'FO'</span> <span class="ow">and</span> <span class="n">depth_integrated</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">'-depthInt'</span>
+        <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">'_calving-</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">calving_law</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
         <span class="c1"># append damage and facemelt if provided</span>
         <span class="k">if</span> <span class="n">damage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">&#39;_damage-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">damage</span><span class="p">)</span>
+            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">'_damage-</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">damage</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">face_melt</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">&#39;_faceMelting&#39;</span>
+            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">'_faceMelting'</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">&#39;_subglacialhydro&#39;</span>
+            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">'_subglacialhydro'</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;full_run&#39;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'full_run'</span>
         <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                         <span class="n">ntasks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_ntasks</span><span class="p">,</span>
                         <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
@@ -228,19 +228,19 @@
         <span class="c1"># tests to a reasonable runtime.  Different nl templates have been</span>
         <span class="c1"># set up for that</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">nl1</span> <span class="o">=</span> <span class="s1">&#39;namelist.full.hydro&#39;</span>
+            <span class="n">nl1</span> <span class="o">=</span> <span class="s1">'namelist.full.hydro'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">nl1</span> <span class="o">=</span> <span class="s1">&#39;namelist.full&#39;</span>
+            <span class="n">nl1</span> <span class="o">=</span> <span class="s1">'namelist.full'</span>
         <span class="c1"># modify the namelist options and streams file</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.landice.tests.humboldt.restart_test&#39;</span><span class="p">,</span>
-            <span class="n">nl1</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+            <span class="s1">'compass.landice.tests.humboldt.restart_test'</span><span class="p">,</span>
+            <span class="n">nl1</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.landice.tests.humboldt.restart_test&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;streams.full&#39;</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">)</span>
+            <span class="s1">'compass.landice.tests.humboldt.restart_test'</span><span class="p">,</span>
+            <span class="s1">'streams.full'</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.landice'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;restart_run&#39;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'restart_run'</span>
         <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                         <span class="n">ntasks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_ntasks</span><span class="p">,</span>
                         <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
@@ -250,49 +250,49 @@
                         <span class="n">hydro</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hydro</span><span class="p">,</span>
                         <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span>
                         <span class="n">depth_integrated</span><span class="o">=</span><span class="n">depth_integrated</span><span class="p">,</span>
-                        <span class="n">suffixes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;landice&#39;</span><span class="p">,</span> <span class="s1">&#39;landice.rst&#39;</span><span class="p">])</span>
+                        <span class="n">suffixes</span><span class="o">=</span><span class="p">[</span><span class="s1">'landice'</span><span class="p">,</span> <span class="s1">'landice.rst'</span><span class="p">])</span>
 
         <span class="c1"># Hydro model restart tests should be shorter duration to keep the</span>
         <span class="c1"># tests to a reasonable runtime.  Different nl templates have been</span>
         <span class="c1"># set up for that</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">nl1</span> <span class="o">=</span> <span class="s1">&#39;namelist.restart.hydro&#39;</span>
-            <span class="n">nl2</span> <span class="o">=</span> <span class="s1">&#39;namelist.restart.rst.hydro&#39;</span>
+            <span class="n">nl1</span> <span class="o">=</span> <span class="s1">'namelist.restart.hydro'</span>
+            <span class="n">nl2</span> <span class="o">=</span> <span class="s1">'namelist.restart.rst.hydro'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">nl1</span> <span class="o">=</span> <span class="s1">&#39;namelist.restart&#39;</span>
-            <span class="n">nl2</span> <span class="o">=</span> <span class="s1">&#39;namelist.restart.rst&#39;</span>
+            <span class="n">nl1</span> <span class="o">=</span> <span class="s1">'namelist.restart'</span>
+            <span class="n">nl2</span> <span class="o">=</span> <span class="s1">'namelist.restart.rst'</span>
         <span class="c1"># modify the namelist options and streams file</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.landice.tests.humboldt.restart_test&#39;</span><span class="p">,</span>
-            <span class="n">nl1</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+            <span class="s1">'compass.landice.tests.humboldt.restart_test'</span><span class="p">,</span>
+            <span class="n">nl1</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.landice.tests.humboldt.restart_test&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;streams.restart&#39;</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">)</span>
+            <span class="s1">'compass.landice.tests.humboldt.restart_test'</span><span class="p">,</span>
+            <span class="s1">'streams.restart'</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.landice'</span><span class="p">)</span>
 
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.landice.tests.humboldt.restart_test&#39;</span><span class="p">,</span>
-            <span class="n">nl2</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice.rst&#39;</span><span class="p">)</span>
+            <span class="s1">'compass.landice.tests.humboldt.restart_test'</span><span class="p">,</span>
+            <span class="n">nl2</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice.rst'</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.landice.tests.humboldt.restart_test&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;streams.restart.rst&#39;</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice.rst&#39;</span><span class="p">)</span>
+            <span class="s1">'compass.landice.tests.humboldt.restart_test'</span><span class="p">,</span>
+            <span class="s1">'streams.restart.rst'</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.landice.rst'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RestartTest.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.restart_test.RestartTest.configure.html#compass.landice.tests.humboldt.restart_test.RestartTest.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set restart-test task counts from framework-detected resources.</span>
 
 <span class="sd">        The target task count is 32 when available. FO runs require at least</span>
 <span class="sd">        10 tasks; other runs allow any positive task count.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">available_resources</span> <span class="o">=</span> <span class="n">get_available_parallel_resources</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
 
-        <span class="n">min_tasks</span> <span class="o">=</span> <span class="mi">10</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="n">min_tasks</span> <span class="o">=</span> <span class="mi">10</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">'FO'</span> <span class="k">else</span> <span class="mi">1</span>
         <span class="n">ntasks</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">min_tasks</span><span class="p">,</span>
                      <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_ntasks</span><span class="p">,</span>
-                         <span class="n">available_resources</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]))</span>
+                         <span class="n">available_resources</span><span class="p">[</span><span class="s1">'cores'</span><span class="p">]))</span>
 
         <span class="c1"># Apply the same task count to both full and restart runs.</span>
         <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
@@ -304,28 +304,28 @@
 <div class="viewcode-block" id="RestartTest.validate">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.restart_test.RestartTest.validate.html#compass.landice.tests.humboldt.restart_test.RestartTest.validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="s1">&#39;surfaceSpeed&#39;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'thickness'</span><span class="p">,</span> <span class="s1">'surfaceSpeed'</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span> <span class="o">!=</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
-            <span class="n">variables</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;calvingVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;calvingThickness&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span> <span class="o">!=</span> <span class="s1">'none'</span><span class="p">:</span>
+            <span class="n">variables</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'calvingVelocity'</span><span class="p">,</span> <span class="s1">'calvingThickness'</span><span class="p">])</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="o">!=</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
-            <span class="n">variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;damage&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="o">!=</span> <span class="s1">'none'</span><span class="p">:</span>
+            <span class="n">variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'damage'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">face_melt</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;faceMeltingThickness&#39;</span><span class="p">)</span>
+            <span class="n">variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'faceMeltingThickness'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">variables</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;waterThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;hydropotential&#39;</span><span class="p">,</span> <span class="s1">&#39;waterFlux&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;channelDischarge&#39;</span><span class="p">,</span> <span class="s1">&#39;channelArea&#39;</span><span class="p">])</span>
+            <span class="n">variables</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'waterThickness'</span><span class="p">,</span> <span class="s1">'hydropotential'</span><span class="p">,</span> <span class="s1">'waterFlux'</span><span class="p">,</span>
+                              <span class="s1">'channelDischarge'</span><span class="p">,</span> <span class="s1">'channelArea'</span><span class="p">])</span>
 
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;full_run/output.nc&#39;</span><span class="p">,</span>
-                          <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;restart_run/output.nc&#39;</span><span class="p">)</span></div>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">'full_run/output.nc'</span><span class="p">,</span>
+                          <span class="n">filename2</span><span class="o">=</span><span class="s1">'restart_run/output.nc'</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

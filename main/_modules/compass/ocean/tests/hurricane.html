@@ -117,26 +117,26 @@
 <div class="viewcode-block" id="Hurricane">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.Hurricane.html#compass.ocean.tests.hurricane.Hurricane">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Hurricane</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test group for hurricane simulations with MPAS-Ocean</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Hurricane.__init__">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.Hurricane.html#compass.ocean.tests.hurricane.Hurricane.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        mpas_core : compass.ocean.Ocean</span>
 <span class="sd">            the MPAS core that this test group belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span>
-                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;hurricane&#39;</span><span class="p">)</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s1">'hurricane'</span><span class="p">)</span>
 
-        <span class="n">storm</span> <span class="o">=</span> <span class="s1">&#39;sandy&#39;</span>
-        <span class="n">mesh_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;DEQU120at30cr10rr2&#39;</span><span class="p">,</span> <span class="s1">&#39;DEVR45to5rr1&#39;</span><span class="p">,</span> <span class="s1">&#39;RRS6to18&#39;</span><span class="p">]</span>
-        <span class="n">wetdry_options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="s1">&#39;standard&#39;</span><span class="p">,</span> <span class="s1">&#39;subgrid&#39;</span><span class="p">]</span>
+        <span class="n">storm</span> <span class="o">=</span> <span class="s1">'sandy'</span>
+        <span class="n">mesh_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'DEQU120at30cr10rr2'</span><span class="p">,</span> <span class="s1">'DEVR45to5rr1'</span><span class="p">,</span> <span class="s1">'RRS6to18'</span><span class="p">]</span>
+        <span class="n">wetdry_options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'off'</span><span class="p">,</span> <span class="s1">'standard'</span><span class="p">,</span> <span class="s1">'subgrid'</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">mesh_names</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">wetdry</span> <span class="ow">in</span> <span class="n">wetdry_options</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">use_lts</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;LTS&#39;</span><span class="p">,</span> <span class="s1">&#39;FB_LTS&#39;</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">use_lts</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="s1">'LTS'</span><span class="p">,</span> <span class="s1">'FB_LTS'</span><span class="p">]:</span>
 
                     <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                                 <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span>

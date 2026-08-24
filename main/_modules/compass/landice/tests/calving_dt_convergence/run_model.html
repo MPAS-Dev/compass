@@ -116,7 +116,7 @@
 <div class="viewcode-block" id="RunModel">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.calving_dt_convergence.run_model.RunModel.html#compass.landice.tests.calving_dt_convergence.run_model.RunModel">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunModel</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MALI runs as part of calving dt convergence</span>
 <span class="sd">    test cases.</span>
 
@@ -132,13 +132,13 @@
 <span class="sd">        the ``restart_run`` step of the ``restart_test`` runs the model</span>
 <span class="sd">        twice, the second time with ``namelist.landice.rst`` and</span>
 <span class="sd">        ``streams.landice.rst``</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="RunModel.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.calving_dt_convergence.run_model.RunModel.html#compass.landice.tests.calving_dt_convergence.run_model.RunModel.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">calving</span><span class="p">,</span> <span class="n">velo</span><span class="p">,</span> <span class="n">calv_dt_frac</span><span class="p">,</span>
                  <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                  <span class="n">suffixes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -151,15 +151,15 @@
 
 <span class="sd">        mesh : str</span>
 <span class="sd">            the name of the mesh to be used. Valid values are:</span>
-<span class="sd">            &#39;mismip+&#39;, &#39;humboldt&#39;, &#39;thwaites&#39;</span>
+<span class="sd">            'mismip+', 'humboldt', 'thwaites'</span>
 
 <span class="sd">        calving : str</span>
 <span class="sd">            the name of the calving option to be used. Valid values are:</span>
-<span class="sd">            &#39;specified_calving_velocity&#39;, &#39;eigencalving&#39;, &#39;von_Mises_stress&#39;</span>
+<span class="sd">            'specified_calving_velocity', 'eigencalving', 'von_Mises_stress'</span>
 
 <span class="sd">        velo : str</span>
 <span class="sd">            the name of the velocity setting to use.  Valid values are:</span>
-<span class="sd">            &#39;none&#39;, &#39;FO&#39;</span>
+<span class="sd">            'none', 'FO'</span>
 
 <span class="sd">        calv_dt_frac : float</span>
 <span class="sd">            the value to use for calving dt fraction</span>
@@ -186,10 +186,10 @@
 <span class="sd">            the ``restart_run`` step of the ``restart_test`` runs the model</span>
 <span class="sd">            twice, the second time with ``namelist.landice.rst`` and</span>
 <span class="sd">            ``streams.landice.rst``</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">if</span> <span class="n">suffixes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">suffixes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;landice&#39;</span><span class="p">]</span>
+            <span class="n">suffixes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'landice'</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suffixes</span> <span class="o">=</span> <span class="n">suffixes</span>
         <span class="k">if</span> <span class="n">min_tasks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">ntasks</span>
@@ -198,59 +198,59 @@
                          <span class="n">openmp_threads</span><span class="o">=</span><span class="n">openmp_threads</span><span class="p">)</span>
 
         <span class="c1"># download and link the mesh</span>
-        <span class="k">if</span> <span class="n">mesh</span> <span class="o">==</span> <span class="s1">&#39;mismip+&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">&#39;MISMIP_2km_20220502.nc&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;albany_input.yaml&#39;</span><span class="p">,</span>
-                                <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.mismipplus&#39;</span><span class="p">,</span>
+        <span class="k">if</span> <span class="n">mesh</span> <span class="o">==</span> <span class="s1">'mismip+'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">'MISMIP_2km_20220502.nc'</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'albany_input.yaml'</span><span class="p">,</span>
+                                <span class="n">package</span><span class="o">=</span><span class="s1">'compass.landice.tests.mismipplus'</span><span class="p">,</span>
                                 <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">mesh</span> <span class="o">==</span> <span class="s1">&#39;humboldt&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">&#39;Humboldt_3to30km_r04_20210615.nc&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;albany_input.yaml&#39;</span><span class="p">,</span>
-                                <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.humboldt&#39;</span><span class="p">,</span>
+        <span class="k">elif</span> <span class="n">mesh</span> <span class="o">==</span> <span class="s1">'humboldt'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">'Humboldt_3to30km_r04_20210615.nc'</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'albany_input.yaml'</span><span class="p">,</span>
+                                <span class="n">package</span><span class="o">=</span><span class="s1">'compass.landice.tests.humboldt'</span><span class="p">,</span>
                                 <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">mesh</span> <span class="o">==</span> <span class="s1">&#39;thwaites&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">&#39;thwaites.4km.210608.nc&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;albany_input.yaml&#39;</span><span class="p">,</span>
-                                <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.thwaites&#39;</span><span class="p">,</span>
+        <span class="k">elif</span> <span class="n">mesh</span> <span class="o">==</span> <span class="s1">'thwaites'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">'thwaites.4km.210608.nc'</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'albany_input.yaml'</span><span class="p">,</span>
+                                <span class="n">package</span><span class="o">=</span><span class="s1">'compass.landice.tests.thwaites'</span><span class="p">,</span>
                                 <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span>
-                            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                            <span class="n">database</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">suffixes</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.landice.tests.calving_dt_convergence&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;namelist.landice&#39;</span><span class="p">,</span>
-                <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+                <span class="s1">'compass.landice.tests.calving_dt_convergence'</span><span class="p">,</span>
+                <span class="s1">'namelist.landice'</span><span class="p">,</span>
+                <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
 
             <span class="c1"># Modify nl &amp; streams for the requested options</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_calving&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">calving</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
-                       <span class="s1">&#39;config_velocity_solver&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">velo</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
-                       <span class="s1">&#39;config_adaptive_timestep_calvingCFL_fraction&#39;</span><span class="p">:</span>
-                       <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">calv_dt_frac</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
-            <span class="k">if</span> <span class="n">velo</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_calving'</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">calving</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                       <span class="s1">'config_velocity_solver'</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">velo</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                       <span class="s1">'config_adaptive_timestep_calvingCFL_fraction'</span><span class="p">:</span>
+                       <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">calv_dt_frac</span><span class="si">}</span><span class="s2">"</span><span class="p">}</span>
+            <span class="k">if</span> <span class="n">velo</span> <span class="o">==</span> <span class="s1">'FO'</span><span class="p">:</span>
                 <span class="c1"># Make FO runs shorter</span>
-                <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_run_duration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&#39;0005-00-00_00:00:00&#39;&quot;</span>
-            <span class="k">if</span> <span class="n">mesh</span> <span class="o">==</span> <span class="s1">&#39;thwaites&#39;</span><span class="p">:</span>
+                <span class="n">options</span><span class="p">[</span><span class="s1">'config_run_duration'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"'0005-00-00_00:00:00'"</span>
+            <span class="k">if</span> <span class="n">mesh</span> <span class="o">==</span> <span class="s1">'thwaites'</span><span class="p">:</span>
                 <span class="c1"># adjust calving params for Thwaites</span>
-                <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_floating_von_Mises_threshold_stress&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;50000&quot;</span>
-                <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_grounded_von_Mises_threshold_stress&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;50000&quot;</span>
-                <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_calving_velocity_const&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;0.000477705&quot;</span>
+                <span class="n">options</span><span class="p">[</span><span class="s1">'config_floating_von_Mises_threshold_stress'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"50000"</span>
+                <span class="n">options</span><span class="p">[</span><span class="s1">'config_grounded_von_Mises_threshold_stress'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"50000"</span>
+                <span class="n">options</span><span class="p">[</span><span class="s1">'config_calving_velocity_const'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"0.000477705"</span>
                 <span class="c1"># (15km/yr)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
-                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
 
-            <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;INPUT_FILE&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">}</span>
+            <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'INPUT_FILE'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.landice.tests.calving_dt_convergence&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;streams.landice.template&#39;</span><span class="p">,</span>
-                <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
+                <span class="s1">'compass.landice.tests.calving_dt_convergence'</span><span class="p">,</span>
+                <span class="s1">'streams.landice.template'</span><span class="p">,</span>
+                <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
                 <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;globalStats.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'globalStats.nc'</span><span class="p">)</span></div>
 
 
     <span class="c1"># no setup() is needed</span>
@@ -258,14 +258,14 @@
 <div class="viewcode-block" id="RunModel.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.calving_dt_convergence.run_model.RunModel.run.html#compass.landice.tests.calving_dt_convergence.run_model.RunModel.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span>
-                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
+                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">suffixes</span><span class="p">:</span>
-            <span class="n">run_model</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
-                      <span class="n">streams</span><span class="o">=</span><span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span></div>
+            <span class="n">run_model</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">'namelist.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
+                      <span class="n">streams</span><span class="o">=</span><span class="s1">'streams.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span></div>
 </div>
 
 </pre></div>

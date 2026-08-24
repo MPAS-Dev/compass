@@ -126,7 +126,7 @@
 <div class="viewcode-block" id="generate_1d_grid">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.vertical.grid_1d.generate_1d_grid.html#compass.ocean.vertical.grid_1d.generate_1d_grid">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_1d_grid</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generate a vertical grid for a test case, using the config options in the</span>
 <span class="sd">    ``vertical_grid`` section</span>
 
@@ -140,35 +140,35 @@
 <span class="sd">    -------</span>
 <span class="sd">    interfaces : numpy.ndarray</span>
 <span class="sd">        A 1D array of positive depths for layer interfaces in meters</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">]</span>
-    <span class="n">grid_type</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grid_type&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span><span class="p">:</span>
-        <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'vertical_grid'</span><span class="p">]</span>
+    <span class="n">grid_type</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'grid_type'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">'uniform'</span><span class="p">:</span>
+        <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'vert_levels'</span><span class="p">)</span>
         <span class="n">interfaces</span> <span class="o">=</span> <span class="n">_generate_uniform</span><span class="p">(</span><span class="n">vert_levels</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">&#39;linear_dz&#39;</span><span class="p">:</span>
-        <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
-        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
-        <span class="n">linear_dz_rate</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;linear_dz_rate&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">'linear_dz'</span><span class="p">:</span>
+        <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'vert_levels'</span><span class="p">)</span>
+        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'bottom_depth'</span><span class="p">)</span>
+        <span class="n">linear_dz_rate</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'linear_dz_rate'</span><span class="p">)</span>
         <span class="n">interfaces</span> <span class="o">=</span> <span class="n">create_linear_dz_grid</span><span class="p">(</span><span class="n">vert_levels</span><span class="p">,</span>
                                            <span class="n">bottom_depth</span><span class="p">,</span>
                                            <span class="n">linear_dz_rate</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">&#39;tanh_dz&#39;</span><span class="p">:</span>
-        <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
-        <span class="n">min_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;min_layer_thickness&#39;</span><span class="p">)</span>
-        <span class="n">max_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;max_layer_thickness&#39;</span><span class="p">)</span>
-        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">'tanh_dz'</span><span class="p">:</span>
+        <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'vert_levels'</span><span class="p">)</span>
+        <span class="n">min_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'min_layer_thickness'</span><span class="p">)</span>
+        <span class="n">max_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'max_layer_thickness'</span><span class="p">)</span>
+        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'bottom_depth'</span><span class="p">)</span>
         <span class="n">interfaces</span> <span class="o">=</span> <span class="n">create_tanh_dz_grid</span><span class="p">(</span><span class="n">vert_levels</span><span class="p">,</span>
                                          <span class="n">bottom_depth</span><span class="p">,</span>
                                          <span class="n">min_layer_thickness</span><span class="p">,</span>
                                          <span class="n">max_layer_thickness</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">&#39;index_tanh_dz&#39;</span><span class="p">:</span>
-        <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
-        <span class="n">min_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;min_layer_thickness&#39;</span><span class="p">)</span>
-        <span class="n">max_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;max_layer_thickness&#39;</span><span class="p">)</span>
-        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
-        <span class="n">transition_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;transition_levels&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">'index_tanh_dz'</span><span class="p">:</span>
+        <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'vert_levels'</span><span class="p">)</span>
+        <span class="n">min_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'min_layer_thickness'</span><span class="p">)</span>
+        <span class="n">max_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'max_layer_thickness'</span><span class="p">)</span>
+        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'bottom_depth'</span><span class="p">)</span>
+        <span class="n">transition_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'transition_levels'</span><span class="p">)</span>
         <span class="n">interfaces</span> <span class="o">=</span> <span class="n">create_index_tanh_dz_grid</span><span class="p">(</span>
             <span class="n">vert_levels</span><span class="p">,</span>
             <span class="n">bottom_depth</span><span class="p">,</span>
@@ -176,14 +176,14 @@
             <span class="n">max_layer_thickness</span><span class="p">,</span>
             <span class="n">transition_levels</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">grid_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;60layerPHC&#39;</span><span class="p">,</span> <span class="s1">&#39;80layerE3SMv1&#39;</span><span class="p">,</span> <span class="s1">&#39;100layerE3SMv1&#39;</span><span class="p">]:</span>
+    <span class="k">elif</span> <span class="n">grid_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'60layerPHC'</span><span class="p">,</span> <span class="s1">'80layerE3SMv1'</span><span class="p">,</span> <span class="s1">'100layerE3SMv1'</span><span class="p">]:</span>
         <span class="n">interfaces</span> <span class="o">=</span> <span class="n">_read_json</span><span class="p">(</span><span class="n">grid_type</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected grid type: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grid_type</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unexpected grid type: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grid_type</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span> <span class="ow">and</span> \
-            <span class="n">grid_type</span> <span class="o">!=</span> <span class="s1">&#39;tanh_dz&#39;</span><span class="p">:</span>
-        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">'vertical_grid'</span><span class="p">,</span> <span class="s1">'bottom_depth'</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="n">grid_type</span> <span class="o">!=</span> <span class="s1">'tanh_dz'</span><span class="p">:</span>
+        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'bottom_depth'</span><span class="p">)</span>
         <span class="c1"># renormalize to the requested range</span>
         <span class="n">interfaces</span> <span class="o">=</span> <span class="p">(</span><span class="n">bottom_depth</span> <span class="o">/</span> <span class="n">interfaces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">interfaces</span>
 
@@ -194,7 +194,7 @@
 <div class="viewcode-block" id="write_1d_grid">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.vertical.grid_1d.write_1d_grid.html#compass.ocean.vertical.grid_1d.write_1d_grid">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">write_1d_grid</span><span class="p">(</span><span class="n">interfaces</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    write the vertical grid to a file</span>
 
 <span class="sd">    Parameters</span>
@@ -204,21 +204,21 @@
 
 <span class="sd">    out_filename : str</span>
 <span class="sd">        MPAS file name for output of vertical grid</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">nz</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">interfaces</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
 
     <span class="c1"># open a new netCDF file for writing.</span>
-    <span class="n">ncfile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">out_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">ncfile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">out_filename</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span>
     <span class="c1"># create the depth_t dimension.</span>
-    <span class="n">ncfile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+    <span class="n">ncfile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
 
     <span class="n">refBottomDepth</span> <span class="o">=</span> <span class="n">ncfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-        <span class="s1">&#39;refBottomDepth&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">char</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,))</span>
+        <span class="s1">'refBottomDepth'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">'float64'</span><span class="p">)</span><span class="o">.</span><span class="n">char</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">,))</span>
     <span class="n">refMidDepth</span> <span class="o">=</span> <span class="n">ncfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-        <span class="s1">&#39;refMidDepth&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">char</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,))</span>
+        <span class="s1">'refMidDepth'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">'float64'</span><span class="p">)</span><span class="o">.</span><span class="n">char</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">,))</span>
     <span class="n">refLayerThickness</span> <span class="o">=</span> <span class="n">ncfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-        <span class="s1">&#39;refLayerThickness&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">char</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,))</span>
+        <span class="s1">'refLayerThickness'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">'float64'</span><span class="p">)</span><span class="o">.</span><span class="n">char</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">,))</span>
 
     <span class="n">botDepth</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
     <span class="n">midDepth</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
@@ -231,7 +231,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">add_1d_grid</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Add a 1D vertical grid based on the config options in the ``vertical_grid``</span>
 <span class="sd">    section to a mesh data set</span>
 
@@ -253,27 +253,27 @@
 
 <span class="sd">    ds : xarray.Dataset</span>
 <span class="sd">        A data set to add the grid variables to</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">interfaces</span> <span class="o">=</span> <span class="n">generate_1d_grid</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;refTopDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;refZMid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;refBottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;refInterfaces&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nVertLevelsP1&#39;</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'refTopDepth'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'refZMid'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'refBottomDepth'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'refInterfaces'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'nVertLevelsP1'</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_generate_uniform</span><span class="p">(</span><span class="n">vert_levels</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Generate uniform layer interfaces between 0 and 1 &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Generate uniform layer interfaces between 0 and 1 """</span>
     <span class="n">interfaces</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">vert_levels</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">interfaces</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_read_json</span><span class="p">(</span><span class="n">grid_type</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Read the grid interfaces from a json file &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Read the grid interfaces from a json file """</span>
 
-    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grid_type</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">open_text</span><span class="p">(</span><span class="s2">&quot;compass.ocean.vertical&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">.json'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grid_type</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">open_text</span><span class="p">(</span><span class="s2">"compass.ocean.vertical"</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
         <span class="n">interfaces</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 

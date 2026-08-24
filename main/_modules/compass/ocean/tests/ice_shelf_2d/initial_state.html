@@ -124,7 +124,7 @@
 <div class="viewcode-block" id="InitialState">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.initial_state.InitialState.html#compass.ocean.tests.ice_shelf_2d.initial_state.InitialState">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating a mesh and initial condition for ice-shelf 2D test</span>
 <span class="sd">    cases</span>
 
@@ -132,11 +132,11 @@
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="InitialState.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.initial_state.InitialState.html#compass.ocean.tests.ice_shelf_2d.initial_state.InitialState.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -146,58 +146,58 @@
 
 <span class="sd">        resolution : str</span>
 <span class="sd">            The resolution of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'initial_state'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
 
-        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;initial_state.nc&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'base_mesh.nc'</span><span class="p">,</span> <span class="s1">'culled_mesh.nc'</span><span class="p">,</span> <span class="s1">'culled_graph.info'</span><span class="p">,</span>
+                     <span class="s1">'initial_state.nc'</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="InitialState.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.initial_state.InitialState.run.html#compass.ocean.tests.ice_shelf_2d.initial_state.InitialState.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ice_shelf_2d&#39;</span><span class="p">]</span>
-        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">)</span>
-        <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;dc&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ice_shelf_2d'</span><span class="p">]</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'nx'</span><span class="p">)</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'ny'</span><span class="p">)</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'dc'</span><span class="p">)</span>
 
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span> <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                       <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">'base_mesh.nc'</span><span class="p">)</span>
 
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">'culled_graph.info'</span><span class="p">,</span>
                          <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">'culled_mesh.nc'</span><span class="p">)</span>
 
-        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
+        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'vertical_grid'</span><span class="p">,</span> <span class="s1">'bottom_depth'</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ice_shelf_2d&#39;</span><span class="p">]</span>
-        <span class="n">temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;temperature&#39;</span><span class="p">)</span>
-        <span class="n">surface_salinity</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;surface_salinity&#39;</span><span class="p">)</span>
-        <span class="n">bottom_salinity</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_salinity&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ice_shelf_2d'</span><span class="p">]</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'temperature'</span><span class="p">)</span>
+        <span class="n">surface_salinity</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'surface_salinity'</span><span class="p">)</span>
+        <span class="n">bottom_salinity</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'bottom_salinity'</span><span class="p">)</span>
 
         <span class="c1"># points 1 and 2 are where angles on ice shelf are located.</span>
         <span class="c1"># point 3 is at the surface.</span>
         <span class="c1"># d variables are total water-column thickness below ice shelf</span>
-        <span class="n">y1</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;y1&#39;</span><span class="p">)</span>
-        <span class="n">y2</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;y2&#39;</span><span class="p">)</span>
-        <span class="n">y3</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;y3&#39;</span><span class="p">)</span>
-        <span class="n">d1</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;y1_water_column_thickness&#39;</span><span class="p">)</span>
-        <span class="n">d2</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;y2_water_column_thickness&#39;</span><span class="p">)</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'y1'</span><span class="p">)</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'y2'</span><span class="p">)</span>
+        <span class="n">y3</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'y3'</span><span class="p">)</span>
+        <span class="n">d1</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'y1_water_column_thickness'</span><span class="p">)</span>
+        <span class="n">d2</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'y2_water_column_thickness'</span><span class="p">)</span>
         <span class="n">d3</span> <span class="o">=</span> <span class="n">bottom_depth</span>
 
         <span class="n">ds</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bottom_depth</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xCell</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'bottomDepth'</span><span class="p">]</span> <span class="o">=</span> <span class="n">bottom_depth</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xCell</span><span class="p">)</span>
 
         <span class="n">yCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">yCell</span>
 
@@ -208,19 +208,19 @@
             <span class="n">d2</span> <span class="o">+</span> <span class="p">(</span><span class="n">d3</span> <span class="o">-</span> <span class="n">d2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">yCell</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">y3</span> <span class="o">-</span> <span class="n">y2</span><span class="p">))</span>
         <span class="n">column_thickness</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">yCell</span> <span class="o">&lt;</span> <span class="n">y3</span><span class="p">,</span> <span class="n">column_thickness</span><span class="p">,</span> <span class="n">d3</span><span class="p">)</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">bottom_depth</span> <span class="o">+</span> <span class="n">column_thickness</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">bottom_depth</span> <span class="o">+</span> <span class="n">column_thickness</span>
 
         <span class="c1"># set up the vertical coordinate</span>
         <span class="n">init_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
 
         <span class="n">modify_mask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">yCell</span> <span class="o">&lt;</span> <span class="n">y3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
-            <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">landIceFraction</span> <span class="o">=</span> <span class="n">modify_mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
         <span class="n">landIceMask</span> <span class="o">=</span> <span class="n">modify_mask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">landIceFloatingFraction</span> <span class="o">=</span> <span class="n">landIceFraction</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">landIceFloatingMask</span> <span class="o">=</span> <span class="n">landIceMask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-        <span class="n">ref_density</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_RHOSW&#39;</span><span class="p">]</span>
+        <span class="n">ref_density</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">'SHR_CONST_RHOSW'</span><span class="p">]</span>
         <span class="n">landIceDraft</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span>
         <span class="n">landIcePressure</span> <span class="o">=</span> <span class="n">compute_land_ice_pressure_from_draft</span><span class="p">(</span>
             <span class="n">land_ice_draft</span><span class="o">=</span><span class="n">landIceDraft</span><span class="p">,</span> <span class="n">modify_mask</span><span class="o">=</span><span class="n">modify_mask</span><span class="p">,</span>
@@ -229,35 +229,35 @@
         <span class="n">salinity</span> <span class="o">=</span> <span class="n">surface_salinity</span> <span class="o">+</span> <span class="p">((</span><span class="n">bottom_salinity</span> <span class="o">-</span> <span class="n">surface_salinity</span><span class="p">)</span> <span class="o">*</span>
                                        <span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">zMid</span> <span class="o">/</span> <span class="p">(</span><span class="o">-</span><span class="n">bottom_depth</span><span class="p">)))</span>
         <span class="n">salinity</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">salinity</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
-        <span class="n">salinity</span> <span class="o">=</span> <span class="n">salinity</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+        <span class="n">salinity</span> <span class="o">=</span> <span class="n">salinity</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="s1">'nCells'</span><span class="p">,</span> <span class="s1">'nVertLevels'</span><span class="p">)</span>
 
         <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
         <span class="n">normalVelocity</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">normalVelocity</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="p">)</span>
-        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;nEdges&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
-        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">'nEdges'</span><span class="p">,</span> <span class="s1">'nVertLevels'</span><span class="p">)</span>
+        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temperature</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;salinity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinity</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalVelocity</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xCell</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fEdge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fVertex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xVertex</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;sshAdjustmentMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">modify_mask</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceFraction</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceFloatingFraction</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceMask</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFloatingMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceFloatingMask</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIcePressure</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceDraft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceDraft</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'temperature'</span><span class="p">]</span> <span class="o">=</span> <span class="n">temperature</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'salinity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinity</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'normalVelocity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalVelocity</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'fCell'</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xCell</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'fEdge'</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'fVertex'</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xVertex</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'sshAdjustmentMask'</span><span class="p">]</span> <span class="o">=</span> <span class="n">modify_mask</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'landIceFraction'</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceFraction</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'landIceFloatingFraction'</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceFloatingFraction</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'landIceMask'</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceMask</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'landIceFloatingMask'</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceFloatingMask</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'landIcePressure'</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIcePressure</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'landIceDraft'</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceDraft</span>
 
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;initial_state.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">'initial_state.nc'</span><span class="p">)</span>
 
         <span class="c1"># Generate the tidal forcing dataset whether it is used or not</span>
         <span class="n">ds_forcing</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
         <span class="n">y_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-        <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;tidalInputMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">'tidalInputMask'</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
             <span class="n">ds</span><span class="o">.</span><span class="n">yCell</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">y_max</span> <span class="o">-</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="mf">5.0e3</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_forcing</span><span class="p">,</span> <span class="s1">&#39;init_mode_forcing_data.nc&#39;</span><span class="p">)</span></div>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_forcing</span><span class="p">,</span> <span class="s1">'init_mode_forcing_data.nc'</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

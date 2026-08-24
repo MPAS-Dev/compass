@@ -130,15 +130,15 @@
 <div class="viewcode-block" id="BranchEnsemble">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble.html#compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BranchEnsemble</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test case for performing an ensemble of</span>
 <span class="sd">    simulations for uncertainty quantification studies.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="BranchEnsemble.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble.html#compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -146,11 +146,11 @@
 <span class="sd">        test_group : compass.landice.tests.ensemble_generator.EnsembleGenerator</span>
 <span class="sd">            The test group that this test case belongs to</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;branch_ensemble&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'branch_ensemble'</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
-        <span class="c1"># We don&#39;t want to initialize all the individual runs</span>
+        <span class="c1"># We don't want to initialize all the individual runs</span>
         <span class="c1"># So during init, we only add the run manager</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">EnsembleManager</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div>
 
@@ -158,7 +158,7 @@
 <div class="viewcode-block" id="BranchEnsemble.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble.configure.html#compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Configure a parameter ensemble of MALI simulations.</span>
 
 <span class="sd">        Start by identifying the start and end run numbers to set up</span>
@@ -173,44 +173,44 @@
 <span class="sd">        Then create the ensemble member as a step in the test case by calling</span>
 <span class="sd">        the EnsembleMember constructor.</span>
 
-<span class="sd">        Finally, add this step to the test case&#39;s step_to_run.  This normally</span>
+<span class="sd">        Finally, add this step to the test case's step_to_run.  This normally</span>
 <span class="sd">        happens automatically if steps are added to the test case in the test</span>
 <span class="sd">        case constructor, but because we waited to add these steps until this</span>
 <span class="sd">        configure phase, we must explicitly add the steps to steps_to_run.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">resource_module</span> <span class="o">=</span> <span class="n">get_branch_template_package</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;branch_ensemble&#39;</span><span class="p">]</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'branch_ensemble'</span><span class="p">]</span>
 
-        <span class="n">spinup_test_dir</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spinup_test_dir&#39;</span><span class="p">)</span>
-        <span class="n">branch_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;branch_year&#39;</span><span class="p">)</span>
+        <span class="n">spinup_test_dir</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'spinup_test_dir'</span><span class="p">)</span>
+        <span class="n">branch_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'branch_year'</span><span class="p">)</span>
 
         <span class="c1"># Determine start and end run numbers being requested</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">start_run</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;start_run&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">end_run</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;end_run&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_run</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'start_run'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_run</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'end_run'</span><span class="p">)</span>
 
         <span class="c1"># Determine whether to only set up filtered runs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_up_filtered_only</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;set_up_filtered_only&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ensemble_pickle_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ensemble_pickle_file&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_up_filtered_only</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'set_up_filtered_only'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ensemble_pickle_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ensemble_pickle_file'</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_up_filtered_only</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble_pickle_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble_pickle_file</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="p">[</span><span class="n">param_info</span><span class="p">,</span> <span class="n">qoi_info</span><span class="p">]</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-            <span class="n">filtered_runs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">qoi_info</span><span class="p">[</span><span class="s1">&#39;VAF change&#39;</span><span class="p">][</span><span class="s1">&#39;values&#39;</span><span class="p">])</span>
+            <span class="n">filtered_runs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">qoi_info</span><span class="p">[</span><span class="s1">'VAF change'</span><span class="p">][</span><span class="s1">'values'</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">filtered_runs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">end_run</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,))</span>
 
         <span class="k">for</span> <span class="n">run_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_run</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_run</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">run_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;run</span><span class="si">{</span><span class="n">run_num</span><span class="si">:</span><span class="s1">03</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">run_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'run</span><span class="si">{</span><span class="n">run_num</span><span class="si">:</span><span class="s1">03</span><span class="si">}</span><span class="s1">'</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">filtered_runs</span><span class="p">[</span><span class="n">run_num</span><span class="p">]</span> <span class="ow">and</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spinup_test_dir</span><span class="p">,</span> <span class="n">run_name</span><span class="p">,</span>
-                                            <span class="sa">f</span><span class="s1">&#39;rst.</span><span class="si">{</span><span class="n">branch_year</span><span class="si">}</span><span class="s1">-01-01.nc&#39;</span><span class="p">))):</span>
+                                            <span class="sa">f</span><span class="s1">'rst.</span><span class="si">{</span><span class="n">branch_year</span><span class="si">}</span><span class="s1">-01-01.nc'</span><span class="p">))):</span>
                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">run_name</span><span class="p">)):</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: </span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s2"> path already exists; &quot;</span>
-                          <span class="s2">&quot;skipping.  &quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"WARNING: </span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s2"> path already exists; "</span>
+                          <span class="s2">"skipping.  "</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding </span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Adding </span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                     <span class="c1"># use this run</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">BranchRun</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_num</span><span class="o">=</span><span class="n">run_num</span><span class="p">,</span>
                                             <span class="n">resource_module</span><span class="o">=</span><span class="n">resource_module</span><span class="p">))</span>
@@ -220,7 +220,7 @@
         <span class="c1"># Have compass run only run the run_manager but not any actual runs.</span>
         <span class="c1"># This is because the individual runs will be submitted as jobs</span>
         <span class="c1"># by the ensemble manager.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ensemble_manager&#39;</span><span class="p">,]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'ensemble_manager'</span><span class="p">,]</span></div>
 </div>
 
 

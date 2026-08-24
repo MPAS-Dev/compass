@@ -126,8 +126,8 @@
 <a class="viewcode-back" href="../../developers_guide/generated/compass.setup.setup_cases.html#compass.setup.setup_cases">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">setup_cases</span><span class="p">(</span><span class="n">tests</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># noqa: C901, E501</span>
                 <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">suite_name</span><span class="o">=</span><span class="s1">&#39;custom&#39;</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">copy_executable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+                <span class="n">suite_name</span><span class="o">=</span><span class="s1">'custom'</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">copy_executable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Set up one or more test cases</span>
 
 <span class="sd">    Parameters</span>
@@ -160,11 +160,11 @@
 
 <span class="sd">    suite_name : str, optional</span>
 <span class="sd">        The name of the test suite if tests are being set up through a test</span>
-<span class="sd">        suite or ``&#39;custom&#39;`` if not</span>
+<span class="sd">        suite or ``'custom'`` if not</span>
 
 <span class="sd">    cached : list of list of str, optional</span>
 <span class="sd">        For each test in ``tests``, which steps (if any) should be cached,</span>
-<span class="sd">        or a list with &quot;_all&quot; as the first entry if all steps in the test case</span>
+<span class="sd">        or a list with "_all" as the first entry if all steps in the test case</span>
 <span class="sd">        should be cached</span>
 
 <span class="sd">    copy_executable : bool, optional</span>
@@ -175,9 +175,9 @@
 <span class="sd">    test_cases : dict of compass.TestCase</span>
 <span class="sd">        A dictionary of test cases, with the relative path in the work</span>
 <span class="sd">        directory as keys</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;COMPASS_MACHINE&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
-        <span class="n">machine</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;COMPASS_MACHINE&#39;</span><span class="p">]</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">'COMPASS_MACHINE'</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'COMPASS_MACHINE'</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">machine</span> <span class="o">=</span> <span class="n">discover_machine</span><span class="p">()</span>
@@ -186,22 +186,22 @@
         <span class="n">machine</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">config_file</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least one of config_file and machine is needed.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'At least one of config_file and machine is needed.'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">config_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;The user config file wasn</span><span class="se">\&#39;</span><span class="s1">t found: </span><span class="si">{</span><span class="n">config_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="sa">f</span><span class="s1">'The user config file wasn</span><span class="se">\'</span><span class="s1">t found: </span><span class="si">{</span><span class="n">config_file</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">tests</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">numbers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least one of tests or numbers is needed.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'At least one of tests or numbers is needed.'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">cached</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">tests</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Ignoring &quot;cached&quot; argument because &quot;tests&quot; was &#39;</span>
-                          <span class="s1">&#39;not provided&#39;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'Ignoring "cached" argument because "tests" was '</span>
+                          <span class="s1">'not provided'</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">cached</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tests</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;A list of cached steps must be provided for &#39;</span>
-                             <span class="s1">&#39;each test in &quot;tests&quot;&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'A list of cached steps must be provided for '</span>
+                             <span class="s1">'each test in "tests"'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">work_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">work_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
@@ -221,18 +221,18 @@
         <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">all_test_cases</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
             <span class="n">cache_all</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="n">number</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">number</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">'c'</span><span class="p">):</span>
                 <span class="n">cache_all</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">number</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;test number </span><span class="si">{}</span><span class="s1"> is out of range.  There are &#39;</span>
-                                 <span class="s1">&#39;only </span><span class="si">{}</span><span class="s1"> tests.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'test number </span><span class="si">{}</span><span class="s1"> is out of range.  There are '</span>
+                                 <span class="s1">'only </span><span class="si">{}</span><span class="s1"> tests.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)))</span>
             <span class="n">path</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">number</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">cache_all</span><span class="p">:</span>
-                <span class="n">cached_steps</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_all&#39;</span><span class="p">]</span>
+                <span class="n">cached_steps</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'_all'</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">cached_steps</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
             <span class="n">test_cases</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_test_cases</span><span class="p">[</span><span class="n">path</span><span class="p">]</span>
@@ -240,15 +240,15 @@
     <span class="k">if</span> <span class="n">tests</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tests</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_test_cases</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Test case with path </span><span class="si">{}</span><span class="s1"> is not in &#39;</span>
-                                 <span class="s1">&#39;test_cases&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Test case with path </span><span class="si">{}</span><span class="s1"> is not in '</span>
+                                 <span class="s1">'test_cases'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">cached</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">cached_steps</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">cached_steps</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
             <span class="n">test_cases</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_test_cases</span><span class="p">[</span><span class="n">path</span><span class="p">]</span>
 
-    <span class="c1"># get the MPAS core of the first test case.  We&#39;ll assume all tests are</span>
+    <span class="c1"># get the MPAS core of the first test case.  We'll assume all tests are</span>
     <span class="c1"># for this core</span>
     <span class="n">first_path</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">test_cases</span><span class="p">))</span>
     <span class="n">mpas_core</span> <span class="o">=</span> <span class="n">test_cases</span><span class="p">[</span><span class="n">first_path</span><span class="p">]</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span>
@@ -258,29 +258,29 @@
 
     <span class="n">provenance</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">test_cases</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">basic_config</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Setting up test cases:&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Setting up test cases:'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">test_case</span> <span class="ow">in</span> <span class="n">test_cases</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">setup_case</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span>
                    <span class="n">baseline_dir</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span>
                    <span class="n">cached_steps</span><span class="o">=</span><span class="n">cached_steps</span><span class="p">[</span><span class="n">path</span><span class="p">],</span>
                    <span class="n">copy_executable</span><span class="o">=</span><span class="n">copy_executable</span><span class="p">)</span>
 
-    <span class="n">test_suite</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">suite_name</span><span class="p">,</span>
-                  <span class="s1">&#39;test_cases&#39;</span><span class="p">:</span> <span class="n">test_cases</span><span class="p">,</span>
-                  <span class="s1">&#39;work_dir&#39;</span><span class="p">:</span> <span class="n">work_dir</span><span class="p">}</span>
+    <span class="n">test_suite</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="n">suite_name</span><span class="p">,</span>
+                  <span class="s1">'test_cases'</span><span class="p">:</span> <span class="n">test_cases</span><span class="p">,</span>
+                  <span class="s1">'work_dir'</span><span class="p">:</span> <span class="n">work_dir</span><span class="p">}</span>
 
     <span class="c1"># pickle the test or step dictionary for use at runtime</span>
-    <span class="n">pickle_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_suite</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">],</span>
-                               <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.pickle&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suite_name</span><span class="p">))</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+    <span class="n">pickle_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_suite</span><span class="p">[</span><span class="s1">'work_dir'</span><span class="p">],</span>
+                               <span class="s1">'</span><span class="si">{}</span><span class="s1">.pickle'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suite_name</span><span class="p">))</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_file</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">test_suite</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
 
     <span class="n">symlink_load_script</span><span class="p">(</span><span class="n">work_dir</span><span class="p">)</span>
 
     <span class="n">max_cores</span><span class="p">,</span> <span class="n">max_of_min_cores</span> <span class="o">=</span> <span class="n">_get_required_cores</span><span class="p">(</span><span class="n">test_cases</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;target cores: </span><span class="si">{</span><span class="n">max_cores</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;minimum cores: </span><span class="si">{</span><span class="n">max_of_min_cores</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'target cores: </span><span class="si">{</span><span class="n">max_cores</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'minimum cores: </span><span class="si">{</span><span class="n">max_of_min_cores</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">write_job_script</span><span class="p">(</span><span class="n">basic_config</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">max_cores</span><span class="p">,</span> <span class="n">max_of_min_cores</span><span class="p">,</span>
@@ -294,7 +294,7 @@
 <a class="viewcode-back" href="../../developers_guide/generated/compass.setup.setup_case.html#compass.setup.setup_case">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">setup_case</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="p">,</span>
                <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">cached_steps</span><span class="p">,</span> <span class="n">copy_executable</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Set up one or more test cases</span>
 
 <span class="sd">    Parameters</span>
@@ -325,13 +325,13 @@
 
 <span class="sd">    cached_steps : list of str</span>
 <span class="sd">        Which steps (if any) should be cached.  If all steps should be cached,</span>
-<span class="sd">         the first entry is &quot;_all&quot;</span>
+<span class="sd">         the first entry is "_all"</span>
 
 <span class="sd">    copy_executable : bool, optional</span>
 <span class="sd">        Whether to copy the MPAS executable to the work directory</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'  </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
 
     <span class="n">mpas_core</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">_get_basic_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span>
@@ -339,21 +339,21 @@
 
     <span class="c1"># add the config options for the test group (if defined)</span>
     <span class="n">test_group</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">.tests.</span><span class="si">{</span><span class="n">test_group</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">test_group</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="sa">f</span><span class="s1">'compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">.tests.</span><span class="si">{</span><span class="n">test_group</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">test_group</span><span class="si">}</span><span class="s1">.cfg'</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">copy_executable</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;setup&#39;</span><span class="p">,</span> <span class="s1">&#39;copy_executable&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'setup'</span><span class="p">,</span> <span class="s1">'copy_executable'</span><span class="p">,</span> <span class="s1">'True'</span><span class="p">)</span>
 
     <span class="c1"># add the config options for the test case (if defined)</span>
     <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
-                            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.cfg'</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s1">&#39;COMPASS_BRANCH&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
-        <span class="n">compass_branch</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;COMPASS_BRANCH&#39;</span><span class="p">]</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;compass_branch&#39;</span><span class="p">,</span> <span class="n">compass_branch</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">'COMPASS_BRANCH'</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="n">compass_branch</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'COMPASS_BRANCH'</span><span class="p">]</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'paths'</span><span class="p">,</span> <span class="s1">'compass_branch'</span><span class="p">,</span> <span class="n">compass_branch</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;compass_branch&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'paths'</span><span class="p">,</span> <span class="s1">'compass_branch'</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
 
     <span class="n">test_case_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
@@ -374,27 +374,27 @@
     <span class="c1"># set the mpas_model path from the command line if provided</span>
     <span class="k">if</span> <span class="n">mpas_model_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">mpas_model_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">mpas_model_path</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_model&#39;</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'paths'</span><span class="p">,</span> <span class="s1">'mpas_model'</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;test_case&#39;</span><span class="p">,</span> <span class="s1">&#39;steps_to_run&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">steps_to_run</span><span class="p">))</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'test_case'</span><span class="p">,</span> <span class="s1">'steps_to_run'</span><span class="p">,</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">steps_to_run</span><span class="p">))</span>
 
     <span class="c1"># write out the config file</span>
-    <span class="n">test_case_config</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.cfg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">test_case_config</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">.cfg'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
     <span class="n">test_case</span><span class="o">.</span><span class="n">config_filename</span> <span class="o">=</span> <span class="n">test_case_config</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_case_dir</span><span class="p">,</span> <span class="n">test_case_config</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_case_dir</span><span class="p">,</span> <span class="n">test_case_config</span><span class="p">),</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">config</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cached_steps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">cached_steps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;_all&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cached_steps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">cached_steps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'_all'</span><span class="p">:</span>
         <span class="n">cached_steps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cached_steps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">print_steps</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cached_steps</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    steps with cached outputs: </span><span class="si">{</span><span class="n">print_steps</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">print_steps</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cached_steps</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'    steps with cached outputs: </span><span class="si">{</span><span class="n">print_steps</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="n">cached_steps</span><span class="p">:</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span><span class="o">.</span><span class="n">cached</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="c1"># iterate over steps</span>
     <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-        <span class="c1"># make the step directory if it doesn&#39;t exist</span>
+        <span class="c1"># make the step directory if it doesn't exist</span>
         <span class="n">step_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">step_dir</span><span class="p">)</span>
@@ -415,13 +415,13 @@
         <span class="c1"># process input, output, namelist and streams files</span>
         <span class="n">step</span><span class="o">.</span><span class="n">process_inputs_and_outputs</span><span class="p">()</span>
 
-    <span class="c1"># wait until we&#39;ve set up all the steps before pickling because steps may</span>
+    <span class="c1"># wait until we've set up all the steps before pickling because steps may</span>
     <span class="c1"># need other steps to be set up</span>
     <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
 
         <span class="c1"># pickle the test case and step for use at runtime</span>
-        <span class="n">pickle_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;step.pickle&#39;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">pickle_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'step.pickle'</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_filename</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
             <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">((</span><span class="n">test_case</span><span class="p">,</span> <span class="n">step</span><span class="p">),</span> <span class="n">handle</span><span class="p">,</span>
                         <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
 
@@ -434,11 +434,11 @@
                              <span class="n">step</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
 
     <span class="c1"># pickle the test case and step for use at runtime</span>
-    <span class="n">pickle_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;test_case.pickle&#39;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
-        <span class="n">test_suite</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;test_case&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;test_cases&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">test_case</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">test_case</span><span class="p">},</span>
-                      <span class="s1">&#39;work_dir&#39;</span><span class="p">:</span> <span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span><span class="p">}</span>
+    <span class="n">pickle_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'test_case.pickle'</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_filename</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">test_suite</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'test_case'</span><span class="p">,</span>
+                      <span class="s1">'test_cases'</span><span class="p">:</span> <span class="p">{</span><span class="n">test_case</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">test_case</span><span class="p">},</span>
+                      <span class="s1">'work_dir'</span><span class="p">:</span> <span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span><span class="p">}</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">test_suite</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
 
     <span class="n">symlink_load_script</span><span class="p">(</span><span class="n">test_case_dir</span><span class="p">)</span>
@@ -452,47 +452,47 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
-        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Set up one or more test cases&#39;</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s1">&#39;compass setup&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--test&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Relative path for a test case to set up&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;PATH&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="s2">&quot;--case_number&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;case_num&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">'Set up one or more test cases'</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s1">'compass setup'</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-t"</span><span class="p">,</span> <span class="s2">"--test"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"test"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"Relative path for a test case to set up"</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"PATH"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-n"</span><span class="p">,</span> <span class="s2">"--case_number"</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">'+'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"case_num"</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Case number(s) to setup, as listed from &quot;</span>
-                             <span class="s2">&quot;&#39;compass list&#39;. Can be a space-separated&quot;</span>
-                             <span class="s2">&quot;list of case numbers.  A suffix &#39;c&#39; indicates&quot;</span>
-                             <span class="s2">&quot;that all steps in the test should use cached&quot;</span>
-                             <span class="s2">&quot;outputs.&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;NUM&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--config_file&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;config_file&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Configuration file for test case setup&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;FILE&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;--machine&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;machine&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The name of the machine for loading machine-&quot;</span>
-                             <span class="s2">&quot;related config options&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;MACH&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-w&quot;</span><span class="p">,</span> <span class="s2">&quot;--work_dir&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;work_dir&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If set, case directories are created in &quot;</span>
-                             <span class="s2">&quot;work_dir rather than the current directory.&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;PATH&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="s2">&quot;--baseline_dir&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;baseline_dir&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Location of baselines that can be compared to&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;PATH&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;--mpas_model&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;mpas_model&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The path to the build of the MPAS model for the &quot;</span>
-                             <span class="s2">&quot;core.&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;PATH&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--suite_name&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;suite_name&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The name to use for the &#39;custom&#39; test suite&quot;</span>
-                             <span class="s2">&quot;containing all setup test cases.&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;SUITE&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--cached&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;cached&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;A list of steps in the test case supplied with&quot;</span>
-                             <span class="s2">&quot;--test that should use cached outputs, or &quot;</span>
-                             <span class="s2">&quot;&#39;_all&#39; if all steps should be cached&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;STEP&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--copy_executable&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;copy_executable&quot;</span><span class="p">,</span>
-                        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If the MPAS executable should be copied to the &quot;</span>
-                             <span class="s2">&quot;work directory&quot;</span><span class="p">)</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"Case number(s) to setup, as listed from "</span>
+                             <span class="s2">"'compass list'. Can be a space-separated"</span>
+                             <span class="s2">"list of case numbers.  A suffix 'c' indicates"</span>
+                             <span class="s2">"that all steps in the test should use cached"</span>
+                             <span class="s2">"outputs."</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">"NUM"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-f"</span><span class="p">,</span> <span class="s2">"--config_file"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"config_file"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"Configuration file for test case setup"</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"FILE"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-m"</span><span class="p">,</span> <span class="s2">"--machine"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"machine"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"The name of the machine for loading machine-"</span>
+                             <span class="s2">"related config options"</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">"MACH"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-w"</span><span class="p">,</span> <span class="s2">"--work_dir"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"work_dir"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"If set, case directories are created in "</span>
+                             <span class="s2">"work_dir rather than the current directory."</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"PATH"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-b"</span><span class="p">,</span> <span class="s2">"--baseline_dir"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"baseline_dir"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"Location of baselines that can be compared to"</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"PATH"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-p"</span><span class="p">,</span> <span class="s2">"--mpas_model"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"mpas_model"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"The path to the build of the MPAS model for the "</span>
+                             <span class="s2">"core."</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"PATH"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--suite_name"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"suite_name"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"custom"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"The name to use for the 'custom' test suite"</span>
+                             <span class="s2">"containing all setup test cases."</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"SUITE"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--cached"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"cached"</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">'+'</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"A list of steps in the test case supplied with"</span>
+                             <span class="s2">"--test that should use cached outputs, or "</span>
+                             <span class="s2">"'_all' if all steps should be cached"</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"STEP"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--copy_executable"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"copy_executable"</span><span class="p">,</span>
+                        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"If the MPAS executable should be copied to the "</span>
+                             <span class="s2">"work directory"</span><span class="p">)</span>
 
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
     <span class="n">cached</span> <span class="o">=</span> <span class="kc">None</span>
@@ -510,7 +510,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_required_cores</span><span class="p">(</span><span class="n">test_cases</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Get the maximum number of target cores and the max of min cores &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Get the maximum number of target cores and the max of min cores """</span>
 
     <span class="n">max_cores</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">max_of_min_cores</span> <span class="o">=</span> <span class="mi">1</span>
@@ -521,12 +521,12 @@
                 <span class="k">continue</span>
             <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">ntasks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;The number of tasks (ntasks) was never set for &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">test_case</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1"> step </span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="sa">f</span><span class="s1">'The number of tasks (ntasks) was never set for '</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">test_case</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1"> step </span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;The number of CPUs per task (cpus_per_task) was never &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;set for </span><span class="si">{</span><span class="n">test_case</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1"> step </span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="sa">f</span><span class="s1">'The number of CPUs per task (cpus_per_task) was never '</span>
+                    <span class="sa">f</span><span class="s1">'set for </span><span class="si">{</span><span class="n">test_case</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1"> step </span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
             <span class="n">cores</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">*</span> <span class="n">step</span><span class="o">.</span><span class="n">ntasks</span>
             <span class="n">min_cores</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">min_cpus_per_task</span> <span class="o">*</span> <span class="n">step</span><span class="o">.</span><span class="n">min_tasks</span>
             <span class="n">max_cores</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_cores</span><span class="p">,</span> <span class="n">cores</span><span class="p">)</span>
@@ -536,10 +536,10 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_basic_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get a base config parser for the machine and MPAS core but not a specific</span>
 <span class="sd">    test</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">CompassConfigParser</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">machine</span><span class="p">:</span>
@@ -549,35 +549,35 @@
         <span class="n">config</span><span class="o">.</span><span class="n">add_user_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
 
     <span class="c1"># start with default compass config options</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass&#39;</span><span class="p">,</span> <span class="s1">&#39;default.cfg&#39;</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">'compass'</span><span class="p">,</span> <span class="s1">'default.cfg'</span><span class="p">)</span>
 
     <span class="c1"># add the E3SM config options from mache</span>
     <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mache.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">'mache.machines'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg'</span><span class="p">,</span>
                                 <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># add the compass machine config file</span>
     <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">machine</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="s1">'default'</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">'compass.machines'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg'</span><span class="p">)</span>
 
     <span class="c1"># store name of machine so tests have access to it if needed</span>
     <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;deploy&#39;</span><span class="p">,</span> <span class="s1">&#39;machine&#39;</span><span class="p">,</span> <span class="n">machine</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'deploy'</span><span class="p">,</span> <span class="s1">'machine'</span><span class="p">,</span> <span class="n">machine</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s1">&#39;COMPASS_BRANCH&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
-        <span class="n">compass_branch</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;COMPASS_BRANCH&#39;</span><span class="p">]</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;compass_branch&#39;</span><span class="p">,</span> <span class="n">compass_branch</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">'COMPASS_BRANCH'</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="n">compass_branch</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'COMPASS_BRANCH'</span><span class="p">]</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'paths'</span><span class="p">,</span> <span class="s1">'compass_branch'</span><span class="p">,</span> <span class="n">compass_branch</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;compass_branch&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'paths'</span><span class="p">,</span> <span class="s1">'compass_branch'</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
 
     <span class="c1"># add the config options for the MPAS core</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="sa">f</span><span class="s1">'compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">.cfg'</span><span class="p">)</span>
 
     <span class="c1"># set the mpas_model path from the command line if provided</span>
     <span class="k">if</span> <span class="n">mpas_model_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">mpas_model_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">mpas_model_path</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_model&#39;</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'paths'</span><span class="p">,</span> <span class="s1">'mpas_model'</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">config</span>
 </pre></div>

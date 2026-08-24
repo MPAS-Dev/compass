@@ -391,27 +391,27 @@ current COMPASS implementation:</p>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;test_case_{{ test_case.name }}.pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'test_case_{{ test_case.name }}.pickle'</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
         <span class="n">test_case</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
-    <span class="n">test_case</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;{{ step.name }}&#39;</span><span class="p">]</span>
+    <span class="n">test_case</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'{{ step.name }}'</span><span class="p">]</span>
     <span class="n">test_case</span><span class="o">.</span><span class="n">new_step_log_file</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;{{ step.name }}.pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'{{ step.name }}.pickle'</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
         <span class="n">step</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">(</span>
         <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;{{ step.config_filename }}&#39;</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">'{{ step.config_filename }}'</span><span class="p">)</span>
     <span class="n">test_case</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
 
     <span class="c1"># start logging to stdout/stderr</span>
-    <span class="n">test_name</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+    <span class="n">test_name</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="s1">'_'</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">test_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">logger</span><span class="p">:</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -426,24 +426,24 @@ that define other python scripts via a series of string formatting statements.</
 written in the same syntax as the resulting streams files.</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;mesh&quot;</span>
-<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"mesh"</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">"init.nc"</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;input&quot;</span>
-<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"input"</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">"init.nc"</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;restart&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"restart"</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output&quot;</span>
-<span class="w">        </span><span class="na">type=</span><span class="s">&quot;output&quot;</span>
-<span class="w">        </span><span class="na">filename_template=</span><span class="s">&quot;output.nc&quot;</span>
-<span class="w">        </span><span class="na">output_interval=</span><span class="s">&quot;0000_00:00:01&quot;</span>
-<span class="w">        </span><span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"output"</span>
+<span class="w">        </span><span class="na">type=</span><span class="s">"output"</span>
+<span class="w">        </span><span class="na">filename_template=</span><span class="s">"output.nc"</span>
+<span class="w">        </span><span class="na">output_interval=</span><span class="s">"0000_00:00:01"</span>
+<span class="w">        </span><span class="na">clobber_mode=</span><span class="s">"truncate"</span><span class="nt">&gt;</span>
 
-<span class="w">    </span><span class="nt">&lt;var_struct</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;tracers&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;xtime&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;normalVelocity&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var_struct</span><span class="w"> </span><span class="na">name=</span><span class="s">"tracers"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"xtime"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"normalVelocity"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"layerThickness"</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/stream&gt;</span>
 
 <span class="nt">&lt;/streams&gt;</span>
@@ -452,7 +452,7 @@ written in the same syntax as the resulting streams files.</p>
 <p>Templates for namelist files would have the same basic syntax as the resulting
 namelist files:</p>
 <div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">config_write_output_on_startup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">.false.</span>
-<span class="na">config_run_duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;0000_00:15:00&#39;</span>
+<span class="na">config_run_duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'0000_00:15:00'</span>
 <span class="na">config_use_mom_del2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">.true.</span>
 <span class="na">config_implicit_bottom_drag_coeff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.0e-2</span>
 <span class="na">config_use_cvmix_background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">.true.</span>
@@ -538,7 +538,7 @@ that is defined using a combination of methods from <code class="docutils litera
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MPAS-Ocean runs as part of baroclinic</span>
 <span class="sd">    channel test cases.</span>
 
@@ -546,10 +546,10 @@ that is defined using a combination of methods from <code class="docutils litera
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="sd">    """</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -580,42 +580,42 @@ that is defined using a combination of methods from <code class="docutils litera
 
 <span class="sd">        nu : float, optional</span>
 <span class="sd">            the viscosity (if different from the default for the test group)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="k">if</span> <span class="n">min_cores</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">min_cores</span> <span class="o">=</span> <span class="n">cores</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
                          <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">.forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.baroclinic_channel'</span><span class="p">,</span>
+                               <span class="s1">'namelist.forward'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.baroclinic_channel'</span><span class="p">,</span>
+                               <span class="s1">'namelist.</span><span class="si">{}</span><span class="s1">.forward'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">nu</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># update the viscosity to the requested value</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_mom_del2&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nu</span><span class="p">)}</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_mom_del2'</span><span class="p">:</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nu</span><span class="p">)}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.baroclinic_channel'</span><span class="p">,</span>
+                              <span class="s1">'streams.forward'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/ocean.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/culled_graph.info&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'init.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../initial_state/ocean.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../initial_state/culled_graph.info'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up the test case in the work directory, including downloading any</span>
 <span class="sd">        dependencies</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -685,24 +685,24 @@ available and how many to run each step with if so.  Developers of individual
 test cases will not need to worry about this.  Here is an example from the
 <code class="docutils literal notranslate"><span class="pre">Init</span></code> test case from the <code class="docutils literal notranslate"><span class="pre">GlobalOcean</span></code> test group:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Run each step of the testcase</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
     <span class="n">steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span>
-    <span class="k">if</span> <span class="s1">&#39;initial_state&#39;</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;initial_state&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">'initial_state'</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">'initial_state'</span><span class="p">]</span>
         <span class="c1"># get the these properties from the config options</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_cores&#39;</span><span class="p">)</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_min_cores&#39;</span><span class="p">)</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_threads&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'init_cores'</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'init_min_cores'</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'init_threads'</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s1">&#39;ssh_adjustment&#39;</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">'ssh_adjustment'</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">'ssh_adjustment'</span><span class="p">]</span>
         <span class="c1"># get the these properties from the config options</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_cores&#39;</span><span class="p">)</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_min_cores&#39;</span><span class="p">)</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_threads&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'forward_cores'</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'forward_min_cores'</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'forward_threads'</span><span class="p">)</span>
 
     <span class="c1"># run the steps</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
@@ -786,9 +786,9 @@ resolution).  A unique subdirectory for each test case and step will be provided
 as the <code class="docutils literal notranslate"><span class="pre">subdir</span></code> argument to the base class’s constructor (i.e.
 <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code> or will be taken from the <code class="docutils literal notranslate"><span class="pre">name</span></code> argument if
 <code class="docutils literal notranslate"><span class="pre">subdir</span></code> is not provided.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;restart_test&#39;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">name</span> <span class="o">=</span> <span class="s1">'restart_test'</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
-<span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+<span class="n">subdir</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                  <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 </pre></div>
@@ -992,7 +992,7 @@ and the name of the test case or step as arguments.</p>
 <p>As an example, here is the constructor for the <code class="docutils literal notranslate"><span class="pre">Default</span></code> test case in the
 <code class="docutils literal notranslate"><span class="pre">BaroclinicChannel</span></code> test group in the <code class="docutils literal notranslate"><span class="pre">Ocean</span></code> MPAS core:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The default test case for the baroclinic channel test group simply creates</span>
 <span class="sd">    the mesh and initial condition, then performs a short forward run on 4</span>
 <span class="sd">    cores.</span>
@@ -1001,10 +1001,10 @@ and the name of the test case or step as arguments.</p>
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -1014,10 +1014,10 @@ and the name of the test case or step as arguments.</p>
 
 <span class="sd">        resolution : str</span>
 <span class="sd">            The resolution of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'default'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -1029,7 +1029,7 @@ and the name of the test case or step as arguments.</p>
 </div>
 <p>And here is the constructor of the <code class="docutils literal notranslate"><span class="pre">InitialState</span></code> step:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating a mesh and initial condition for baroclinic channel</span>
 <span class="sd">    test cases</span>
 
@@ -1037,9 +1037,9 @@ and the name of the test case or step as arguments.</p>
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update the dictionary of step properties</span>
 
 <span class="sd">        Parameters</span>
@@ -1049,12 +1049,12 @@ and the name of the test case or step as arguments.</p>
 
 <span class="sd">        resolution : str</span>
 <span class="sd">            The resolution of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'initial_state'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
 
-        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;ocean.nc&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'base_mesh.nc'</span><span class="p">,</span> <span class="s1">'culled_mesh.nc'</span><span class="p">,</span> <span class="s1">'culled_graph.info'</span><span class="p">,</span>
+                     <span class="s1">'ocean.nc'</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1066,15 +1066,15 @@ add any number of parameters as attributes of each class in this way for later
 use in the test case or step.  For example, the <code class="docutils literal notranslate"><span class="pre">Default</span></code> test case later
 uses the resolution to call a shared <code class="docutils literal notranslate"><span class="pre">configure()</span></code> function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Modify the configuration options for this test case.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">baroclinic_channel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The shared function uses the resolution to determine other config options:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Modify the configuration options for one of the baroclinic test cases</span>
 
 <span class="sd">    Parameters</span>
@@ -1084,23 +1084,23 @@ uses the resolution to call a shared <code class="docutils literal notranslate">
 
 <span class="sd">    config : configparser.ConfigParser</span>
 <span class="sd">        Configuration options for this test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-                           <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
-                           <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">10e3</span><span class="p">},</span>
-                  <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
-                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">126</span><span class="p">,</span>
-                          <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">4e3</span><span class="p">},</span>
-                  <span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
-                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-                          <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">}}</span>
+<span class="sd">    """</span>
+    <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'10km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'nx'</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+                           <span class="s1">'ny'</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+                           <span class="s1">'dc'</span><span class="p">:</span> <span class="mf">10e3</span><span class="p">},</span>
+                  <span class="s1">'4km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'nx'</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+                          <span class="s1">'ny'</span><span class="p">:</span> <span class="mi">126</span><span class="p">,</span>
+                          <span class="s1">'dc'</span><span class="p">:</span> <span class="mf">4e3</span><span class="p">},</span>
+                  <span class="s1">'1km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'nx'</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
+                          <span class="s1">'ny'</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                          <span class="s1">'dc'</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">}}</span>
 
     <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: &#39;</span>
-                         <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: '</span>
+                         <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
     <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]))</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'baroclinic_channel'</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]))</span>
 </pre></div>
 </div>
 <p>Since all MPAS cores, test groups, test cases and steps are constructed as part
@@ -1135,10 +1135,10 @@ the same step class for many test cases.</p>
 compiled.  Replacements are stored as keys and values in a python dictionary.
 For convenience, they can be read from easy-to-read files similar to the
 namelist files themselves but without sections:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_time_integrator = &#39;split_explicit&#39;
-config_dt = &#39;02:00:00&#39;
-config_btr_dt = &#39;00:06:00&#39;
-config_run_duration = &#39;0000_06:00:00&#39;
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_time_integrator = 'split_explicit'
+config_dt = '02:00:00'
+config_btr_dt = '00:06:00'
+config_run_duration = '0000_06:00:00'
 config_hmix_use_ref_cell_width = .true.
 config_write_output_on_startup = .false.
 config_use_debugTracers = .true.
@@ -1146,18 +1146,18 @@ config_use_debugTracers = .true.
 </div>
 <p>Such a file can be added within <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ForwardStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">,</span>
                  <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="o">...</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.ocean.tests.global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+            <span class="s1">'compass.ocean.tests.global_ocean'</span><span class="p">,</span> <span class="s1">'namelist.forward'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.ocean.tests.global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.wisc&#39;</span><span class="p">)</span>
+                <span class="s1">'compass.ocean.tests.global_ocean'</span><span class="p">,</span> <span class="s1">'namelist.wisc'</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-        <span class="s1">&#39;compass.ocean.tests.global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+        <span class="s1">'compass.ocean.tests.global_ocean'</span><span class="p">,</span> <span class="s1">'streams.forward'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The namelist recipe can be updated with multiple calls to
@@ -1169,30 +1169,30 @@ define.  The recipe is always defined by adding a streams file with
 <p>A typical streams file might look like:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;mesh&quot;</span>
-<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"mesh"</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">"init.nc"</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;input&quot;</span>
-<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"input"</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">"init.nc"</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;restart&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"restart"</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output&quot;</span>
-<span class="w">        </span><span class="na">type=</span><span class="s">&quot;output&quot;</span>
-<span class="w">        </span><span class="na">filename_template=</span><span class="s">&quot;output.nc&quot;</span>
-<span class="w">        </span><span class="na">output_interval=</span><span class="s">&quot;0000_00:00:01&quot;</span>
-<span class="w">        </span><span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"output"</span>
+<span class="w">        </span><span class="na">type=</span><span class="s">"output"</span>
+<span class="w">        </span><span class="na">filename_template=</span><span class="s">"output.nc"</span>
+<span class="w">        </span><span class="na">output_interval=</span><span class="s">"0000_00:00:01"</span>
+<span class="w">        </span><span class="na">clobber_mode=</span><span class="s">"truncate"</span><span class="nt">&gt;</span>
 
-<span class="w">    </span><span class="nt">&lt;var_struct</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;tracers&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;xtime&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;normalVelocity&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var_struct</span><span class="w"> </span><span class="na">name=</span><span class="s">"tracers"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"xtime"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"normalVelocity"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">"layerThickness"</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/stream&gt;</span>
 
-<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;forcing_data&quot;</span>
-<span class="w">        </span><span class="na">filename_template=</span><span class="s">&quot;forcing_data.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"forcing_data"</span>
+<span class="w">        </span><span class="na">filename_template=</span><span class="s">"forcing_data.nc"</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;mixedLayerDepthsOutput&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">"mixedLayerDepthsOutput"</span><span class="nt">/&gt;</span>
 
 <span class="nt">&lt;/streams&gt;</span>
 </pre></div>
@@ -1221,24 +1221,24 @@ found in the package (directory) for the test case:</p>
 <span class="o">...</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Modify the configuration options for this test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">add_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;compass.landice.tests.enthalpy_benchmark.A&#39;</span><span class="p">,</span>
-               <span class="s1">&#39;A.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">add_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">'compass.landice.tests.enthalpy_benchmark.A'</span><span class="p">,</span>
+               <span class="s1">'A.cfg'</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">&#39;compass.landice.tests.enthalpy_benchmark&#39;</span><span class="p">,</span> <span class="s1">&#39;README&#39;</span><span class="p">)</span> <span class="k">as</span> \
+    <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">'compass.landice.tests.enthalpy_benchmark'</span><span class="p">,</span> <span class="s1">'README'</span><span class="p">)</span> <span class="k">as</span> \
             <span class="n">target</span><span class="p">:</span>
-        <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/README&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">))</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/README'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Another way is to call the <code class="docutils literal notranslate"><span class="pre">config.set()</span></code> method:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Modify the configuration options for this test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># We want to visualize all test cases by default</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;eismint2_viz&#39;</span><span class="p">,</span> <span class="s1">&#39;experiment&#39;</span><span class="p">,</span> <span class="s1">&#39;a, b, c, d, f, g&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'eismint2_viz'</span><span class="p">,</span> <span class="s1">'experiment'</span><span class="p">,</span> <span class="s1">'a, b, c, d, f, g'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Config options in <code class="docutils literal notranslate"><span class="pre">config</span></code> will be written to a config file in the work
@@ -1294,21 +1294,21 @@ that a step can use</p></li>
 <span class="o">...</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Run each step of the testcase</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_step</span>
     <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
     <span class="c1"># get the these properties from the config options</span>
-    <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh_cores&#39;</span><span class="p">)</span>
-    <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh_min_cores&#39;</span><span class="p">)</span>
+    <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'mesh_cores'</span><span class="p">)</span>
+    <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'mesh_min_cores'</span><span class="p">)</span>
 
     <span class="c1"># run the step</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
-    <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;xCell&#39;</span><span class="p">,</span> <span class="s1">&#39;yCell&#39;</span><span class="p">,</span> <span class="s1">&#39;zCell&#39;</span><span class="p">]</span>
+    <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'xCell'</span><span class="p">,</span> <span class="s1">'yCell'</span><span class="p">,</span> <span class="s1">'zCell'</span><span class="p">]</span>
     <span class="n">compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
-                      <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;mesh/culled_mesh.nc&#39;</span><span class="p">)</span>
+                      <span class="n">filename1</span><span class="o">=</span><span class="s1">'mesh/culled_mesh.nc'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">run()</span></code> method of a step does the main “job” of the step so the
@@ -1320,9 +1320,9 @@ which can be done trivially with a call to <code class="docutils literal notrans
 <span class="o">...</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Run this step of the testcase</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1373,11 +1373,11 @@ in the <code class="docutils literal notranslate"><span class="pre">__init__.py<
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">QU240Mesh</span><span class="p">(</span><span class="n">MeshStep</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating QU240 and QUwISC240 meshes</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new step</span>
 
 <span class="sd">        Parameters</span>
@@ -1390,14 +1390,14 @@ in the <code class="docutils literal notranslate"><span class="pre">__init__.py<
 
 <span class="sd">        with_ice_shelf_cavities : bool</span>
 <span class="sd">            Whether the mesh includes ice-shelf cavities</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">,</span>
                          <span class="n">package</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
-                         <span class="n">mesh_config_filename</span><span class="o">=</span><span class="s1">&#39;qu240.cfg&#39;</span><span class="p">)</span>
+                         <span class="n">mesh_config_filename</span><span class="o">=</span><span class="s1">'qu240.cfg'</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create cell width array for this mesh on a regular latitude-longitude</span>
 <span class="sd">        grid</span>
 
@@ -1411,7 +1411,7 @@ in the <code class="docutils literal notranslate"><span class="pre">__init__.py<
 
 <span class="sd">        lat : numpy.array</span>
 <span class="sd">            longitude in degrees (length m and between -90 and 90)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">dlon</span> <span class="o">=</span> <span class="mf">10.</span>
         <span class="n">dlat</span> <span class="o">=</span> <span class="n">dlon</span>
         <span class="n">constantCellWidth</span> <span class="o">=</span> <span class="mf">240.</span>
@@ -1428,10 +1428,10 @@ in the <code class="docutils literal notranslate"><span class="pre">__init__.py<
 <p>A developer would also need to define any namelist options for forward runs that
 are specific to this mesh (once for RK4 and once for split-explicit if both
 time integrators are supported):</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_time_integrator = &#39;split_explicit&#39;
-config_dt = &#39;00:30:00&#39;
-config_btr_dt = &#39;00:01:00&#39;
-config_run_duration = &#39;0000_01:30:00&#39;
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_time_integrator = 'split_explicit'
+config_dt = '00:30:00'
+config_btr_dt = '00:01:00'
+config_run_duration = '0000_01:30:00'
 config_mom_del2 = 1000.0
 config_mom_del4 = 1.2e11
 config_hmix_scaleWithMesh = .true.
@@ -1502,13 +1502,13 @@ descends from <code class="docutils literal notranslate"><span class="pre">TestC
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">QU240DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test case performing dynamic adjustment (dissipating fast-moving waves)</span>
 <span class="sd">    from an initial condition on the QU240 MPAS-Ocean mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -1522,12 +1522,12 @@ descends from <code class="docutils literal notranslate"><span class="pre">TestC
 <span class="sd">        init : compass.ocean.tests.global_ocean.init.Init</span>
 <span class="sd">            The test case that produces the initial condition for this run</span>
 
-<span class="sd">        time_integrator : {&#39;split_explicit&#39;, &#39;RK4&#39;}</span>
+<span class="sd">        time_integrator : {'split_explicit', 'RK4'}</span>
 <span class="sd">            The time integrator to use for the forward run</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">restart_times</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0001-01-02_00:00:00&#39;</span><span class="p">,</span> <span class="s1">&#39;0001-01-03_00:00:00&#39;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">restart_times</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'0001-01-02_00:00:00'</span><span class="p">,</span> <span class="s1">'0001-01-03_00:00:00'</span><span class="p">]</span>
         <span class="n">restart_filenames</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s1">&#39;restarts/rst.</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_time</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">))</span>
+            <span class="s1">'restarts/rst.</span><span class="si">{}</span><span class="s1">.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_time</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">':'</span><span class="p">,</span> <span class="s1">'.'</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">restart_time</span> <span class="ow">in</span> <span class="n">restart_times</span><span class="p">]</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
@@ -1537,46 +1537,46 @@ descends from <code class="docutils literal notranslate"><span class="pre">TestC
         <span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span>
 
         <span class="c1"># first step</span>
-        <span class="n">step_name</span> <span class="o">=</span> <span class="s1">&#39;damped_adjustment_1&#39;</span>
+        <span class="n">step_name</span> <span class="o">=</span> <span class="s1">'damped_adjustment_1'</span>
         <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
                            <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span>
                            <span class="n">subdir</span><span class="o">=</span><span class="n">step_name</span><span class="p">)</span>
 
         <span class="n">namelist_options</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;config_run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00-00-01_00:00:00&#39;&quot;</span><span class="p">,</span>
-            <span class="s1">&#39;config_Rayleigh_friction&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;config_Rayleigh_damping_coeff&#39;</span><span class="p">:</span> <span class="s1">&#39;1.0e-4&#39;</span><span class="p">}</span>
+            <span class="s1">'config_run_duration'</span><span class="p">:</span> <span class="s2">"'00-00-01_00:00:00'"</span><span class="p">,</span>
+            <span class="s1">'config_Rayleigh_friction'</span><span class="p">:</span> <span class="s1">'.true.'</span><span class="p">,</span>
+            <span class="s1">'config_Rayleigh_damping_coeff'</span><span class="p">:</span> <span class="s1">'1.0e-4'</span><span class="p">}</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span>
 
         <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-01_00:00:00&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;restart_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-01_00:00:00&#39;</span><span class="p">}</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span>
+            <span class="s1">'output_interval'</span><span class="p">:</span> <span class="s1">'00-00-01_00:00:00'</span><span class="p">,</span>
+            <span class="s1">'restart_interval'</span><span class="p">:</span> <span class="s1">'00-00-01_00:00:00'</span><span class="p">}</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">'streams.template'</span><span class="p">,</span>
                               <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
 
-        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;../</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'../</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 
         <span class="c1"># final step</span>
-        <span class="n">step_name</span> <span class="o">=</span> <span class="s1">&#39;simulation&#39;</span>
+        <span class="n">step_name</span> <span class="o">=</span> <span class="s1">'simulation'</span>
         <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
                            <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span>
                            <span class="n">subdir</span><span class="o">=</span><span class="n">step_name</span><span class="p">)</span>
 
         <span class="n">namelist_options</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;config_run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00-00-01_00:00:00&#39;&quot;</span><span class="p">,</span>
-            <span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_times</span><span class="p">[</span><span class="mi">0</span><span class="p">])}</span>
+            <span class="s1">'config_run_duration'</span><span class="p">:</span> <span class="s2">"'00-00-01_00:00:00'"</span><span class="p">,</span>
+            <span class="s1">'config_do_restart'</span><span class="p">:</span> <span class="s1">'.true.'</span><span class="p">,</span>
+            <span class="s1">'config_start_time'</span><span class="p">:</span> <span class="s2">"'</span><span class="si">{}</span><span class="s2">'"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_times</span><span class="p">[</span><span class="mi">0</span><span class="p">])}</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span>
 
         <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-01_00:00:00&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;restart_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-01_00:00:00&#39;</span><span class="p">}</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span>
+            <span class="s1">'output_interval'</span><span class="p">:</span> <span class="s1">'00-00-01_00:00:00'</span><span class="p">,</span>
+            <span class="s1">'restart_interval'</span><span class="p">:</span> <span class="s1">'00-00-01_00:00:00'</span><span class="p">}</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">'streams.template'</span><span class="p">,</span>
                               <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
 
-        <span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;../</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;../</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'../</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'../</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1721,9 +1721,9 @@ the test group level, e.g.:</p>
 <span class="o">...</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Modify the configuration options for this test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">configure_global_ocean</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1732,7 +1732,7 @@ the test group level, e.g.:</p>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">configure_global_ocean</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Modify the configuration options for this test case</span>
 
 <span class="sd">    Parameters</span>
@@ -1745,37 +1745,37 @@ the test group level, e.g.:</p>
 
 <span class="sd">    init : compass.ocean.tests.global_ocean.init.Init, optional</span>
 <span class="sd">        The test case that produces the initial condition for this run</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">config</span>
     <span class="n">mesh_step</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mesh_step</span>
     <span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_step</span><span class="o">.</span><span class="n">package</span><span class="p">,</span> <span class="n">mesh_step</span><span class="o">.</span><span class="n">mesh_config_filename</span><span class="p">,</span>
                <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;prefix&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">wISC&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;prefix&#39;</span><span class="p">)))</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'prefix'</span><span class="p">,</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">wISC'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'prefix'</span><span class="p">)))</span>
 
-    <span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">test_case</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.cfg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+    <span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">test_case</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">.cfg'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
                <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># add a description of the initial condition</span>
     <span class="k">if</span> <span class="n">init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">initial_condition</span> <span class="o">=</span> <span class="n">init</span><span class="o">.</span><span class="n">initial_condition</span>
-        <span class="n">descriptions</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;PHC&#39;</span><span class="p">:</span> <span class="s1">&#39;Polar science center Hydrographic &#39;</span>
-                               <span class="s1">&#39;Climatology (PHC)&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;EN4_1900&#39;</span><span class="p">:</span>
-                            <span class="s2">&quot;Met Office Hadley Centre&#39;s EN4 dataset from 1900&quot;</span><span class="p">}</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_description&#39;</span><span class="p">,</span>
+        <span class="n">descriptions</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'PHC'</span><span class="p">:</span> <span class="s1">'Polar science center Hydrographic '</span>
+                               <span class="s1">'Climatology (PHC)'</span><span class="p">,</span>
+                        <span class="s1">'EN4_1900'</span><span class="p">:</span>
+                            <span class="s2">"Met Office Hadley Centre's EN4 dataset from 1900"</span><span class="p">}</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'init_description'</span><span class="p">,</span>
                    <span class="n">descriptions</span><span class="p">[</span><span class="n">initial_condition</span><span class="p">])</span>
 
     <span class="c1"># a description of the bathymetry</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;bathy_description&#39;</span><span class="p">,</span>
-               <span class="s1">&#39;Bathymetry is from GEBCO 2019, combined with BedMachine &#39;</span>
-               <span class="s1">&#39;Antarctica around Antarctica.&#39;</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'bathy_description'</span><span class="p">,</span>
+               <span class="s1">'Bathymetry is from GEBCO 2019, combined with BedMachine '</span>
+               <span class="s1">'Antarctica around Antarctica.'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;wisc_description&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;Includes cavities under the ice shelves around Antarctica&#39;</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'wisc_description'</span><span class="p">,</span>
+                   <span class="s1">'Includes cavities under the ice shelves around Antarctica'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In this case, a config options related to the mesh are loaded, then those
@@ -1909,7 +1909,7 @@ be set.  The most straightforward is to set them by calling the base class’
 <code class="docutils literal notranslate"><span class="pre">__init__()</span></code>.  They could be passed through from calls to the child class’
 <code class="docutils literal notranslate"><span class="pre">__init__()</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a new test case</span>
 
 <span class="sd">    Parameters</span>
@@ -1925,26 +1925,26 @@ be set.  The most straightforward is to set them by calling the base class’
 <span class="sd">    min_cores : int, optional</span>
 <span class="sd">        the number of cores the step requires.  If the system has fewer</span>
 <span class="sd">        than this number of cores, the step will fail</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">min_cores</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">min_cores</span> <span class="o">=</span> <span class="n">cores</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span>
                      <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>or just hard coded:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a new test case</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    test_case : compass.TestCase</span>
 <span class="sd">        The test case this step belongs to</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">min_cores</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">min_cores</span> <span class="o">=</span> <span class="n">cores</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
                      <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1956,17 +1956,17 @@ using config options.  Since users could modify these before calling the
 <code class="docutils literal notranslate"><span class="pre">run.py</span></code> script, they are parsed in the test case’s <code class="docutils literal notranslate"><span class="pre">run()</span></code> function
 before <code class="docutils literal notranslate"><span class="pre">run_steps()</span></code> is called:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Run each step of the testcase</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
     <span class="c1"># get the these properties from the config options</span>
     <span class="k">for</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="p">:</span>
         <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span>
         <span class="c1"># get the these properties from the config options</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_cores&#39;</span><span class="p">)</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_min_cores&#39;</span><span class="p">)</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_threads&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'forward_cores'</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'forward_min_cores'</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'forward_threads'</span><span class="p">)</span>
 
     <span class="c1"># run the steps</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
@@ -1980,7 +1980,7 @@ default, and this is specified by passing <code class="docutils literal notransl
 argument to <code class="docutils literal notranslate"><span class="pre">self.add_step()</span></code> when adding the step in the test case’s
 constructor:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create the test case</span>
 
 <span class="sd">    Parameters</span>
@@ -1990,10 +1990,10 @@ constructor:</p>
 
 <span class="sd">    mesh_type : str</span>
 <span class="sd">        The resolution or tye of mesh of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;smoke_test&#39;</span>
+<span class="sd">    """</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">'smoke_test'</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">=</span> <span class="n">mesh_type</span>
-    <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">subdir</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                      <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 

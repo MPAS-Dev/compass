@@ -123,7 +123,7 @@
 <div class="viewcode-block" id="E3smToCmipMaps">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps.E3smToCmipMaps.html#compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps.E3smToCmipMaps">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">E3smToCmipMaps</span><span class="p">(</span><span class="n">FilesForE3SMStep</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating mapping files from the MPAS-Ocean mesh to a standard</span>
 <span class="sd">    CMIP6 mesh</span>
 
@@ -131,50 +131,50 @@
 <span class="sd">    ----------</span>
 <span class="sd">    map_types : list</span>
 <span class="sd">        A list of map types to generate</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="E3smToCmipMaps.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps.E3smToCmipMaps.html#compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps.E3smToCmipMaps.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new step</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM</span>
 <span class="sd">            The test case this step belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+<span class="sd">        """</span>  <span class="c1"># noqa: E501</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;e3sm_to_cmip_maps&#39;</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'e3sm_to_cmip_maps'</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span>
                          <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;ocean.scrip.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../scrip/ocean.scrip.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'ocean.scrip.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../scrip/ocean.scrip.nc'</span><span class="p">)</span>
 
-        <span class="c1"># add both scrip files, since we don&#39;t know in advance which to use</span>
+        <span class="c1"># add both scrip files, since we don't know in advance which to use</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;cmip6_180x360_scrip.20181001.nc&#39;</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;cmip6_180x360_scrip.20181001.nc&#39;</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;map_database&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'cmip6_180x360_scrip.20181001.nc'</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">'cmip6_180x360_scrip.20181001.nc'</span><span class="p">,</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">'map_database'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;cmip6_720x1440_scrip.20181001.nc&#39;</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;cmip6_720x1440_scrip.20181001.nc&#39;</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;map_database&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'cmip6_720x1440_scrip.20181001.nc'</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">'cmip6_720x1440_scrip.20181001.nc'</span><span class="p">,</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">'map_database'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">map_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;esmfaave&#39;</span><span class="p">,</span> <span class="s1">&#39;ncoaave&#39;</span><span class="p">,</span> <span class="s1">&#39;traave&#39;</span><span class="p">,</span> <span class="s1">&#39;trfv2&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;esmfbilin&#39;</span><span class="p">,</span> <span class="s1">&#39;ncoidw&#39;</span><span class="p">,</span> <span class="s1">&#39;trbilin&#39;</span><span class="p">,</span> <span class="s1">&#39;trintbilin&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'esmfaave'</span><span class="p">,</span> <span class="s1">'ncoaave'</span><span class="p">,</span> <span class="s1">'traave'</span><span class="p">,</span> <span class="s1">'trfv2'</span><span class="p">,</span>
+                          <span class="s1">'esmfbilin'</span><span class="p">,</span> <span class="s1">'ncoidw'</span><span class="p">,</span> <span class="s1">'trbilin'</span><span class="p">,</span> <span class="s1">'trintbilin'</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">map_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_types</span><span class="p">:</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;map_mpas_to_cmip6_</span><span class="si">{</span><span class="n">map_type</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'map_mpas_to_cmip6_</span><span class="si">{</span><span class="n">map_type</span><span class="si">}</span><span class="s1">.nc'</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="E3smToCmipMaps.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps.E3smToCmipMaps.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps.E3smToCmipMaps.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the testcase</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
         <span class="n">creation_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span>
         <span class="n">make_e3sm_to_cmip_maps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_short_name</span><span class="p">,</span>
@@ -185,7 +185,7 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">make_e3sm_to_cmip_maps</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">creation_date</span><span class="p">,</span>
                            <span class="n">ntasks</span><span class="p">,</span> <span class="n">map_types</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Make mapping file from the MPAS-Ocean mesh to the CMIP6 grid</span>
 
 <span class="sd">    Parameters</span>
@@ -206,55 +206,55 @@
 <span class="sd">        The number of parallel tasks to use for remapping</span>
 
 <span class="sd">    map_types : list</span>
-<span class="sd">        A list of one or more of the available map types: &#39;esmfaave&#39;,</span>
-<span class="sd">        &#39;ncoaave&#39;, &#39;traave&#39;, &#39;trfv2&#39;, &#39;esmfbilin&#39;, &#39;ncoidw&#39;, &#39;trbilin&#39;,</span>
-<span class="sd">        &#39;trintbilin&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        A list of one or more of the available map types: 'esmfaave',</span>
+<span class="sd">        'ncoaave', 'traave', 'trfv2', 'esmfbilin', 'ncoidw', 'trbilin',</span>
+<span class="sd">        'trintbilin'</span>
+<span class="sd">    """</span>
 
-    <span class="n">link_dir</span> <span class="o">=</span> <span class="s1">&#39;../assembled_files/diagnostics/maps&#39;</span>
+    <span class="n">link_dir</span> <span class="o">=</span> <span class="s1">'../assembled_files/diagnostics/maps'</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">link_dir</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
         <span class="k">pass</span>
 
-    <span class="n">src_scrip_filename</span> <span class="o">=</span> <span class="s1">&#39;ocean.scrip.nc&#39;</span>
-    <span class="n">cmip6_grid_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;cmip6_grid_res&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">cmip6_grid_res</span> <span class="o">==</span> <span class="s1">&#39;180x360&#39;</span><span class="p">:</span>
-        <span class="n">dst_scrip_filename</span> <span class="o">=</span> <span class="s1">&#39;cmip6_180x360_scrip.20181001.nc&#39;</span>
-    <span class="k">elif</span> <span class="n">cmip6_grid_res</span> <span class="o">==</span> <span class="s1">&#39;720x1440&#39;</span><span class="p">:</span>
-        <span class="n">dst_scrip_filename</span> <span class="o">=</span> <span class="s1">&#39;cmip6_720x1440_scrip.20181001.nc&#39;</span>
+    <span class="n">src_scrip_filename</span> <span class="o">=</span> <span class="s1">'ocean.scrip.nc'</span>
+    <span class="n">cmip6_grid_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'files_for_e3sm'</span><span class="p">,</span> <span class="s1">'cmip6_grid_res'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cmip6_grid_res</span> <span class="o">==</span> <span class="s1">'180x360'</span><span class="p">:</span>
+        <span class="n">dst_scrip_filename</span> <span class="o">=</span> <span class="s1">'cmip6_180x360_scrip.20181001.nc'</span>
+    <span class="k">elif</span> <span class="n">cmip6_grid_res</span> <span class="o">==</span> <span class="s1">'720x1440'</span><span class="p">:</span>
+        <span class="n">dst_scrip_filename</span> <span class="o">=</span> <span class="s1">'cmip6_720x1440_scrip.20181001.nc'</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unexpected cmip6_grid_res: </span><span class="si">{</span><span class="n">cmip6_grid_res</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Unexpected cmip6_grid_res: </span><span class="si">{</span><span class="n">cmip6_grid_res</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
-    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>
+    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'parallel'</span><span class="p">,</span> <span class="s1">'parallel_executable'</span><span class="p">)</span>
     <span class="c1"># split the parallel executable into constituents in case it includes flags</span>
-    <span class="n">parallel_command</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
-    <span class="n">parallel_system</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;system&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">parallel_system</span> <span class="o">==</span> <span class="s1">&#39;slurm&#39;</span><span class="p">:</span>
-        <span class="n">parallel_command</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
-    <span class="k">elif</span> <span class="n">parallel_system</span> <span class="o">==</span> <span class="s1">&#39;single_node&#39;</span><span class="p">:</span>
+    <span class="n">parallel_command</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)</span>
+    <span class="n">parallel_system</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'parallel'</span><span class="p">,</span> <span class="s1">'system'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">parallel_system</span> <span class="o">==</span> <span class="s1">'slurm'</span><span class="p">:</span>
+        <span class="n">parallel_command</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'-n'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">'</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">parallel_system</span> <span class="o">==</span> <span class="s1">'single_node'</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">ntasks</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">parallel_command</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+            <span class="n">parallel_command</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'-n'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">'</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unexpected parallel system: </span><span class="si">{</span><span class="n">parallel_system</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">parallel_command</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parallel_command</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Unexpected parallel system: </span><span class="si">{</span><span class="n">parallel_system</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">parallel_command</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parallel_command</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">map_type</span> <span class="ow">in</span> <span class="n">map_types</span><span class="p">:</span>
-        <span class="n">local_map_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;map_mpas_to_cmip6_</span><span class="si">{</span><span class="n">map_type</span><span class="si">}</span><span class="s1">.nc&#39;</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncremap&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;--mpi_pfx=</span><span class="si">{</span><span class="n">parallel_command</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;--alg_typ=</span><span class="si">{</span><span class="n">map_type</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;--grd_src=</span><span class="si">{</span><span class="n">src_scrip_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;--grd_dst=</span><span class="si">{</span><span class="n">dst_scrip_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;--map=</span><span class="si">{</span><span class="n">local_map_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+        <span class="n">local_map_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'map_mpas_to_cmip6_</span><span class="si">{</span><span class="n">map_type</span><span class="si">}</span><span class="s1">.nc'</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'ncremap'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'--mpi_pfx=</span><span class="si">{</span><span class="n">parallel_command</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'--alg_typ=</span><span class="si">{</span><span class="n">map_type</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'--grd_src=</span><span class="si">{</span><span class="n">src_scrip_filename</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'--grd_dst=</span><span class="si">{</span><span class="n">dst_scrip_filename</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'--map=</span><span class="si">{</span><span class="n">local_map_filename</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="n">map_filename</span> <span class="o">=</span> \
-            <span class="sa">f</span><span class="s1">&#39;map_</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">_to_cmip6_</span><span class="si">{</span><span class="n">cmip6_grid_res</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">map_type</span><span class="si">}</span><span class="s1">.&#39;</span> \
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+            <span class="sa">f</span><span class="s1">'map_</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">_to_cmip6_</span><span class="si">{</span><span class="n">cmip6_grid_res</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">map_type</span><span class="si">}</span><span class="s1">.'</span> \
+            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.nc'</span>
 
         <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">local_map_filename</span><span class="p">),</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">link_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">map_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">link_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">map_filename</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 </pre></div>
 
            </div>

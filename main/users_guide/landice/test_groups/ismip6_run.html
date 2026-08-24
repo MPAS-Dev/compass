@@ -183,9 +183,9 @@ for new runs</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[ismip6_run_ais_2300]</span>
 
 <span class="c1"># list of experiments to set up.</span>
-<span class="c1"># Can be &quot;tier1&quot;, &quot;tier2&quot;, &quot;all&quot;, or a comma-delimited list of runs</span>
-<span class="c1"># &quot;tier1&quot; is expAE01-expAE06 plus hist and ctrlAE</span>
-<span class="c1"># &quot;tier2&quot; is expAE07-expAE14</span>
+<span class="c1"># Can be "tier1", "tier2", "all", or a comma-delimited list of runs</span>
+<span class="c1"># "tier1" is expAE01-expAE06 plus hist and ctrlAE</span>
+<span class="c1"># "tier2" is expAE07-expAE14</span>
 <span class="na">exp_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tier1</span>
 
 <span class="c1"># Resolution that will be set up, in km.  Should be one of 4, 8, as those are</span>
@@ -215,13 +215,13 @@ for new runs</p>
 <span class="na">region_mask_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/ISMIP6-2300/initial_conditions/AIS_8to30km_20221027/AIS_8to30km_r01_20220607.regionMask_ismip6.nc</span>
 
 <span class="c1"># Calving method to use.  Should be one of:</span>
-<span class="c1"># &#39;restore&#39; for restore-calving front method (fixed calving front)</span>
-<span class="c1"># &#39;von_mises&#39; for von Mises threshold stress calving law</span>
+<span class="c1"># 'restore' for restore-calving front method (fixed calving front)</span>
+<span class="c1"># 'von_mises' for von Mises threshold stress calving law</span>
 <span class="na">calving_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">restore</span>
 
 <span class="c1"># Path to the file containing the von Mises parameter fields</span>
 <span class="c1"># groundedVonMisesThresholdStress and floatingVonMisesThresholdStress.</span>
-<span class="c1"># Only required if calving_method is set to &#39;von_mises&#39;</span>
+<span class="c1"># Only required if calving_method is set to 'von_mises'</span>
 <span class="na">von_mises_parameter_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">UNKNOWN</span>
 
 <span class="c1"># Whether facemelting should be included in the runs</span>
@@ -230,7 +230,7 @@ for new runs</p>
 <span class="c1"># True if running coupled MALI-sea level model simulation</span>
 <span class="na">sea_level_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 
-<span class="c1"># NOTE: for the directories related to the sea-level model input/outputs, the slash &#39;/&#39; at the end of the directory name is necessary.</span>
+<span class="c1"># NOTE: for the directories related to the sea-level model input/outputs, the slash '/' at the end of the directory name is necessary.</span>
 <span class="c1"># Path to the base directory containing globally defined ice thickness field for the sea-level model</span>
 <span class="na">slm_input_ice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/SeaLevelModel_Inputs/icemodel/</span>
 
@@ -241,9 +241,9 @@ for new runs</p>
 <span class="c1"># possible values: any file name string of earth model file.</span>
 <span class="c1"># Note that there is no single representative earth model for the globe or</span>
 <span class="c1"># any region of the globe (e.g., West Antarctica, East Antarctica, Greenland)</span>
-<span class="c1"># But for this test, we use &#39;prem_512.l60K2C.sum18p6.dum19p2.tz19p4.lm22&#39; for West Antarctica</span>
-<span class="c1"># and &#39;prem_coll_512.l120C.ump5.lm10&#39; for East Antarctica. Other earthmodels that can be used</span>
-<span class="c1"># should exist in the path defined in the config option &#39;slm_input_earth&#39;.</span>
+<span class="c1"># But for this test, we use 'prem_512.l60K2C.sum18p6.dum19p2.tz19p4.lm22' for West Antarctica</span>
+<span class="c1"># and 'prem_coll_512.l120C.ump5.lm10' for East Antarctica. Other earthmodels that can be used</span>
+<span class="c1"># should exist in the path defined in the config option 'slm_input_earth'.</span>
 <span class="na">slm_earth_structure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">prem_512.l60K2C.sum18p6.dum19p2.tz19p4.lm22</span>
 
 <span class="c1"># Path to the diectory containing other input files (present-day global topography and sea-level model grid files)</span>

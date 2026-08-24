@@ -112,7 +112,7 @@
 <div class="viewcode-block" id="configure">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.configure.configure.html#compass.landice.tests.ismip6_forcing.configure.configure">[docs]</a>
 <span></span><span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">check_model_options</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A shared function for configuring options for all ismip6 forcing</span>
 <span class="sd">    test cases</span>
 
@@ -123,20 +123,20 @@
 
 <span class="sd">    check_model_options : bool</span>
 <span class="sd">        Whether we check ``model``, ``scenario``, ``period_endyear``</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">section</span> <span class="o">=</span> <span class="s2">&quot;ismip6_ais&quot;</span>
-    <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;base_path_ismip6&quot;</span><span class="p">,</span> <span class="s2">&quot;base_path_mali&quot;</span><span class="p">,</span> <span class="s2">&quot;mali_mesh_name&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;mali_mesh_file&quot;</span><span class="p">,</span> <span class="s2">&quot;output_base_path&quot;</span><span class="p">]</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="s2">"ismip6_ais"</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"base_path_ismip6"</span><span class="p">,</span> <span class="s2">"base_path_mali"</span><span class="p">,</span> <span class="s2">"mali_mesh_name"</span><span class="p">,</span>
+               <span class="s2">"mali_mesh_file"</span><span class="p">,</span> <span class="s2">"output_base_path"</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">check_model_options</span><span class="p">:</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="n">options</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="s2">&quot;scenario&quot;</span><span class="p">,</span> <span class="s2">&quot;period_endyear&quot;</span><span class="p">]</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">options</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"model"</span><span class="p">,</span> <span class="s2">"scenario"</span><span class="p">,</span> <span class="s2">"period_endyear"</span><span class="p">]</span>
 
     <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="o">=</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="o">=</span><span class="n">option</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;NotAvailable&quot;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;You need to supply a user config file, which &quot;</span>
-                             <span class="sa">f</span><span class="s2">&quot;should contain the </span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2"> &quot;</span>
-                             <span class="sa">f</span><span class="s2">&quot;section with the </span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s2"> option&quot;</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">"NotAvailable"</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"You need to supply a user config file, which "</span>
+                             <span class="sa">f</span><span class="s2">"should contain the </span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2"> "</span>
+                             <span class="sa">f</span><span class="s2">"section with the </span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s2"> option"</span><span class="p">)</span></div>
 
 </pre></div>
 

@@ -121,19 +121,19 @@
 <div class="viewcode-block" id="FloodplainMeshStep">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.mesh.floodplain.FloodplainMeshStep.html#compass.ocean.mesh.floodplain.FloodplainMeshStep">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FloodplainMeshStep</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating a global MPAS-Ocean mesh that includes variables</span>
 <span class="sd">    needed for preserving a floodplain</span>
 
 <span class="sd">    preserve_floodplain : bool</span>
 <span class="sd">        Whether the mesh includes land cells</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="FloodplainMeshStep.__init__">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.mesh.floodplain.FloodplainMeshStep.html#compass.ocean.mesh.floodplain.FloodplainMeshStep.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'base_mesh'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">cell_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new step</span>
 
 <span class="sd">        Parameters</span>
@@ -152,67 +152,67 @@
 
 <span class="sd">        preserve_floodplain : bool, optional</span>
 <span class="sd">            Whether the mesh includes land cells</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
                          <span class="n">cell_width</span><span class="o">=</span><span class="n">cell_width</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">preserve_floodplain</span> <span class="o">=</span> <span class="n">preserve_floodplain</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;earth_relief_15s.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;SRTM15_plus_earth_relief_15s.nc&#39;</span><span class="p">,</span>
-                            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'earth_relief_15s.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'SRTM15_plus_earth_relief_15s.nc'</span><span class="p">,</span>
+                            <span class="n">database</span><span class="o">=</span><span class="s1">'bathymetry_database'</span><span class="p">)</span>
 
-        <span class="n">pixel_path</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;pixel&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
-        <span class="n">pixel_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pixel_path</span><span class="si">}</span><span class="s1">/RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc&#39;</span>
+        <span class="n">pixel_path</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">'pixel'</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">pixel_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">pixel_path</span><span class="si">}</span><span class="s1">/RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;bathy.nc&#39;</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'bathy.nc'</span><span class="p">,</span>
             <span class="n">work_dir_target</span><span class="o">=</span><span class="n">pixel_file</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">bottomDepth_varname</span> <span class="o">=</span> <span class="s1">&#39;bottomDepthObserved&#39;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bottomDepth_varname</span> <span class="o">=</span> <span class="s1">'bottomDepthObserved'</span></div>
 
 
 <div class="viewcode-block" id="FloodplainMeshStep.run">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.mesh.floodplain.FloodplainMeshStep.run.html#compass.ocean.mesh.floodplain.FloodplainMeshStep.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_mesh_filename&#39;</span><span class="p">)</span>
+        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'spherical_mesh'</span><span class="p">,</span> <span class="s1">'mpas_mesh_filename'</span><span class="p">)</span>
 
-        <span class="n">dem_remap</span><span class="o">.</span><span class="n">dem_remap</span><span class="p">(</span><span class="s1">&#39;bathy.nc&#39;</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">)</span>
+        <span class="n">dem_remap</span><span class="o">.</span><span class="n">dem_remap</span><span class="p">(</span><span class="s1">'bathy.nc'</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">)</span>
 
         <span class="c1"># Create new NetCDF variables in mesh file, if necessary</span>
-        <span class="n">nc_mesh</span> <span class="o">=</span> <span class="n">nc4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+        <span class="n">nc_mesh</span> <span class="o">=</span> <span class="n">nc4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">)</span>
         <span class="n">nc_vars</span> <span class="o">=</span> <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;bottomDepthObserved&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nc_vars</span><span class="p">:</span>
-            <span class="n">nc_mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">'bottomDepthObserved'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nc_vars</span><span class="p">:</span>
+            <span class="n">nc_mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'bottomDepthObserved'</span><span class="p">,</span> <span class="s1">'f8'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nCells'</span><span class="p">))</span>
 
         <span class="c1"># Write to mesh file</span>
-        <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">][:]</span> <span class="o">=</span> \
-            <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">][:]</span>
+        <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'bottomDepthObserved'</span><span class="p">][:]</span> <span class="o">=</span> \
+            <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'bed_elevation'</span><span class="p">][:]</span>
         <span class="n">nc_mesh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">preserve_floodplain</span><span class="p">:</span>
-            <span class="n">floodplain_elevation</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;floodplain_elevation&#39;</span><span class="p">)</span>
+            <span class="n">floodplain_elevation</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'spherical_mesh'</span><span class="p">,</span>
+                                                   <span class="s1">'floodplain_elevation'</span><span class="p">)</span>
             <span class="n">min_depth_outside_floodplain</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
-                <span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;min_depth_outside_floodplain&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;floodplain_resolution&#39;</span><span class="p">):</span>
+                <span class="s1">'spherical_mesh'</span><span class="p">,</span>
+                <span class="s1">'min_depth_outside_floodplain'</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">'spherical_mesh'</span><span class="p">,</span> <span class="s1">'floodplain_resolution'</span><span class="p">):</span>
                 <span class="n">floodplain_resolution</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
-                    <span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;floodplain_resolution&#39;</span><span class="p">)</span>
+                    <span class="s1">'spherical_mesh'</span><span class="p">,</span>
+                    <span class="s1">'floodplain_resolution'</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">floodplain_resolution</span> <span class="o">=</span> <span class="mf">1e10</span>
-            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;floodplain_geojson&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">'spherical_mesh'</span><span class="p">,</span> <span class="s1">'floodplain_geojson'</span><span class="p">):</span>
                 <span class="n">floodplain_geojson</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                    <span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;floodplain_geojson&#39;</span><span class="p">)</span>
+                    <span class="s1">'spherical_mesh'</span><span class="p">,</span>
+                    <span class="s1">'floodplain_geojson'</span><span class="p">)</span>
                 <span class="n">floodplain_region</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="n">floodplain_geojson</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">floodplain_region</span> <span class="o">=</span> <span class="kc">None</span>
@@ -230,26 +230,26 @@
                                    <span class="n">floodplain_region</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                    <span class="n">min_depth_outside_floodplain</span><span class="o">=</span><span class="mf">5.0</span><span class="p">):</span>
 
-        <span class="n">nc_mesh</span> <span class="o">=</span> <span class="n">nc4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">mesh_file</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+        <span class="n">nc_mesh</span> <span class="o">=</span> <span class="n">nc4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">mesh_file</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">)</span>
         <span class="n">nc_vars</span> <span class="o">=</span> <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="s1">&#39;regionCellMasks&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nc_vars</span><span class="p">:</span>
-            <span class="n">nc_mesh</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nRegions&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">nc_mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span>
-                                   <span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nRegions&#39;</span><span class="p">))</span>
-        <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="s1">'regionCellMasks'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nc_vars</span><span class="p">:</span>
+            <span class="n">nc_mesh</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'nRegions'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">nc_mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'regionCellMasks'</span><span class="p">,</span> <span class="s1">'i'</span><span class="p">,</span>
+                                   <span class="p">(</span><span class="s1">'nCells'</span><span class="p">,</span> <span class="s1">'nRegions'</span><span class="p">))</span>
+        <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'regionCellMasks'</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-        <span class="k">if</span> <span class="s1">&#39;transectCellMasks&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nc_vars</span><span class="p">:</span>
-            <span class="n">nc_mesh</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nTransects&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">nc_mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;transectCellMasks&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span>
-                                   <span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nTransects&#39;</span><span class="p">))</span>
-        <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;transectCellMasks&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="s1">'transectCellMasks'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nc_vars</span><span class="p">:</span>
+            <span class="n">nc_mesh</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'nTransects'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">nc_mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'transectCellMasks'</span><span class="p">,</span> <span class="s1">'i'</span><span class="p">,</span>
+                                   <span class="p">(</span><span class="s1">'nCells'</span><span class="p">,</span> <span class="s1">'nTransects'</span><span class="p">))</span>
+        <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'transectCellMasks'</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="n">floodplain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_floodplain</span><span class="p">(</span><span class="n">mesh_file</span><span class="p">,</span> <span class="n">floodplain_elevation</span><span class="p">,</span>
                                           <span class="n">floodplain_resolution</span><span class="p">,</span>
                                           <span class="n">floodplain_region</span><span class="p">)</span>
 
-        <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">floodplain</span>
+        <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'regionCellMasks'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">floodplain</span>
 
         <span class="n">nc_mesh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
@@ -257,24 +257,24 @@
                         <span class="n">floodplain_resolution</span><span class="p">,</span>
                         <span class="n">floodplain_region</span><span class="p">):</span>
 
-        <span class="n">nc_mesh</span> <span class="o">=</span> <span class="n">nc4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">mesh_file</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+        <span class="n">nc_mesh</span> <span class="o">=</span> <span class="n">nc4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">mesh_file</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">)</span>
 
         <span class="n">bottomDepth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bottomDepth_varname</span>
-        <span class="n">h</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">][:]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.0</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'areaCell'</span><span class="p">][:]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.0</span>
         <span class="n">floodplain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
             <span class="n">h</span> <span class="o">&lt;</span> <span class="n">floodplain_resolution</span><span class="p">,</span>
             <span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">bottomDepth</span><span class="p">][:]</span> <span class="o">&lt;</span> <span class="n">floodplain_elevation</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">floodplain_region</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;adding floodplain region&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"adding floodplain region"</span><span class="p">)</span>
             <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
             <span class="n">edges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">floodplain_region</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Polygon&#39;</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">poly</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">][</span><span class="s1">&#39;coordinates&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">'geometry'</span><span class="p">][</span><span class="s1">'type'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'Polygon'</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">poly</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">'geometry'</span><span class="p">][</span><span class="s1">'coordinates'</span><span class="p">]:</span>
                         <span class="n">_add_poly</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">nodes</span><span class="p">)</span>
 
-                <span class="k">elif</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;MultiPolygon&#39;</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">mpoly</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">][</span><span class="s1">&#39;coordinates&#39;</span><span class="p">]:</span>
+                <span class="k">elif</span> <span class="n">feature</span><span class="p">[</span><span class="s1">'geometry'</span><span class="p">][</span><span class="s1">'type'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'MultiPolygon'</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">mpoly</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">'geometry'</span><span class="p">][</span><span class="s1">'coordinates'</span><span class="p">]:</span>
                         <span class="k">for</span> <span class="n">poly</span> <span class="ow">in</span> <span class="n">mpoly</span><span class="p">:</span>
                             <span class="n">_add_poly</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">nodes</span><span class="p">)</span>
 
@@ -283,9 +283,9 @@
             <span class="nb">print</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
 
-            <span class="n">lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lonCell&#39;</span><span class="p">][:])</span>
+            <span class="n">lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'lonCell'</span><span class="p">][:])</span>
             <span class="n">lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">lon</span> <span class="o">+</span> <span class="mf">180.0</span><span class="p">,</span> <span class="mf">360.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">180.0</span>
-            <span class="n">lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latCell&#39;</span><span class="p">][:])</span>
+            <span class="n">lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">nc_mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'latCell'</span><span class="p">][:])</span>
 
             <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
 

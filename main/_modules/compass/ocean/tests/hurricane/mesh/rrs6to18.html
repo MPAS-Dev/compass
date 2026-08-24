@@ -119,14 +119,14 @@
 <div class="viewcode-block" id="RRS6to18BaseMesh">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.mesh.rrs6to18.RRS6to18BaseMesh.html#compass.ocean.tests.hurricane.mesh.rrs6to18.RRS6to18BaseMesh">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RRS6to18BaseMesh</span><span class="p">(</span><span class="n">FloodplainMeshStep</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating RRS6to18 and RRSwISC6to18 meshes</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="RRS6to18BaseMesh.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.mesh.rrs6to18.RRS6to18BaseMesh.html#compass.ocean.tests.hurricane.mesh.rrs6to18.RRS6to18BaseMesh.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">pixel</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">elev_file</span><span class="o">=</span><span class="s1">&#39;RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc&#39;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">pixel</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'base_mesh'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">elev_file</span><span class="o">=</span><span class="s1">'RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc'</span><span class="p">):</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -134,17 +134,17 @@
         <span class="n">pixel_path</span> <span class="o">=</span> <span class="n">pixel</span><span class="o">.</span><span class="n">path</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;bathy.nc&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pixel_path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">elev_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'bathy.nc'</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">pixel_path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">elev_file</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mab_floodplain.geojson&#39;</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'mab_floodplain.geojson'</span><span class="p">,</span>
                             <span class="n">package</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RRS6to18BaseMesh.build_cell_width_lat_lon">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.mesh.rrs6to18.RRS6to18BaseMesh.build_cell_width_lat_lon.html#compass.ocean.tests.hurricane.mesh.rrs6to18.RRS6to18BaseMesh.build_cell_width_lat_lon">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create cell width array for this mesh on a regular latitude-longitude</span>
 <span class="sd">        grid</span>
 
@@ -158,7 +158,7 @@
 
 <span class="sd">        lat : numpy.array</span>
 <span class="sd">            longitude in degrees (length m and between -90 and 90)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">dlon</span> <span class="o">=</span> <span class="mf">10.</span>
         <span class="n">dlat</span> <span class="o">=</span> <span class="mf">0.1</span>

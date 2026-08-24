@@ -126,39 +126,39 @@
 <div class="viewcode-block" id="ProcessBasalMelt">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt.ProcessBasalMelt.html#compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt.ProcessBasalMelt">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ProcessBasalMelt</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for processing (combine, remap and rename) the ISMIP6 basalmelt</span>
 <span class="sd">    data</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ProcessBasalMelt.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt.ProcessBasalMelt.html#compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt.ProcessBasalMelt.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal</span>
 <span class="sd">            The test case this step belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;process_basal_melt&quot;</span><span class="p">,</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"process_basal_melt"</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProcessBasalMelt.setup">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt.ProcessBasalMelt.setup.html#compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt.ProcessBasalMelt.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip6_ais&quot;</span><span class="p">]</span>
-        <span class="n">base_path_ismip6</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;base_path_ismip6&quot;</span><span class="p">)</span>
-        <span class="n">base_path_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;base_path_mali&quot;</span><span class="p">)</span>
-        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_name&quot;</span><span class="p">)</span>
-        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_file&quot;</span><span class="p">)</span>
-        <span class="n">period_endyear</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;period_endyear&quot;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip6_ais"</span><span class="p">]</span>
+        <span class="n">base_path_ismip6</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"base_path_ismip6"</span><span class="p">)</span>
+        <span class="n">base_path_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"base_path_mali"</span><span class="p">)</span>
+        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_name"</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_file"</span><span class="p">)</span>
+        <span class="n">period_endyear</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"period_endyear"</span><span class="p">)</span>
 
         <span class="n">input_file_basin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_basin</span><span class="p">[</span><span class="n">period_endyear</span><span class="p">]</span>
         <span class="n">input_files_coeff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files_coeff</span><span class="p">[</span><span class="n">period_endyear</span><span class="p">]</span>
@@ -172,93 +172,93 @@
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">input_files_coeff</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">),</span>
                                 <span class="n">target</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_ismip6</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_basin_and_&quot;</span>
-                                          <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_basin_and_"</span>
+                                          <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProcessBasalMelt.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt.ProcessBasalMelt.run.html#compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt.ProcessBasalMelt.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip6_ais&quot;</span><span class="p">]</span>
-        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_name&quot;</span><span class="p">)</span>
-        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_file&quot;</span><span class="p">)</span>
-        <span class="n">period_endyear</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;period_endyear&quot;</span><span class="p">)</span>
-        <span class="n">output_base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_base_path&quot;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip6_ais"</span><span class="p">]</span>
+        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_name"</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_file"</span><span class="p">)</span>
+        <span class="n">period_endyear</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"period_endyear"</span><span class="p">)</span>
+        <span class="n">output_base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_base_path"</span><span class="p">)</span>
         <span class="c1"># we always want neareststod for the remapping method because we want</span>
         <span class="c1"># a single value per basin</span>
-        <span class="n">method_remap</span> <span class="o">=</span> <span class="s2">&quot;neareststod&quot;</span>
+        <span class="n">method_remap</span> <span class="o">=</span> <span class="s2">"neareststod"</span>
 
         <span class="c1"># combine, interpolate and rename the basin file and deltaT0_gamma0</span>
         <span class="c1"># ismip6 input files</span>
 
         <span class="c1"># call the function that combines data</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Combining the ismip6 input files&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Combining the ismip6 input files"</span><span class="p">)</span>
         <span class="n">input_file_basin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_basin</span><span class="p">[</span><span class="n">period_endyear</span><span class="p">]</span>
         <span class="n">input_file_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files_coeff</span><span class="p">[</span><span class="n">period_endyear</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_file_list</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;!---Start processing the current file---!&quot;</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;processing the input file &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
-            <span class="c1"># temporary file names. Note: The counter &#39;i&#39; seems to be necessary</span>
-            <span class="c1"># for &#39;ncremap&#39; to correctly interpolate the gamma0 values for an</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"!---Start processing the current file---!"</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"processing the input file "</span>
+                        <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+            <span class="c1"># temporary file names. Note: The counter 'i' seems to be necessary</span>
+            <span class="c1"># for 'ncremap' to correctly interpolate the gamma0 values for an</span>
             <span class="c1"># unknown reason.</span>
-            <span class="n">combined_file_temp</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;combined_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.nc&quot;</span>
-            <span class="n">remapped_file_temp</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;remapped_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.nc&quot;</span>
+            <span class="n">combined_file_temp</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"combined_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.nc"</span>
+            <span class="n">remapped_file_temp</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"remapped_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.nc"</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">combine_ismip6_inputfiles</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file_basin</span><span class="p">),</span>
                                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">),</span>
                                            <span class="n">combined_file_temp</span><span class="p">)</span>
 
             <span class="c1"># remap the input forcing file.</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calling the remapping function...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Calling the remapping function..."</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">remap_ismip6_basal_melt_to_mali_vars</span><span class="p">(</span><span class="n">combined_file_temp</span><span class="p">,</span>
                                                       <span class="n">remapped_file_temp</span><span class="p">,</span>
                                                       <span class="n">mali_mesh_name</span><span class="p">,</span>
                                                       <span class="n">mali_mesh_file</span><span class="p">,</span>
                                                       <span class="n">method_remap</span><span class="p">)</span>
 
-            <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_basin_and_&quot;</span> \
-                          <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_basin_and_"</span> \
+                          <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
 
             <span class="c1"># rename the ismip6 variables to MALI variables</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Renaming the ismip6 variables to &quot;</span>
-                        <span class="s2">&quot;mali variable names...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Renaming the ismip6 variables to "</span>
+                        <span class="s2">"mali variable names..."</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rename_ismip6_basal_melt_to_mali_vars</span><span class="p">(</span><span class="n">remapped_file_temp</span><span class="p">,</span>
                                                        <span class="n">output_file</span><span class="p">)</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Remapping and renaming process done successfully. &quot;</span>
-                        <span class="s2">&quot;Removing the temporary files...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Remapping and renaming process done successfully. "</span>
+                        <span class="s2">"Removing the temporary files..."</span><span class="p">)</span>
 
             <span class="c1"># remove the temporary combined file</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">combined_file_temp</span><span class="p">)</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">remapped_file_temp</span><span class="p">)</span>
 
             <span class="c1"># place the output file in appropriate director</span>
-            <span class="n">output_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_base_path</span><span class="si">}</span><span class="s2">/basal_melt/parameterizations/&quot;</span>
+            <span class="n">output_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">output_base_path</span><span class="si">}</span><span class="s2">/basal_melt/parameterizations/"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating a new directory for the output data...&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Creating a new directory for the output data..."</span><span class="p">)</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
 
             <span class="n">src</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">output_file</span><span class="p">)</span>
             <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;!---Done processing the current file---!&quot;</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"!---Done processing the current file---!"</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProcessBasalMelt.combine_ismip6_inputfiles">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt.ProcessBasalMelt.combine_ismip6_inputfiles.html#compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt.ProcessBasalMelt.combine_ismip6_inputfiles">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">combine_ismip6_inputfiles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basin_file</span><span class="p">,</span> <span class="n">coeff_gamma0_deltat_file</span><span class="p">,</span>
                                   <span class="n">combined_file_temp</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Combine ismip6 input files before regridding onto mali mesh</span>
 
 <span class="sd">        Parameters</span>
@@ -272,12 +272,12 @@
 
 <span class="sd">        combined_file_temp : str</span>
 <span class="sd">            temporary output file that has all the variables combined</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">ds_basin</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">basin_file</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;netcdf4&quot;</span><span class="p">)</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">coeff_gamma0_deltat_file</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;netcdf4&quot;</span><span class="p">)</span>
+        <span class="n">ds_basin</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">basin_file</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">coeff_gamma0_deltat_file</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">)</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_basin&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_basin</span><span class="o">.</span><span class="n">basinNumber</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip6shelfMelt_basin"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_basin</span><span class="o">.</span><span class="n">basinNumber</span>
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">combined_file_temp</span><span class="p">)</span></div>
 
 
@@ -286,7 +286,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">remap_ismip6_basal_melt_to_mali_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
                                              <span class="n">mali_mesh_name</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">,</span>
                                              <span class="n">method_remap</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Remap the input ismip6 basal melt data onto mali mesh</span>
 
 <span class="sd">        Parameters</span>
@@ -306,27 +306,27 @@
 
 <span class="sd">        method_remap : str, optional</span>
 <span class="sd">            Remapping method used in building a mapping file</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># check if mapfile exists</span>
-        <span class="n">mapping_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;map_ismip6_8km_to_</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">.nc&quot;</span>
+        <span class="n">mapping_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"map_ismip6_8km_to_</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">.nc"</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
-            <span class="c1"># build a mapping file if it doesn&#39;t already exist</span>
+            <span class="c1"># build a mapping file if it doesn't already exist</span>
             <span class="n">build_mapping_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
                                <span class="n">input_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
                                <span class="n">scrip_from_latlon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="n">mali_mesh_file</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
                                <span class="n">method_remap</span><span class="o">=</span><span class="n">method_remap</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Mapping file exists. &quot;</span>
-                             <span class="s2">&quot;Remapping the input data...&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Mapping file exists. "</span>
+                             <span class="s2">"Remapping the input data..."</span><span class="p">)</span>
 
         <span class="c1"># remap the input data</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ncremap&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span>
-                <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
-                <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncremap"</span><span class="p">,</span>
+                <span class="s2">"-i"</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span>
+                <span class="s2">"-o"</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
+                <span class="s2">"-m"</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">]</span>
 
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span></div>
 
@@ -335,7 +335,7 @@
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt.ProcessBasalMelt.rename_ismip6_basal_melt_to_mali_vars.html#compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt.ProcessBasalMelt.rename_ismip6_basal_melt_to_mali_vars">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rename_ismip6_basal_melt_to_mali_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remapped_file_temp</span><span class="p">,</span>
                                               <span class="n">output_file</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Rename variables in the remapped ismip6 input data</span>
 <span class="sd">        to the ones that MALI uses.</span>
 
@@ -346,24 +346,24 @@
 
 <span class="sd">        output_file : str</span>
 <span class="sd">            remapped ismip6 data renamed on mali mesh</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># open dataset in 20 years chunk</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">remapped_file_temp</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">20</span><span class="p">))</span>
 
         <span class="c1"># build dictionary and rename the ismip6 dimension and variables</span>
         <span class="n">ismip6_to_mali_dims</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">ncol</span><span class="o">=</span><span class="s2">&quot;nCells&quot;</span><span class="p">)</span>
+            <span class="n">ncol</span><span class="o">=</span><span class="s2">"nCells"</span><span class="p">)</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">ismip6_to_mali_dims</span><span class="p">)</span>
 
         <span class="n">ismip6_to_mali_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">deltaT_basin</span><span class="o">=</span><span class="s2">&quot;ismip6shelfMelt_deltaT&quot;</span><span class="p">,</span>
-            <span class="n">gamma0</span><span class="o">=</span><span class="s2">&quot;ismip6shelfMelt_gamma0&quot;</span><span class="p">)</span>
+            <span class="n">deltaT_basin</span><span class="o">=</span><span class="s2">"ismip6shelfMelt_deltaT"</span><span class="p">,</span>
+            <span class="n">gamma0</span><span class="o">=</span><span class="s2">"ismip6shelfMelt_gamma0"</span><span class="p">)</span>
 
         <span class="c1"># drop unnecessary variables on the regridded data on MALI mesh</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">ismip6_to_mali_vars</span><span class="p">)</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s2">&quot;lat_vertices&quot;</span><span class="p">,</span> <span class="s2">&quot;lon_vertices&quot;</span><span class="p">,</span>
-                           <span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="s2">&quot;lon&quot;</span><span class="p">,</span> <span class="s2">&quot;area&quot;</span><span class="p">])</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s2">"lat_vertices"</span><span class="p">,</span> <span class="s2">"lon_vertices"</span><span class="p">,</span>
+                           <span class="s2">"lat"</span><span class="p">,</span> <span class="s2">"lon"</span><span class="p">,</span> <span class="s2">"area"</span><span class="p">])</span>
 
         <span class="c1"># write to a new netCDF file</span>
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
@@ -373,38 +373,38 @@
     <span class="c1"># input files: input uniform melt rate coefficient (gamma0)</span>
     <span class="c1"># and temperature correction per basin</span>
     <span class="n">_file_basin</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;2100&quot;</span><span class="p">:</span> <span class="s2">&quot;AIS/Ocean_Forcing/imbie2/imbie2_basin_numbers_8km.nc&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;2300&quot;</span><span class="p">:</span> <span class="s2">&quot;AIS/Ocean_forcing/imbie2/imbie2_basin_numbers_8km.nc&quot;</span>
+        <span class="s2">"2100"</span><span class="p">:</span> <span class="s2">"AIS/Ocean_Forcing/imbie2/imbie2_basin_numbers_8km.nc"</span><span class="p">,</span>
+        <span class="s2">"2300"</span><span class="p">:</span> <span class="s2">"AIS/Ocean_forcing/imbie2/imbie2_basin_numbers_8km.nc"</span>
     <span class="p">}</span>
 
     <span class="n">_files_coeff</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;2100&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
+        <span class="s2">"2100"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">"AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median_PIGL_gamma_calibration.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_pct_PIGL_gamma_calibration.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_percentile.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc"</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
 
-        <span class="s2">&quot;2300&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
+        <span class="s2">"2300"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">"AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median_PIGL_gamma_calibration.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_pct_PIGL_gamma_calibration.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_percentile.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc"</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">"AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc"</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
     <span class="p">}</span></div>
 
 </pre></div>

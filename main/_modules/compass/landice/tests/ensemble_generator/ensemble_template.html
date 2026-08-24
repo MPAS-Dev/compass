@@ -112,7 +112,7 @@
 <div class="viewcode-block" id="get_ensemble_template_name">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_template.get_ensemble_template_name.html#compass.landice.tests.ensemble_generator.ensemble_template.get_ensemble_template_name">[docs]</a>
 <span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_ensemble_template_name</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the configured ensemble template name.</span>
 
 <span class="sd">    Parameters</span>
@@ -124,23 +124,23 @@
 <span class="sd">    -------</span>
 <span class="sd">    str</span>
 <span class="sd">        The selected ensemble template name</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">section</span> <span class="o">=</span> <span class="s1">&#39;ensemble_generator&#39;</span>
-    <span class="n">option</span> <span class="o">=</span> <span class="s1">&#39;ensemble_template&#39;</span>
+<span class="sd">    """</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="s1">'ensemble_generator'</span>
+    <span class="n">option</span> <span class="o">=</span> <span class="s1">'ensemble_template'</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Missing required config section &#39;</span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2">&#39; for ensemble &quot;</span>
-            <span class="s2">&quot;generator configuration selection.&quot;</span><span class="p">)</span>
+            <span class="sa">f</span><span class="s2">"Missing required config section '</span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2">' for ensemble "</span>
+            <span class="s2">"generator configuration selection."</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Missing required config option &#39;</span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s2">&#39; in section &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+            <span class="sa">f</span><span class="s2">"Missing required config option '</span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s2">' in section "</span>
+            <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
 
     <span class="n">template</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">template</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ensemble_template cannot be empty.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">template</span> <span class="o">==</span> <span class="s1">''</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'ensemble_template cannot be empty.'</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">template</span></div>
 
@@ -149,7 +149,7 @@
 <div class="viewcode-block" id="get_spinup_template_package">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_template.get_spinup_template_package.html#compass.landice.tests.ensemble_generator.ensemble_template.get_spinup_template_package">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_spinup_template_package</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the package containing spinup ensemble template resources.</span>
 
 <span class="sd">    Parameters</span>
@@ -161,17 +161,17 @@
 <span class="sd">    -------</span>
 <span class="sd">    str</span>
 <span class="sd">        Package path for spinup resources</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">template</span> <span class="o">=</span> <span class="n">get_ensemble_template_name</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;compass.landice.tests.ensemble_generator.ensemble_templates.&#39;</span>
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">template</span><span class="si">}</span><span class="s1">.spinup&#39;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="p">(</span><span class="s1">'compass.landice.tests.ensemble_generator.ensemble_templates.'</span>
+            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">template</span><span class="si">}</span><span class="s1">.spinup'</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="get_branch_template_package">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_template.get_branch_template_package.html#compass.landice.tests.ensemble_generator.ensemble_template.get_branch_template_package">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_branch_template_package</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the package containing branch ensemble template resources.</span>
 
 <span class="sd">    Parameters</span>
@@ -183,10 +183,10 @@
 <span class="sd">    -------</span>
 <span class="sd">    str</span>
 <span class="sd">        Package path for branch resources</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">template</span> <span class="o">=</span> <span class="n">get_ensemble_template_name</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;compass.landice.tests.ensemble_generator.ensemble_templates.&#39;</span>
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">template</span><span class="si">}</span><span class="s1">.branch&#39;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="p">(</span><span class="s1">'compass.landice.tests.ensemble_generator.ensemble_templates.'</span>
+            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">template</span><span class="si">}</span><span class="s1">.branch'</span><span class="p">)</span></div>
 
 </pre></div>
 

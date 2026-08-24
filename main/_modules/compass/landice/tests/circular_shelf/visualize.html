@@ -119,19 +119,19 @@
 <div class="viewcode-block" id="Visualize">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.circular_shelf.visualize.Visualize.html#compass.landice.tests.circular_shelf.visualize.Visualize">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Visualize</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for visualizing the output from a circular_shelf test case</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    mesh_type : str</span>
 <span class="sd">        The resolution or mesh type of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Visualize.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.circular_shelf.visualize.Visualize.html#compass.landice.tests.circular_shelf.visualize.Visualize.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;visualize&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">input_dir</span><span class="o">=</span><span class="s1">&#39;run_model&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'visualize'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">input_dir</span><span class="o">=</span><span class="s1">'run_model'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -148,14 +148,14 @@
 <span class="sd">        input_dir : str, optional</span>
 <span class="sd">            The input directory within the test case with a file ``output.nc``</span>
 <span class="sd">            to visualize</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../</span><span class="si">{}</span><span class="s1">/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_dir</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../</span><span class="si">{}</span><span class="s1">/output.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_dir</span><span class="p">))</span></div>
 
 
-        <span class="c1"># depending on settings, this may produce no outputs, so we won&#39;t add</span>
+        <span class="c1"># depending on settings, this may produce no outputs, so we won't add</span>
         <span class="c1"># any</span>
 
     <span class="c1"># no setup method is needed</span>
@@ -163,11 +163,11 @@
 <div class="viewcode-block" id="Visualize.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.circular_shelf.visualize.Visualize.run.html#compass.landice.tests.circular_shelf.visualize.Visualize.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">visualize_circular_shelf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
-                                 <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span></div>
+                                 <span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">)</span></div>
 </div>
 
 
@@ -175,7 +175,7 @@
 <div class="viewcode-block" id="visualize_circular_shelf">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.circular_shelf.visualize.visualize_circular_shelf.html#compass.landice.tests.circular_shelf.visualize.visualize_circular_shelf">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">visualize_circular_shelf</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot the output from a circular_shelf test case</span>
 
 <span class="sd">    Parameters</span>
@@ -189,59 +189,59 @@
 
 <span class="sd">    filename : str</span>
 <span class="sd">        file to visualize</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circular_shelf_viz&#39;</span><span class="p">]</span>
+<span class="sd">    """</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'circular_shelf_viz'</span><span class="p">]</span>
 
-    <span class="n">time_slice</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;time_slice&#39;</span><span class="p">)</span>
-    <span class="n">save_images</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;save_images&#39;</span><span class="p">)</span>
-    <span class="n">hide_figs</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;hide_figs&#39;</span><span class="p">)</span>
+    <span class="n">time_slice</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'time_slice'</span><span class="p">)</span>
+    <span class="n">save_images</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'save_images'</span><span class="p">)</span>
+    <span class="n">hide_figs</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'hide_figs'</span><span class="p">)</span>
 
     <span class="c1"># Note: this may be slightly wrong for some calendar types!</span>
     <span class="n">secInYr</span> <span class="o">=</span> <span class="mf">3600.0</span> <span class="o">*</span> <span class="mf">24.0</span> <span class="o">*</span> <span class="mf">365.0</span>
 
-    <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
 
-    <span class="n">thickness</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s1">&#39;bedTopography&#39;</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
-        <span class="n">bedTopography</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bedTopography&#39;</span><span class="p">]</span>  <span class="c1"># not needed</span>
+    <span class="n">thickness</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'thickness'</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">'bedTopography'</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+        <span class="n">bedTopography</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'bedTopography'</span><span class="p">]</span>  <span class="c1"># not needed</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;bedTopography not in file.  Continuing without it.&quot;</span><span class="p">)</span>
-    <span class="n">xCell</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xCell&#39;</span><span class="p">][:]</span> <span class="o">/</span> <span class="mf">1000.0</span>
-    <span class="n">yCell</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yCell&#39;</span><span class="p">][:]</span> <span class="o">/</span> <span class="mf">1000.0</span>
-    <span class="n">lowerSurface</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lowerSurface&#39;</span><span class="p">]</span>
-    <span class="n">upperSurface</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;upperSurface&#39;</span><span class="p">]</span>
-    <span class="n">uReconstructX</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;uReconstructX&#39;</span><span class="p">]</span>
-    <span class="n">uReconstructY</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;uReconstructY&#39;</span><span class="p">]</span>
-    <span class="n">layerInterfaceSigma</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;layerInterfaceSigma&#39;</span><span class="p">][:]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"bedTopography not in file.  Continuing without it."</span><span class="p">)</span>
+    <span class="n">xCell</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xCell'</span><span class="p">][:]</span> <span class="o">/</span> <span class="mf">1000.0</span>
+    <span class="n">yCell</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yCell'</span><span class="p">][:]</span> <span class="o">/</span> <span class="mf">1000.0</span>
+    <span class="n">lowerSurface</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'lowerSurface'</span><span class="p">]</span>
+    <span class="n">upperSurface</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'upperSurface'</span><span class="p">]</span>
+    <span class="n">uReconstructX</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'uReconstructX'</span><span class="p">]</span>
+    <span class="n">uReconstructY</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'uReconstructY'</span><span class="p">]</span>
+    <span class="n">layerInterfaceSigma</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'layerInterfaceSigma'</span><span class="p">][:]</span>
 
-    <span class="n">vert_levs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">])</span>
+    <span class="n">vert_levs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">])</span>
 
     <span class="n">velnorm</span> <span class="o">=</span> <span class="p">(</span><span class="n">uReconstructX</span><span class="p">[:]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">uReconstructY</span><span class="p">[:]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">secInYr</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Maximum velocity (m/yr) at cell centers in domain: </span><span class="si">{}</span><span class="s2">&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Maximum velocity (m/yr) at cell centers in domain: </span><span class="si">{}</span><span class="s2">"</span>
                 <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">velnorm</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
 
     <span class="c1">##################</span>
     <span class="c1"># FIGURE: Map view surface and bed velocity</span>
     <span class="c1">##################</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="mi">80</span><span class="p">,</span> <span class="n">velnorm</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span>
-                <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">'equal'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="mi">80</span><span class="p">,</span> <span class="n">velnorm</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'h'</span><span class="p">,</span>
+                <span class="n">edgecolors</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="n">uReconstructX</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">,</span>
                <span class="n">uReconstructY</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;surface speed (m/yr)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'surface speed (m/yr)'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="mi">80</span><span class="p">,</span> <span class="n">velnorm</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span>
-                <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">'equal'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="mi">80</span><span class="p">,</span> <span class="n">velnorm</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'h'</span><span class="p">,</span>
+                <span class="n">edgecolors</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="n">uReconstructX</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">,</span>
                <span class="n">uReconstructY</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;basal speed (m/yr)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'basal speed (m/yr)'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">save_images</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;circ_shelf_velos.png&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'circ_shelf_velos.png'</span><span class="p">)</span>
 
     <span class="c1">##################</span>
     <span class="c1"># FIGURE: Cross-section of surface velocity through centerline</span>
@@ -261,48 +261,48 @@
         <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">layerInterfaceSigma</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indXsectIce</span><span class="p">),</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span> <span class="o">+</span>
         <span class="n">lowerSurface</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="n">indXsectIce</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
         <span class="n">velnorm</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span><span class="n">indXsectIce</span><span class="p">,:],</span> <span class="mi">100</span><span class="p">)</span>
-    <span class="c1"># plot x&#39;s at the velocity data locations</span>
+    <span class="c1"># plot x's at the velocity data locations</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">xCell</span><span class="p">[</span><span class="n">indXsectIce</span><span class="p">],</span> <span class="p">(</span><span class="n">vert_levs</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
         <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">thickness</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="n">indXsectIce</span><span class="p">],</span> <span class="p">(</span><span class="n">vert_levs</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span>
         <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">layerInterfaceSigma</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indXsectIce</span><span class="p">),</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span> <span class="o">+</span>
         <span class="n">lowerSurface</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="n">indXsectIce</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
-        <span class="s1">&#39;kx&#39;</span><span class="p">)</span><span class="c1">#, label=&#39;velocity points&#39;)</span>
+        <span class="s1">'kx'</span><span class="p">)</span><span class="c1">#, label='velocity points')</span>
     <span class="n">cbar</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-    <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;speed (m/yr)&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">270</span><span class="p">)</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">'speed (m/yr)'</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">270</span><span class="p">)</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xCell</span><span class="p">[</span><span class="n">indXsectIce</span><span class="p">],</span> <span class="n">upperSurface</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="n">indXsectIce</span><span class="p">],</span> <span class="s1">&#39;ro-&#39;</span><span class="p">,</span>
-             <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Upper surface&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xCell</span><span class="p">[</span><span class="n">indXsectIce</span><span class="p">],</span> <span class="n">lowerSurface</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="n">indXsectIce</span><span class="p">],</span> <span class="s1">&#39;bo-&#39;</span><span class="p">,</span>
-             <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Lower surface&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xCell</span><span class="p">[</span><span class="n">indXsectIce</span><span class="p">],</span> <span class="n">upperSurface</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="n">indXsectIce</span><span class="p">],</span> <span class="s1">'ro-'</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="s2">"Upper surface"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xCell</span><span class="p">[</span><span class="n">indXsectIce</span><span class="p">],</span> <span class="n">lowerSurface</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="n">indXsectIce</span><span class="p">],</span> <span class="s1">'bo-'</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="s2">"Lower surface"</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xCell</span><span class="p">[</span><span class="n">indXsect</span><span class="p">],</span> <span class="n">bedTopography</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="n">indXsect</span><span class="p">],</span> <span class="s1">&#39;go-&#39;</span><span class="p">,</span>
-                 <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Bed topography&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xCell</span><span class="p">[</span><span class="n">indXsect</span><span class="p">],</span> <span class="n">bedTopography</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="n">indXsect</span><span class="p">],</span> <span class="s1">'go-'</span><span class="p">,</span>
+                 <span class="n">label</span><span class="o">=</span><span class="s2">"Bed topography"</span><span class="p">)</span>
     <span class="k">except</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Skipping plotting of bedTopography.&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xCell</span><span class="p">[</span><span class="n">indXsect</span><span class="p">],</span> <span class="n">xCell</span><span class="p">[</span><span class="n">indXsect</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;:k&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;sea level&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;cross-section at y=0&#39;</span> <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"Skipping plotting of bedTopography."</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xCell</span><span class="p">[</span><span class="n">indXsect</span><span class="p">],</span> <span class="n">xCell</span><span class="p">[</span><span class="n">indXsect</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">':k'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"sea level"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'best'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'cross-section at y=0'</span> <span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">save_images</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;circ_shelf_xsect.png&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'circ_shelf_xsect.png'</span><span class="p">)</span>
 
 
     <span class="c1">##################</span>
     <span class="c1"># FIGURE: scatter plot of upper and lower surfaces</span>
     <span class="c1">##################</span>
     <span class="c1">#fig = plt.figure(3)</span>
-    <span class="c1">#ax = fig.add_subplot(121, aspect=&#39;equal&#39;)</span>
-    <span class="c1">#plt.scatter(xCell[:], yCell[:], 80, upperSurface[time_slice,:], marker=&#39;h&#39;, edgecolors=&#39;none&#39;)</span>
+    <span class="c1">#ax = fig.add_subplot(121, aspect='equal')</span>
+    <span class="c1">#plt.scatter(xCell[:], yCell[:], 80, upperSurface[time_slice,:], marker='h', edgecolors='none')</span>
     <span class="c1">#plt.colorbar()</span>
-    <span class="c1">#plt.title(&#39;upper surface (m)&#39; )</span>
+    <span class="c1">#plt.title('upper surface (m)' )</span>
     <span class="c1">#plt.draw()</span>
-    <span class="c1">#ax = fig.add_subplot(122, aspect=&#39;equal&#39;)</span>
-    <span class="c1">#plt.scatter(xCell[:], yCell[:], 80, lowerSurface[time_slice,:], marker=&#39;h&#39;, edgecolors=&#39;none&#39;)</span>
+    <span class="c1">#ax = fig.add_subplot(122, aspect='equal')</span>
+    <span class="c1">#plt.scatter(xCell[:], yCell[:], 80, lowerSurface[time_slice,:], marker='h', edgecolors='none')</span>
     <span class="c1">#plt.colorbar()</span>
-    <span class="c1">#plt.title(&#39;lower surface (m)&#39; )</span>
+    <span class="c1">#plt.title('lower surface (m)' )</span>
     <span class="c1">#plt.draw()</span>
     <span class="c1">#if options.save_images:</span>
-    <span class="c1">#        plt.savefig(&#39;circ_shelf_surfaces.png&#39;)</span>
+    <span class="c1">#        plt.savefig('circ_shelf_surfaces.png')</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">hide_figs</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>

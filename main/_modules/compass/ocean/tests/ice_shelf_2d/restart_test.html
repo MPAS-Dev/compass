@@ -121,7 +121,7 @@
 <div class="viewcode-block" id="RestartTest">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest.html#compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RestartTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A restart test case for the ice-shelf 2D test case test group, which makes</span>
 <span class="sd">    sure the model produces identical results with one longer run and two</span>
 <span class="sd">    shorter runs with a restart in between.</span>
@@ -133,12 +133,12 @@
 
 <span class="sd">    coord_type : str</span>
 <span class="sd">        The type of vertical coordinate (``z-star``, ``z-level``, etc.)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="RestartTest.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest.html#compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">coord_type</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -151,15 +151,15 @@
 
 <span class="sd">        coord_type : str</span>
 <span class="sd">            The type of vertical coordinate (``z-star``, ``z-level``, etc.)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;restart_test&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'restart_test'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coord_type</span> <span class="o">=</span> <span class="n">coord_type</span>
         <span class="k">if</span> <span class="n">resolution</span> <span class="o">&gt;=</span> <span class="mf">1e3</span><span class="p">:</span>
-            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e3</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">km&#39;</span>
+            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e3</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">km'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">m&#39;</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">coord_type</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">m'</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">coord_type</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -170,18 +170,18 @@
                           <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
                           <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
-        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="s1">&#39;restart&#39;</span><span class="p">]:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'full'</span><span class="p">,</span> <span class="s1">'restart'</span><span class="p">]:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">_run'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
             <span class="n">step</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                            <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                            <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">with_frazil</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.ocean.tests.ice_shelf_2d.restart_test&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">part</span><span class="p">))</span>
+                <span class="s1">'compass.ocean.tests.ice_shelf_2d.restart_test'</span><span class="p">,</span>
+                <span class="s1">'namelist.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">part</span><span class="p">))</span>
             <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.ocean.tests.ice_shelf_2d.restart_test&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">part</span><span class="p">))</span>
+                <span class="s1">'compass.ocean.tests.ice_shelf_2d.restart_test'</span><span class="p">,</span>
+                <span class="s1">'streams.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">part</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Viz</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">),</span> <span class="n">run_by_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
@@ -190,56 +190,56 @@
 <div class="viewcode-block" id="RestartTest.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest.configure.html#compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Modify the configuration options for this test case.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">ice_shelf_2d</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coord_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span></div>
 
 
     <span class="c1"># no run() method is needed</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;zMid&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;maxLevelCell&#39;</span><span class="p">,</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'bottomDepth'</span><span class="p">,</span> <span class="s1">'ssh'</span><span class="p">,</span> <span class="s1">'layerThickness'</span><span class="p">,</span> <span class="s1">'zMid'</span><span class="p">,</span>
+                     <span class="s1">'maxLevelCell'</span><span class="p">,</span> <span class="s1">'temperature'</span><span class="p">,</span> <span class="s1">'salinity'</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span>
             <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-            <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;initial_state/initial_state.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename1</span><span class="o">=</span><span class="s1">'initial_state/initial_state.nc'</span><span class="p">)</span>
 
-        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'temperature'</span><span class="p">,</span> <span class="s1">'salinity'</span><span class="p">,</span> <span class="s1">'layerThickness'</span><span class="p">,</span>
+                     <span class="s1">'normalVelocity'</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;full_run/output.nc&#39;</span><span class="p">,</span>
-                          <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;restart_run/output.nc&#39;</span><span class="p">)</span>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">'full_run/output.nc'</span><span class="p">,</span>
+                          <span class="n">filename2</span><span class="o">=</span><span class="s1">'restart_run/output.nc'</span><span class="p">)</span>
 
-        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;landIcePressure&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceDraft&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;landIceMask&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFrictionVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;topDrag&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;topDragMagnitude&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFreshwaterFlux&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;landIceHeatFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;heatFluxToLandIce&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;landIceBoundaryLayerTemperature&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;landIceBoundaryLayerSalinity&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;landIceHeatTransferVelocity&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;landIceSaltTransferVelocity&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;landIceInterfaceTemperature&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;landIceInterfaceSalinity&#39;</span><span class="p">,</span> <span class="s1">&#39;accumulatedLandIceMass&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;accumulatedLandIceHeat&#39;</span><span class="p">]</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'ssh'</span><span class="p">,</span> <span class="s1">'landIcePressure'</span><span class="p">,</span> <span class="s1">'landIceDraft'</span><span class="p">,</span>
+                     <span class="s1">'landIceFraction'</span><span class="p">,</span>
+                     <span class="s1">'landIceMask'</span><span class="p">,</span> <span class="s1">'landIceFrictionVelocity'</span><span class="p">,</span> <span class="s1">'topDrag'</span><span class="p">,</span>
+                     <span class="s1">'topDragMagnitude'</span><span class="p">,</span> <span class="s1">'landIceFreshwaterFlux'</span><span class="p">,</span>
+                     <span class="s1">'landIceHeatFlux'</span><span class="p">,</span> <span class="s1">'heatFluxToLandIce'</span><span class="p">,</span>
+                     <span class="s1">'landIceBoundaryLayerTemperature'</span><span class="p">,</span>
+                     <span class="s1">'landIceBoundaryLayerSalinity'</span><span class="p">,</span>
+                     <span class="s1">'landIceHeatTransferVelocity'</span><span class="p">,</span>
+                     <span class="s1">'landIceSaltTransferVelocity'</span><span class="p">,</span>
+                     <span class="s1">'landIceInterfaceTemperature'</span><span class="p">,</span>
+                     <span class="s1">'landIceInterfaceSalinity'</span><span class="p">,</span> <span class="s1">'accumulatedLandIceMass'</span><span class="p">,</span>
+                     <span class="s1">'accumulatedLandIceHeat'</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;full_run/land_ice_fluxes.nc&#39;</span><span class="p">,</span>
-                          <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;restart_run/land_ice_fluxes.nc&#39;</span><span class="p">)</span>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">'full_run/land_ice_fluxes.nc'</span><span class="p">,</span>
+                          <span class="n">filename2</span><span class="o">=</span><span class="s1">'restart_run/land_ice_fluxes.nc'</span><span class="p">)</span>
 
-        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;accumulatedFrazilIceMass&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;accumulatedFrazilIceSalinity&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;seaIceEnergy&#39;</span><span class="p">,</span> <span class="s1">&#39;frazilLayerThicknessTendency&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;frazilTemperatureTendency&#39;</span><span class="p">,</span> <span class="s1">&#39;frazilSalinityTendency&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;frazilSurfacePressure&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;accumulatedLandIceFrazilMass&#39;</span><span class="p">]</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'accumulatedFrazilIceMass'</span><span class="p">,</span>
+                     <span class="s1">'accumulatedFrazilIceSalinity'</span><span class="p">,</span>
+                     <span class="s1">'seaIceEnergy'</span><span class="p">,</span> <span class="s1">'frazilLayerThicknessTendency'</span><span class="p">,</span>
+                     <span class="s1">'frazilTemperatureTendency'</span><span class="p">,</span> <span class="s1">'frazilSalinityTendency'</span><span class="p">,</span>
+                     <span class="s1">'frazilSurfacePressure'</span><span class="p">,</span>
+                     <span class="s1">'accumulatedLandIceFrazilMass'</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;full_run/frazil.nc&#39;</span><span class="p">,</span>
-                          <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;restart_run/frazil.nc&#39;</span><span class="p">)</span></div>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">'full_run/frazil.nc'</span><span class="p">,</span>
+                          <span class="n">filename2</span><span class="o">=</span><span class="s1">'restart_run/frazil.nc'</span><span class="p">)</span></div>
 
 </pre></div>
 

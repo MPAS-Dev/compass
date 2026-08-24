@@ -119,7 +119,7 @@
 <div class="viewcode-block" id="Forward">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_convergence.forward.Forward.html#compass.landice.tests.mesh_convergence.forward.Forward">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MALI runs as part of a mesh</span>
 <span class="sd">    convergence test case</span>
 
@@ -127,12 +127,12 @@
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : int</span>
 <span class="sd">        The resolution of the (uniform) mesh in km</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="Forward.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_convergence.forward.Forward.html#compass.landice.tests.mesh_convergence.forward.Forward.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new step</span>
 
 <span class="sd">        Parameters</span>
@@ -142,48 +142,48 @@
 
 <span class="sd">        resolution : int</span>
 <span class="sd">            The resolution of the (uniform) mesh in km</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+<span class="sd">        """</span>  <span class="c1"># noqa: E501</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span>
-                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">km_forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
-                         <span class="n">subdir</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">km/forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s1">'</span><span class="si">{}</span><span class="s1">km_forward'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
+                         <span class="n">subdir</span><span class="o">=</span><span class="s1">'</span><span class="si">{}</span><span class="s1">km/forward'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.landice.tests.mesh_convergence&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+            <span class="s1">'compass.landice.tests.mesh_convergence'</span><span class="p">,</span> <span class="s1">'namelist.forward'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.landice.tests.mesh_convergence&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.landice.tests.mesh_convergence'</span><span class="p">,</span>
+                              <span class="s1">'streams.forward'</span><span class="p">)</span>
 
         <span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="vm">__module__</span>
         <span class="n">mesh_package_contents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">contents</span><span class="p">(</span><span class="n">module</span><span class="p">))</span>
-        <span class="k">if</span> <span class="s1">&#39;namelist.forward&#39;</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;streams.forward&#39;</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">'namelist.forward'</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">'namelist.forward'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">'streams.forward'</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">'streams.forward'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../init/initial_state.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../init/graph.info&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'init.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../init/initial_state.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../init/graph.info'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Forward.setup">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_convergence.forward.Forward.setup.html#compass.landice.tests.mesh_convergence.forward.Forward.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set namelist options based on config options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">namelist_options</span><span class="p">,</span> <span class="n">stream_replacements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dt_duration</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.landice.tests.mesh_convergence&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.landice.tests.mesh_convergence'</span><span class="p">,</span>
+                              <span class="s1">'streams.template'</span><span class="p">,</span>
                               <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span></div>
 
@@ -191,9 +191,9 @@
 <div class="viewcode-block" id="Forward.constrain_resources">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_convergence.forward.Forward.constrain_resources.html#compass.landice.tests.mesh_convergence.forward.Forward.constrain_resources">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update resources at runtime from config options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span></div>
 
@@ -201,18 +201,18 @@
 <div class="viewcode-block" id="Forward.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_convergence.forward.Forward.run.html#compass.landice.tests.mesh_convergence.forward.Forward.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the testcase</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">namelist_options</span><span class="p">,</span> <span class="n">stream_replacements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dt_duration</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span>
             <span class="n">options</span><span class="o">=</span><span class="n">namelist_options</span><span class="p">,</span>
-            <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+            <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">update_streams_at_runtime</span><span class="p">(</span>
-            <span class="s1">&#39;compass.landice.tests.mesh_convergence&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span> <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">,</span>
-            <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">)</span>
+            <span class="s1">'compass.landice.tests.mesh_convergence'</span><span class="p">,</span>
+            <span class="s1">'streams.template'</span><span class="p">,</span> <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">,</span>
+            <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.landice'</span><span class="p">)</span>
 
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
@@ -220,7 +220,7 @@
 <div class="viewcode-block" id="Forward.get_dt_duration">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_convergence.forward.Forward.get_dt_duration.html#compass.landice.tests.mesh_convergence.forward.Forward.get_dt_duration">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dt_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the time step and run duration as namelist options from config</span>
 <span class="sd">        options</span>
 
@@ -228,16 +228,16 @@
 <span class="sd">        -------</span>
 <span class="sd">        options : dict</span>
 <span class="sd">            Namelist options to update</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">sec_in_yr</span> <span class="o">=</span> <span class="mf">3600.0</span> <span class="o">*</span> <span class="mf">24.0</span> <span class="o">*</span> <span class="mf">365.0</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">duration</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;mesh_convergence&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">)</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'mesh_convergence'</span><span class="p">,</span> <span class="s1">'duration'</span><span class="p">)</span>
         <span class="n">dur_sec</span> <span class="o">=</span> <span class="n">duration</span> <span class="o">*</span> <span class="n">sec_in_yr</span>
-        <span class="n">target_velocity</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;mesh_convergence&#39;</span><span class="p">,</span>
-                                          <span class="s1">&#39;target_velocity&#39;</span><span class="p">)</span>
-        <span class="n">resolutions</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;mesh_convergence&#39;</span><span class="p">,</span> <span class="s1">&#39;resolutions&#39;</span><span class="p">,</span>
+        <span class="n">target_velocity</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'mesh_convergence'</span><span class="p">,</span>
+                                          <span class="s1">'target_velocity'</span><span class="p">)</span>
+        <span class="n">resolutions</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">'mesh_convergence'</span><span class="p">,</span> <span class="s1">'resolutions'</span><span class="p">,</span>
                                      <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
         <span class="n">max_res</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">resolutions</span><span class="p">)</span>
         <span class="c1"># calculate dt in s for the resolution in km and velo in m/yr</span>
@@ -246,27 +246,27 @@
                                    <span class="n">sec_in_yr</span><span class="p">)</span>
         <span class="n">nt_max_res</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">dur_sec</span> <span class="o">/</span> <span class="n">dt_max_res_cfl</span><span class="p">)</span>
         <span class="n">dt_max_res</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">dur_sec</span> <span class="o">/</span> <span class="n">nt_max_res</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;max res: nt=</span><span class="si">{</span><span class="n">nt_max_res</span><span class="si">}</span><span class="s1">, dt=</span><span class="si">{</span><span class="n">dt_max_res</span><span class="si">}</span><span class="s1">, &#39;</span>
-              <span class="sa">f</span><span class="s1">&#39;err=</span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">dur_sec</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nt_max_res</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dt_max_res</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">dur_sec</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'max res: nt=</span><span class="si">{</span><span class="n">nt_max_res</span><span class="si">}</span><span class="s1">, dt=</span><span class="si">{</span><span class="n">dt_max_res</span><span class="si">}</span><span class="s1">, '</span>
+              <span class="sa">f</span><span class="s1">'err=</span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">dur_sec</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nt_max_res</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dt_max_res</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">dur_sec</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="n">dt</span> <span class="o">=</span> <span class="n">dt_max_res</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">/</span> <span class="n">max_res</span>
         <span class="n">nt</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">dur_sec</span> <span class="o">/</span> <span class="n">dt</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="si">}</span><span class="s1">km res: nt=</span><span class="si">{</span><span class="n">nt</span><span class="si">}</span><span class="s1">, dt=</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s1">, &#39;</span>
-              <span class="sa">f</span><span class="s1">&#39;err=</span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">dur_sec</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nt</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dt</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">dur_sec</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="si">}</span><span class="s1">km res: nt=</span><span class="si">{</span><span class="n">nt</span><span class="si">}</span><span class="s1">, dt=</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s1">, '</span>
+              <span class="sa">f</span><span class="s1">'err=</span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">dur_sec</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nt</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dt</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">dur_sec</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="c1"># check that dt*nt is acceptably close to duration</span>
         <span class="n">time_err</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dur_sec</span> <span class="o">-</span> <span class="n">nt</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span> <span class="o">/</span> <span class="n">dur_sec</span>
         <span class="k">if</span> <span class="n">time_err</span> <span class="o">&gt;=</span> <span class="mf">1e-4</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;nt*dt differs from duration by </span><span class="si">{</span><span class="n">time_err</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s1">'nt*dt differs from duration by </span><span class="si">{</span><span class="n">time_err</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="c1"># the duration (years) of the run</span>
-        <span class="n">duration</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">duration</span><span class="si">:</span><span class="s1">05d</span><span class="si">}</span><span class="s1">-00-00_00:00:00&#39;</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">duration</span><span class="si">:</span><span class="s1">05d</span><span class="si">}</span><span class="s1">-00-00_00:00:00'</span>
 
-        <span class="n">namelist_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
-                                 <span class="s1">&#39;config_run_duration&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">duration</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">}</span>
+        <span class="n">namelist_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_dt'</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                                 <span class="s1">'config_run_duration'</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">duration</span><span class="si">}</span><span class="s2">'"</span><span class="p">}</span>
 
-        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="n">duration</span><span class="p">}</span>
+        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'output_interval'</span><span class="p">:</span> <span class="n">duration</span><span class="p">}</span>
 
         <span class="k">return</span> <span class="n">namelist_replacements</span><span class="p">,</span> <span class="n">stream_replacements</span></div>
 
@@ -274,10 +274,10 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;mesh_convergence&#39;</span><span class="p">,</span>
-                                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">km_ntasks&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;mesh_convergence&#39;</span><span class="p">,</span>
-                                       <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">km_min_tasks&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'mesh_convergence'</span><span class="p">,</span>
+                                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">km_ntasks'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'mesh_convergence'</span><span class="p">,</span>
+                                       <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">km_min_tasks'</span><span class="p">)</span></div>
 
 </pre></div>
 

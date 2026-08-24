@@ -118,53 +118,53 @@
 <div class="viewcode-block" id="RemapTopography">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.html#compass.ocean.tests.utility.extrap_woa.RemapTopography">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RemapTopography</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for remapping bathymetry and ice-shelf topography from one</span>
 <span class="sd">    latitude-longitude grid to another</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="RemapTopography.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.html#compass.ocean.tests.utility.extrap_woa.RemapTopography.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new step</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.ocean.tests.utility.extrap_woa.ExtraWoa</span>
 <span class="sd">            The test case this step belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'remap_topography'</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;woa.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../combine/woa_combined.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'woa.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../combine/woa_combined.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'topography_remapped.nc'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RemapTopography.setup">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.setup.html#compass.ocean.tests.utility.extrap_woa.RemapTopography.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up the step in the work directory, including downloading any</span>
 <span class="sd">        dependencies.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">topo_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extrap_woa&#39;</span><span class="p">,</span> <span class="s1">&#39;topo_filename&#39;</span><span class="p">)</span>
+        <span class="n">topo_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'extrap_woa'</span><span class="p">,</span> <span class="s1">'topo_filename'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'topography.nc'</span><span class="p">,</span>
             <span class="n">target</span><span class="o">=</span><span class="n">topo_filename</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">'bathymetry_database'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;extrap_woa&#39;</span><span class="p">,</span> <span class="s1">&#39;remap_ntasks&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;extrap_woa&#39;</span><span class="p">,</span> <span class="s1">&#39;remap_min_tasks&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'extrap_woa'</span><span class="p">,</span> <span class="s1">'remap_ntasks'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'extrap_woa'</span><span class="p">,</span> <span class="s1">'remap_min_tasks'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RemapTopography.constrain_resources">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.constrain_resources.html#compass.ocean.tests.utility.extrap_woa.RemapTopography.constrain_resources">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Constrain ``cpus_per_task`` and ``ntasks`` based on the number of</span>
 <span class="sd">        cores available to this step</span>
 
@@ -172,39 +172,39 @@
 <span class="sd">        ----------</span>
 <span class="sd">        available_resources : dict</span>
 <span class="sd">            The total number of cores available to the step</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;extrap_woa&#39;</span><span class="p">,</span> <span class="s1">&#39;remap_ntasks&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;extrap_woa&#39;</span><span class="p">,</span> <span class="s1">&#39;remap_min_tasks&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'extrap_woa'</span><span class="p">,</span> <span class="s1">'remap_ntasks'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'extrap_woa'</span><span class="p">,</span> <span class="s1">'remap_min_tasks'</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RemapTopography.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.run.html#compass.ocean.tests.utility.extrap_woa.RemapTopography.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
-        <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>
+        <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'parallel'</span><span class="p">,</span> <span class="s1">'parallel_executable'</span><span class="p">)</span>
 
-        <span class="n">method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extrap_woa&#39;</span><span class="p">,</span> <span class="s1">&#39;remap_method&#39;</span><span class="p">)</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'extrap_woa'</span><span class="p">,</span> <span class="s1">'remap_method'</span><span class="p">)</span>
 
-        <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
-                                                  <span class="n">lonVarName</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span>
-                                                  <span class="n">latVarName</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">)</span>
+        <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'topography.nc'</span><span class="p">,</span>
+                                                  <span class="n">lonVarName</span><span class="o">=</span><span class="s1">'lon'</span><span class="p">,</span>
+                                                  <span class="n">latVarName</span><span class="o">=</span><span class="s1">'lat'</span><span class="p">)</span>
 
         <span class="n">in_mesh_name</span> <span class="o">=</span> <span class="n">in_descriptor</span><span class="o">.</span><span class="n">mesh_name</span>
 
-        <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;woa.nc&#39;</span><span class="p">,</span>
-                                                   <span class="n">lonVarName</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span>
-                                                   <span class="n">latVarName</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">)</span>
+        <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'woa.nc'</span><span class="p">,</span>
+                                                   <span class="n">lonVarName</span><span class="o">=</span><span class="s1">'lon'</span><span class="p">,</span>
+                                                   <span class="n">latVarName</span><span class="o">=</span><span class="s1">'lat'</span><span class="p">)</span>
 
         <span class="n">out_mesh_name</span> <span class="o">=</span> <span class="n">out_descriptor</span><span class="o">.</span><span class="n">mesh_name</span>
 
         <span class="n">mapping_file_name</span> <span class="o">=</span> \
-            <span class="sa">f</span><span class="s1">&#39;map_</span><span class="si">{</span><span class="n">in_mesh_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">out_mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+            <span class="sa">f</span><span class="s1">'map_</span><span class="si">{</span><span class="n">in_mesh_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">out_mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc'</span>
 
         <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span>
             <span class="n">ntasks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span>
@@ -218,8 +218,8 @@
         <span class="n">remapper</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="n">remapper</span><span class="o">.</span><span class="n">ncremap</span><span class="p">(</span>
-            <span class="n">in_filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
-            <span class="n">out_filename</span><span class="o">=</span><span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">,</span>
+            <span class="n">in_filename</span><span class="o">=</span><span class="s1">'topography.nc'</span><span class="p">,</span>
+            <span class="n">out_filename</span><span class="o">=</span><span class="s1">'topography_remapped.nc'</span><span class="p">,</span>
             <span class="n">logger</span><span class="o">=</span><span class="n">logger</span>
         <span class="p">)</span></div>
 </div>

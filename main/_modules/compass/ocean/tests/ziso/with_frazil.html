@@ -119,7 +119,7 @@
 <div class="viewcode-block" id="WithFrazil">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ziso.with_frazil.WithFrazil.html#compass.ocean.tests.ziso.with_frazil.WithFrazil">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">WithFrazil</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The with frazil test case for the ZISO test group simply creates the mesh</span>
 <span class="sd">    and initial condition, then performs a short forward run including frazil</span>
 <span class="sd">    formation.</span>
@@ -128,12 +128,12 @@
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="WithFrazil.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ziso.with_frazil.WithFrazil.html#compass.ocean.tests.ziso.with_frazil.WithFrazil.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -143,10 +143,10 @@
 
 <span class="sd">        resolution : str</span>
 <span class="sd">            The resolution of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;with_frazil&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'with_frazil'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -161,32 +161,32 @@
 <div class="viewcode-block" id="WithFrazil.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ziso.with_frazil.WithFrazil.configure.html#compass.ocean.tests.ziso.with_frazil.WithFrazil.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Modify the configuration options for this test case.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">ziso</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span></div>
 
 
     <span class="c1"># no run() method is needed</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'temperature'</span><span class="p">,</span> <span class="s1">'layerThickness'</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span>
             <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-            <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output/output.0001-01-01_00.00.00.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename1</span><span class="o">=</span><span class="s1">'forward/output/output.0001-01-01_00.00.00.nc'</span><span class="p">)</span>
 
-        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;accumulatedFrazilIceMass&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;accumulatedFrazilIceSalinity&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;seaIceEnergy&#39;</span><span class="p">,</span> <span class="s1">&#39;frazilLayerThicknessTendency&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;frazilTemperatureTendency&#39;</span><span class="p">,</span> <span class="s1">&#39;frazilSalinityTendency&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;frazilSurfacePressure&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;accumulatedLandIceFrazilMass&#39;</span><span class="p">]</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'accumulatedFrazilIceMass'</span><span class="p">,</span>
+                     <span class="s1">'accumulatedFrazilIceSalinity'</span><span class="p">,</span>
+                     <span class="s1">'seaIceEnergy'</span><span class="p">,</span> <span class="s1">'frazilLayerThicknessTendency'</span><span class="p">,</span>
+                     <span class="s1">'frazilTemperatureTendency'</span><span class="p">,</span> <span class="s1">'frazilSalinityTendency'</span><span class="p">,</span>
+                     <span class="s1">'frazilSurfacePressure'</span><span class="p">,</span>
+                     <span class="s1">'accumulatedLandIceFrazilMass'</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/frazil.nc&#39;</span><span class="p">)</span></div>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">'forward/frazil.nc'</span><span class="p">)</span></div>
 
 </pre></div>
 

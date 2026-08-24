@@ -117,15 +117,15 @@
 <div class="viewcode-block" id="SshAdjustment">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.isomip_plus.ssh_adjustment.SshAdjustment">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SshAdjustment</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for iteratively adjusting the pressure from the weight of the ice</span>
 <span class="sd">    shelf to match the sea-surface height as part of ice-shelf 2D test cases</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="SshAdjustment.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.isomip_plus.ssh_adjustment.SshAdjustment.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">vertical_coordinate</span><span class="o">=</span><span class="s1">&#39;z-star&#39;</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">vertical_coordinate</span><span class="o">=</span><span class="s1">'z-star'</span><span class="p">,</span>
                  <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -135,8 +135,8 @@
 
 <span class="sd">        resolution : float</span>
 <span class="sd">            The horizontal resolution (km) of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'ssh_adjustment'</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">openmp_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
@@ -144,89 +144,89 @@
 
         <span class="c1"># generate the namelist, replacing a few default options</span>
         <span class="c1"># start with the same namelist settings as the forward run</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.forward_and_ssh_adjust&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">vertical_coordinate</span> <span class="o">==</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.isomip_plus'</span><span class="p">,</span>
+                               <span class="s1">'namelist.forward_and_ssh_adjust'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vertical_coordinate</span> <span class="o">==</span> <span class="s1">'single_layer'</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;namelist.single_layer.forward_and_ssh_adjust&#39;</span><span class="p">)</span>
+                <span class="s1">'compass.ocean.tests.isomip_plus'</span><span class="p">,</span>
+                <span class="s1">'namelist.single_layer.forward_and_ssh_adjust'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">thin_film_present</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
-                                   <span class="s1">&#39;namelist.thin_film.forward_and_ssh_adjust&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.isomip_plus'</span><span class="p">,</span>
+                                   <span class="s1">'namelist.thin_film.forward_and_ssh_adjust'</span><span class="p">)</span>
 
-        <span class="c1"># we don&#39;t want the global stats AM for this run</span>
+        <span class="c1"># we don't want the global stats AM for this run</span>
         <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_AM_globalStats_enable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.false.&#39;</span>
+        <span class="n">options</span><span class="p">[</span><span class="s1">'config_AM_globalStats_enable'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'.false.'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
         <span class="c1"># we want a shorter run and no freshwater fluxes under the ice shelf</span>
         <span class="c1"># from these namelist options</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.namelists&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.ssh_adjust&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.namelists'</span><span class="p">,</span>
+                               <span class="s1">'namelist.ssh_adjust'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.ssh_adjust&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.streams'</span><span class="p">,</span> <span class="s1">'streams.ssh_adjust'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;adjusting_init0.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/initial_state.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'adjusting_init0.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../initial_state/initial_state.nc'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../cull_mesh/culled_graph.info&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../cull_mesh/culled_graph.info'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;adjusted_init.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'adjusted_init.nc'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SshAdjustment.setup">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.ssh_adjustment.SshAdjustment.setup.html#compass.ocean.tests.isomip_plus.ssh_adjustment.SshAdjustment.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up the test case in the work directory, including downloading any</span>
 <span class="sd">        dependencies</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update resources at runtime from config options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SshAdjustment.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.ssh_adjustment.SshAdjustment.run.html#compass.ocean.tests.isomip_plus.ssh_adjustment.SshAdjustment.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
 
-        <span class="n">dt_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_per_km&#39;</span><span class="p">)</span>
-        <span class="n">dt_btr_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_btr_per_km&#39;</span><span class="p">)</span>
+        <span class="n">dt_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'isomip_plus'</span><span class="p">,</span> <span class="s1">'dt_per_km'</span><span class="p">)</span>
+        <span class="n">dt_btr_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'isomip_plus'</span><span class="p">,</span> <span class="s1">'dt_btr_per_km'</span><span class="p">)</span>
 
         <span class="n">dt</span> <span class="o">=</span> <span class="n">get_time_interval_string</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">dt_per_km</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">)</span>
         <span class="n">btr_dt</span> <span class="o">=</span> <span class="n">get_time_interval_string</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">dt_btr_per_km</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">)</span>
 
-        <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config_dt</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
-                       <span class="n">config_btr_dt</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">btr_dt</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config_dt</span><span class="o">=</span><span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                       <span class="n">config_btr_dt</span><span class="o">=</span><span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">btr_dt</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
-        <span class="n">iteration_count</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span> <span class="s1">&#39;iterations&#39;</span><span class="p">)</span>
-        <span class="n">adjust_ssh</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">,</span> <span class="n">iteration_count</span><span class="o">=</span><span class="n">iteration_count</span><span class="p">,</span>
+        <span class="n">iteration_count</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'ssh_adjustment'</span><span class="p">,</span> <span class="s1">'iterations'</span><span class="p">)</span>
+        <span class="n">adjust_ssh</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">'landIcePressure'</span><span class="p">,</span> <span class="n">iteration_count</span><span class="o">=</span><span class="n">iteration_count</span><span class="p">,</span>
                    <span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get resources (ntasks, min_tasks, and openmp_threads) from the config</span>
 <span class="sd">        options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_ntasks&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_min_tasks&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_threads&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'isomip_plus'</span><span class="p">,</span> <span class="s1">'forward_ntasks'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'isomip_plus'</span><span class="p">,</span> <span class="s1">'forward_min_tasks'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'isomip_plus'</span><span class="p">,</span> <span class="s1">'forward_threads'</span><span class="p">)</span></div>
 
 </pre></div>
 

@@ -123,7 +123,7 @@
 <div class="viewcode-block" id="RunModel">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.run_model.RunModel.html#compass.landice.tests.mismipplus.run_model.RunModel">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunModel</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MALI runs as part of MISMIP+ test cases.</span>
 
 <span class="sd">    Attributes</span>
@@ -138,12 +138,12 @@
 
 <span class="sd">    resolution : float</span>
 <span class="sd">        The nominal distance [m] between horizontal grid points (dcEdge).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="RunModel.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.run_model.RunModel.html#compass.landice.tests.mismipplus.run_model.RunModel.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -182,10 +182,10 @@
 <span class="sd">            the ``restart_run`` step of the ``restart_test`` runs the model</span>
 <span class="sd">            twice, the second time with ``namelist.landice.rst`` and</span>
 <span class="sd">            ``streams.landice.rst``</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">if</span> <span class="n">suffixes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">suffixes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;landice&#39;</span><span class="p">]</span>
+            <span class="n">suffixes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'landice'</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suffixes</span> <span class="o">=</span> <span class="n">suffixes</span>
 
         <span class="c1"># The condition below will only be true for the `SpinUp` testcase</span>
@@ -212,31 +212,31 @@
 
         <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">suffixes</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.landice.tests.mismipplus&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.landice&#39;</span><span class="p">,</span>
-                <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+                <span class="s1">'compass.landice.tests.mismipplus'</span><span class="p">,</span> <span class="s1">'namelist.landice'</span><span class="p">,</span>
+                <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.landice.tests.mismipplus&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
-                <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+                <span class="s1">'compass.landice.tests.mismipplus'</span><span class="p">,</span> <span class="s1">'streams.landice'</span><span class="p">,</span>
+                <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;albany_input.yaml&#39;</span><span class="p">,</span>
-                            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.mismipplus&#39;</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'albany_input.yaml'</span><span class="p">,</span>
+                            <span class="n">package</span><span class="o">=</span><span class="s1">'compass.landice.tests.mismipplus'</span><span class="p">,</span>
                             <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;globalStats.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'globalStats.nc'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RunModel.setup">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.run_model.RunModel.setup.html#compass.landice.tests.mismipplus.run_model.RunModel.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set the number of MPI tasks based on a tentative scaling of</span>
 <span class="sd">        a the `ncells_at_1km_res` heuristic from the config file</span>
 <span class="sd">        based on the desired resolution.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="c1"># use the resolution at the time of ``compass setup``</span>
@@ -246,8 +246,8 @@
         <span class="c1"># not use the gutter_length option.</span>
         <span class="n">gutter_length</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;spin_up&quot;</span><span class="p">:</span>
-            <span class="n">gutter_length</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;gutter_length&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"spin_up"</span><span class="p">:</span>
+            <span class="n">gutter_length</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'mesh'</span><span class="p">,</span> <span class="s1">'gutter_length'</span><span class="p">)</span>
 
         <span class="c1"># approximate the number of cells in the mesh, based on the requested</span>
         <span class="c1"># resolution and gutter_length.</span>
@@ -265,13 +265,13 @@
 <div class="viewcode-block" id="RunModel.constrain_resources">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.run_model.RunModel.constrain_resources.html#compass.landice.tests.mismipplus.run_model.RunModel.constrain_resources">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update resources at runtime from config options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span>
+        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'landice_grid.nc'</span><span class="p">)</span>
 
         <span class="c1"># find the number of cells from the mesh created as part of the</span>
         <span class="c1"># `setup_mesh` step.</span>
@@ -289,25 +289,25 @@
 <div class="viewcode-block" id="RunModel.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.run_model.RunModel.run.html#compass.landice.tests.mismipplus.run_model.RunModel.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;spin_up&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"spin_up"</span><span class="p">:</span>
             <span class="c1"># read the density value from config file and update</span>
             <span class="c1"># namelist. This will only work for the `SpinUp` test case.</span>
-            <span class="n">ice_density</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;ice_density&#39;</span><span class="p">)</span>
+            <span class="n">ice_density</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'mesh'</span><span class="p">]</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'ice_density'</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span>
-                <span class="p">{</span><span class="s1">&#39;config_ice_density&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ice_density</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">})</span>
+                <span class="p">{</span><span class="s1">'config_ice_density'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">ice_density</span><span class="si">}</span><span class="s1">'</span><span class="p">})</span>
 
         <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span>
-                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
+                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">suffixes</span><span class="p">:</span>
-            <span class="n">run_model</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
-                      <span class="n">streams</span><span class="o">=</span><span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span></div>
+            <span class="n">run_model</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">'namelist.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
+                      <span class="n">streams</span><span class="o">=</span><span class="s1">'streams.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span></div>
 </div>
 
 </pre></div>

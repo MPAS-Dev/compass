@@ -128,36 +128,36 @@
 <div class="viewcode-block" id="ProcessTemperature">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ProcessTemperature</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for processing ISMIP7 ice surface temperature (ts) data.</span>
 <span class="sd">    Remaps monthly temperature from the ISMIP7 2km polar stereographic</span>
 <span class="sd">    grid to the MALI unstructured mesh.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ProcessTemperature.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere</span>
 <span class="sd">            The test case this step belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;process_temperature&quot;</span><span class="p">)</span></div>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"process_temperature"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProcessTemperature.setup">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.setup.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip7&quot;</span><span class="p">]</span>
-        <span class="n">base_path_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;base_path_mali&quot;</span><span class="p">)</span>
-        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_file&quot;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip7"</span><span class="p">]</span>
+        <span class="n">base_path_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"base_path_mali"</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_file"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
                             <span class="n">target</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_mali</span><span class="p">,</span>
@@ -167,62 +167,62 @@
 <div class="viewcode-block" id="ProcessTemperature.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.run.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">params</span> <span class="o">=</span> <span class="n">get_params</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip7&quot;</span><span class="p">]</span>
-        <span class="n">base_path_ismip7</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;base_path_ismip7&quot;</span><span class="p">)</span>
-        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_name&quot;</span><span class="p">)</span>
-        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_file&quot;</span><span class="p">)</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
-        <span class="n">scenario</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scenario&quot;</span><span class="p">)</span>
-        <span class="n">output_base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_base_path&quot;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip7"</span><span class="p">]</span>
+        <span class="n">base_path_ismip7</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"base_path_ismip7"</span><span class="p">)</span>
+        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_name"</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_file"</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model"</span><span class="p">)</span>
+        <span class="n">scenario</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"scenario"</span><span class="p">)</span>
+        <span class="n">output_base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_base_path"</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip7_atmosphere&quot;</span><span class="p">]</span>
-        <span class="n">method_remap</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method_remap&quot;</span><span class="p">)</span>
-        <span class="n">start_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">&quot;start_year&quot;</span><span class="p">)</span>
-        <span class="n">end_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">&quot;end_year&quot;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip7_atmosphere"</span><span class="p">]</span>
+        <span class="n">method_remap</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"method_remap"</span><span class="p">)</span>
+        <span class="n">start_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">"start_year"</span><span class="p">)</span>
+        <span class="n">end_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">"end_year"</span><span class="p">)</span>
 
         <span class="c1"># Discover input files</span>
-        <span class="n">prefix</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span>
-        <span class="n">resolution</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;atm_resolution&#39;</span><span class="p">]</span>
-        <span class="n">version</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;atm_version&#39;</span><span class="p">]</span>
-        <span class="n">input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_ismip7</span><span class="p">,</span> <span class="s2">&quot;ts&quot;</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
-        <span class="n">file_pattern</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ts_</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_&quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;SDBN1-</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">_*.nc&quot;</span><span class="p">)</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'prefix'</span><span class="p">]</span>
+        <span class="n">resolution</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'atm_resolution'</span><span class="p">]</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'atm_version'</span><span class="p">]</span>
+        <span class="n">input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_ismip7</span><span class="p">,</span> <span class="s2">"ts"</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+        <span class="n">file_pattern</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"ts_</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_"</span>
+                        <span class="sa">f</span><span class="s2">"SDBN1-</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">_*.nc"</span><span class="p">)</span>
         <span class="n">all_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">file_pattern</span><span class="p">)))</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">all_files</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;No temperature files found matching pattern:</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span><span class="w"> </span><span class="n">file_pattern</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s2">"No temperature files found matching pattern:</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span><span class="w"> </span><span class="n">file_pattern</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Filter to requested year range</span>
         <span class="n">input_files</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">all_files</span><span class="p">:</span>
-            <span class="n">year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.nc&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+            <span class="n">year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">".nc"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">start_year</span> <span class="o">&lt;=</span> <span class="n">year</span> <span class="o">&lt;=</span> <span class="n">end_year</span><span class="p">:</span>
                 <span class="n">input_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">input_files</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;No temperature files for year range &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s2">"No temperature files for year range "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">input_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> temperature files for years &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">input_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> temperature files for years "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Build mapping file (reuse if already created by process_smb)</span>
-        <span class="n">ice_sheet</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ismip7&quot;</span><span class="p">,</span> <span class="s2">&quot;ice_sheet&quot;</span><span class="p">)</span>
-        <span class="n">mapping_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;map_ismip7_</span><span class="si">{</span><span class="n">ice_sheet</span><span class="si">}</span><span class="s2">_atm_to_&quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">.nc&quot;</span><span class="p">)</span>
+        <span class="n">ice_sheet</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ismip7"</span><span class="p">,</span> <span class="s2">"ice_sheet"</span><span class="p">)</span>
+        <span class="n">mapping_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"map_ismip7_</span><span class="si">{</span><span class="n">ice_sheet</span><span class="si">}</span><span class="s2">_atm_to_"</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Building mapping file...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Building mapping file..."</span><span class="p">)</span>
             <span class="n">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
                                <span class="n">input_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mapping_file</span><span class="p">,</span>
                                <span class="n">mali_mesh_file</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
@@ -232,49 +232,49 @@
         <span class="n">remapped_files</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">input_file</span> <span class="ow">in</span> <span class="n">input_files</span><span class="p">:</span>
             <span class="n">basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
-            <span class="n">remapped_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;remapped_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">remapped_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"remapped_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
             <span class="n">remapped_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">):</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Remapped file exists, skipping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Remapped file exists, skipping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                 <span class="k">continue</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Remapping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ncremap&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span>
-                    <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">,</span>
-                    <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
-                    <span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;ts&quot;</span><span class="p">]</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Remapping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncremap"</span><span class="p">,</span>
+                    <span class="s2">"-i"</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span>
+                    <span class="s2">"-o"</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">,</span>
+                    <span class="s2">"-m"</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+                    <span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"ts"</span><span class="p">]</span>
 
             <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># Combine remapped files and rename to MALI conventions</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Combining remapped files and renaming variables...&quot;</span><span class="p">)</span>
-        <span class="n">output_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_temperature_</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_&quot;</span>
-                       <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">.nc&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Combining remapped files and renaming variables..."</span><span class="p">)</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_temperature_</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_"</span>
+                       <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_combine_and_rename</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
 
         <span class="c1"># Clean up remapped files</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cleaning up temporary remapped files...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Cleaning up temporary remapped files..."</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">remapped_files</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
         <span class="c1"># Place output in appropriate directory</span>
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="s2">&quot;atmosphere_forcing&quot;</span><span class="p">,</span>
-                                   <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="s2">"atmosphere_forcing"</span><span class="p">,</span>
+                                   <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
 
         <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Done. Output: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done. Output: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_combine_and_rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remapped_files</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Combine yearly remapped files and rename variables/dimensions</span>
 <span class="sd">        to MALI conventions.</span>
 
@@ -285,55 +285,55 @@
 
 <span class="sd">        output_file : str</span>
 <span class="sd">            Output file path</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">concat_dim</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span>
-                               <span class="n">combine</span><span class="o">=</span><span class="s2">&quot;nested&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;netcdf4&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">concat_dim</span><span class="o">=</span><span class="s2">"time"</span><span class="p">,</span>
+                               <span class="n">combine</span><span class="o">=</span><span class="s2">"nested"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">)</span>
 
         <span class="c1"># Rename dimensions to MALI conventions</span>
         <span class="n">rename_dims</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="s2">&quot;time&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;ncol&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">&quot;ncol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;nCells&quot;</span>
+        <span class="k">if</span> <span class="s2">"time"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Time"</span>
+        <span class="k">if</span> <span class="s2">"ncol"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">rename_dims</span><span class="p">[</span><span class="s2">"ncol"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"nCells"</span>
         <span class="k">if</span> <span class="n">rename_dims</span><span class="p">:</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">rename_dims</span><span class="p">)</span>
 
         <span class="c1"># Rename variable</span>
-        <span class="k">if</span> <span class="s2">&quot;ts&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
-            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;ts&quot;</span><span class="p">:</span> <span class="s2">&quot;surfaceAirTemperature&quot;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="s2">"ts"</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">"ts"</span><span class="p">:</span> <span class="s2">"surfaceAirTemperature"</span><span class="p">})</span>
 
         <span class="c1"># Add xtime variable with monthly timestamps</span>
         <span class="c1"># ISMIP7 files encode time at mid-month (e.g., Jan 15) but</span>
         <span class="c1"># this represents forcing for the full month (Jan 1-31).</span>
         <span class="c1"># MALI needs xtime at the start of each forcing interval.</span>
         <span class="n">xtime</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">t_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">t_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">"Time"</span><span class="p">]):</span>
             <span class="n">date</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="p">[</span><span class="n">t_index</span><span class="p">]</span>
             <span class="n">yr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
             <span class="n">mo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-            <span class="n">date_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">yr</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">mo</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">-01_00:00:00&quot;</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+            <span class="n">date_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">yr</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">mo</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">-01_00:00:00"</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
             <span class="n">xtime</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date_str</span><span class="p">)</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;xtime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="n">xtime</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;xtime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xtime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;S&quot;</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"xtime"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"Time"</span><span class="p">,</span> <span class="n">xtime</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"xtime"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xtime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"S"</span><span class="p">)</span>
 
         <span class="c1"># Set attributes</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;surfaceAirTemperature&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;long_name&quot;</span><span class="p">:</span> <span class="s2">&quot;temperature at top of ice sheet model&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"surfaceAirTemperature"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"long_name"</span><span class="p">:</span> <span class="s2">"temperature at top of ice sheet model"</span><span class="p">,</span>
+            <span class="s2">"units"</span><span class="p">:</span> <span class="s2">"K"</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="c1"># Drop auxiliary variables from remapping</span>
-        <span class="n">vars_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;lon&quot;</span><span class="p">,</span> <span class="s2">&quot;lon_vertices&quot;</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;lat_vertices&quot;</span><span class="p">,</span> <span class="s2">&quot;area&quot;</span><span class="p">]</span>
+        <span class="n">vars_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"lon"</span><span class="p">,</span> <span class="s2">"lon_vertices"</span><span class="p">,</span> <span class="s2">"lat"</span><span class="p">,</span>
+                                    <span class="s2">"lat_vertices"</span><span class="p">,</span> <span class="s2">"area"</span><span class="p">]</span>
                         <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">vars_to_drop</span><span class="p">:</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="n">vars_to_drop</span><span class="p">)</span>
 
         <span class="c1"># Drop Time coordinate values (keep as dimension only);</span>
         <span class="c1"># MALI uses xtime, not CF-encoded time coordinates</span>
-        <span class="k">if</span> <span class="s2">&quot;Time&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
-            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"Time"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">"Time"</span><span class="p">)</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
         <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>

@@ -121,7 +121,7 @@
 <div class="viewcode-block" id="Default">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.default.Default.html#compass.ocean.tests.ice_shelf_2d.default.Default">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The default ice-shelf 2D test case, which performs a short forward run with</span>
 <span class="sd">    the z-star vertical coordinate and with 15 iterations of adjustment to make</span>
 <span class="sd">    the pressure from the weight of the ice shelf match the sea-surface height</span>
@@ -133,13 +133,13 @@
 
 <span class="sd">    coord_type : str</span>
 <span class="sd">        The type of vertical coordinate (``z-star``, ``z-level``, etc.)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="Default.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.default.Default.html#compass.ocean.tests.ice_shelf_2d.default.Default.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">coord_type</span><span class="p">,</span>
                  <span class="n">tidal_forcing</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -152,20 +152,20 @@
 
 <span class="sd">        coord_type : str</span>
 <span class="sd">            The type of vertical coordinate (``z-star``, ``z-level``, etc.)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'default'</span>
         <span class="k">if</span> <span class="n">tidal_forcing</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;tidal_forcing&#39;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">'tidal_forcing'</span>
             <span class="n">with_frazil</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">with_frazil</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coord_type</span> <span class="o">=</span> <span class="n">coord_type</span>
         <span class="k">if</span> <span class="n">resolution</span> <span class="o">&gt;=</span> <span class="mf">1e3</span><span class="p">:</span>
-            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e3</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">km&#39;</span>
+            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e3</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">km'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">m&#39;</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">coord_type</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">m'</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">coord_type</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -185,35 +185,35 @@
 <div class="viewcode-block" id="Default.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.default.Default.configure.html#compass.ocean.tests.ice_shelf_2d.default.Default.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Modify the configuration options for this test case.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">ice_shelf_2d</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coord_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span></div>
 
 
     <span class="c1"># no run() method is needed</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'temperature'</span><span class="p">,</span> <span class="s1">'salinity'</span><span class="p">,</span> <span class="s1">'layerThickness'</span><span class="p">,</span>
+                     <span class="s1">'normalVelocity'</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output.nc&#39;</span><span class="p">)</span>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">'forward/output.nc'</span><span class="p">)</span>
 
         <span class="n">variables</span> <span class="o">=</span> \
-            <span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;landIcePressure&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceDraft&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;landIceMask&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFrictionVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;topDrag&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;topDragMagnitude&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFreshwaterFlux&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;landIceHeatFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;heatFluxToLandIce&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;landIceBoundaryLayerTemperature&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceBoundaryLayerSalinity&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;landIceHeatTransferVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceSaltTransferVelocity&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;landIceInterfaceTemperature&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceInterfaceSalinity&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;accumulatedLandIceMass&#39;</span><span class="p">,</span> <span class="s1">&#39;accumulatedLandIceHeat&#39;</span><span class="p">]</span>
+            <span class="p">[</span><span class="s1">'ssh'</span><span class="p">,</span> <span class="s1">'landIcePressure'</span><span class="p">,</span> <span class="s1">'landIceDraft'</span><span class="p">,</span> <span class="s1">'landIceFraction'</span><span class="p">,</span>
+             <span class="s1">'landIceMask'</span><span class="p">,</span> <span class="s1">'landIceFrictionVelocity'</span><span class="p">,</span> <span class="s1">'topDrag'</span><span class="p">,</span>
+             <span class="s1">'topDragMagnitude'</span><span class="p">,</span> <span class="s1">'landIceFreshwaterFlux'</span><span class="p">,</span>
+             <span class="s1">'landIceHeatFlux'</span><span class="p">,</span> <span class="s1">'heatFluxToLandIce'</span><span class="p">,</span>
+             <span class="s1">'landIceBoundaryLayerTemperature'</span><span class="p">,</span> <span class="s1">'landIceBoundaryLayerSalinity'</span><span class="p">,</span>
+             <span class="s1">'landIceHeatTransferVelocity'</span><span class="p">,</span> <span class="s1">'landIceSaltTransferVelocity'</span><span class="p">,</span>
+             <span class="s1">'landIceInterfaceTemperature'</span><span class="p">,</span> <span class="s1">'landIceInterfaceSalinity'</span><span class="p">,</span>
+             <span class="s1">'accumulatedLandIceMass'</span><span class="p">,</span> <span class="s1">'accumulatedLandIceHeat'</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/land_ice_fluxes.nc&#39;</span><span class="p">)</span></div>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">'forward/land_ice_fluxes.nc'</span><span class="p">)</span></div>
 
 </pre></div>
 

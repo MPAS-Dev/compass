@@ -119,7 +119,7 @@
 <div class="viewcode-block" id="DecompositionTest">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.dome.decomposition_test.DecompositionTest.html#compass.landice.tests.dome.decomposition_test.DecompositionTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DecompositionTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test case for performing two MALI runs of a dome setup, one with one core</span>
 <span class="sd">    and one with four.  The test case verifies that the results of the two runs</span>
 <span class="sd">    are identical.</span>
@@ -128,12 +128,12 @@
 <span class="sd">    ----------</span>
 <span class="sd">    mesh_type : str</span>
 <span class="sd">        The resolution or type of mesh of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DecompositionTest.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.dome.decomposition_test.DecompositionTest.html#compass.landice.tests.dome.decomposition_test.DecompositionTest.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">velo_solver</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -141,16 +141,16 @@
 <span class="sd">        test_group : compass.landice.tests.dome.Dome</span>
 <span class="sd">            The test group that this test case belongs to</span>
 
-<span class="sd">        velo_solver : {&#39;sia&#39;, &#39;FO&#39;}</span>
+<span class="sd">        velo_solver : {'sia', 'FO'}</span>
 <span class="sd">            The velocity solver to use for the test case</span>
 
 <span class="sd">        mesh_type : str</span>
 <span class="sd">            The resolution or type of mesh of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;decomposition_test&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'decomposition_test'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">=</span> <span class="n">mesh_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">=</span> <span class="n">velo_solver</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -158,14 +158,14 @@
             <span class="n">SetupMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">procs</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">proc_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">proc_run'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
                 <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="n">procs</span><span class="p">,</span>
                          <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
                          <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">))</span>
 
             <span class="n">input_dir</span> <span class="o">=</span> <span class="n">name</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;visualize_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">'visualize_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="n">step</span> <span class="o">=</span> <span class="n">Visualize</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                              <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">input_dir</span><span class="o">=</span><span class="n">input_dir</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">run_by_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
@@ -176,46 +176,46 @@
     <span class="c1"># no run() method is needed</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;sia&#39;</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">'sia'</span><span class="p">:</span>
             <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                              <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">],</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;1proc_run/output.nc&#39;</span><span class="p">,</span>
-                              <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;4proc_run/output.nc&#39;</span><span class="p">)</span>
+                              <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">'thickness'</span><span class="p">,</span> <span class="s1">'normalVelocity'</span><span class="p">],</span>
+                              <span class="n">filename1</span><span class="o">=</span><span class="s1">'1proc_run/output.nc'</span><span class="p">,</span>
+                              <span class="n">filename2</span><span class="o">=</span><span class="s1">'4proc_run/output.nc'</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">'FO'</span><span class="p">:</span>
             <span class="c1"># validate thickness</span>
-            <span class="n">variable</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="p">]</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;variable_resolution&#39;</span><span class="p">:</span>
+            <span class="n">variable</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'thickness'</span><span class="p">,</span> <span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">'variable_resolution'</span><span class="p">:</span>
                 <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
                 <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
                 <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;2000m&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">'2000m'</span><span class="p">:</span>
                 <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-9</span>
                 <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
                 <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
             <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;1proc_run/output.nc&#39;</span><span class="p">,</span>
-                              <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;4proc_run/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">filename1</span><span class="o">=</span><span class="s1">'1proc_run/output.nc'</span><span class="p">,</span>
+                              <span class="n">filename2</span><span class="o">=</span><span class="s1">'4proc_run/output.nc'</span><span class="p">,</span>
                               <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
                               <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
             <span class="c1"># validate normalVelocity</span>
-            <span class="n">variable</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">,</span> <span class="p">]</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;variable_resolution&#39;</span><span class="p">:</span>
+            <span class="n">variable</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'normalVelocity'</span><span class="p">,</span> <span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">'variable_resolution'</span><span class="p">:</span>
                 <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-17</span>
                 <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-18</span>
                 <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-19</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;2000m&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">'2000m'</span><span class="p">:</span>
                 <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-15</span>
                 <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-16</span>
                 <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-18</span>
             <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;1proc_run/output.nc&#39;</span><span class="p">,</span>
-                              <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;4proc_run/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">filename1</span><span class="o">=</span><span class="s1">'1proc_run/output.nc'</span><span class="p">,</span>
+                              <span class="n">filename2</span><span class="o">=</span><span class="s1">'4proc_run/output.nc'</span><span class="p">,</span>
                               <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
                               <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 

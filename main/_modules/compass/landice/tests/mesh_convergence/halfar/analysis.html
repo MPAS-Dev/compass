@@ -122,13 +122,13 @@
 <div class="viewcode-block" id="Analysis">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.html#compass.landice.tests.mesh_convergence.halfar.analysis.Analysis">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">ConvAnalysis</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for visualizing the output from the advection convergence test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Analysis.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.html#compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -138,20 +138,20 @@
 
 <span class="sd">        resolutions : list of int</span>
 <span class="sd">            The resolutions of the meshes that have been run</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">resolutions</span><span class="o">=</span><span class="n">resolutions</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="n">resolutions</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">&#39;convergence_rmse.png&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">&#39;convergence_dome.png&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">'convergence_rmse.png'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">'convergence_dome.png'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Analysis.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.run.html#compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">'Agg'</span><span class="p">)</span>
         <span class="n">resolutions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span>
         <span class="n">ncells_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="n">rmse_errors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -172,16 +172,16 @@
         <span class="n">error_fit</span> <span class="o">=</span> <span class="n">ncells</span><span class="o">**</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">ncells</span><span class="p">,</span> <span class="n">error_fit</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">ncells</span><span class="p">,</span> <span class="n">rmse_errors</span><span class="p">,</span> <span class="s1">&#39;or&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;Order of Convergence = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
-                     <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;axes fraction&#39;</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Number of Grid Cells&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;L2 Norm&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;mesh_convergence&#39;</span><span class="p">]</span>
-        <span class="n">duration</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;duration&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Halfar convergence test, </span><span class="si">{</span><span class="n">duration</span><span class="si">}</span><span class="s1"> yrs&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;convergence_rmse.png&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">ncells</span><span class="p">,</span> <span class="n">error_fit</span><span class="p">,</span> <span class="s1">'k'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">ncells</span><span class="p">,</span> <span class="n">rmse_errors</span><span class="p">,</span> <span class="s1">'or'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">'Order of Convergence = </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
+                     <span class="n">xycoords</span><span class="o">=</span><span class="s1">'axes fraction'</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Number of Grid Cells'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'L2 Norm'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'mesh_convergence'</span><span class="p">]</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'duration'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Halfar convergence test, </span><span class="si">{</span><span class="n">duration</span><span class="si">}</span><span class="s1"> yrs'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'convergence_rmse.png'</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">,</span>
                     <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 
         <span class="c1"># now repeat for center errors</span>
@@ -190,33 +190,33 @@
         <span class="n">conv2</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mf">2.0</span>
         <span class="n">error_fit</span> <span class="o">=</span> <span class="n">ncells</span><span class="o">**</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">ncells</span><span class="p">,</span> <span class="n">error_fit</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">ncells</span><span class="p">,</span> <span class="n">center_errors</span><span class="p">,</span> <span class="s1">&#39;or&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;Order of Convergence = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">conv2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
-                     <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;axes fraction&#39;</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Number of Grid Cells&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Dome center error (m)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Halfar convergence test, </span><span class="si">{</span><span class="n">duration</span><span class="si">}</span><span class="s1"> yrs&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;convergence_dome.png&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">ncells</span><span class="p">,</span> <span class="n">error_fit</span><span class="p">,</span> <span class="s1">'k'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">ncells</span><span class="p">,</span> <span class="n">center_errors</span><span class="p">,</span> <span class="s1">'or'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">'Order of Convergence = </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">conv2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
+                     <span class="n">xycoords</span><span class="o">=</span><span class="s1">'axes fraction'</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Number of Grid Cells'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Dome center error (m)'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Halfar convergence test, </span><span class="si">{</span><span class="n">duration</span><span class="si">}</span><span class="s1"> yrs'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'convergence_dome.png'</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">,</span>
                     <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;halfar&#39;</span><span class="p">]</span>
-        <span class="n">conv_thresh</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;conv_thresh&#39;</span><span class="p">)</span>
-        <span class="n">conv_max</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;conv_max&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'halfar'</span><span class="p">]</span>
+        <span class="n">conv_thresh</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'conv_thresh'</span><span class="p">)</span>
+        <span class="n">conv_max</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'conv_max'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">conv</span> <span class="o">&lt;</span> <span class="n">conv_thresh</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;order of convergence &#39;</span>
-                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">conv</span><span class="si">}</span><span class="s1"> &lt; min tolerance </span><span class="si">{</span><span class="n">conv_thresh</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'order of convergence '</span>
+                             <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">conv</span><span class="si">}</span><span class="s1"> &lt; min tolerance </span><span class="si">{</span><span class="n">conv_thresh</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">conv</span> <span class="o">&gt;</span> <span class="n">conv_max</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;order of convergence &#39;</span>
-                          <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">conv</span><span class="si">}</span><span class="s1"> &gt; max tolerance </span><span class="si">{</span><span class="n">conv_max</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">'order of convergence '</span>
+                          <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">conv</span><span class="si">}</span><span class="s1"> &gt; max tolerance </span><span class="si">{</span><span class="n">conv_max</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Analysis.rmse">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.rmse.html#compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.rmse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rmse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the RMSE for a given resolution</span>
 
 <span class="sd">        Parameters</span>
@@ -231,38 +231,38 @@
 
 <span class="sd">        ncells : int</span>
 <span class="sd">            The number of cells in the mesh</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">res_tag</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">km&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">res_tag</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">km'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
 
         <span class="n">timelev</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># todo: determine a specified time level and err check</span>
 
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_tag</span><span class="p">),</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">_output.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_tag</span><span class="p">),</span>
                              <span class="n">decode_cf</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                              <span class="n">decode_timedelta</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="c1"># Find out what the ice density and flowA values for this run were.</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Collecting parameter values from the output file.&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'Collecting parameter values from the output file.'</span><span class="p">)</span>
         <span class="n">flowA</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">config_default_flowParamA</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Using a flowParamA value of: </span><span class="si">{</span><span class="n">flowA</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Using a flowParamA value of: </span><span class="si">{</span><span class="n">flowA</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="n">flow_n</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">config_flowLawExponent</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Using a flowLawExponent value of: </span><span class="si">{</span><span class="n">flow_n</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Using a flowLawExponent value of: </span><span class="si">{</span><span class="n">flow_n</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">flow_n</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Error: The Halfar script currently only &#39;</span>
-                             <span class="s1">&#39;supports a flow law exponent of 3.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Error: The Halfar script currently only '</span>
+                             <span class="s1">'supports a flow law exponent of 3.'</span><span class="p">)</span>
         <span class="n">rhoi</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">config_ice_density</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Using an ice density value of: </span><span class="si">{</span><span class="n">rhoi</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Using an ice density value of: </span><span class="si">{</span><span class="n">rhoi</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="n">dynamicThickness</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">config_dynamic_thickness</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Dynamic thickness for this run = </span><span class="si">{</span><span class="n">dynamicThickness</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Dynamic thickness for this run = </span><span class="si">{</span><span class="n">dynamicThickness</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="n">daysSinceStart</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">daysSinceStart</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Using model time of </span><span class="si">{</span><span class="n">daysSinceStart</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">365.0</span><span class="si">}</span><span class="s1"> years&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">ds</span><span class="o">.</span><span class="n">config_calendar_type</span> <span class="o">!=</span> <span class="s2">&quot;noleap&quot;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Error: The Halfar script currently assumes a &#39;</span>
-                             <span class="s1">&#39;noleap calendar.&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Using model time of </span><span class="si">{</span><span class="n">daysSinceStart</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">365.0</span><span class="si">}</span><span class="s1"> years'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ds</span><span class="o">.</span><span class="n">config_calendar_type</span> <span class="o">!=</span> <span class="s2">"noleap"</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Error: The Halfar script currently assumes a '</span>
+                             <span class="s1">'noleap calendar.'</span><span class="p">)</span>
 
-        <span class="n">ncells</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
-        <span class="n">thk</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">timelev</span><span class="p">)</span>
-        <span class="n">xCell</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;xCell&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">yCell</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;yCell&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">areaCell</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">ncells</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nCells'</span><span class="p">]</span>
+        <span class="n">thk</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'thickness'</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">timelev</span><span class="p">)</span>
+        <span class="n">xCell</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'xCell'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">yCell</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'yCell'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">areaCell</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'areaCell'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 
         <span class="n">dt</span> <span class="o">=</span> <span class="p">(</span><span class="n">daysSinceStart</span><span class="p">[</span><span class="n">timelev</span><span class="p">]</span> <span class="o">-</span> <span class="n">daysSinceStart</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mf">3600.0</span> <span class="o">*</span> <span class="mf">24.0</span>
 
@@ -299,7 +299,7 @@
     <span class="n">y0</span> <span class="o">=</span> <span class="mf">0.0</span>
 
     <span class="c1"># NOTE: These constants assume n=3</span>
-    <span class="c1"># they need to be generalized to allow other n&#39;s</span>
+    <span class="c1"># they need to be generalized to allow other n's</span>
     <span class="n">t0</span> <span class="o">=</span> <span class="p">(</span><span class="n">beta</span> <span class="o">/</span> <span class="n">Gamma</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">7.0</span> <span class="o">/</span> <span class="mf">4.0</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">R0</span><span class="o">**</span><span class="mi">4</span> <span class="o">/</span> <span class="n">H0</span><span class="o">**</span><span class="mi">7</span><span class="p">)</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="n">t0</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">/</span> <span class="n">t0</span>

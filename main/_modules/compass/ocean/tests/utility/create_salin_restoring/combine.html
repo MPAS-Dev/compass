@@ -120,113 +120,113 @@
 <div class="viewcode-block" id="Combine">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.create_salin_restoring.Combine.html#compass.ocean.tests.utility.create_salin_restoring.Combine">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Combine</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for combining January through December sea surface salinity</span>
 <span class="sd">    data into a single file for salinity restoring in G-cases.</span>
 <span class="sd">    The top level data of the monthly WOA23 is utilized.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="Combine.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.create_salin_restoring.Combine.html#compass.ocean.tests.utility.create_salin_restoring.Combine.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.ocean.tests.utility.create_salin_restoring.CreateSalinRestoring</span>
 <span class="sd">            The test case this step belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;combine&#39;</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="sd">        """</span>  <span class="c1"># noqa: E501</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'combine'</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                          <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;woa_surface_salinity_monthly.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'woa_surface_salinity_monthly.nc'</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up the step in the work directory, including downloading any</span>
 <span class="sd">        dependencies.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
 
         <span class="n">base_url</span> <span class="o">=</span> \
-            <span class="s1">&#39;https://www.ncei.noaa.gov/thredds-ocean/fileServer/woa23/DATA&#39;</span>
+            <span class="s1">'https://www.ncei.noaa.gov/thredds-ocean/fileServer/woa23/DATA'</span>
 
-        <span class="n">woa_dir</span> <span class="o">=</span> <span class="s1">&#39;salinity/netcdf/decav91C0/0.25&#39;</span>
+        <span class="n">woa_dir</span> <span class="o">=</span> <span class="s1">'salinity/netcdf/decav91C0/0.25'</span>
 
-        <span class="n">woa_files</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">jan</span><span class="o">=</span><span class="s1">&#39;woa23_decav91C0_s01_04.nc&#39;</span><span class="p">,</span>
-                         <span class="n">feb</span><span class="o">=</span><span class="s1">&#39;woa23_decav91C0_s02_04.nc&#39;</span><span class="p">,</span>
-                         <span class="n">mar</span><span class="o">=</span><span class="s1">&#39;woa23_decav91C0_s03_04.nc&#39;</span><span class="p">,</span>
-                         <span class="n">apr</span><span class="o">=</span><span class="s1">&#39;woa23_decav91C0_s04_04.nc&#39;</span><span class="p">,</span>
-                         <span class="n">may</span><span class="o">=</span><span class="s1">&#39;woa23_decav91C0_s05_04.nc&#39;</span><span class="p">,</span>
-                         <span class="n">jun</span><span class="o">=</span><span class="s1">&#39;woa23_decav91C0_s06_04.nc&#39;</span><span class="p">,</span>
-                         <span class="n">jul</span><span class="o">=</span><span class="s1">&#39;woa23_decav91C0_s07_04.nc&#39;</span><span class="p">,</span>
-                         <span class="n">aug</span><span class="o">=</span><span class="s1">&#39;woa23_decav91C0_s08_04.nc&#39;</span><span class="p">,</span>
-                         <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;woa23_decav91C0_s09_04.nc&#39;</span><span class="p">,</span>
-                         <span class="n">octo</span><span class="o">=</span><span class="s1">&#39;woa23_decav91C0_s10_04.nc&#39;</span><span class="p">,</span>
-                         <span class="n">nov</span><span class="o">=</span><span class="s1">&#39;woa23_decav91C0_s11_04.nc&#39;</span><span class="p">,</span>
-                         <span class="n">dec</span><span class="o">=</span><span class="s1">&#39;woa23_decav91C0_s12_04.nc&#39;</span><span class="p">)</span>
+        <span class="n">woa_files</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">jan</span><span class="o">=</span><span class="s1">'woa23_decav91C0_s01_04.nc'</span><span class="p">,</span>
+                         <span class="n">feb</span><span class="o">=</span><span class="s1">'woa23_decav91C0_s02_04.nc'</span><span class="p">,</span>
+                         <span class="n">mar</span><span class="o">=</span><span class="s1">'woa23_decav91C0_s03_04.nc'</span><span class="p">,</span>
+                         <span class="n">apr</span><span class="o">=</span><span class="s1">'woa23_decav91C0_s04_04.nc'</span><span class="p">,</span>
+                         <span class="n">may</span><span class="o">=</span><span class="s1">'woa23_decav91C0_s05_04.nc'</span><span class="p">,</span>
+                         <span class="n">jun</span><span class="o">=</span><span class="s1">'woa23_decav91C0_s06_04.nc'</span><span class="p">,</span>
+                         <span class="n">jul</span><span class="o">=</span><span class="s1">'woa23_decav91C0_s07_04.nc'</span><span class="p">,</span>
+                         <span class="n">aug</span><span class="o">=</span><span class="s1">'woa23_decav91C0_s08_04.nc'</span><span class="p">,</span>
+                         <span class="n">sep</span><span class="o">=</span><span class="s1">'woa23_decav91C0_s09_04.nc'</span><span class="p">,</span>
+                         <span class="n">octo</span><span class="o">=</span><span class="s1">'woa23_decav91C0_s10_04.nc'</span><span class="p">,</span>
+                         <span class="n">nov</span><span class="o">=</span><span class="s1">'woa23_decav91C0_s11_04.nc'</span><span class="p">,</span>
+                         <span class="n">dec</span><span class="o">=</span><span class="s1">'woa23_decav91C0_s12_04.nc'</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;jan&#39;</span><span class="p">,</span> <span class="s1">&#39;feb&#39;</span><span class="p">,</span> <span class="s1">&#39;mar&#39;</span><span class="p">,</span> <span class="s1">&#39;apr&#39;</span><span class="p">,</span> <span class="s1">&#39;may&#39;</span><span class="p">,</span> <span class="s1">&#39;jun&#39;</span><span class="p">,</span> <span class="s1">&#39;jul&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;aug&#39;</span><span class="p">,</span> <span class="s1">&#39;sep&#39;</span><span class="p">,</span> <span class="s1">&#39;octo&#39;</span><span class="p">,</span> <span class="s1">&#39;nov&#39;</span><span class="p">,</span> <span class="s1">&#39;dec&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'jan'</span><span class="p">,</span> <span class="s1">'feb'</span><span class="p">,</span> <span class="s1">'mar'</span><span class="p">,</span> <span class="s1">'apr'</span><span class="p">,</span> <span class="s1">'may'</span><span class="p">,</span> <span class="s1">'jun'</span><span class="p">,</span> <span class="s1">'jul'</span><span class="p">,</span>
+                      <span class="s1">'aug'</span><span class="p">,</span> <span class="s1">'sep'</span><span class="p">,</span> <span class="s1">'octo'</span><span class="p">,</span> <span class="s1">'nov'</span><span class="p">,</span> <span class="s1">'dec'</span><span class="p">]:</span>
             <span class="n">woa_filename</span> <span class="o">=</span> <span class="n">woa_files</span><span class="p">[</span><span class="n">month</span><span class="p">]</span>
-            <span class="n">woa_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">woa_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">woa_filename</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">woa_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">woa_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">woa_filename</span><span class="si">}</span><span class="s1">'</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;woa_salin_</span><span class="si">{</span><span class="n">month</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">,</span>
+                <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'woa_salin_</span><span class="si">{</span><span class="n">month</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">,</span>
                 <span class="n">target</span><span class="o">=</span><span class="n">woa_filename</span><span class="p">,</span>
-                <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">,</span>
+                <span class="n">database</span><span class="o">=</span><span class="s1">'initial_condition_database'</span><span class="p">,</span>
                 <span class="n">url</span><span class="o">=</span><span class="n">woa_url</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ds_jan</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;woa_salin_jan.nc&#39;</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">ds_jan</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'woa_salin_jan.nc'</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
 
-        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="s1">&#39;lat&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'lon'</span><span class="p">,</span> <span class="s1">'lat'</span><span class="p">]:</span>
             <span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_jan</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
-            <span class="n">ds_out</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">_bnds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_jan</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">_bnds&#39;</span><span class="p">]</span>
+            <span class="n">ds_out</span><span class="p">[</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">_bnds'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_jan</span><span class="p">[</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">_bnds'</span><span class="p">]</span>
 
         <span class="n">slices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;jan&#39;</span><span class="p">,</span> <span class="s1">&#39;feb&#39;</span><span class="p">,</span> <span class="s1">&#39;mar&#39;</span><span class="p">,</span> <span class="s1">&#39;apr&#39;</span><span class="p">,</span> <span class="s1">&#39;may&#39;</span><span class="p">,</span> <span class="s1">&#39;jun&#39;</span><span class="p">,</span> <span class="s1">&#39;jul&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;aug&#39;</span><span class="p">,</span> <span class="s1">&#39;sep&#39;</span><span class="p">,</span> <span class="s1">&#39;octo&#39;</span><span class="p">,</span> <span class="s1">&#39;nov&#39;</span><span class="p">,</span> <span class="s1">&#39;dec&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'jan'</span><span class="p">,</span> <span class="s1">'feb'</span><span class="p">,</span> <span class="s1">'mar'</span><span class="p">,</span> <span class="s1">'apr'</span><span class="p">,</span> <span class="s1">'may'</span><span class="p">,</span> <span class="s1">'jun'</span><span class="p">,</span> <span class="s1">'jul'</span><span class="p">,</span>
+                      <span class="s1">'aug'</span><span class="p">,</span> <span class="s1">'sep'</span><span class="p">,</span> <span class="s1">'octo'</span><span class="p">,</span> <span class="s1">'nov'</span><span class="p">,</span> <span class="s1">'dec'</span><span class="p">]:</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;woa_salin_</span><span class="si">{</span><span class="n">month</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'woa_salin_</span><span class="si">{</span><span class="n">month</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">,</span>
                 <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span> \
-                <span class="n">drop_vars</span><span class="p">(</span><span class="s1">&#39;depth&#39;</span><span class="p">)</span>
+                <span class="n">drop_vars</span><span class="p">(</span><span class="s1">'depth'</span><span class="p">)</span>
             <span class="n">slices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">s_an</span><span class="p">)</span>
 
-        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;s_an&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">slices</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
-        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;s_an&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">ds_jan</span><span class="p">[</span><span class="s1">&#39;s_an&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span>
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">'s_an'</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">slices</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">'time'</span><span class="p">)</span>
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">'s_an'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">ds_jan</span><span class="p">[</span><span class="s1">'s_an'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span>
 
         <span class="c1"># Change names of variables and alter attributes</span>
-        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">rename_dims</span><span class="p">({</span><span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="s1">&#39;Time&#39;</span><span class="p">})</span>
-        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">rename_vars</span><span class="p">({</span><span class="s1">&#39;s_an&#39;</span><span class="p">:</span> <span class="s1">&#39;SALT&#39;</span><span class="p">})</span>
-        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">rename_dims</span><span class="p">({</span><span class="s1">'time'</span><span class="p">:</span> <span class="s1">'Time'</span><span class="p">})</span>
+        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">rename_vars</span><span class="p">({</span><span class="s1">'s_an'</span><span class="p">:</span> <span class="s1">'SALT'</span><span class="p">})</span>
+        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">'time'</span><span class="p">)</span>
 
         <span class="c1"># Create a time index</span>
         <span class="n">time_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">12.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">time_var</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]))</span>
+        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">time_var</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]))</span>
 
         <span class="c1"># Create a xtime array</span>
         <span class="n">xtime_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span>
-            <span class="n">xtime_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;0000-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">-15_00:00:00&quot;</span>
+            <span class="n">xtime_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"0000-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">-15_00:00:00"</span>
             <span class="n">xtime_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xtime_string</span><span class="p">)</span>
-        <span class="n">xtime_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xtime_list</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;S64&#39;</span><span class="p">)</span>
+        <span class="n">xtime_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xtime_list</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'S64'</span><span class="p">)</span>
 
-        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">xtime</span><span class="o">=</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">xtime_out</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]))</span>
+        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">xtime</span><span class="o">=</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">xtime_out</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]))</span>
 
         <span class="c1"># Change attributes to be consistent with PHC restoring file</span>
-        <span class="n">ds_out</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Month Index&quot;</span>
-        <span class="n">ds_out</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;month&quot;</span>
-        <span class="n">ds_out</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;T&quot;</span>
+        <span class="n">ds_out</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'long_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Month Index"</span>
+        <span class="n">ds_out</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"month"</span>
+        <span class="n">ds_out</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'axis'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"T"</span>
 
         <span class="c1"># Save file and change time dimension to unlimited</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">&#39;woa_surface_salinity_monthly.nc&#39;</span><span class="p">)</span></div>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">'woa_surface_salinity_monthly.nc'</span><span class="p">)</span></div>
 
 </pre></div>
 

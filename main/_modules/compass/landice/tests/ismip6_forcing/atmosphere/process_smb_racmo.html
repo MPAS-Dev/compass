@@ -126,14 +126,14 @@
 <div class="viewcode-block" id="ProcessSmbRacmo">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo.ProcessSmbRacmo.html#compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo.ProcessSmbRacmo">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ProcessSmbRacmo</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for processing the regional RACMO surface mass balance data</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ProcessSmbRacmo.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo.ProcessSmbRacmo.html#compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo.ProcessSmbRacmo.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -142,26 +142,26 @@
 <span class="sd">            The test case this step belongs to</span>
 
 <span class="sd">        input_file : file name of ismip6 forcing data processed by this step</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span> <span class="o">=</span> <span class="n">input_file</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;process_smb_racmo&#39;</span><span class="p">,</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'process_smb_racmo'</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProcessSmbRacmo.setup">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo.ProcessSmbRacmo.setup.html#compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo.ProcessSmbRacmo.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip6_ais&quot;</span><span class="p">]</span>
-        <span class="n">base_path_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;base_path_mali&quot;</span><span class="p">)</span>
-        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_name&quot;</span><span class="p">)</span>
-        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_file&quot;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip6_ais"</span><span class="p">]</span>
+        <span class="n">base_path_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"base_path_mali"</span><span class="p">)</span>
+        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_name"</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_file"</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip6_ais_atmosphere&quot;</span><span class="p">]</span>
-        <span class="n">process_smb_racmo</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">&quot;process_smb_racmo&quot;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip6_ais_atmosphere"</span><span class="p">]</span>
+        <span class="n">process_smb_racmo</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">"process_smb_racmo"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
                             <span class="n">target</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_mali</span><span class="p">,</span>
@@ -169,69 +169,69 @@
 
         <span class="k">if</span> <span class="n">process_smb_racmo</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">target</span><span class="o">=</span><span class="s2">&quot;RACMO2.3p2_ANT27_smb_yearly_1979_2018.nc&quot;</span><span class="p">,</span>
-                <span class="n">database</span><span class="o">=</span><span class="s2">&quot;RACMO2.3p2_ANT27_SMB_yearly_1979_2018&quot;</span><span class="p">)</span>
+                <span class="n">target</span><span class="o">=</span><span class="s2">"RACMO2.3p2_ANT27_smb_yearly_1979_2018.nc"</span><span class="p">,</span>
+                <span class="n">database</span><span class="o">=</span><span class="s2">"RACMO2.3p2_ANT27_SMB_yearly_1979_2018"</span><span class="p">)</span>
 
-            <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_RACMO2.3p2_ANT27&quot;</span> \
-                          <span class="sa">f</span><span class="s2">&quot;_smb_climatology_1995-2017.nc&quot;</span>
+            <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_RACMO2.3p2_ANT27"</span> \
+                          <span class="sa">f</span><span class="s2">"_smb_climatology_1995-2017.nc"</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">output_file</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&#39;Warning: process_smb_racmo&#39; is set to &#39;False&#39;.&quot;</span>
-                  <span class="s2">&quot; This step will not run unless set &#39;True&#39; in the&quot;</span>
-                  <span class="s2">&quot; config file.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">'Warning: process_smb_racmo' is set to 'False'."</span>
+                  <span class="s2">" This step will not run unless set 'True' in the"</span>
+                  <span class="s2">" config file.</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProcessSmbRacmo.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo.ProcessSmbRacmo.run.html#compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo.ProcessSmbRacmo.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip6_ais_atmosphere&quot;</span><span class="p">]</span>
-        <span class="n">process_smb_racmo</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">&quot;process_smb_racmo&quot;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip6_ais_atmosphere"</span><span class="p">]</span>
+        <span class="n">process_smb_racmo</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">"process_smb_racmo"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">process_smb_racmo</span><span class="p">:</span>
-            <span class="c1"># we don&#39;t want to run this step</span>
+            <span class="c1"># we don't want to run this step</span>
             <span class="k">return</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip6_ais&quot;</span><span class="p">]</span>
-        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_name&quot;</span><span class="p">)</span>
-        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mali_mesh_file&quot;</span><span class="p">)</span>
-        <span class="n">output_base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_base_path&quot;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip6_ais"</span><span class="p">]</span>
+        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_name"</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_file"</span><span class="p">)</span>
+        <span class="n">output_base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_base_path"</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip6_ais_atmosphere&quot;</span><span class="p">]</span>
-        <span class="n">method_remap</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method_remap&quot;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip6_ais_atmosphere"</span><span class="p">]</span>
+        <span class="n">method_remap</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"method_remap"</span><span class="p">)</span>
 
-        <span class="n">racmo_file_temp1</span> <span class="o">=</span> <span class="s2">&quot;RACMO2.3p2_smb_climatology_1995_2017.nc&quot;</span>
-        <span class="n">racmo_file_temp2</span> <span class="o">=</span> <span class="s2">&quot;RACMO2.3p2_smb_climatology_1995_2017_&quot;</span> \
-                           <span class="s2">&quot;correct_unit.nc&quot;</span>
-        <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_RACMO2.3p2_ANT27&quot;</span> \
-                      <span class="sa">f</span><span class="s2">&quot;_smb_climatology_1995-2017.nc&quot;</span>
-        <span class="n">output_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_base_path</span><span class="si">}</span><span class="s2">/atmosphere_forcing/&quot;</span> \
-                      <span class="sa">f</span><span class="s2">&quot;RACMO_climatology_1995-2017&quot;</span>
+        <span class="n">racmo_file_temp1</span> <span class="o">=</span> <span class="s2">"RACMO2.3p2_smb_climatology_1995_2017.nc"</span>
+        <span class="n">racmo_file_temp2</span> <span class="o">=</span> <span class="s2">"RACMO2.3p2_smb_climatology_1995_2017_"</span> \
+                           <span class="s2">"correct_unit.nc"</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_RACMO2.3p2_ANT27"</span> \
+                      <span class="sa">f</span><span class="s2">"_smb_climatology_1995-2017.nc"</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">output_base_path</span><span class="si">}</span><span class="s2">/atmosphere_forcing/"</span> \
+                      <span class="sa">f</span><span class="s2">"RACMO_climatology_1995-2017"</span>
         <span class="n">output_path_final</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path_final</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processed RACMO SMB data already exists in the &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;output path </span><span class="si">{</span><span class="n">output_base_path</span><span class="si">}</span><span class="s2">. &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;Not processing the source RACMO data...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Processed RACMO SMB data already exists in the "</span>
+                        <span class="sa">f</span><span class="s2">"output path </span><span class="si">{</span><span class="n">output_base_path</span><span class="si">}</span><span class="s2">. "</span>
+                        <span class="sa">f</span><span class="s2">"Not processing the source RACMO data..."</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="n">input_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="c1"># take the time average over the period 1995-2017</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ncra&quot;</span><span class="p">,</span> <span class="s2">&quot;-O&quot;</span><span class="p">,</span> <span class="s2">&quot;-F&quot;</span><span class="p">,</span> <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;time,17,39&quot;</span><span class="p">,</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncra"</span><span class="p">,</span> <span class="s2">"-O"</span><span class="p">,</span> <span class="s2">"-F"</span><span class="p">,</span> <span class="s2">"-d"</span><span class="p">,</span> <span class="s2">"time,17,39"</span><span class="p">,</span>
                 <span class="n">input_file</span><span class="p">,</span>
                 <span class="n">racmo_file_temp1</span><span class="p">]</span>
 
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># interpolate the racmo smb data</span>
-        <span class="n">remapped_file_temp</span> <span class="o">=</span> <span class="s2">&quot;remapped.nc&quot;</span>  <span class="c1"># temporary file name</span>
+        <span class="n">remapped_file_temp</span> <span class="o">=</span> <span class="s2">"remapped.nc"</span>  <span class="c1"># temporary file name</span>
 
         <span class="c1"># call the function that reads in, remap and rename the file.</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calling the remapping function...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Calling the remapping function..."</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remap_source_smb_to_mali</span><span class="p">(</span><span class="n">racmo_file_temp1</span><span class="p">,</span>
                                       <span class="n">remapped_file_temp</span><span class="p">,</span>
                                       <span class="n">mali_mesh_name</span><span class="p">,</span>
@@ -240,51 +240,51 @@
 
         <span class="c1"># perform algebraic operation on the source data in unit of kg/m^2</span>
         <span class="c1"># to be in unit of kg/m^2/s</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ncap2&quot;</span><span class="p">,</span> <span class="s2">&quot;-O&quot;</span><span class="p">,</span> <span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;-s&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;sfcMassBal=smb/(60*60*24*365)&quot;</span><span class="p">,</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncap2"</span><span class="p">,</span> <span class="s2">"-O"</span><span class="p">,</span> <span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"-s"</span><span class="p">,</span>
+                <span class="s2">"sfcMassBal=smb/(60*60*24*365)"</span><span class="p">,</span>
                 <span class="n">remapped_file_temp</span><span class="p">,</span>
                 <span class="n">racmo_file_temp2</span><span class="p">]</span>
 
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># change the unit attribute to kg/m^2/s</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ncatted&quot;</span><span class="p">,</span> <span class="s2">&quot;-O&quot;</span><span class="p">,</span> <span class="s2">&quot;-a&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;units,sfcMassBal,m,c,&#39;kg m-2 s-1&#39;&quot;</span><span class="p">,</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncatted"</span><span class="p">,</span> <span class="s2">"-O"</span><span class="p">,</span> <span class="s2">"-a"</span><span class="p">,</span>
+                <span class="s2">"units,sfcMassBal,m,c,'kg m-2 s-1'"</span><span class="p">,</span>
                 <span class="n">racmo_file_temp2</span><span class="p">]</span>
 
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># call the function that renames the ismip6 variables to MALI variables</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Renaming source variables to mali variable names...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Renaming source variables to mali variable names..."</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">rename_source_smb_to_mali_vars</span><span class="p">(</span><span class="n">racmo_file_temp2</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Processing done successfully. &quot;</span>
-                    <span class="s2">&quot;Removing the temporary files...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Processing done successfully. "</span>
+                    <span class="s2">"Removing the temporary files..."</span><span class="p">)</span>
         <span class="c1"># remove the temporary remapped and combined files</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">remapped_file_temp</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">racmo_file_temp1</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">racmo_file_temp2</span><span class="p">)</span>
 
         <span class="c1"># place the output file in appropriate directory</span>
-        <span class="n">output_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_base_path</span><span class="si">}</span><span class="s2">/atmosphere_forcing/&quot;</span> \
-                      <span class="sa">f</span><span class="s2">&quot;RACMO_climatology_1995-2017&quot;</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">output_base_path</span><span class="si">}</span><span class="s2">/atmosphere_forcing/"</span> \
+                      <span class="sa">f</span><span class="s2">"RACMO_climatology_1995-2017"</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating a new directory for the output data&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Creating a new directory for the output data"</span><span class="p">)</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
 
         <span class="n">src</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">output_file</span><span class="p">)</span>
         <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;!---Done processing the file---!&quot;</span><span class="p">)</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"!---Done processing the file---!"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProcessSmbRacmo.remap_source_smb_to_mali">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo.ProcessSmbRacmo.remap_source_smb_to_mali.html#compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo.ProcessSmbRacmo.remap_source_smb_to_mali">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remap_source_smb_to_mali</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">mali_mesh_name</span><span class="p">,</span>
                                  <span class="n">mali_mesh_file</span><span class="p">,</span> <span class="n">method_remap</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Remap the input ismip6 smb forcing data onto mali mesh</span>
 
 <span class="sd">        Parameters</span>
@@ -303,29 +303,29 @@
 
 <span class="sd">        method_remap : str, optional</span>
 <span class="sd">            Remapping method used in building a mapping file</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">mapping_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;map_racmo_24km_to_&quot;</span> \
-                       <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">.nc&quot;</span>
+<span class="sd">        """</span>
+        <span class="n">mapping_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"map_racmo_24km_to_"</span> \
+                       <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">.nc"</span>
 
         <span class="c1"># check if a mapfile exists</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
-            <span class="c1"># build a mapping file if it doesn&#39;t already exist</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating a mapping file. &quot;</span>
-                             <span class="sa">f</span><span class="s2">&quot;Mapping method used: </span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># build a mapping file if it doesn't already exist</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Creating a mapping file. "</span>
+                             <span class="sa">f</span><span class="s2">"Mapping method used: </span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">build_mapping_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
                                <span class="n">input_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
                                <span class="n">scrip_from_latlon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                <span class="n">mali_mesh_file</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
                                <span class="n">method_remap</span><span class="o">=</span><span class="n">method_remap</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Mapping file exists. &quot;</span>
-                             <span class="s2">&quot;Remapping the input data...&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Mapping file exists. "</span>
+                             <span class="s2">"Remapping the input data..."</span><span class="p">)</span>
 
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ncremap&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span>
-                <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
-                <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
-                <span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;smb&quot;</span><span class="p">]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncremap"</span><span class="p">,</span>
+                <span class="s2">"-i"</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span>
+                <span class="s2">"-o"</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
+                <span class="s2">"-m"</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+                <span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"smb"</span><span class="p">]</span>
 
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span></div>
 
@@ -333,7 +333,7 @@
 <div class="viewcode-block" id="ProcessSmbRacmo.rename_source_smb_to_mali_vars">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo.ProcessSmbRacmo.rename_source_smb_to_mali_vars.html#compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo.ProcessSmbRacmo.rename_source_smb_to_mali_vars">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rename_source_smb_to_mali_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remapped_file_temp</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Rename variables in the remapped source input data</span>
 <span class="sd">        to the ones that MALI uses.</span>
 
@@ -344,23 +344,23 @@
 
 <span class="sd">        output_file : str</span>
 <span class="sd">            remapped ismip6 data renamed on mali mesh</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># open dataset in 20 years chunk</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">remapped_file_temp</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">20</span><span class="p">),</span>
-                             <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;netcdf4&quot;</span><span class="p">)</span>
+                             <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">)</span>
 
         <span class="c1"># build dictionary for ismip6 variables that MALI takes in</span>
         <span class="n">ismip6_to_mali_dims</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">time</span><span class="o">=</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span>
-            <span class="n">ncol</span><span class="o">=</span><span class="s2">&quot;nCells&quot;</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">=</span><span class="s2">"Time"</span><span class="p">,</span>
+            <span class="n">ncol</span><span class="o">=</span><span class="s2">"nCells"</span><span class="p">)</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">ismip6_to_mali_dims</span><span class="p">)</span>
 
         <span class="c1"># drop unnecessary variables</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s2">&quot;height&quot;</span><span class="p">])</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s2">"height"</span><span class="p">])</span>
 
         <span class="c1"># squeeze unnecessary coordinate variable</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;sfcMassBal&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;sfcMassBal&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s2">&quot;height&quot;</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"sfcMassBal"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">"sfcMassBal"</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s2">"height"</span><span class="p">)</span>
 
         <span class="c1"># write to a new netCDF file</span>
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
@@ -370,7 +370,7 @@
 <div class="viewcode-block" id="ProcessSmbRacmo.correct_smb_anomaly_for_base_smb">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo.ProcessSmbRacmo.correct_smb_anomaly_for_base_smb.html#compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo.ProcessSmbRacmo.correct_smb_anomaly_for_base_smb">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">correct_smb_anomaly_for_base_smb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Apply the MALI base SMB to the ismip6 SMB anomaly field</span>
 
 <span class="sd">        Parameters</span>
@@ -380,14 +380,14 @@
 
 <span class="sd">        mali_mesh_file : str</span>
 <span class="sd">            initialized MALI mesh file in which the base SMB field exists</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
         <span class="n">ds_base</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">mali_mesh_file</span><span class="p">)</span>
         <span class="c1"># get the first time index</span>
-        <span class="n">ref_smb</span> <span class="o">=</span> <span class="n">ds_base</span><span class="p">[</span><span class="s2">&quot;sfcMassBal&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ref_smb</span> <span class="o">=</span> <span class="n">ds_base</span><span class="p">[</span><span class="s2">"sfcMassBal"</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="c1"># correct for the reference smb</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;sfcMassBal&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;sfcMassBal&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">ref_smb</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"sfcMassBal"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">"sfcMassBal"</span><span class="p">]</span> <span class="o">+</span> <span class="n">ref_smb</span>
 
         <span class="c1"># write to a new netCDF file</span>
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>

@@ -129,18 +129,18 @@
 <div class="viewcode-block" id="SphericalBaseStep">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.spherical.SphericalBaseStep.html#compass.mesh.SphericalBaseStep">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SphericalBaseStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A base class for steps that create a JIGSAW spherical mesh</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    opts : jigsawpy.jigsaw_jig_t</span>
 <span class="sd">        JIGSAW options for creating the mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="SphericalBaseStep.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.spherical.SphericalBaseStep.html#compass.mesh.SphericalBaseStep.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new step</span>
 
 <span class="sd">        Parameters</span>
@@ -153,7 +153,7 @@
 
 <span class="sd">        subdir : {str, None}</span>
 <span class="sd">            the subdirectory for the step.  The default is ``name``</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="c1"># setup files for JIGSAW</span>
@@ -163,7 +163,7 @@
 <div class="viewcode-block" id="SphericalBaseStep.save_and_plot_cell_width">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.spherical.SphericalBaseStep.save_and_plot_cell_width.html#compass.mesh.SphericalBaseStep.save_and_plot_cell_width">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save_and_plot_cell_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Save the cell width field on a lon/lat grid to</span>
 <span class="sd">        ``self.cell_width_filename`` and plot</span>
 
@@ -177,118 +177,118 @@
 
 <span class="sd">        cell_width : numpy.ndarray</span>
 <span class="sd">            m x n array of cell width in km</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'spherical_mesh'</span><span class="p">]</span>
         <span class="n">da</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
-            <span class="n">cell_width</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">],</span> <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="n">lat</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">:</span> <span class="n">lon</span><span class="p">},</span>
-            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cellWidth&#39;</span><span class="p">)</span>
-        <span class="n">cell_width_filename</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cell_width_filename&#39;</span><span class="p">)</span>
+            <span class="n">cell_width</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">,</span> <span class="s1">'lon'</span><span class="p">],</span> <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">'lat'</span><span class="p">:</span> <span class="n">lat</span><span class="p">,</span> <span class="s1">'lon'</span><span class="p">:</span> <span class="n">lon</span><span class="p">},</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">'cellWidth'</span><span class="p">)</span>
+        <span class="n">cell_width_filename</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'cell_width_filename'</span><span class="p">)</span>
         <span class="n">da</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="n">cell_width_filename</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;plot_cell_width&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'plot_cell_width'</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_plot_cell_width</span><span class="p">(</span><span class="n">cell_width</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SphericalBaseStep.setup">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.spherical.SphericalBaseStep.setup.html#compass.mesh.SphericalBaseStep.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add output files</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;jigsaw_mesh_filename&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_mesh_filename&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;cell_width_filename&#39;</span><span class="p">]:</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'jigsaw_mesh_filename'</span><span class="p">,</span> <span class="s1">'mpas_mesh_filename'</span><span class="p">,</span>
+                       <span class="s1">'cell_width_filename'</span><span class="p">]:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'spherical_mesh'</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SphericalBaseStep.run">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.spherical.SphericalBaseStep.run.html#compass.mesh.SphericalBaseStep.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Finish up the step. Run this after the subclass&#39;s run() method</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Finish up the step. Run this after the subclass's run() method</span>
+<span class="sd">        """</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">]</span>
-        <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_REARTH&#39;</span><span class="p">]</span>
-        <span class="n">jigsaw_mesh_filename</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;jigsaw_mesh_filename&#39;</span><span class="p">)</span>
-        <span class="n">mpas_mesh_filename</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mpas_mesh_filename&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'spherical_mesh'</span><span class="p">]</span>
+        <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">'SHR_CONST_REARTH'</span><span class="p">]</span>
+        <span class="n">jigsaw_mesh_filename</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'jigsaw_mesh_filename'</span><span class="p">)</span>
+        <span class="n">mpas_mesh_filename</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mpas_mesh_filename'</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Convert triangles from jigsaw format to netcdf&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Convert triangles from jigsaw format to netcdf'</span><span class="p">)</span>
         <span class="n">jigsaw_to_netcdf</span><span class="p">(</span><span class="n">msh_filename</span><span class="o">=</span><span class="n">jigsaw_mesh_filename</span><span class="p">,</span>
-                         <span class="n">output_name</span><span class="o">=</span><span class="s1">&#39;mesh_triangles.nc&#39;</span><span class="p">,</span> <span class="n">on_sphere</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                         <span class="n">output_name</span><span class="o">=</span><span class="s1">'mesh_triangles.nc'</span><span class="p">,</span> <span class="n">on_sphere</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                          <span class="n">sphere_radius</span><span class="o">=</span><span class="n">earth_radius</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Convert from triangles to MPAS mesh&#39;</span><span class="p">)</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;MpasMeshConverter.x&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;mesh_triangles.nc&#39;</span><span class="p">,</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Convert from triangles to MPAS mesh'</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'MpasMeshConverter.x'</span><span class="p">,</span>
+                <span class="s1">'mesh_triangles.nc'</span><span class="p">,</span>
                 <span class="n">mpas_mesh_filename</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;add_mesh_density&#39;</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Add meshDensity into the mesh file&#39;</span><span class="p">)</span>
-            <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;cellWidthVsLatLon.nc&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'add_mesh_density'</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Add meshDensity into the mesh file'</span><span class="p">)</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'cellWidthVsLatLon.nc'</span><span class="p">)</span>
             <span class="n">inject_spherical_meshDensity</span><span class="p">(</span>
                 <span class="n">ds</span><span class="o">.</span><span class="n">cellWidth</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
                 <span class="n">mesh_filename</span><span class="o">=</span><span class="n">mpas_mesh_filename</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;convert_to_vtk&#39;</span><span class="p">):</span>
-            <span class="n">vtk_dir</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vtk_dir&#39;</span><span class="p">)</span>
-            <span class="c1"># only use progress bars if we&#39;re not writing to a log file</span>
+        <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'convert_to_vtk'</span><span class="p">):</span>
+            <span class="n">vtk_dir</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'vtk_dir'</span><span class="p">)</span>
+            <span class="c1"># only use progress bars if we're not writing to a log file</span>
             <span class="n">use_progress_bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span> <span class="ow">is</span> <span class="kc">None</span>
-            <span class="n">lat_lon</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;vtk_lat_lon&#39;</span><span class="p">)</span>
+            <span class="n">lat_lon</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'vtk_lat_lon'</span><span class="p">)</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Create vtk file for visualization&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Create vtk file for visualization'</span><span class="p">)</span>
             <span class="n">extract_vtk</span><span class="p">(</span><span class="n">ignore_time</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lonlat</span><span class="o">=</span><span class="n">lat_lon</span><span class="p">,</span>
-                        <span class="n">dimension_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;maxEdges=&#39;</span><span class="p">],</span>
-                        <span class="n">variable_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;allOnCells&#39;</span><span class="p">],</span>
+                        <span class="n">dimension_list</span><span class="o">=</span><span class="p">[</span><span class="s1">'maxEdges='</span><span class="p">],</span>
+                        <span class="n">variable_list</span><span class="o">=</span><span class="p">[</span><span class="s1">'allOnCells'</span><span class="p">],</span>
                         <span class="n">filename_pattern</span><span class="o">=</span><span class="n">mpas_mesh_filename</span><span class="p">,</span>
                         <span class="n">out_dir</span><span class="o">=</span><span class="n">vtk_dir</span><span class="p">,</span> <span class="n">use_progress_bar</span><span class="o">=</span><span class="n">use_progress_bar</span><span class="p">)</span>
 
         <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="n">mpas_mesh_filename</span><span class="p">,</span>
-                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span></div>
+                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_plot_cell_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Plot a lat/lon map of cell widths (mesh resolution)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        cell_width : numpy.ndarray</span>
 <span class="sd">            m x n array of cell width in km</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">cmap</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;cell_width_colormap&#39;</span><span class="p">)</span>
-        <span class="n">image_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
-                                    <span class="s1">&#39;cell_width_image_filename&#39;</span><span class="p">)</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'spherical_mesh'</span><span class="p">,</span> <span class="s1">'cell_width_colormap'</span><span class="p">)</span>
+        <span class="n">image_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'spherical_mesh'</span><span class="p">,</span>
+                                    <span class="s1">'cell_width_image_filename'</span><span class="p">)</span>
         <span class="n">register_sci_viz_colormaps</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mf">16.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">])</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_global</span><span class="p">()</span>
-        <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cell_width</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cell_width</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span>
                        <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span>
                        <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cartopy</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cartopy</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="c1"># only request the labels we want.  Creating the top and right labels</span>
-        <span class="c1"># and then hiding them confuses cartopy&#39;s title placement, leading to</span>
+        <span class="c1"># and then hiding them confuses cartopy's title placement, leading to</span>
         <span class="c1"># a non-finite axes bounding box</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span>
             <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span>
-            <span class="n">draw_labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">],</span>
+            <span class="n">draw_labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'left'</span><span class="p">,</span> <span class="s1">'bottom'</span><span class="p">],</span>
             <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span>
             <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-            <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">min_width</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">cell_width</span><span class="p">)</span>
         <span class="n">max_width</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">cell_width</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;Grid cell size, km, min: </span><span class="si">{</span><span class="n">min_width</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> max: </span><span class="si">{</span><span class="n">max_width</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="sa">f</span><span class="s1">'Grid cell size, km, min: </span><span class="si">{</span><span class="n">min_width</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> max: </span><span class="si">{</span><span class="n">max_width</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">.60</span><span class="p">)</span>
-        <span class="c1"># no tight_layout() here: bbox_inches=&#39;tight&#39; already crops the figure</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">image_filename</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="c1"># no tight_layout() here: bbox_inches='tight' already crops the figure</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">image_filename</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
@@ -296,7 +296,7 @@
 <div class="viewcode-block" id="QuasiUniformSphericalMeshStep">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.QuasiUniformSphericalMeshStep.html#compass.mesh.QuasiUniformSphericalMeshStep">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">QuasiUniformSphericalMeshStep</span><span class="p">(</span><span class="n">SphericalBaseStep</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating a quasi-uniform JIGSAW mesh with a constant approximate</span>
 <span class="sd">    cell width.  Subclasses can override the ``build_cell_width_lat_lon()``</span>
 <span class="sd">    method to define a lon/lat map of cell width.  They can override the</span>
@@ -306,13 +306,13 @@
 <span class="sd">    ----------</span>
 <span class="sd">    cell_width : float</span>
 <span class="sd">        The approximate cell width in km of the mesh if constant resolution</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="QuasiUniformSphericalMeshStep.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.QuasiUniformSphericalMeshStep.html#compass.mesh.QuasiUniformSphericalMeshStep.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'base_mesh'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">cell_width</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new step</span>
 
 <span class="sd">        Parameters</span>
@@ -328,13 +328,13 @@
 
 <span class="sd">        cell_width : float, optional</span>
 <span class="sd">            The approximate cell width in km of the mesh if constant resolution</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cell_width</span> <span class="o">=</span> <span class="n">cell_width</span>
 
         <span class="c1"># build mesh via JIGSAW!</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">hfun_scal</span> <span class="o">=</span> <span class="s1">&#39;absolute&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">hfun_hmax</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">hfun_scal</span> <span class="o">=</span> <span class="s1">'absolute'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">hfun_hmax</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">'inf'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">hfun_hmin</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="c1"># 2-dim. simplexes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">mesh_dims</span> <span class="o">=</span> <span class="mi">2</span>
@@ -345,23 +345,23 @@
 <div class="viewcode-block" id="QuasiUniformSphericalMeshStep.setup">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.QuasiUniformSphericalMeshStep.setup.html#compass.mesh.QuasiUniformSphericalMeshStep.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add JIGSAW options based on config options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;jigsaw_mesh_filename&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">geom_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;jigsaw_geom_filename&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">jcfg_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;jigsaw_jcfg_filename&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">hfun_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;jigsaw_hfun_filename&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'spherical_mesh'</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'jigsaw_mesh_filename'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">geom_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'jigsaw_geom_filename'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">jcfg_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'jigsaw_jcfg_filename'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">hfun_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'jigsaw_hfun_filename'</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="QuasiUniformSphericalMeshStep.run">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.QuasiUniformSphericalMeshStep.run.html#compass.mesh.QuasiUniformSphericalMeshStep.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">cell_width</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_cell_width_lat_lon</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_and_plot_cell_width</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">)</span>
 
@@ -374,7 +374,7 @@
 <div class="viewcode-block" id="QuasiUniformSphericalMeshStep.build_cell_width_lat_lon">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.QuasiUniformSphericalMeshStep.build_cell_width_lat_lon.html#compass.mesh.QuasiUniformSphericalMeshStep.build_cell_width_lat_lon">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        A function for creating cell width array for this mesh on a regular</span>
 <span class="sd">        latitude-longitude grid.  The default method use constant resolution</span>
 <span class="sd">        by setting the ``cell_width`` config option in the ``[spherical_mesh]``</span>
@@ -391,14 +391,14 @@
 
 <span class="sd">        lat : numpy.ndarray</span>
 <span class="sd">            longitude in degrees (length m and between -90 and 90)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">cell_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell_width</span>
         <span class="k">if</span> <span class="n">cell_width</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The cell width was not set.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'The cell width was not set.'</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  cell width: </span><span class="si">{</span><span class="n">cell_width</span><span class="si">}</span><span class="s1"> km&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  cell width: </span><span class="si">{</span><span class="n">cell_width</span><span class="si">}</span><span class="s1"> km'</span><span class="p">)</span>
 
         <span class="c1"># save the constant approximate resolution on a 10 degree grid</span>
         <span class="n">dlon</span> <span class="o">=</span> <span class="mf">10.</span>
@@ -414,7 +414,7 @@
 <div class="viewcode-block" id="QuasiUniformSphericalMeshStep.make_jigsaw_mesh">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.QuasiUniformSphericalMeshStep.make_jigsaw_mesh.html#compass.mesh.QuasiUniformSphericalMeshStep.make_jigsaw_mesh">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">make_jigsaw_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Build the JIGSAW mesh.  A subclass can override this method to build</span>
 <span class="sd">        the mesh in a different way.</span>
 
@@ -426,14 +426,14 @@
 
 <span class="sd">        cell_width : numpy.ndarray</span>
 <span class="sd">            m x n array of cell width in km</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
-        <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_REARTH&#39;</span><span class="p">]</span>
+        <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">'SHR_CONST_REARTH'</span><span class="p">]</span>
         <span class="n">opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opts</span>
 
         <span class="c1"># save HFUN data to file</span>
         <span class="n">hmat</span> <span class="o">=</span> <span class="n">jigsawpy</span><span class="o">.</span><span class="n">jigsaw_msh_t</span><span class="p">()</span>
-        <span class="n">hmat</span><span class="o">.</span><span class="n">mshID</span> <span class="o">=</span> <span class="s1">&#39;ELLIPSOID-GRID&#39;</span>
+        <span class="n">hmat</span><span class="o">.</span><span class="n">mshID</span> <span class="o">=</span> <span class="s1">'ELLIPSOID-GRID'</span>
         <span class="n">hmat</span><span class="o">.</span><span class="n">xgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
         <span class="n">hmat</span><span class="o">.</span><span class="n">ygrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
         <span class="n">hmat</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">cell_width</span>
@@ -441,12 +441,12 @@
 
         <span class="c1"># define JIGSAW geometry</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="n">jigsawpy</span><span class="o">.</span><span class="n">jigsaw_msh_t</span><span class="p">()</span>
-        <span class="n">geom</span><span class="o">.</span><span class="n">mshID</span> <span class="o">=</span> <span class="s1">&#39;ELLIPSOID-MESH&#39;</span>
+        <span class="n">geom</span><span class="o">.</span><span class="n">mshID</span> <span class="o">=</span> <span class="s1">'ELLIPSOID-MESH'</span>
         <span class="n">geom</span><span class="o">.</span><span class="n">radii</span> <span class="o">=</span> <span class="n">earth_radius</span> <span class="o">*</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
         <span class="n">jigsawpy</span><span class="o">.</span><span class="n">savemsh</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">geom_file</span><span class="p">,</span> <span class="n">geom</span><span class="p">)</span>
 
         <span class="n">savejig</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">jcfg_file</span><span class="p">,</span> <span class="n">opts</span><span class="p">)</span>
-        <span class="n">check_call</span><span class="p">([</span><span class="s1">&#39;jigsaw&#39;</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">jcfg_file</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
+        <span class="n">check_call</span><span class="p">([</span><span class="s1">'jigsaw'</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">jcfg_file</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 </div>
 
 
@@ -454,7 +454,7 @@
 <div class="viewcode-block" id="IcosahedralMeshStep">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.IcosahedralMeshStep.html#compass.mesh.IcosahedralMeshStep">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">IcosahedralMeshStep</span><span class="p">(</span><span class="n">SphericalBaseStep</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating an icosahedral JIGSAW mesh</span>
 
 <span class="sd">    Attributes</span>
@@ -464,13 +464,13 @@
 
 <span class="sd">    subdivisions : int</span>
 <span class="sd">        The number of subdivisions of the icosahedral mesh to perform</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="IcosahedralMeshStep.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.IcosahedralMeshStep.html#compass.mesh.IcosahedralMeshStep.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'base_mesh'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">cell_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subdivisions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new step</span>
 
 <span class="sd">        Parameters</span>
@@ -489,7 +489,7 @@
 
 <span class="sd">        subdivisions : int, optional</span>
 <span class="sd">            The number of subdivisions of the icosahedral mesh to perform</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="c1"># run as a subprocess so output goes to a log file</span>
@@ -509,25 +509,25 @@
 <div class="viewcode-block" id="IcosahedralMeshStep.setup">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.IcosahedralMeshStep.setup.html#compass.mesh.IcosahedralMeshStep.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add JIGSAW options based on config options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;jigsaw_mesh_filename&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">geom_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;jigsaw_geom_filename&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">jcfg_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;jigsaw_jcfg_filename&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'spherical_mesh'</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'jigsaw_mesh_filename'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">geom_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'jigsaw_geom_filename'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">jcfg_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'jigsaw_jcfg_filename'</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="IcosahedralMeshStep.run">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.IcosahedralMeshStep.run.html#compass.mesh.IcosahedralMeshStep.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Generate JIGSAW icosahedral mesh&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Generate JIGSAW icosahedral mesh'</span><span class="p">)</span>
 
         <span class="n">subdivisions</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> \
             <span class="bp">self</span><span class="o">.</span><span class="n">build_subdivisions_cell_width_lat_lon</span><span class="p">()</span>
@@ -541,7 +541,7 @@
 <div class="viewcode-block" id="IcosahedralMeshStep.make_jigsaw_mesh">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.IcosahedralMeshStep.make_jigsaw_mesh.html#compass.mesh.IcosahedralMeshStep.make_jigsaw_mesh">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">make_jigsaw_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subdivisions</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Make the JIGSAW mesh.  A subclass can override this method to build</span>
 <span class="sd">        the mesh in a different way.</span>
 
@@ -549,12 +549,12 @@
 <span class="sd">        ----------</span>
 <span class="sd">        subdivisions : int</span>
 <span class="sd">            The number of subdivisions of the icosahedron</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_REARTH&#39;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">'SHR_CONST_REARTH'</span><span class="p">]</span>
         <span class="n">opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opts</span>
 
         <span class="n">geom</span> <span class="o">=</span> <span class="n">jigsawpy</span><span class="o">.</span><span class="n">jigsaw_msh_t</span><span class="p">()</span>
-        <span class="n">geom</span><span class="o">.</span><span class="n">mshID</span> <span class="o">=</span> <span class="s1">&#39;ellipsoid-mesh&#39;</span>
+        <span class="n">geom</span><span class="o">.</span><span class="n">mshID</span> <span class="o">=</span> <span class="s1">'ellipsoid-mesh'</span>
         <span class="n">geom</span><span class="o">.</span><span class="n">radii</span> <span class="o">=</span> <span class="n">earth_radius</span> <span class="o">*</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
         <span class="n">jigsawpy</span><span class="o">.</span><span class="n">savemsh</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">geom_file</span><span class="p">,</span> <span class="n">geom</span><span class="p">)</span>
 
@@ -565,7 +565,7 @@
 <div class="viewcode-block" id="IcosahedralMeshStep.build_subdivisions_cell_width_lat_lon">
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.IcosahedralMeshStep.build_subdivisions_cell_width_lat_lon.html#compass.mesh.IcosahedralMeshStep.build_subdivisions_cell_width_lat_lon">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">build_subdivisions_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        A function for creating cell width array for this mesh on a regular</span>
 <span class="sd">        latitude-longitude grid.</span>
 
@@ -582,28 +582,28 @@
 
 <span class="sd">        lat : numpy.ndarray</span>
 <span class="sd">            longitude in degrees (length m and between -90 and 90)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">icosahedral_method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;icosahedral_method&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">icosahedral_method</span> <span class="o">==</span> <span class="s1">&#39;subdivisions&#39;</span><span class="p">:</span>
+        <span class="n">icosahedral_method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'spherical_mesh'</span><span class="p">,</span> <span class="s1">'icosahedral_method'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">icosahedral_method</span> <span class="o">==</span> <span class="s1">'subdivisions'</span><span class="p">:</span>
             <span class="n">subdivisions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subdivisions</span>
             <span class="k">if</span> <span class="n">subdivisions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The number of subdivisions was not set.&#39;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">icosahedral_method</span> <span class="o">==</span> <span class="s1">&#39;cell_width&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'The number of subdivisions was not set.'</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">icosahedral_method</span> <span class="o">==</span> <span class="s1">'cell_width'</span><span class="p">:</span>
             <span class="n">cell_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell_width</span>
             <span class="k">if</span> <span class="n">cell_width</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The cell width was not set.&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'The cell width was not set.'</span><span class="p">)</span>
             <span class="n">subdivisions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_subdivisions</span><span class="p">(</span><span class="n">cell_width</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&quot;icosahedral_method&quot; must be either &#39;</span>
-                             <span class="sa">f</span><span class="s1">&#39;&quot;cell_width&quot; or the &quot;subdivisions&quot;.  Got &#39;</span>
-                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">icosahedral_method</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'"icosahedral_method" must be either '</span>
+                             <span class="sa">f</span><span class="s1">'"cell_width" or the "subdivisions".  Got '</span>
+                             <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">icosahedral_method</span><span class="si">}</span><span class="s1">.'</span><span class="p">)</span>
 
         <span class="n">cell_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cell_width</span><span class="p">(</span><span class="n">subdivisions</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  cell width: </span><span class="si">{</span><span class="n">cell_width</span><span class="si">}</span><span class="s1"> km&#39;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  subdivisions: </span><span class="si">{</span><span class="n">subdivisions</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  cell width: </span><span class="si">{</span><span class="n">cell_width</span><span class="si">}</span><span class="s1"> km'</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  subdivisions: </span><span class="si">{</span><span class="n">subdivisions</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="c1"># save the constant approximate resolution on a 1 degree grid</span>
         <span class="n">nlon</span> <span class="o">=</span> <span class="mi">361</span>
@@ -618,7 +618,7 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.IcosahedralMeshStep.get_subdivisions.html#compass.mesh.IcosahedralMeshStep.get_subdivisions">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_subdivisions</span><span class="p">(</span><span class="n">cell_width</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Find the number of subdivisions of an icosahedron to achieve a</span>
 <span class="sd">        resolution as close as possible to ``cell_width``.</span>
 
@@ -631,8 +631,8 @@
 <span class="sd">        -------</span>
 <span class="sd">        subdivisions : int</span>
 <span class="sd">            The number of subdivisions of the icosahedron</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_REARTH&#39;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">'SHR_CONST_REARTH'</span><span class="p">]</span>
         <span class="n">earth_area</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">earth_radius</span> <span class="o">**</span> <span class="mi">2</span>
 
         <span class="c1"># Using Euclidean, not spherical area, so not accurate for large cell</span>
@@ -649,7 +649,7 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.IcosahedralMeshStep.get_cell_width.html#compass.mesh.IcosahedralMeshStep.get_cell_width">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_cell_width</span><span class="p">(</span><span class="n">subdivisions</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the approximate cell width for an icosahedral mesh given either a</span>
 <span class="sd">        number of subdivisions of the icosahedron.  As a rule of thumb:</span>
 
@@ -676,8 +676,8 @@
 <span class="sd">        -------</span>
 <span class="sd">        cell_width : float</span>
 <span class="sd">            The approximate size in km of each cell</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_REARTH&#39;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">'SHR_CONST_REARTH'</span><span class="p">]</span>
         <span class="n">earth_area</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">earth_radius</span> <span class="o">**</span> <span class="mi">2</span>
 
         <span class="c1"># compute and save the cell widths for later use in computing mesh</span>

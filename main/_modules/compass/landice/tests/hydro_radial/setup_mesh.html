@@ -123,19 +123,19 @@
 <div class="viewcode-block" id="SetupMesh">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.hydro_radial.setup_mesh.SetupMesh.html#compass.landice.tests.hydro_radial.setup_mesh.SetupMesh">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SetupMesh</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating a mesh and initial condition for dome test cases</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    initial_condition : {&#39;zero&#39;, &#39;exact&#39;}</span>
-<span class="sd">        The type of initial condition to set up.  &#39;zero&#39; means nearly zero ice</span>
-<span class="sd">        thickness.  &#39;exact&#39; uses a precomputed near exact solution from a file.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    initial_condition : {'zero', 'exact'}</span>
+<span class="sd">        The type of initial condition to set up.  'zero' means nearly zero ice</span>
+<span class="sd">        thickness.  'exact' uses a precomputed near exact solution from a file.</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="SetupMesh.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.hydro_radial.setup_mesh.SetupMesh.html#compass.landice.tests.hydro_radial.setup_mesh.SetupMesh.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">initial_condition</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -143,24 +143,24 @@
 <span class="sd">        test_case : compass.TestCase</span>
 <span class="sd">            The test case this step belongs to</span>
 
-<span class="sd">        initial_condition : {&#39;zero&#39;, &#39;exact&#39;}</span>
-<span class="sd">            The type of initial condition to set up.  &#39;zero&#39; means nearly zero</span>
-<span class="sd">            ice thickness.  &#39;exact&#39; uses a precomputed near exact solution from</span>
+<span class="sd">        initial_condition : {'zero', 'exact'}</span>
+<span class="sd">            The type of initial condition to set up.  'zero' means nearly zero</span>
+<span class="sd">            ice thickness.  'exact' uses a precomputed near exact solution from</span>
 <span class="sd">            a file.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;setup_mesh&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'setup_mesh'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">initial_condition</span> <span class="o">=</span> <span class="n">initial_condition</span>
 
-        <span class="k">if</span> <span class="n">initial_condition</span> <span class="o">==</span> <span class="s1">&#39;exact&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;near_exact_solution_r_P_W.txt&#39;</span><span class="p">,</span>
-                                <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.hydro_radial&#39;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">initial_condition</span> <span class="o">!=</span> <span class="s1">&#39;zero&#39;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown initial condition type specified &quot;</span>
-                             <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">initial_condition</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">initial_condition</span> <span class="o">==</span> <span class="s1">'exact'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'near_exact_solution_r_P_W.txt'</span><span class="p">,</span>
+                                <span class="n">package</span><span class="o">=</span><span class="s1">'compass.landice.tests.hydro_radial'</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">initial_condition</span> <span class="o">!=</span> <span class="s1">'zero'</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Unknown initial condition type specified "</span>
+                             <span class="s2">"</span><span class="si">{}</span><span class="s2">."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">initial_condition</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">)</span></div>
 
 
     <span class="c1"># no setup() method is needed</span>
@@ -168,41 +168,41 @@
 <div class="viewcode-block" id="SetupMesh.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.hydro_radial.setup_mesh.SetupMesh.run.html#compass.landice.tests.hydro_radial.setup_mesh.SetupMesh.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">initial_condition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_condition</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;hydro_radial&#39;</span><span class="p">]</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'hydro_radial'</span><span class="p">]</span>
 
-        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">)</span>
-        <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;dc&#39;</span><span class="p">)</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'nx'</span><span class="p">)</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'ny'</span><span class="p">)</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'dc'</span><span class="p">)</span>
 
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span> <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                       <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;grid.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">'grid.nc'</span><span class="p">)</span>
 
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;mpas_grid.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">'mpas_grid.nc'</span><span class="p">)</span>
 
-        <span class="n">levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;levels&#39;</span><span class="p">)</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_landice_grid_from_generic_mpas_grid&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_grid.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span>
-                <span class="s1">&#39;--hydro&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;--diri&#39;</span><span class="p">]</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'levels'</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'create_landice_grid_from_generic_mpas_grid'</span><span class="p">,</span>
+                <span class="s1">'-i'</span><span class="p">,</span> <span class="s1">'mpas_grid.nc'</span><span class="p">,</span>
+                <span class="s1">'-o'</span><span class="p">,</span> <span class="s1">'landice_grid.nc'</span><span class="p">,</span>
+                <span class="s1">'-l'</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span>
+                <span class="s1">'--hydro'</span><span class="p">,</span>
+                <span class="s1">'--diri'</span><span class="p">]</span>
 
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
-        <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
-                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
+        <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">,</span>
+                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">)</span>
 
         <span class="n">_setup_hydro_radial_initial_conditions</span><span class="p">(</span>
-            <span class="n">logger</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
+            <span class="n">logger</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">,</span>
             <span class="n">initial_condition</span><span class="o">=</span><span class="n">initial_condition</span><span class="p">)</span></div>
 </div>
 
@@ -210,7 +210,7 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_setup_hydro_radial_initial_conditions</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span>
                                            <span class="n">initial_condition</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Add the initial condition to the given MPAS mesh file</span>
 
 <span class="sd">    Parameters</span>
@@ -221,22 +221,22 @@
 <span class="sd">    filename : str</span>
 <span class="sd">        file to setup hydro_radial</span>
 
-<span class="sd">    initial_condition : {&#39;zero&#39;, &#39;exact&#39;}</span>
+<span class="sd">    initial_condition : {'zero', 'exact'}</span>
 <span class="sd">        the type of initial condition</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Open the file, get needed dimensions</span>
-    <span class="n">gridfile</span> <span class="o">=</span> <span class="n">NetCDFFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
-    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gridfile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">])</span>
+    <span class="n">gridfile</span> <span class="o">=</span> <span class="n">NetCDFFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">)</span>
+    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gridfile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">])</span>
     <span class="c1"># Get variables</span>
-    <span class="n">xCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xCell&#39;</span><span class="p">]</span>
-    <span class="n">yCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yCell&#39;</span><span class="p">]</span>
-    <span class="n">xEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xEdge&#39;</span><span class="p">]</span>
-    <span class="n">yEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yEdge&#39;</span><span class="p">]</span>
-    <span class="n">xVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xVertex&#39;</span><span class="p">]</span>
-    <span class="n">yVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yVertex&#39;</span><span class="p">]</span>
-    <span class="n">thickness</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span>
-    <span class="n">bedTopography</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bedTopography&#39;</span><span class="p">]</span>
-    <span class="n">layerThicknessFractions</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;layerThicknessFractions&#39;</span><span class="p">]</span>
+    <span class="n">xCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xCell'</span><span class="p">]</span>
+    <span class="n">yCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yCell'</span><span class="p">]</span>
+    <span class="n">xEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xEdge'</span><span class="p">]</span>
+    <span class="n">yEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yEdge'</span><span class="p">]</span>
+    <span class="n">xVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xVertex'</span><span class="p">]</span>
+    <span class="n">yVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yVertex'</span><span class="p">]</span>
+    <span class="n">thickness</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'thickness'</span><span class="p">]</span>
+    <span class="n">bedTopography</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'bedTopography'</span><span class="p">]</span>
+    <span class="n">layerThicknessFractions</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'layerThicknessFractions'</span><span class="p">]</span>
 
     <span class="c1"># Find center of domain</span>
     <span class="n">x0</span> <span class="o">=</span> <span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
@@ -246,7 +246,7 @@
 
     <span class="c1"># Center the dome in the center of the cell that is closest to the center</span>
     <span class="c1"># of the domain.</span>
-    <span class="c1">#   NOTE: for some meshes, maybe we don&#39;t want to do this - could add</span>
+    <span class="c1">#   NOTE: for some meshes, maybe we don't want to do this - could add</span>
     <span class="c1">#   command-line argument controlling this later.</span>
     <span class="n">putOriginOnACell</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">if</span> <span class="n">putOriginOnACell</span><span class="p">:</span>
@@ -285,56 +285,56 @@
     <span class="n">layerThicknessFractions</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">nVertLevels</span>
 
     <span class="c1"># melt</span>
-    <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;basalMeltInput&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'basalMeltInput'</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="c1"># 20 cm/yr as SI mass rate</span>
-    <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;basalMeltInput&#39;</span><span class="p">][:]</span> <span class="o">=</span> \
+    <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'basalMeltInput'</span><span class="p">][:]</span> <span class="o">=</span> \
         <span class="mf">0.2</span> <span class="o">/</span> <span class="p">(</span><span class="mf">365.0</span> <span class="o">*</span> <span class="mf">24.0</span> <span class="o">*</span> <span class="mf">3600.0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1000.0</span>
     <span class="c1"># Use this line to only add a source term to the center cell - useful for</span>
     <span class="c1"># debugging divergence</span>
 
     <span class="c1"># value from ramp</span>
-    <span class="c1"># gridfile.variables[&#39;basalMeltInput&#39;][0,r==0.0] = 4.0e-10 * 1000.0 *100</span>
+    <span class="c1"># gridfile.variables['basalMeltInput'][0,r==0.0] = 4.0e-10 * 1000.0 *100</span>
 
     <span class="c1"># velocity</span>
-    <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;uReconstructX&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'uReconstructX'</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">velo</span> <span class="o">=</span> <span class="n">v0</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">R1</span><span class="p">)</span><span class="o">**</span><span class="mi">5</span> <span class="o">/</span> <span class="p">(</span><span class="n">L</span> <span class="o">-</span> <span class="n">R1</span><span class="p">)</span><span class="o">**</span><span class="mi">5</span>
     <span class="n">velo</span><span class="p">[</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">R1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;uReconstructX&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">velo</span>
-    <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;uReconstructX&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="n">thickness</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'uReconstructX'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">velo</span>
+    <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'uReconstructX'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="n">thickness</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-    <span class="k">if</span> <span class="n">initial_condition</span> <span class="o">==</span> <span class="s1">&#39;zero&#39;</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using &#39;zero&#39; option for initial condition.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">initial_condition</span> <span class="o">==</span> <span class="s1">'zero'</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Using 'zero' option for initial condition."</span><span class="p">)</span>
         <span class="c1"># set some small initial value to keep adaptive time stepper from</span>
         <span class="c1"># taking a huge time step initially</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;waterThickness&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">0.01</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;waterPressure&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="k">elif</span> <span class="n">initial_condition</span> <span class="o">==</span> <span class="s1">&#39;exact&#39;</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using &#39;exact&#39; option for initial condition.&quot;</span><span class="p">)</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'waterThickness'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">0.01</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'waterPressure'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">elif</span> <span class="n">initial_condition</span> <span class="o">==</span> <span class="s1">'exact'</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Using 'exact' option for initial condition."</span><span class="p">)</span>
         <span class="c1"># IC on thickness</span>
         <span class="c1"># import exact solution</span>
-        <span class="n">fnameSoln</span> <span class="o">=</span> <span class="s1">&#39;near_exact_solution_r_P_W.txt&#39;</span>
-        <span class="n">soln</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fnameSoln</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">fnameSoln</span> <span class="o">=</span> <span class="s1">'near_exact_solution_r_P_W.txt'</span>
+        <span class="n">soln</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fnameSoln</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">','</span><span class="p">)</span>
         <span class="n">rsoln</span> <span class="o">=</span> <span class="n">soln</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">Psoln</span> <span class="o">=</span> <span class="n">soln</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="n">Wsoln</span> <span class="o">=</span> <span class="n">soln</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
 
         <span class="n">Wmpas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">rsoln</span><span class="p">,</span> <span class="n">Wsoln</span><span class="p">)</span>  <span class="c1"># apply exact solution</span>
         <span class="n">Wmpas</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">Wmpas</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;waterThickness&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">Wmpas</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'waterThickness'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">Wmpas</span>
 
         <span class="c1"># IC on water pressure</span>
         <span class="c1"># apply exact solution</span>
         <span class="n">Pmpas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">rsoln</span><span class="p">,</span> <span class="n">Psoln</span><span class="p">)</span>
         <span class="n">Pmpas</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">Pmpas</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;waterPressure&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">Pmpas</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'waterPressure'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">Pmpas</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown initial condition type specified &quot;</span>
-                         <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">initial_condition</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Unknown initial condition type specified "</span>
+                         <span class="s2">"</span><span class="si">{}</span><span class="s2">."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">initial_condition</span><span class="p">))</span>
 
     <span class="n">gridfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Successfully added hydro_radial initial conditions to: &#39;</span>
-                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Successfully added hydro_radial initial conditions to: '</span>
+                <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
 </pre></div>
 
            </div>

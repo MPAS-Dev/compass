@@ -125,14 +125,14 @@
 <div class="viewcode-block" id="Step">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.Step.html#compass.Step">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Step</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The base class for a step of a test cases, such as setting up a mesh,</span>
 <span class="sd">    creating an initial condition, or running the MPAS core forward in time.</span>
 <span class="sd">    The step is the smallest unit of work in compass that can be run on its</span>
 <span class="sd">    own by a user, though users will typically run full test cases or test</span>
 <span class="sd">    suites.</span>
 
-<span class="sd">    Below, the terms &quot;input&quot; and &quot;output&quot; refer to inputs and outputs to the</span>
+<span class="sd">    Below, the terms "input" and "output" refer to inputs and outputs to the</span>
 <span class="sd">    step itself, not necessarily the MPAS model.  In fact, the MPAS model</span>
 <span class="sd">    itself is often an input to the step.</span>
 
@@ -155,8 +155,8 @@
 
 <span class="sd">    path : str</span>
 <span class="sd">        the path within the base work directory of the step, made up of</span>
-<span class="sd">        ``mpas_core``, ``test_group``, the test case&#39;s ``subdir`` and the</span>
-<span class="sd">        step&#39;s ``subdir``</span>
+<span class="sd">        ``mpas_core``, ``test_group``, the test case's ``subdir`` and the</span>
+<span class="sd">        step's ``subdir``</span>
 
 <span class="sd">    cpus_per_task : int</span>
 <span class="sd">        the number of cores per task the step would ideally use.  If</span>
@@ -223,7 +223,7 @@
 <span class="sd">        during setup and read from during run</span>
 
 <span class="sd">    work_dir : str</span>
-<span class="sd">        The step&#39;s work directory, defined during setup as the combination</span>
+<span class="sd">        The step's work directory, defined during setup as the combination</span>
 <span class="sd">        of ``base_work_dir`` and ``path``</span>
 
 <span class="sd">    base_work_dir : str</span>
@@ -246,7 +246,7 @@
 <span class="sd">        subprocess if there is not a good way to redirect output to a log</span>
 <span class="sd">        file (e.g. if the step calls external code that, in turn, calls</span>
 <span class="sd">        additional subprocesses).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="Step.__init__">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.Step.html#compass.Step.__init__">[docs]</a>
@@ -254,7 +254,7 @@
                  <span class="n">min_cpus_per_task</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                  <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_memory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">run_as_subprocess</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -307,7 +307,7 @@
 <span class="sd">            subprocess if there is not a good way to redirect output to a log</span>
 <span class="sd">            file (e.g. if the step calls external code that, in turn, calls</span>
 <span class="sd">            additional subprocesses).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span> <span class="o">=</span> <span class="n">test_case</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">mpas_core</span>
@@ -356,7 +356,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">set_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_cpus_per_task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">max_memory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update the resources for the subtask.  This can be done within init,</span>
 <span class="sd">        ``setup()`` or ``runtime_setup()`` of this step, or init,</span>
 <span class="sd">        ``configure()`` or ``run()`` for the test case that this step belongs</span>
@@ -392,7 +392,7 @@
 <span class="sd">            the amount of memory that the step is allowed to use in MB.</span>
 <span class="sd">            This is currently just a placeholder for later use with task</span>
 <span class="sd">            parallelism</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">cpus_per_task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="n">cpus_per_task</span>
         <span class="k">if</span> <span class="n">min_cpus_per_task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -410,7 +410,7 @@
 <div class="viewcode-block" id="Step.constrain_resources">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.Step.constrain_resources.html#compass.Step.constrain_resources">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Constrain ``cpus_per_task`` and ``ntasks`` based on the number of</span>
 <span class="sd">        cores available to this step</span>
 
@@ -419,47 +419,47 @@
 <span class="sd">        available_resources : dict</span>
 <span class="sd">            A dictionary containing available resources (cores, tasks, nodes</span>
 <span class="sd">            and cores_per_node)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">mpi_allowed</span> <span class="o">=</span> <span class="n">available_resources</span><span class="p">[</span><span class="s1">&#39;mpi_allowed&#39;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">mpi_allowed</span> <span class="o">=</span> <span class="n">available_resources</span><span class="p">[</span><span class="s1">'mpi_allowed'</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">mpi_allowed</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s1">&#39;You are trying to run an MPI job on a login node.</span><span class="se">\n</span><span class="s1">&#39;</span>
-                <span class="s1">&#39;Please switch to a compute node.&#39;</span><span class="p">)</span>
+                <span class="s1">'You are trying to run an MPI job on a login node.</span><span class="se">\n</span><span class="s1">'</span>
+                <span class="s1">'Please switch to a compute node.'</span><span class="p">)</span>
 
-        <span class="n">available_cores</span> <span class="o">=</span> <span class="n">available_resources</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span>
-        <span class="n">cores_per_node</span> <span class="o">=</span> <span class="n">available_resources</span><span class="p">[</span><span class="s1">&#39;cores_per_node&#39;</span><span class="p">]</span>
+        <span class="n">available_cores</span> <span class="o">=</span> <span class="n">available_resources</span><span class="p">[</span><span class="s1">'cores'</span><span class="p">]</span>
+        <span class="n">cores_per_node</span> <span class="o">=</span> <span class="n">available_resources</span><span class="p">[</span><span class="s1">'cores_per_node'</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">,</span>
                                  <span class="nb">min</span><span class="p">(</span><span class="n">available_cores</span><span class="p">,</span> <span class="n">cores_per_node</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;Available cpus_per_task (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="si">}</span><span class="s1">) is below the &#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;minimum of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span><span class="si">}</span><span class="s1"> for step </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s1">'Available cpus_per_task (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="si">}</span><span class="s1">) is below the '</span>
+                <span class="sa">f</span><span class="s1">'minimum of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span><span class="si">}</span><span class="s1"> for step </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="n">available_tasks</span> <span class="o">=</span> <span class="n">available_cores</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">available_tasks</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;Available number of MPI tasks (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">) is below the &#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;minimum of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span><span class="si">}</span><span class="s1"> for step </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+                <span class="sa">f</span><span class="s1">'Available number of MPI tasks (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">) is below the '</span>
+                <span class="sa">f</span><span class="s1">'minimum of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span><span class="si">}</span><span class="s1"> for step </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Step.setup">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.Step.setup.html#compass.Step.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up the test case in the work directory, including downloading any</span>
 <span class="sd">        dependencies.  The step should override this function to perform setup</span>
 <span class="sd">        operations such as generating namelist and streams files, adding inputs</span>
 <span class="sd">        and outputs.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="Step.runtime_setup">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.Step.runtime_setup.html#compass.Step.runtime_setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">runtime_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update attributes of the step at runtime before calling the ``run()``</span>
 <span class="sd">        method.  The most common reason to override this method is to</span>
 <span class="sd">        determine the number of cores and threads to run with.  It may also</span>
@@ -467,17 +467,17 @@
 <span class="sd">        graph and partition files before running a parallel command. When</span>
 <span class="sd">        running with parallel tasks in the future, this method will be called</span>
 <span class="sd">        for each step in serial before steps are run in task parallel.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="Step.run">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.Step.run.html#compass.Step.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run the step.  Every child class must override this method to perform</span>
 <span class="sd">        the main work.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">pass</span></div>
 
 
@@ -486,7 +486,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">add_input_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">database_component</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">package</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add an input file to the step (but not necessarily to the MPAS model).</span>
 <span class="sd">        The file can be local, a symlink to a file that will be created in</span>
 <span class="sd">        another step, a symlink to a file in one of the databases for files</span>
@@ -495,14 +495,14 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        filename : str, optional</span>
-<span class="sd">            The relative path of the input file within the step&#39;s work</span>
+<span class="sd">            The relative path of the input file within the step's work</span>
 <span class="sd">            directory. The default is the file name (without the path) of</span>
 <span class="sd">            ``target``.</span>
 
 <span class="sd">        target : str, optional</span>
 <span class="sd">            A file that will be the target of a symlink to ``filename``.  If</span>
 <span class="sd">            ``database`` is not specified, this should be an absolute path or a</span>
-<span class="sd">            relative path from the step&#39;s work directory.  If ``database`` is</span>
+<span class="sd">            relative path from the step's work directory.  If ``database`` is</span>
 <span class="sd">            specified, this is a relative path within the database and the name</span>
 <span class="sd">            of the remote file to download.</span>
 
@@ -513,7 +513,7 @@
 <span class="sd">            determined by combining the base URL of the data server, the</span>
 <span class="sd">            relative path for the core, ``database`` and ``target``.</span>
 
-<span class="sd">        database_component : {&#39;ocean&#39;, &#39;seaice&#39;, &#39;landice&#39;, None}, optional</span>
+<span class="sd">        database_component : {'ocean', 'seaice', 'landice', None}, optional</span>
 <span class="sd">            The prefix of a database root that the database resides in.  By</span>
 <span class="sd">            default this is the MPAS core name for this step.  The suffix</span>
 <span class="sd">            ``_database_root`` is appended to this string to determine the</span>
@@ -528,18 +528,18 @@
 <span class="sd">        work_dir_target : str, optional</span>
 <span class="sd">            Same as ``target`` but with a path relative to the base work</span>
 <span class="sd">            directory.  This is useful if it is not easy to determine the</span>
-<span class="sd">            relative path between the step&#39;s work directory and the target.</span>
+<span class="sd">            relative path between the step's work directory and the target.</span>
 
 <span class="sd">        package : str or package, optional</span>
 <span class="sd">            A package within ``compass`` from which the file should be linked</span>
 
 <span class="sd">        copy : bool, optional</span>
 <span class="sd">            Whether to make a copy of the file, rather than a symlink</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least one of local_name and target are &#39;</span>
-                                 <span class="s1">&#39;required.&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'At least one of local_name and target are '</span>
+                                 <span class="s1">'required.'</span><span class="p">)</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
@@ -552,7 +552,7 @@
 <div class="viewcode-block" id="Step.add_output_file">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_output_file.html#compass.Step.add_output_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_output_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add the output file that must be produced by this step and may be made</span>
 <span class="sd">        available as an input to steps, perhaps in other test cases.  This file</span>
 <span class="sd">        must exist after the test has run or an exception will be raised.</span>
@@ -560,26 +560,26 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        filename : str</span>
-<span class="sd">            The relative path of the output file within the step&#39;s work</span>
+<span class="sd">            The relative path of the output file within the step's work</span>
 <span class="sd">            directory</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Step.add_model_as_input">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_model_as_input.html#compass.Step.add_model_as_input">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_model_as_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        make a link to the model executable and add it to the inputs</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;&lt;&lt;&lt;model&gt;&gt;&gt;&#39;</span><span class="p">)</span></div>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'&lt;&lt;&lt;model&gt;&gt;&gt;'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Step.add_namelist_file">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_namelist_file.html#compass.Step.add_namelist_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_namelist_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">namelist</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                          <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+                          <span class="n">mode</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add a file with updates to namelist options to the step to be parsed</span>
 <span class="sd">        when generating a complete namelist file if and when the step gets set</span>
 <span class="sd">        up.</span>
@@ -596,11 +596,11 @@
 <span class="sd">            The name of the namelist file to write out, ``namelist.&lt;core&gt;`` by</span>
 <span class="sd">            default</span>
 
-<span class="sd">        mode : {&#39;init&#39;, &#39;forward&#39;}, optional</span>
+<span class="sd">        mode : {'init', 'forward'}, optional</span>
 <span class="sd">            The mode that the model will run in</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'namelist.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
 
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist_data</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">namelist_data</span><span class="p">[</span><span class="n">out_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -613,8 +613,8 @@
 
 <div class="viewcode-block" id="Step.add_namelist_options">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_namelist_options.html#compass.Step.add_namelist_options">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_namelist_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_namelist_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add the namelist replacements to be parsed when generating a namelist</span>
 <span class="sd">        file if and when the step gets set up.</span>
 
@@ -628,11 +628,11 @@
 <span class="sd">            The name of the namelist file to write out, ``namelist.&lt;core&gt;`` by</span>
 <span class="sd">            default</span>
 
-<span class="sd">        mode : {&#39;init&#39;, &#39;forward&#39;}, optional</span>
+<span class="sd">        mode : {'init', 'forward'}, optional</span>
 <span class="sd">            The mode that the model will run in</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'namelist.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
 
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist_data</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">namelist_data</span><span class="p">[</span><span class="n">out_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -645,7 +645,7 @@
 <div class="viewcode-block" id="Step.update_namelist_at_runtime">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.Step.update_namelist_at_runtime.html#compass.Step.update_namelist_at_runtime">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_namelist_at_runtime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update an existing namelist file with additional options.  This would</span>
 <span class="sd">        typically be used for namelist options that are only known at runtime,</span>
 <span class="sd">        not during setup, typically those related to the number of nodes and</span>
@@ -660,14 +660,14 @@
 <span class="sd">        out_name : str, optional</span>
 <span class="sd">            The name of the namelist file to write out, ``namelist.&lt;core&gt;`` by</span>
 <span class="sd">            default</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'namelist.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Warning: replacing namelist options in </span><span class="si">{</span><span class="n">out_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Warning: replacing namelist options in </span><span class="si">{</span><span class="n">out_name</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">out_name</span><span class="p">)</span>
 
@@ -681,7 +681,7 @@
 <div class="viewcode-block" id="Step.update_namelist_pio">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.Step.update_namelist_pio.html#compass.Step.update_namelist_pio">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_namelist_pio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Modify the namelist so the number of PIO tasks and the stride between</span>
 <span class="sd">        them consistent with the number of nodes and cores (one PIO task per</span>
 <span class="sd">        node).</span>
@@ -691,26 +691,26 @@
 <span class="sd">        out_name : str, optional</span>
 <span class="sd">            The name of the namelist file to write out, ``namelist.&lt;core&gt;`` by</span>
 <span class="sd">            default</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span>
 
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'namelist.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
 
-        <span class="n">cores_per_node</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;cores_per_node&#39;</span><span class="p">)</span>
+        <span class="n">cores_per_node</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'parallel'</span><span class="p">,</span> <span class="s1">'cores_per_node'</span><span class="p">)</span>
 
         <span class="c1"># update PIO tasks based on the machine settings and the available</span>
         <span class="c1"># number or cores</span>
         <span class="n">pio_num_iotasks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">cores</span> <span class="o">/</span> <span class="n">cores_per_node</span><span class="p">))</span>
         <span class="n">pio_stride</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">//</span> <span class="n">pio_num_iotasks</span>
         <span class="k">if</span> <span class="n">pio_stride</span> <span class="o">&gt;</span> <span class="n">cores_per_node</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Not enough nodes for the number of cores.  &#39;</span>
-                             <span class="sa">f</span><span class="s1">&#39;cores: </span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s1">, cores per node: &#39;</span>
-                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cores_per_node</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Not enough nodes for the number of cores.  '</span>
+                             <span class="sa">f</span><span class="s1">'cores: </span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s1">, cores per node: '</span>
+                             <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">cores_per_node</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
-        <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_pio_num_iotasks&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pio_num_iotasks</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;config_pio_stride&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pio_stride</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+        <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_pio_num_iotasks'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">pio_num_iotasks</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                        <span class="s1">'config_pio_stride'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">pio_stride</span><span class="si">}</span><span class="s1">'</span><span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">replacements</span><span class="p">,</span>
                                         <span class="n">out_name</span><span class="o">=</span><span class="n">out_name</span><span class="p">)</span></div>
@@ -719,8 +719,8 @@
 <div class="viewcode-block" id="Step.add_streams_file">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_streams_file.html#compass.Step.add_streams_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_streams_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">streams</span><span class="p">,</span> <span class="n">template_replacements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                         <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+                         <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add a streams file to the step to be parsed when generating a complete</span>
 <span class="sd">        streams file if and when the step gets set up.</span>
 
@@ -740,11 +740,11 @@
 <span class="sd">            The name of the streams file to write out, ``streams.&lt;core&gt;`` by</span>
 <span class="sd">            default</span>
 
-<span class="sd">        mode : {&#39;init&#39;, &#39;forward&#39;}, optional</span>
+<span class="sd">        mode : {'init', 'forward'}, optional</span>
 <span class="sd">            The mode that the model will run in</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;streams.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'streams.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
 
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">streams_data</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">streams_data</span><span class="p">[</span><span class="n">out_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -758,7 +758,7 @@
 <a class="viewcode-back" href="../../developers_guide/generated/compass.Step.update_streams_at_runtime.html#compass.Step.update_streams_at_runtime">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_streams_at_runtime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">streams</span><span class="p">,</span>
                                   <span class="n">template_replacements</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update the streams files during the run phase of this step using the</span>
 <span class="sd">        given template and replacements.  This may be useful for updating</span>
 <span class="sd">        streams based on config options that a user may have changed before</span>
@@ -778,17 +778,17 @@
 <span class="sd">        out_name : str, optional</span>
 <span class="sd">            The name of the streams file to write out, ``streams.&lt;core&gt;`` by</span>
 <span class="sd">            default</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;streams.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'streams.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
 
         <span class="k">if</span> <span class="n">template_replacements</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Warning: updating streams in </span><span class="si">{</span><span class="n">out_name</span><span class="si">}</span><span class="s1"> using the &#39;</span>
-                  <span class="sa">f</span><span class="s1">&#39;following template and replacements:&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">streams</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Warning: updating streams in </span><span class="si">{</span><span class="n">out_name</span><span class="si">}</span><span class="s1"> using the '</span>
+                  <span class="sa">f</span><span class="s1">'following template and replacements:'</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">streams</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">template_replacements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">out_name</span><span class="p">)</span>
 
@@ -799,7 +799,7 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">process_inputs_and_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># noqa: C901</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process the inputs to and outputs from a step added with</span>
 <span class="sd">        :py:meth:`compass.Step.add_input_file` and</span>
 <span class="sd">        :py:meth:`compass.Step.add_output_file`.  This includes downloading</span>
@@ -807,52 +807,52 @@
 <span class="sd">        paths.</span>
 
 <span class="sd">        Also generates namelist and streams files</span>
-<span class="sd">       &quot;&quot;&quot;</span>
+<span class="sd">       """</span>
         <span class="n">mpas_core</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span>
         <span class="n">step_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="k">with</span> <span class="n">package_path</span><span class="p">(</span><span class="s1">&#39;compass&#39;</span><span class="p">,</span> <span class="s1">&#39;database_subdirs.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">path</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">package_path</span><span class="p">(</span><span class="s1">'compass'</span><span class="p">,</span> <span class="s1">'database_subdirs.json'</span><span class="p">)</span> <span class="k">as</span> <span class="n">path</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
                 <span class="n">database_subdirs</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
 
         <span class="c1"># process the outputs first because cached outputs will add more inputs</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached</span><span class="p">:</span>
-            <span class="c1"># forget about the inputs -- we won&#39;t used them, but we will add</span>
+            <span class="c1"># forget about the inputs -- we won't used them, but we will add</span>
             <span class="c1"># the cached outputs as inputs</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">filename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">cached_files</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The file </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> has not been added &#39;</span>
-                                     <span class="sa">f</span><span class="s1">&#39;to the cache database&#39;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'The file </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> has not been added '</span>
+                                     <span class="sa">f</span><span class="s1">'to the cache database'</span><span class="p">)</span>
                 <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">cached_files</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
                     <span class="n">filename</span><span class="o">=</span><span class="n">output</span><span class="p">,</span>
                     <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
-                    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;compass_cache&#39;</span><span class="p">)</span>
+                    <span class="n">database</span><span class="o">=</span><span class="s1">'compass_cache'</span><span class="p">)</span>
 
         <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">databases_with_downloads</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span><span class="p">:</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span>
-            <span class="n">target</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
-            <span class="n">database</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">]</span>
-            <span class="n">database_component</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;database_component&#39;</span><span class="p">]</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
-            <span class="n">work_dir_target</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;work_dir_target&#39;</span><span class="p">]</span>
-            <span class="n">package</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;package&#39;</span><span class="p">]</span>
-            <span class="n">copy</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;copy&#39;</span><span class="p">]</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'filename'</span><span class="p">]</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'target'</span><span class="p">]</span>
+            <span class="n">database</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'database'</span><span class="p">]</span>
+            <span class="n">database_component</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'database_component'</span><span class="p">]</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'url'</span><span class="p">]</span>
+            <span class="n">work_dir_target</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'work_dir_target'</span><span class="p">]</span>
+            <span class="n">package</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'package'</span><span class="p">]</span>
+            <span class="n">copy</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'copy'</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s1">&#39;&lt;&lt;&lt;model&gt;&gt;&gt;&#39;</span><span class="p">:</span>
-                <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;executables&#39;</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s1">'&lt;&lt;&lt;model&gt;&gt;&gt;'</span><span class="p">:</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'executables'</span><span class="p">,</span> <span class="s1">'model'</span><span class="p">)</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-                <span class="n">copy_executable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;setup&#39;</span><span class="p">,</span>
-                                                         <span class="s1">&#39;copy_executable&#39;</span><span class="p">)</span>
+                <span class="n">copy_executable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'setup'</span><span class="p">,</span>
+                                                         <span class="s1">'copy_executable'</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">copy_executable</span><span class="p">:</span>
                     <span class="c1"># make a copy of the model executable, then link to that</span>
                     <span class="n">mpas_subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_model&#39;</span><span class="p">))</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'paths'</span><span class="p">,</span> <span class="s1">'mpas_model'</span><span class="p">))</span>
                     <span class="n">mpas_workdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span><span class="p">,</span>
                                                 <span class="n">mpas_subdir</span><span class="p">)</span>
                     <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mpas_workdir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
@@ -885,22 +885,22 @@
             <span class="n">download_path</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="k">if</span> <span class="n">database</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># we&#39;re downloading a file to a cache of a database (if it&#39;s</span>
+                <span class="c1"># we're downloading a file to a cache of a database (if it's</span>
                 <span class="c1"># not already there.</span>
                 <span class="k">if</span> <span class="n">database_component</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">database_component</span> <span class="o">=</span> <span class="n">mpas_core</span>
 
                 <span class="k">if</span> <span class="n">database_component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">database_subdirs</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">database_component</span><span class="si">}</span><span class="s1"> a recognized &#39;</span>
-                                     <span class="sa">f</span><span class="s1">&#39;database in database_subdirs.json&#39;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">database_component</span><span class="si">}</span><span class="s1"> a recognized '</span>
+                                     <span class="sa">f</span><span class="s1">'database in database_subdirs.json'</span><span class="p">)</span>
 
                 <span class="n">core_path</span> <span class="o">=</span> <span class="n">database_subdirs</span><span class="p">[</span><span class="n">database_component</span><span class="p">]</span>
 
                 <span class="k">if</span> <span class="n">url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">base_url</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;download&#39;</span><span class="p">,</span> <span class="s1">&#39;server_base_url&#39;</span><span class="p">)</span>
-                    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">core_path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="n">base_url</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'download'</span><span class="p">,</span> <span class="s1">'server_base_url'</span><span class="p">)</span>
+                    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">core_path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">'</span>
 
-                <span class="n">database_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;database_root&#39;</span><span class="p">)</span>
+                <span class="n">database_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'paths'</span><span class="p">,</span> <span class="s1">'database_root'</span><span class="p">)</span>
                 <span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="n">core_path</span><span class="p">,</span>
                                              <span class="n">database</span><span class="p">,</span> <span class="n">download_target</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">download_path</span><span class="p">):</span>
@@ -943,10 +943,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_generate_streams</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_generate_namelists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Writes out a namelist file in the work directory with new values given</span>
-<span class="sd">        by parsing the files and dictionaries in the step&#39;s ``namelist_data``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        by parsing the files and dictionaries in the step's ``namelist_data``.</span>
+<span class="sd">        """</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached</span><span class="p">:</span>
             <span class="c1"># no need for namelists</span>
@@ -963,19 +963,19 @@
 
             <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist_data</span><span class="p">[</span><span class="n">out_name</span><span class="p">]:</span>
                 <span class="k">if</span> <span class="n">mode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">mode</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span>
+                    <span class="n">mode</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'mode'</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">assert</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span>
-                <span class="k">if</span> <span class="s1">&#39;options&#39;</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'mode'</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">'options'</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span>
                     <span class="c1"># this is a dictionary of replacement namelist options</span>
-                    <span class="n">options</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;options&#39;</span><span class="p">]</span>
+                    <span class="n">options</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'options'</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">options</span> <span class="o">=</span> <span class="n">compass</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">parse_replacements</span><span class="p">(</span>
-                        <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;package&#39;</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;namelist&#39;</span><span class="p">])</span>
+                        <span class="n">entry</span><span class="p">[</span><span class="s1">'package'</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'namelist'</span><span class="p">])</span>
                 <span class="n">replacements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
-            <span class="n">defaults_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;namelists&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
-            <span class="n">out_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step_work_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">out_name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">defaults_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'namelists'</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+            <span class="n">out_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">step_work_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">out_name</span><span class="si">}</span><span class="s1">'</span>
 
             <span class="n">namelist</span> <span class="o">=</span> <span class="n">compass</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">ingest</span><span class="p">(</span><span class="n">defaults_filename</span><span class="p">)</span>
 
@@ -984,10 +984,10 @@
             <span class="n">compass</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">namelist</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_generate_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Writes out a streams file in the work directory with new values given</span>
-<span class="sd">        by parsing the files and dictionaries in the step&#39;s ``streams_data``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        by parsing the files and dictionaries in the step's ``streams_data``.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached</span><span class="p">:</span>
             <span class="c1"># no need for streams</span>
             <span class="k">return</span>
@@ -1004,31 +1004,31 @@
 
             <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">streams_data</span><span class="p">[</span><span class="n">out_name</span><span class="p">]:</span>
                 <span class="k">if</span> <span class="n">mode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">mode</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span>
+                    <span class="n">mode</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'mode'</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">assert</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span>
+                    <span class="k">assert</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'mode'</span><span class="p">]</span>
 
                 <span class="n">tree</span> <span class="o">=</span> <span class="n">compass</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
-                    <span class="n">package</span><span class="o">=</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;package&#39;</span><span class="p">],</span>
-                    <span class="n">streams_filename</span><span class="o">=</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;streams&#39;</span><span class="p">],</span>
-                    <span class="n">replacements</span><span class="o">=</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;replacements&#39;</span><span class="p">],</span> <span class="n">tree</span><span class="o">=</span><span class="n">tree</span><span class="p">)</span>
+                    <span class="n">package</span><span class="o">=</span><span class="n">entry</span><span class="p">[</span><span class="s1">'package'</span><span class="p">],</span>
+                    <span class="n">streams_filename</span><span class="o">=</span><span class="n">entry</span><span class="p">[</span><span class="s1">'streams'</span><span class="p">],</span>
+                    <span class="n">replacements</span><span class="o">=</span><span class="n">entry</span><span class="p">[</span><span class="s1">'replacements'</span><span class="p">],</span> <span class="n">tree</span><span class="o">=</span><span class="n">tree</span><span class="p">)</span>
 
-            <span class="n">defaults_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;streams&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
-            <span class="n">out_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step_work_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">out_name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">defaults_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'streams'</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+            <span class="n">out_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">step_work_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">out_name</span><span class="si">}</span><span class="s1">'</span>
 
             <span class="n">defaults_tree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">defaults_filename</span><span class="p">)</span>
 
-            <span class="n">defaults</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">defaults_tree</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s1">&#39;streams&#39;</span><span class="p">))</span>
-            <span class="n">streams</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s1">&#39;streams&#39;</span><span class="p">))</span>
+            <span class="n">defaults</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">defaults_tree</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s1">'streams'</span><span class="p">))</span>
+            <span class="n">streams</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s1">'streams'</span><span class="p">))</span>
 
             <span class="k">for</span> <span class="n">stream</span> <span class="ow">in</span> <span class="n">streams</span><span class="p">:</span>
                 <span class="n">compass</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">update_defaults</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">defaults</span><span class="p">)</span>
 
-            <span class="c1"># remove any streams that aren&#39;t requested</span>
+            <span class="c1"># remove any streams that aren't requested</span>
             <span class="k">for</span> <span class="n">default</span> <span class="ow">in</span> <span class="n">defaults</span><span class="p">:</span>
                 <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">for</span> <span class="n">stream</span> <span class="ow">in</span> <span class="n">streams</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">stream</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">default</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">stream</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">==</span> <span class="n">default</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]:</span>
                         <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
                         <span class="k">break</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
@@ -1037,16 +1037,16 @@
             <span class="n">compass</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">defaults_tree</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_fix_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databases</span><span class="p">):</span>  <span class="c1"># noqa: C901</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Fix permissions on the databases where files were downloaded so</span>
 <span class="sd">        everyone in the group can read/write to them</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;e3sm_unified&#39;</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">'e3sm_unified'</span><span class="p">,</span> <span class="s1">'group'</span><span class="p">):</span>
             <span class="k">return</span>
 
-        <span class="n">group</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;e3sm_unified&#39;</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">)</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'e3sm_unified'</span><span class="p">,</span> <span class="s1">'group'</span><span class="p">)</span>
 
         <span class="n">new_uid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getuid</span><span class="p">()</span>
         <span class="n">new_gid</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">getgrnam</span><span class="p">(</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">gr_gid</span>
@@ -1059,9 +1059,9 @@
 
         <span class="n">mask</span> <span class="o">=</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IRWXU</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IRWXG</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IRWXO</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;changing permissions on downloaded files&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'changing permissions on downloaded files'</span><span class="p">)</span>
 
-        <span class="c1"># first the base directories that don&#39;t seem to be included in</span>
+        <span class="c1"># first the base directories that don't seem to be included in</span>
         <span class="c1"># os.walk()</span>
         <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">databases</span><span class="p">:</span>
             <span class="n">dir_stat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
@@ -1069,7 +1069,7 @@
             <span class="n">perm</span> <span class="o">=</span> <span class="n">dir_stat</span><span class="o">.</span><span class="n">st_mode</span> <span class="o">&amp;</span> <span class="n">mask</span>
 
             <span class="k">if</span> <span class="n">dir_stat</span><span class="o">.</span><span class="n">st_uid</span> <span class="o">!=</span> <span class="n">new_uid</span><span class="p">:</span>
-                <span class="c1"># current user doesn&#39;t own this dir so let&#39;s move on</span>
+                <span class="c1"># current user doesn't own this dir so let's move on</span>
                 <span class="k">continue</span>
 
             <span class="k">if</span> <span class="n">perm</span> <span class="o">==</span> <span class="n">exec_perm</span> <span class="ow">and</span> <span class="n">dir_stat</span><span class="o">.</span><span class="n">st_gid</span> <span class="o">==</span> <span class="n">new_gid</span><span class="p">:</span>
@@ -1087,8 +1087,8 @@
                 <span class="n">files_and_dirs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">dirs</span><span class="p">)</span>
                 <span class="n">files_and_dirs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
 
-        <span class="n">widgets</span> <span class="o">=</span> <span class="p">[</span><span class="n">progressbar</span><span class="o">.</span><span class="n">Percentage</span><span class="p">(),</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">Bar</span><span class="p">(),</span>
-                   <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ETA</span><span class="p">()]</span>
+        <span class="n">widgets</span> <span class="o">=</span> <span class="p">[</span><span class="n">progressbar</span><span class="o">.</span><span class="n">Percentage</span><span class="p">(),</span> <span class="s1">' '</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">Bar</span><span class="p">(),</span>
+                   <span class="s1">' '</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ETA</span><span class="p">()]</span>
         <span class="n">bar</span> <span class="o">=</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ProgressBar</span><span class="p">(</span><span class="n">widgets</span><span class="o">=</span><span class="n">widgets</span><span class="p">,</span>
                                       <span class="n">maxval</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">files_and_dirs</span><span class="p">))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="n">progress</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1106,7 +1106,7 @@
                         <span class="k">continue</span>
 
                     <span class="k">if</span> <span class="n">dir_stat</span><span class="o">.</span><span class="n">st_uid</span> <span class="o">!=</span> <span class="n">new_uid</span><span class="p">:</span>
-                        <span class="c1"># current user doesn&#39;t own this dir so let&#39;s move on</span>
+                        <span class="c1"># current user doesn't own this dir so let's move on</span>
                         <span class="k">continue</span>
 
                     <span class="n">perm</span> <span class="o">=</span> <span class="n">dir_stat</span><span class="o">.</span><span class="n">st_mode</span> <span class="o">&amp;</span> <span class="n">mask</span>
@@ -1130,7 +1130,7 @@
                         <span class="k">continue</span>
 
                     <span class="k">if</span> <span class="n">file_stat</span><span class="o">.</span><span class="n">st_uid</span> <span class="o">!=</span> <span class="n">new_uid</span><span class="p">:</span>
-                        <span class="c1"># current user doesn&#39;t own this file so let&#39;s move on</span>
+                        <span class="c1"># current user doesn't own this file so let's move on</span>
                         <span class="k">continue</span>
 
                     <span class="n">perm</span> <span class="o">=</span> <span class="n">file_stat</span><span class="o">.</span><span class="n">st_mode</span> <span class="o">&amp;</span> <span class="n">mask</span>
@@ -1151,7 +1151,7 @@
                         <span class="k">continue</span>
 
         <span class="n">bar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  done.&#39;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'  done.'</span><span class="p">)</span></div>
 
 </pre></div>
 

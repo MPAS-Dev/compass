@@ -118,7 +118,7 @@
 <div class="viewcode-block" id="SmokeTest">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.dome.smoke_test.SmokeTest.html#compass.landice.tests.dome.smoke_test.SmokeTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SmokeTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The default test case for the dome test group simply creates the mesh and</span>
 <span class="sd">    initial condition, then performs a short forward run on 4 cores.</span>
 
@@ -127,14 +127,14 @@
 <span class="sd">    mesh_type : str</span>
 <span class="sd">        The resolution or type of mesh of the test case</span>
 
-<span class="sd">    velo_solver : {&#39;sia&#39;, &#39;FO&#39;}</span>
+<span class="sd">    velo_solver : {'sia', 'FO'}</span>
 <span class="sd">        The velocity solver to use for the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="SmokeTest.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.dome.smoke_test.SmokeTest.html#compass.landice.tests.dome.smoke_test.SmokeTest.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">velo_solver</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -142,16 +142,16 @@
 <span class="sd">        test_group : compass.landice.tests.dome.Dome</span>
 <span class="sd">            The test group that this test case belongs to</span>
 
-<span class="sd">        velo_solver : {&#39;sia&#39;, &#39;FO&#39;}</span>
+<span class="sd">        velo_solver : {'sia', 'FO'}</span>
 <span class="sd">            The velocity solver to use for the test case</span>
 
 <span class="sd">        mesh_type : str</span>
 <span class="sd">            The resolution or type of mesh of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;smoke_test&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'smoke_test'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">=</span> <span class="n">mesh_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">=</span> <span class="n">velo_solver</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -159,11 +159,11 @@
             <span class="n">SetupMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">))</span>
 
         <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;run_step&#39;</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s1">'run_step'</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
                         <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;sia&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">'sia'</span><span class="p">:</span>
             <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span>
-                <span class="p">{</span><span class="s1">&#39;config_run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0200-00-00_00:00:00&#39;&quot;</span><span class="p">})</span>
+                <span class="p">{</span><span class="s1">'config_run_duration'</span><span class="p">:</span> <span class="s2">"'0200-00-00_00:00:00'"</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 
         <span class="n">step</span> <span class="o">=</span> <span class="n">Visualize</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">)</span>
@@ -174,7 +174,7 @@
     <span class="c1"># no configure() method is needed because we will use the default dome</span>
     <span class="c1"># config options</span>
 
-    <span class="c1"># no run() method is needed because we&#39;re doing the default: running all</span>
+    <span class="c1"># no run() method is needed because we're doing the default: running all</span>
     <span class="c1"># steps</span>
 </pre></div>
 

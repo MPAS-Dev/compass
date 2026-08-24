@@ -118,7 +118,7 @@
 <div class="viewcode-block" id="Forward">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.forward.Forward.html#compass.ocean.tests.isomip_plus.forward.Forward">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MPAS-Ocean runs as part of ice-shelf 2D test</span>
 <span class="sd">    cases.</span>
 
@@ -127,17 +127,17 @@
 <span class="sd">    resolution : float</span>
 <span class="sd">        The horizontal resolution (km) of the test case</span>
 
-<span class="sd">    experiment : {&#39;Ocean0&#39;, &#39;Ocean1&#39;, &#39;Ocean2&#39;}</span>
+<span class="sd">    experiment : {'Ocean0', 'Ocean1', 'Ocean2'}</span>
 <span class="sd">        The ISOMIP+ experiment</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Forward.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.forward.Forward.html#compass.ocean.tests.isomip_plus.forward.Forward.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">experiment</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span>
-                 <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">run_duration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vertical_coordinate</span><span class="o">=</span><span class="s1">&#39;z-star&#39;</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">experiment</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">,</span>
+                 <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">run_duration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vertical_coordinate</span><span class="o">=</span><span class="s1">'z-star'</span><span class="p">,</span>
                  <span class="n">tidal_forcing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">time_varying_forcing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -148,7 +148,7 @@
 <span class="sd">        resolution : float</span>
 <span class="sd">            The horizontal resolution (km) of the test case</span>
 
-<span class="sd">        experiment : {&#39;Ocean0&#39;, &#39;Ocean1&#39;, &#39;Ocean2&#39;}</span>
+<span class="sd">        experiment : {'Ocean0', 'Ocean1', 'Ocean2'}</span>
 <span class="sd">            The ISOMIP+ experiment</span>
 
 <span class="sd">        name : str, optional</span>
@@ -162,135 +162,135 @@
 
 <span class="sd">        time_varying_forcing : bool, optional</span>
 <span class="sd">            Whether the run includes time-varying land-ice forcing</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">experiment</span> <span class="o">=</span> <span class="n">experiment</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># make sure output is double precision</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.output&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.streams'</span><span class="p">,</span> <span class="s1">'streams.output'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.forward_and_ssh_adjust&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.isomip_plus'</span><span class="p">,</span>
+                               <span class="s1">'namelist.forward_and_ssh_adjust'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.isomip_plus'</span><span class="p">,</span>
+                               <span class="s1">'namelist.forward'</span><span class="p">)</span>
 
         <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">run_duration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_run_duration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_duration</span>
+            <span class="n">options</span><span class="p">[</span><span class="s1">'config_run_duration'</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_duration</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;streams.land_ice_fluxes&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.streams'</span><span class="p">,</span>
+                              <span class="s1">'streams.land_ice_fluxes'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">tidal_forcing</span><span class="p">:</span>
-            <span class="n">output_interval</span> <span class="o">=</span> <span class="s2">&quot;0000-00-00_02:00:00&quot;</span>
+            <span class="n">output_interval</span> <span class="o">=</span> <span class="s2">"0000-00-00_02:00:00"</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">output_interval</span> <span class="o">=</span> <span class="n">run_duration</span>
-        <span class="n">template_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="n">output_interval</span><span class="p">}</span>
+        <span class="n">template_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'output_interval'</span><span class="p">:</span> <span class="n">output_interval</span><span class="p">}</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;streams.forward.template&#39;</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.isomip_plus'</span><span class="p">,</span>
+                              <span class="s1">'streams.forward.template'</span><span class="p">,</span>
                               <span class="n">template_replacements</span><span class="o">=</span><span class="n">template_replacements</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">vertical_coordinate</span> <span class="o">==</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">vertical_coordinate</span> <span class="o">==</span> <span class="s1">'single_layer'</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;namelist.single_layer.forward_and_ssh_adjust&#39;</span><span class="p">)</span>
+                <span class="s1">'compass.ocean.tests.isomip_plus'</span><span class="p">,</span>
+                <span class="s1">'namelist.single_layer.forward_and_ssh_adjust'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">tidal_forcing</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
-                                   <span class="s1">&#39;namelist.tidal_forcing.forward&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.isomip_plus'</span><span class="p">,</span>
+                                   <span class="s1">'namelist.tidal_forcing.forward'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">thin_film_present</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
-                                   <span class="s1">&#39;namelist.thin_film.forward_and_ssh_adjust&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.isomip_plus'</span><span class="p">,</span>
+                                   <span class="s1">'namelist.thin_film.forward_and_ssh_adjust'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">time_varying_forcing</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
-                                   <span class="s1">&#39;namelist.time_varying_forcing&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
-                                  <span class="s1">&#39;streams.time_varying_forcing&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.isomip_plus'</span><span class="p">,</span>
+                                   <span class="s1">'namelist.time_varying_forcing'</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.isomip_plus'</span><span class="p">,</span>
+                                  <span class="s1">'streams.time_varying_forcing'</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;land_ice_forcing.nc&#39;</span><span class="p">,</span>
-                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/land_ice_forcing.nc&#39;</span><span class="p">)</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">'land_ice_forcing.nc'</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="s1">'../initial_state/land_ice_forcing.nc'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../ssh_adjustment/adjusted_init.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../cull_mesh/culled_graph.info&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'init.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../ssh_adjustment/adjusted_init.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../cull_mesh/culled_graph.info'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;forcing_data_init.nc&#39;</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/init_mode_forcing_data.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'forcing_data_init.nc'</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">'../initial_state/init_mode_forcing_data.nc'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;forcing_data.nc&#39;</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;forcing_data_init.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'forcing_data.nc'</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">'forcing_data_init.nc'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">&#39;land_ice_fluxes.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">'output.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">'land_ice_fluxes.nc'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Forward.setup">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.forward.Forward.setup.html#compass.ocean.tests.isomip_plus.forward.Forward.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up the test case in the work directory, including downloading any</span>
 <span class="sd">        dependencies</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update resources at runtime from config options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Forward.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.forward.Forward.run.html#compass.ocean.tests.isomip_plus.forward.Forward.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
 
-        <span class="n">dt_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_per_km&#39;</span><span class="p">)</span>
-        <span class="n">dt_btr_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_btr_per_km&#39;</span><span class="p">)</span>
+        <span class="n">dt_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'isomip_plus'</span><span class="p">,</span> <span class="s1">'dt_per_km'</span><span class="p">)</span>
+        <span class="n">dt_btr_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'isomip_plus'</span><span class="p">,</span> <span class="s1">'dt_btr_per_km'</span><span class="p">)</span>
 
         <span class="n">dt</span> <span class="o">=</span> <span class="n">get_time_interval_string</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">dt_per_km</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">)</span>
         <span class="n">btr_dt</span> <span class="o">=</span> <span class="n">get_time_interval_string</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">dt_btr_per_km</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">)</span>
 
-        <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config_dt</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
-                       <span class="n">config_btr_dt</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">btr_dt</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config_dt</span><span class="o">=</span><span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                       <span class="n">config_btr_dt</span><span class="o">=</span><span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">btr_dt</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;simulation&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">'simulation'</span><span class="p">:</span>
             <span class="n">update_evaporation_flux</span><span class="p">(</span>
-                <span class="n">in_forcing_file</span><span class="o">=</span><span class="s1">&#39;forcing_data_init.nc&#39;</span><span class="p">,</span>
-                <span class="n">out_forcing_file</span><span class="o">=</span><span class="s1">&#39;forcing_data_updated.nc&#39;</span><span class="p">,</span>
-                <span class="n">out_forcing_link</span><span class="o">=</span><span class="s1">&#39;forcing_data.nc&#39;</span><span class="p">)</span>
+                <span class="n">in_forcing_file</span><span class="o">=</span><span class="s1">'forcing_data_init.nc'</span><span class="p">,</span>
+                <span class="n">out_forcing_file</span><span class="o">=</span><span class="s1">'forcing_data_updated.nc'</span><span class="p">,</span>
+                <span class="n">out_forcing_link</span><span class="o">=</span><span class="s1">'forcing_data.nc'</span><span class="p">)</span>
 
-            <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
-                            <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;file&#39;&quot;</span><span class="p">}</span>
+            <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_do_restart'</span><span class="p">:</span> <span class="s1">'.true.'</span><span class="p">,</span>
+                            <span class="s1">'config_start_time'</span><span class="p">:</span> <span class="s2">"'file'"</span><span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">replacements</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get resources (ntasks, min_tasks, and openmp_threads) from the config</span>
 <span class="sd">        options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_ntasks&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_min_tasks&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_threads&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'isomip_plus'</span><span class="p">,</span> <span class="s1">'forward_ntasks'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'isomip_plus'</span><span class="p">,</span> <span class="s1">'forward_min_tasks'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'isomip_plus'</span><span class="p">,</span> <span class="s1">'forward_threads'</span><span class="p">)</span></div>
 
 </pre></div>
 

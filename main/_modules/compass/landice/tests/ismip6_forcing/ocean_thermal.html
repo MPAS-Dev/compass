@@ -121,7 +121,7 @@
 <div class="viewcode-block" id="OceanThermal">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.ocean_thermal.OceanThermal.html#compass.landice.tests.ismip6_forcing.ocean_thermal.OceanThermal">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OceanThermal</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test case for processing the ISMIP6 ocean thermal forcing data.</span>
 <span class="sd">    The test case builds a mapping file for interpolation between the</span>
 <span class="sd">    ISMIP6 8km polarstereo grid and MALI mesh, regrids the forcing data</span>
@@ -131,12 +131,12 @@
 <span class="sd">    ----------</span>
 <span class="sd">    process_obs : bool</span>
 <span class="sd">        Whether we are processing observations rather than CMIP model data</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="OceanThermal.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.ocean_thermal.OceanThermal.html#compass.landice.tests.ismip6_forcing.ocean_thermal.OceanThermal.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">process_obs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -146,11 +146,11 @@
 
 <span class="sd">        process_obs: bool</span>
 <span class="sd">            Whether we are processing observations rather than CMIP model data</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">process_obs</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;ocean_thermal_obs&quot;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">"ocean_thermal_obs"</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;ocean_thermal&quot;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">"ocean_thermal"</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">process_obs</span> <span class="o">=</span> <span class="n">process_obs</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
@@ -162,9 +162,9 @@
 <div class="viewcode-block" id="OceanThermal.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.ocean_thermal.OceanThermal.configure.html#compass.landice.tests.ismip6_forcing.ocean_thermal.OceanThermal.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Configures test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">check_model_options</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_obs</span>
         <span class="n">configure_testgroup</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
                             <span class="n">check_model_options</span><span class="o">=</span><span class="n">check_model_options</span><span class="p">)</span></div>

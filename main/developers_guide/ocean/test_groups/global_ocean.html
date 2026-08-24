@@ -246,9 +246,9 @@ added here.</p>
 <p>The function <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names.html#compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names" title="compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names()</span></code></a>
 is used to construct the “short” and “long” names of the mesh using a
 standard naming convention for E3SM:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">short_mesh_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}{</span><span class="n">res</span><span class="si">}</span><span class="s1">E</span><span class="si">{</span><span class="n">e3sm_version</span><span class="si">}</span><span class="s1">r</span><span class="si">{</span><span class="n">mesh_revision</span><span class="si">}</span><span class="s1">&#39;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">short_mesh_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}{</span><span class="n">res</span><span class="si">}</span><span class="s1">E</span><span class="si">{</span><span class="n">e3sm_version</span><span class="si">}</span><span class="s1">r</span><span class="si">{</span><span class="n">mesh_revision</span><span class="si">}</span><span class="s1">'</span>
 <span class="n">long_mesh_name</span> <span class="o">=</span> \
-    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}{</span><span class="n">res</span><span class="si">}</span><span class="s1">kmL</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">E3SMv</span><span class="si">{</span><span class="n">e3sm_version</span><span class="si">}</span><span class="s1">r</span><span class="si">{</span><span class="n">mesh_revision</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}{</span><span class="n">res</span><span class="si">}</span><span class="s1">kmL</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">E3SMv</span><span class="si">{</span><span class="n">e3sm_version</span><span class="si">}</span><span class="s1">r</span><span class="si">{</span><span class="n">mesh_revision</span><span class="si">}</span><span class="s1">'</span>
 </pre></div>
 </div>
 <p>For example, the <code class="docutils literal notranslate"><span class="pre">QU240</span></code> mesh has the E3SM short name <code class="docutils literal notranslate"><span class="pre">QU240E2r1</span></code> and
@@ -300,13 +300,13 @@ that will be used for the forward model run are needed, along with the
 time integrator (<code class="docutils literal notranslate"><span class="pre">split-explicit</span></code> or <code class="docutils literal notranslate"><span class="pre">RK4</span></code>).  Here is an example from the
 <a class="reference internal" href="#dev-ocean-global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PerformanceTest</span><span class="p">(</span><span class="n">ForwardTestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test case for performing a short forward run with an MPAS-Ocean global</span>
 <span class="sd">    initial condition assess performance and compare with previous results</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create test case</span>
 
 <span class="sd">        Parameters</span>
@@ -320,20 +320,20 @@ time integrator (<code class="docutils literal notranslate"><span class="pre">sp
 <span class="sd">        init : compass.ocean.tests.global_ocean.init.Init</span>
 <span class="sd">            The test case that produces the initial condition for this run</span>
 
-<span class="sd">        time_integrator : {&#39;split_explicit&#39;, &#39;RK4&#39;}</span>
+<span class="sd">        time_integrator : {'split_explicit', 'RK4'}</span>
 <span class="sd">            The time integrator to use for the forward run</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
                          <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span>
-                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;performance_test&#39;</span><span class="p">)</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s1">'performance_test'</span><span class="p">)</span>
 
         <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
                            <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
             <span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span>
-            <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;namelist.wisc&#39;</span><span class="p">)</span>
-            <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.wisc&#39;</span><span class="p">)</span>
-            <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;land_ice_fluxes.nc&#39;</span><span class="p">)</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">'namelist.wisc'</span><span class="p">)</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">'streams.wisc'</span><span class="p">)</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'land_ice_fluxes.nc'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -801,7 +801,7 @@ for short runs with these meshes.</p>
 
 <span class="c1"># The minimum and maximum cells per core for creating graph partitions</span>
 <span class="na">max_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30000</span>
-<span class="c1"># We&#39;re seeing gpmetis failures for more than 750,000 tasks so we&#39;ll stay under</span>
+<span class="c1"># We're seeing gpmetis failures for more than 750,000 tasks so we'll stay under</span>
 <span class="na">min_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6</span>
 </pre></div>
 </div>
@@ -1304,19 +1304,19 @@ file (with horizontal coordinate information), creating a symlink
 at <code class="docutils literal notranslate"><span class="pre">assembled_files/inputdata/share/meshes/mpas/sea-ice/&lt;mesh_short_name&gt;.&lt;datestamp&gt;.nc</span></code></p>
 </dd>
 <dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition" title="compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition</span></code></a></dt><dd><p>extracts the following variables from the restart file:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">keep_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;edgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;fCell&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;indexToCellID&#39;</span><span class="p">,</span> <span class="s1">&#39;latCell&#39;</span><span class="p">,</span> <span class="s1">&#39;lonCell&#39;</span><span class="p">,</span> <span class="s1">&#39;meshDensity&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;xCell&#39;</span><span class="p">,</span> <span class="s1">&#39;yCell&#39;</span><span class="p">,</span> <span class="s1">&#39;zCell&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;angleEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;dcEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;dvEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;edgesOnEdge&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;fEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;indexToEdgeID&#39;</span><span class="p">,</span> <span class="s1">&#39;latEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;lonEdge&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;nEdgesOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnEdge&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;weightsOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;xEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;yEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;zEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;areaTriangle&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;cellsOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;edgesOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;fVertex&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;indexToVertexID&#39;</span><span class="p">,</span> <span class="s1">&#39;kiteAreasOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;latVertex&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;lonVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;xVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;yVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;zVertex&#39;</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">keep_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'areaCell'</span><span class="p">,</span> <span class="s1">'cellsOnCell'</span><span class="p">,</span> <span class="s1">'edgesOnCell'</span><span class="p">,</span> <span class="s1">'fCell'</span><span class="p">,</span>
+             <span class="s1">'indexToCellID'</span><span class="p">,</span> <span class="s1">'latCell'</span><span class="p">,</span> <span class="s1">'lonCell'</span><span class="p">,</span> <span class="s1">'meshDensity'</span><span class="p">,</span>
+             <span class="s1">'nEdgesOnCell'</span><span class="p">,</span> <span class="s1">'verticesOnCell'</span><span class="p">,</span> <span class="s1">'xCell'</span><span class="p">,</span> <span class="s1">'yCell'</span><span class="p">,</span> <span class="s1">'zCell'</span><span class="p">,</span>
+             <span class="s1">'angleEdge'</span><span class="p">,</span> <span class="s1">'cellsOnEdge'</span><span class="p">,</span> <span class="s1">'dcEdge'</span><span class="p">,</span> <span class="s1">'dvEdge'</span><span class="p">,</span> <span class="s1">'edgesOnEdge'</span><span class="p">,</span>
+             <span class="s1">'fEdge'</span><span class="p">,</span> <span class="s1">'indexToEdgeID'</span><span class="p">,</span> <span class="s1">'latEdge'</span><span class="p">,</span> <span class="s1">'lonEdge'</span><span class="p">,</span>
+             <span class="s1">'nEdgesOnCell'</span><span class="p">,</span> <span class="s1">'nEdgesOnEdge'</span><span class="p">,</span> <span class="s1">'verticesOnEdge'</span><span class="p">,</span>
+             <span class="s1">'weightsOnEdge'</span><span class="p">,</span> <span class="s1">'xEdge'</span><span class="p">,</span> <span class="s1">'yEdge'</span><span class="p">,</span> <span class="s1">'zEdge'</span><span class="p">,</span> <span class="s1">'areaTriangle'</span><span class="p">,</span>
+             <span class="s1">'cellsOnVertex'</span><span class="p">,</span> <span class="s1">'edgesOnVertex'</span><span class="p">,</span> <span class="s1">'fVertex'</span><span class="p">,</span>
+             <span class="s1">'indexToVertexID'</span><span class="p">,</span> <span class="s1">'kiteAreasOnVertex'</span><span class="p">,</span> <span class="s1">'latVertex'</span><span class="p">,</span>
+             <span class="s1">'lonVertex'</span><span class="p">,</span> <span class="s1">'xVertex'</span><span class="p">,</span> <span class="s1">'yVertex'</span><span class="p">,</span> <span class="s1">'zVertex'</span><span class="p">]</span>
 
 <span class="k">if</span> <span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-   <span class="n">keep_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">)</span>
+   <span class="n">keep_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'landIceMask'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>A symlink to the resulting file is placed at
@@ -1367,10 +1367,10 @@ The mapping files are symlinked in the directory
 <p>Region masks are created using
 <a class="reference external" href="http://mpas-dev.github.io/geometric_features/main/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features main)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a> for
 the following region groups:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">region_groups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Antarctic Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;Arctic Ocean Regions&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;Arctic Sea Ice Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocean Basins&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;Ocean Subbasins&#39;</span><span class="p">,</span> <span class="s1">&#39;ISMIP6 Regions&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;Transport Transects&#39;</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">region_groups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Antarctic Regions'</span><span class="p">,</span> <span class="s1">'Arctic Ocean Regions'</span><span class="p">,</span>
+                 <span class="s1">'Arctic Sea Ice Regions'</span><span class="p">,</span> <span class="s1">'Ocean Basins'</span><span class="p">,</span>
+                 <span class="s1">'Ocean Subbasins'</span><span class="p">,</span> <span class="s1">'ISMIP6 Regions'</span><span class="p">,</span>
+                 <span class="s1">'Transport Transects'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>If ice-shelf cavities are present in the mesh, the <code class="docutils literal notranslate"><span class="pre">Ice</span> <span class="pre">Shelves</span></code>
@@ -1420,11 +1420,11 @@ following config options must be specified (typically by editing
 <span class="c1"># for E3SM</span>
 <span class="k">[files_for_e3sm]</span>
 
-<span class="c1"># the absolute path or relative path with respect to the test case&#39;s work</span>
+<span class="c1"># the absolute path or relative path with respect to the test case's work</span>
 <span class="c1"># directory of an ocean restart file on the given mesh</span>
 <span class="na">ocean_restart_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
 
-<span class="c1"># the absolute path or relative path with respect to the test case&#39;s work</span>
+<span class="c1"># the absolute path or relative path with respect to the test case's work</span>
 <span class="c1"># directory of a graph file that corresponds to the mesh</span>
 <span class="na">graph_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
 </pre></div>
@@ -1435,7 +1435,7 @@ present but can be set if needed:</p>
 <span class="c1"># for E3SM</span>
 <span class="k">[files_for_e3sm]</span>
 
-<span class="c1"># the E3SM short name of the mesh or &quot;autodetect&quot; to use the</span>
+<span class="c1"># the E3SM short name of the mesh or "autodetect" to use the</span>
 <span class="c1"># MPAS_Mesh_Short_Name attribute of the mesh file</span>
 <span class="na">mesh_short_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
 

@@ -122,19 +122,19 @@
 <div class="viewcode-block" id="GyreTestCase">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.GyreTestCase.html#compass.ocean.tests.baroclinic_gyre.GyreTestCase">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GyreTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A class to define the baroclinic gyre test cases</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : float</span>
 <span class="sd">        The resolution of the test case (m)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="GyreTestCase.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.GyreTestCase.html#compass.ocean.tests.baroclinic_gyre.GyreTestCase.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">long</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -148,19 +148,19 @@
 
 <span class="sd">        long : bool</span>
 <span class="sd">            Whether to run a long (3-year) simulation to quasi-equilibrium</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;performance_test&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'performance_test'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">long</span> <span class="o">=</span> <span class="n">long</span>
 
         <span class="k">if</span> <span class="n">long</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;3_year_test&#39;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">'3_year_test'</span>
 
         <span class="k">if</span> <span class="n">resolution</span> <span class="o">&gt;=</span> <span class="mf">1e3</span><span class="p">:</span>
-            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="o">/</span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">km&#39;</span>
+            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="o">/</span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">km'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">m&#39;</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">m'</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -182,22 +182,22 @@
 <div class="viewcode-block" id="GyreTestCase.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.GyreTestCase.configure.html#compass.ocean.tests.baroclinic_gyre.GyreTestCase.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set config options for the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass.mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh.cfg&#39;</span><span class="p">)</span></div>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">'compass.mesh'</span><span class="p">,</span> <span class="s1">'mesh.cfg'</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Validate variables against a baseline</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                          <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span>
-                                     <span class="s1">&#39;ssh&#39;</span><span class="p">],</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output/&#39;</span>
-                                    <span class="s1">&#39;output.0001-01-01_00.00.00.nc&#39;</span><span class="p">)</span></div>
+                          <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">'layerThickness'</span><span class="p">,</span> <span class="s1">'temperature'</span><span class="p">,</span>
+                                     <span class="s1">'ssh'</span><span class="p">],</span>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">'forward/output/'</span>
+                                    <span class="s1">'output.0001-01-01_00.00.00.nc'</span><span class="p">)</span></div>
 
 </pre></div>
 

@@ -118,16 +118,16 @@
 <div class="viewcode-block" id="MeshConvergenceTest">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.mesh_convergence.MeshConvergenceTest.html#compass.landice.tests.slm_circ_icesheet.mesh_convergence.MeshConvergenceTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MeshConvergenceTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    This test uses the circular ice sheet test case to test the convergence</span>
 <span class="sd">    of the coupled MALI-SLM system with respect to mesh resolution of both</span>
 <span class="sd">    MALI and the SLM.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="MeshConvergenceTest.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.mesh_convergence.MeshConvergenceTest.html#compass.landice.tests.slm_circ_icesheet.mesh_convergence.MeshConvergenceTest.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -135,8 +135,8 @@
 <span class="sd">        test_group : compass.landice.tests.slm_circ_icesheet.SlmCircIcesheet</span>
 <span class="sd">            The test group that this test case belongs to</span>
 <span class="sd">            The resolution or type of mesh of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh_convergence&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'mesh_convergence'</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="n">name</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span></div>
@@ -145,25 +145,25 @@
 <div class="viewcode-block" id="MeshConvergenceTest.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.mesh_convergence.MeshConvergenceTest.configure.html#compass.landice.tests.slm_circ_icesheet.mesh_convergence.MeshConvergenceTest.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up the desired mesh-resolution tests</span>
 
 <span class="sd">        Read the list of resolutions from the config</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circ_icesheet&#39;</span><span class="p">]</span>
-        <span class="n">mali_res</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mali_res&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'circ_icesheet'</span><span class="p">]</span>
+        <span class="n">mali_res</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mali_res'</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;slm&#39;</span><span class="p">]</span>
-        <span class="n">slm_nglv</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slm_nglv&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;list of MALI-mesh resolution is </span><span class="si">{</span><span class="n">mali_res</span><span class="si">}</span><span class="s1"> km.&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;list of SLM Gauss-Legendre latitudinal points is </span><span class="si">{</span><span class="n">slm_nglv</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'slm'</span><span class="p">]</span>
+        <span class="n">slm_nglv</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'slm_nglv'</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'list of MALI-mesh resolution is </span><span class="si">{</span><span class="n">mali_res</span><span class="si">}</span><span class="s1"> km.'</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'list of SLM Gauss-Legendre latitudinal points is </span><span class="si">{</span><span class="n">slm_nglv</span><span class="si">}</span><span class="s1">.'</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">mali_res</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">nglv</span> <span class="ow">in</span> <span class="n">slm_nglv</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">SetupMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                        <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/&#39;</span>
-                                        <span class="s1">&#39;setup_mesh&#39;</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">res</span><span class="p">,</span> <span class="n">nglv</span><span class="o">=</span><span class="n">nglv</span><span class="p">))</span>
+                                        <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/'</span>
+                                        <span class="s1">'setup_mesh'</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">res</span><span class="p">,</span> <span class="n">nglv</span><span class="o">=</span><span class="n">nglv</span><span class="p">))</span>
                 <span class="k">if</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">16</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">):</span>
                     <span class="n">ntasks</span> <span class="o">=</span> <span class="mi">256</span>
                 <span class="k">elif</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">):</span>
@@ -174,8 +174,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">res</span><span class="p">,</span> <span class="n">nglv</span><span class="o">=</span><span class="n">nglv</span><span class="p">,</span>
                                        <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">min_tasks</span><span class="p">,</span>
                                        <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                                       <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">&#39;</span>
-                                       <span class="s1">&#39;/run_model&#39;</span><span class="p">))</span>
+                                       <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">'</span>
+                                       <span class="s1">'/run_model'</span><span class="p">))</span>
         <span class="n">step</span> <span class="o">=</span> <span class="n">Visualize</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">run_by_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 </div>

@@ -121,16 +121,16 @@
 <div class="viewcode-block" id="RunModel">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.run_model.RunModel.html#compass.landice.tests.slm_circ_icesheet.run_model.RunModel">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunModel</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MALI runs as part of dome test cases.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="RunModel.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.run_model.RunModel.html#compass.landice.tests.slm_circ_icesheet.run_model.RunModel.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">nglv</span><span class="p">,</span> <span class="n">resource_package</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;run_model&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'run_model'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -165,7 +165,7 @@
 
 <span class="sd">        openmp_threads : int, optional</span>
 <span class="sd">            the number of OpenMP threads the step will use</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">res</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nglv</span> <span class="o">=</span> <span class="n">nglv</span>
 
@@ -181,59 +181,59 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">resource_package</span> <span class="o">=</span> <span class="n">resource_package</span>
 
         <span class="c1"># add namelist and streams from the circ_icesheet package</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_package</span><span class="p">,</span> <span class="s1">&#39;namelist.landice&#39;</span><span class="p">,</span>
-                               <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_package</span><span class="p">,</span> <span class="s1">'namelist.landice'</span><span class="p">,</span>
+                               <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_package</span><span class="p">,</span> <span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
-                              <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_package</span><span class="p">,</span> <span class="s1">'streams.landice'</span><span class="p">,</span>
+                              <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.landice'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../setup_mesh/landice_grid.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../setup_mesh/graph.info&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;smb_forcing.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../setup_mesh/smb_forcing.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mapping_file_mali_to_slm.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../setup_mesh/&#39;</span>
-                                   <span class="s1">&#39;mapping_file_mali_to_slm.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mapping_file_slm_to_mali.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../setup_mesh/&#39;</span>
-                                   <span class="s1">&#39;mapping_file_slm_to_mali.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../setup_mesh/landice_grid.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../setup_mesh/graph.info'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'smb_forcing.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../setup_mesh/smb_forcing.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'mapping_file_mali_to_slm.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../setup_mesh/'</span>
+                                   <span class="s1">'mapping_file_mali_to_slm.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'mapping_file_slm_to_mali.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../setup_mesh/'</span>
+                                   <span class="s1">'mapping_file_slm_to_mali.nc'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output/output.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output/output.nc'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RunModel.setup">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.run_model.RunModel.setup.html#compass.landice.tests.slm_circ_icesheet.run_model.RunModel.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;OUTPUT_SLM/&#39;</span><span class="p">),</span>
-                    <span class="n">exist_ok</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;ICELOAD_SLM/&#39;</span><span class="p">),</span>
-                    <span class="n">exist_ok</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'OUTPUT_SLM/'</span><span class="p">),</span>
+                    <span class="n">exist_ok</span><span class="o">=</span><span class="s1">'True'</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'ICELOAD_SLM/'</span><span class="p">),</span>
+                    <span class="n">exist_ok</span><span class="o">=</span><span class="s1">'True'</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;slm&#39;</span><span class="p">]</span>
-        <span class="n">slm_input_root</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slm_input_root&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'slm'</span><span class="p">]</span>
+        <span class="n">slm_input_root</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'slm_input_root'</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)</span>
 
         <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span>
-            <span class="n">resources</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s1">&#39;compass.landice.tests.slm_circ_icesheet&#39;</span><span class="p">,</span>
-                                <span class="s1">&#39;namelist.sealevel.template&#39;</span><span class="p">)</span>
+            <span class="n">resources</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s1">'compass.landice.tests.slm_circ_icesheet'</span><span class="p">,</span>
+                                <span class="s1">'namelist.sealevel.template'</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">nglv</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nglv</span><span class="p">,</span>
                                <span class="n">slm_input_root</span><span class="o">=</span><span class="n">slm_input_root</span><span class="p">)</span>
 
         <span class="c1"># write out the namelist.sealevel file</span>
-        <span class="n">file_slm_nl</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;namelist.sealevel&#39;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_slm_nl</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">file_slm_nl</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'namelist.sealevel'</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_slm_nl</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
             <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RunModel.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.run_model.RunModel.run.html#compass.landice.tests.slm_circ_icesheet.run_model.RunModel.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">run_model</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
 </div>
 

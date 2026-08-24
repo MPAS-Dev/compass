@@ -121,7 +121,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">ismip7_grid_file</span><span class="p">,</span>
                        <span class="n">mapping_file</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">method_remap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Build a mapping file for regridding from an ISMIP7 polar</span>
 <span class="sd">    stereographic grid to the MALI unstructured mesh.</span>
 
@@ -143,85 +143,85 @@
 <span class="sd">        The MALI mesh file</span>
 
 <span class="sd">    method_remap : str, optional</span>
-<span class="sd">        Remapping method: &#39;bilinear&#39;, &#39;neareststod&#39;, or &#39;conserve&#39;</span>
+<span class="sd">        Remapping method: 'bilinear', 'neareststod', or 'conserve'</span>
 
 <span class="sd">    projection : str, optional</span>
-<span class="sd">        Projection flag for SCRIP generation (e.g., &#39;ais-bedmap2&#39;,</span>
-<span class="sd">        &#39;gis-bamber&#39;). If not provided, reads from ice_sheet_params.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        Projection flag for SCRIP generation (e.g., 'ais-bedmap2',</span>
+<span class="sd">        'gis-bamber'). If not provided, reads from ice_sheet_params.</span>
+<span class="sd">    """</span>
 
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Mapping file exists. Not building a new one.&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Mapping file exists. Not building a new one."</span><span class="p">)</span>
         <span class="k">return</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Mapping file does not exist. Building one based on the&quot;</span>
-                <span class="s2">&quot; input/output meshes&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Mapping file does not exist. Building one based on the"</span>
+                <span class="s2">" input/output meshes"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">mali_mesh_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Mapping file does not exist. A MALI mesh file &quot;</span>
-                         <span class="s2">&quot;must be provided to build one.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Mapping file does not exist. A MALI mesh file "</span>
+                         <span class="s2">"must be provided to build one."</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">method_remap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Remapping method must be provided. &quot;</span>
-                         <span class="s2">&quot;Options: &#39;bilinear&#39;, &#39;neareststod&#39;, &#39;conserve&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Remapping method must be provided. "</span>
+                         <span class="s2">"Options: 'bilinear', 'neareststod', 'conserve'."</span><span class="p">)</span>
 
     <span class="c1"># Determine projection from parameter or config</span>
     <span class="k">if</span> <span class="n">projection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_forcing.ice_sheet_params</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
             <span class="n">get_params</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">projection</span> <span class="o">=</span> <span class="n">get_params</span><span class="p">(</span><span class="n">config</span><span class="p">)[</span><span class="s1">&#39;projection&#39;</span><span class="p">]</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">get_params</span><span class="p">(</span><span class="n">config</span><span class="p">)[</span><span class="s1">'projection'</span><span class="p">]</span>
 
     <span class="n">ismip7_projection</span> <span class="o">=</span> <span class="n">projection</span>
 
     <span class="c1"># name temporary scrip files</span>
-    <span class="n">source_grid_scripfile</span> <span class="o">=</span> <span class="s2">&quot;temp_source_scrip.nc&quot;</span>
-    <span class="n">mali_scripfile</span> <span class="o">=</span> <span class="s2">&quot;temp_mali_scrip.nc&quot;</span>
+    <span class="n">source_grid_scripfile</span> <span class="o">=</span> <span class="s2">"temp_source_scrip.nc"</span>
+    <span class="n">mali_scripfile</span> <span class="o">=</span> <span class="s2">"temp_mali_scrip.nc"</span>
 
     <span class="c1"># create the scrip file for the ISMIP7 planar rectangular grid</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating SCRIP file for ISMIP7 source grid...&quot;</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;create_scrip_file_from_planar_rectangular_grid&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--input&quot;</span><span class="p">,</span> <span class="n">ismip7_grid_file</span><span class="p">,</span>
-            <span class="s2">&quot;--scrip&quot;</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">,</span>
-            <span class="s2">&quot;--proj&quot;</span><span class="p">,</span> <span class="n">ismip7_projection</span><span class="p">,</span>
-            <span class="s2">&quot;--rank&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">]</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Creating SCRIP file for ISMIP7 source grid..."</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"create_scrip_file_from_planar_rectangular_grid"</span><span class="p">,</span>
+            <span class="s2">"--input"</span><span class="p">,</span> <span class="n">ismip7_grid_file</span><span class="p">,</span>
+            <span class="s2">"--scrip"</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">,</span>
+            <span class="s2">"--proj"</span><span class="p">,</span> <span class="n">ismip7_projection</span><span class="p">,</span>
+            <span class="s2">"--rank"</span><span class="p">,</span> <span class="s2">"2"</span><span class="p">]</span>
 
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># create a MALI mesh scrip file</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating SCRIP file for MALI mesh...&quot;</span><span class="p">)</span>
-    <span class="n">mali_mesh_copy</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_file</span><span class="si">}</span><span class="s2">_copy&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Creating SCRIP file for MALI mesh..."</span><span class="p">)</span>
+    <span class="n">mali_mesh_copy</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_file</span><span class="si">}</span><span class="s2">_copy"</span>
     <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mali_mesh_file</span><span class="p">,</span> <span class="n">mali_mesh_copy</span><span class="p">)</span>
 
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;set_lat_lon_fields_in_planar_grid&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--file&quot;</span><span class="p">,</span> <span class="n">mali_mesh_copy</span><span class="p">,</span>
-            <span class="s2">&quot;--proj&quot;</span><span class="p">,</span> <span class="n">ismip7_projection</span><span class="p">]</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"set_lat_lon_fields_in_planar_grid"</span><span class="p">,</span>
+            <span class="s2">"--file"</span><span class="p">,</span> <span class="n">mali_mesh_copy</span><span class="p">,</span>
+            <span class="s2">"--proj"</span><span class="p">,</span> <span class="n">ismip7_projection</span><span class="p">]</span>
 
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="n">scrip_from_mpas</span><span class="p">(</span><span class="n">mali_mesh_copy</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">)</span>
 
     <span class="c1"># create a mapping file using ESMF_RegridWeightGen</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating mapping file with method: </span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Creating mapping file with method: </span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip7&quot;</span><span class="p">]</span>
-    <span class="n">cores</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">&quot;esmf_ntasks&quot;</span><span class="p">)</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip7"</span><span class="p">]</span>
+    <span class="n">cores</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">"esmf_ntasks"</span><span class="p">)</span>
 
-    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parallel&quot;</span><span class="p">,</span> <span class="s2">&quot;parallel_executable&quot;</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
-    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;ESMF_RegridWeightGen&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">,</span>
-                 <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">,</span>
-                 <span class="s2">&quot;-w&quot;</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
-                 <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="n">method_remap</span><span class="p">,</span>
-                 <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;-64bit_offset&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;--dst_regional&quot;</span><span class="p">,</span> <span class="s2">&quot;--src_regional&quot;</span><span class="p">])</span>
+    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"parallel"</span><span class="p">,</span> <span class="s2">"parallel_executable"</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">"-n"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                 <span class="s2">"ESMF_RegridWeightGen"</span><span class="p">,</span>
+                 <span class="s2">"-s"</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">,</span>
+                 <span class="s2">"-d"</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">,</span>
+                 <span class="s2">"-w"</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+                 <span class="s2">"-m"</span><span class="p">,</span> <span class="n">method_remap</span><span class="p">,</span>
+                 <span class="s2">"-i"</span><span class="p">,</span> <span class="s2">"-64bit_offset"</span><span class="p">,</span>
+                 <span class="s2">"--dst_regional"</span><span class="p">,</span> <span class="s2">"--src_regional"</span><span class="p">])</span>
 
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># clean up temporary files</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removing temporary scrip files...&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Removing temporary scrip files..."</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">source_grid_scripfile</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mali_scripfile</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mali_mesh_copy</span><span class="p">)</span></div>

@@ -125,7 +125,7 @@
 <div class="viewcode-block" id="CalculateWaveDrag">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.html#compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CalculateWaveDrag</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for calculating wave drag information</span>
 
 <span class="sd">    Attributes</span>
@@ -141,12 +141,12 @@
 
 <span class="sd">    output_file : str</span>
 <span class="sd">       File name for the output file containing wave drag information</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="CalculateWaveDrag.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.html#compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -157,74 +157,74 @@
 <span class="sd">         mesh : compass.ocean.tests.tides.mesh.Mesh</span>
 <span class="sd">            The test case the produces the mesh for this case</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;wave_drag&#39;</span><span class="p">,</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'wave_drag'</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">bathy_file</span> <span class="o">=</span> <span class="s1">&#39;bathy.nc&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">&#39;mesh.nc&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">buoy_file</span> <span class="o">=</span> <span class="s1">&#39;buoy.nc&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bathy_file</span> <span class="o">=</span> <span class="s1">'bathy.nc'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">'mesh.nc'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buoy_file</span> <span class="o">=</span> <span class="s1">'buoy.nc'</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy_file</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;WOA2013_buoyancies.nc&#39;</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">'WOA2013_buoyancies.nc'</span><span class="p">,</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">'initial_condition_database'</span><span class="p">)</span>
 
-        <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;cull_mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">'cull_mesh'</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc'</span><span class="p">)</span>
 
-        <span class="n">bathy_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;pixel&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
-        <span class="n">pixel_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">bathy_path</span><span class="si">}</span><span class="s1">/RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc&#39;</span>
+        <span class="n">bathy_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">'pixel'</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">pixel_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">bathy_path</span><span class="si">}</span><span class="s1">/RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bathy_file</span><span class="p">,</span>
             <span class="n">work_dir_target</span><span class="o">=</span><span class="n">pixel_file</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;topographic_wave_drag.nc&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="s1">'topographic_wave_drag.nc'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CalculateWaveDrag.interpolate_data_to_grid">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.interpolate_data_to_grid.html#compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.interpolate_data_to_grid">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">interpolate_data_to_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_file</span><span class="p">,</span> <span class="n">data_file</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Interpolate a variable from a data file to an the MPAS grid</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># Open files</span>
-        <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">grid_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">grid_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+        <span class="n">grid_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">grid_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
 
         <span class="c1"># Get grid from data file</span>
-        <span class="n">lon_data</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;longitude&#39;</span><span class="p">][:]</span>
-        <span class="n">lat_data</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">][:]</span>
+        <span class="n">lon_data</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'longitude'</span><span class="p">][:]</span>
+        <span class="n">lat_data</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'latitude'</span><span class="p">][:]</span>
         <span class="n">nsnaps</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="c1"># Get grid from grid file</span>
-        <span class="n">lon_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lonEdge&#39;</span><span class="p">][:]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span>
+        <span class="n">lon_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'lonEdge'</span><span class="p">][:]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span>
                           <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
         <span class="n">lon_grid</span> <span class="o">=</span> <span class="n">lon_grid</span> <span class="o">*</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
-        <span class="n">lat_grid</span> <span class="o">=</span> <span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latEdge&#39;</span><span class="p">][:]</span> <span class="o">*</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="n">lat_grid</span> <span class="o">=</span> <span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'latEdge'</span><span class="p">][:]</span> <span class="o">*</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
 
         <span class="n">grid_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">lon_grid</span><span class="p">,</span> <span class="n">lat_grid</span><span class="p">))</span>
         <span class="n">nEdges</span> <span class="o">=</span> <span class="n">lon_grid</span><span class="o">.</span><span class="n">size</span>
         <span class="n">interp_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nsnaps</span><span class="p">,</span> <span class="n">nEdges</span><span class="p">))</span>
 
         <span class="c1"># Interpolate timesnaps</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Interpolating </span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Interpolating </span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="c1"># Get data to interpolate</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">var</span><span class="p">][:]</span>
-        <span class="c1"># bottom_index = data_nc.variables[&#39;bottom_index&#39;][:]</span>
+        <span class="c1"># bottom_index = data_nc.variables['bottom_index'][:]</span>
         <span class="n">data</span><span class="p">[</span><span class="n">data</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">data</span><span class="p">[</span><span class="n">data</span> <span class="o">&gt;</span> <span class="mf">0.015</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.015</span>
         <span class="n">data</span><span class="p">[</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mf">1.405189e-4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.405189e-4</span>
         <span class="c1"># Interpolate data onto new grid</span>
         <span class="n">interpolator</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">RegularGridInterpolator</span><span class="p">(</span>
             <span class="p">(</span><span class="n">lon_data</span><span class="p">,</span> <span class="n">lat_data</span><span class="p">),</span> <span class="n">data</span><span class="p">,</span>
-            <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+            <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">)</span>
         <span class="n">interp_data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">interpolator</span><span class="p">(</span><span class="n">grid_points</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">interp_data</span></div>
@@ -233,12 +233,12 @@
 <div class="viewcode-block" id="CalculateWaveDrag.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.run.html#compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run the step to calculate wave drag information</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># Open Datasets</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opening Datasets&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Opening Datasets"</span><span class="p">)</span>
         <span class="n">bd</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bathy_file</span><span class="p">)</span>
         <span class="n">elev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">bd</span><span class="o">.</span><span class="n">bed_elevation</span><span class="p">)</span>  <span class="c1"># (lat, lon)</span>
         <span class="n">ylat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">bd</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">values</span><span class="p">[:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
@@ -254,7 +254,7 @@
         <span class="n">zEdges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">md</span><span class="o">.</span><span class="n">zEdge</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
         <span class="n">xyzVertex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">xEdges</span><span class="p">,</span> <span class="n">yEdges</span><span class="p">,</span> <span class="n">zEdges</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Getting nearest neighbors&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Getting nearest neighbors"</span><span class="p">)</span>
         <span class="n">tree</span> <span class="o">=</span> <span class="n">cKDTree</span><span class="p">(</span><span class="n">xyzVertex</span><span class="p">)</span>
         <span class="n">xmid</span> <span class="o">=</span> <span class="mf">.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xlon</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">xlon</span><span class="p">[</span><span class="mi">1</span><span class="p">::])</span>
         <span class="n">ymid</span> <span class="o">=</span> <span class="mf">.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">ylat</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">ylat</span><span class="p">[</span><span class="mi">1</span><span class="p">::])</span>
@@ -280,7 +280,7 @@
         <span class="k">del</span> <span class="n">nset</span>
         <span class="k">del</span> <span class="n">nloc</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Calculating Standard Deviation and Interpolating Bed Slope&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Calculating Standard Deviation and Interpolating Bed Slope"</span><span class="p">)</span>
         <span class="n">stddev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nEdges</span><span class="p">))</span>
         <span class="n">bed_slope_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nEdges</span><span class="p">))</span>
         <span class="n">xGradEdges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nEdges</span><span class="p">))</span>
@@ -289,13 +289,13 @@
         <span class="n">N1B_interp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nEdges</span><span class="p">))</span>
         <span class="n">xlon_nn</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nEdges</span><span class="p">)]</span>
         <span class="n">ylat_nn</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nEdges</span><span class="p">)]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Making lists&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Making lists"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">ymid</span><span class="p">)):</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">xmid</span><span class="p">)):</span>
                 <span class="n">ylat_nn</span><span class="p">,</span> <span class="n">xlon_nn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_nn_lists</span><span class="p">(</span><span class="n">ylat_nn</span><span class="p">,</span> <span class="n">xlon_nn</span><span class="p">,</span>
                                                       <span class="n">near</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Calculating stats&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Calculating stats"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nEdges</span><span class="p">):</span>
             <span class="n">bed_slope_edge</span><span class="p">,</span> <span class="n">sd</span><span class="p">,</span> <span class="n">xGradEdge</span><span class="p">,</span> <span class="n">yGradEdge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_stats</span><span class="p">(</span>
                 <span class="n">xlon_nn</span><span class="p">,</span> <span class="n">ylat_nn</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">bed_slope</span><span class="p">,</span>
@@ -307,25 +307,25 @@
             <span class="n">yGradEdges</span><span class="p">[</span><span class="n">edge</span><span class="p">]</span> <span class="o">=</span> <span class="n">yGradEdge</span>
 
         <span class="c1"># Fix some nn issues</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fixing nans in data&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Fixing nans in data"</span><span class="p">)</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stddev</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;stddev&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stddev</span><span class="p">)))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"stddev"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stddev</span><span class="p">)))</span>
             <span class="n">stddev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_nans</span><span class="p">(</span><span class="n">stddev</span><span class="p">,</span> <span class="n">md</span><span class="p">)</span>
             <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">bed_slope_edges</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;bed_slope_edges&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stddev</span><span class="p">)))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"bed_slope_edges"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stddev</span><span class="p">)))</span>
             <span class="n">bed_slope_edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_nans</span><span class="p">(</span><span class="n">bed_slope_edges</span><span class="p">,</span> <span class="n">md</span><span class="p">)</span>
             <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">xGradEdges</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;xGradEdges&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stddev</span><span class="p">)))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"xGradEdges"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stddev</span><span class="p">)))</span>
             <span class="n">xGradEdges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_nans</span><span class="p">(</span><span class="n">xGradEdges</span><span class="p">,</span> <span class="n">md</span><span class="p">)</span>
             <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">yGradEdges</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;yGradEdges&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stddev</span><span class="p">)))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"yGradEdges"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stddev</span><span class="p">)))</span>
             <span class="n">yGradEdge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_nans</span><span class="p">(</span><span class="n">yGradEdges</span><span class="p">,</span> <span class="n">md</span><span class="p">)</span>
             <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
 
@@ -333,18 +333,18 @@
         <span class="c1"># bottomDepthEdges[bottomDepthEdges==0.0] = 0.01</span>
 
         <span class="n">N1V_interp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate_data_to_grid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span>
-                                                   <span class="bp">self</span><span class="o">.</span><span class="n">buoy_file</span><span class="p">,</span> <span class="s1">&#39;N1V&#39;</span><span class="p">)</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">buoy_file</span><span class="p">,</span> <span class="s1">'N1V'</span><span class="p">)</span>
         <span class="n">N1B_interp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate_data_to_grid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span>
-                                                   <span class="bp">self</span><span class="o">.</span><span class="n">buoy_file</span><span class="p">,</span> <span class="s1">&#39;N1B&#39;</span><span class="p">)</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">buoy_file</span><span class="p">,</span> <span class="s1">'N1B'</span><span class="p">)</span>
         <span class="n">twd</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
-        <span class="n">twd</span><span class="p">[</span><span class="s2">&quot;topo_buoyancy_N1V&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">N1V_interp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span>
-                                                <span class="n">dims</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;nEdges&quot;</span><span class="p">})</span>
-        <span class="n">twd</span><span class="p">[</span><span class="s2">&quot;topo_buoyancy_N1B&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">N1B_interp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span>
-                                                <span class="n">dims</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;nEdges&quot;</span><span class="p">})</span>
-        <span class="n">twd</span><span class="p">[</span><span class="s2">&quot;bathy_stddev&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">stddev</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;nEdges&quot;</span><span class="p">})</span>
-        <span class="n">twd</span><span class="p">[</span><span class="s2">&quot;bed_slope_edges&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">bed_slope_edges</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;nEdges&quot;</span><span class="p">})</span>
-        <span class="n">twd</span><span class="p">[</span><span class="s2">&quot;lonGradEdge&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">xGradEdges</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;nEdges&quot;</span><span class="p">})</span>
-        <span class="n">twd</span><span class="p">[</span><span class="s2">&quot;latGradEdge&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">yGradEdges</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;nEdges&quot;</span><span class="p">})</span>
+        <span class="n">twd</span><span class="p">[</span><span class="s2">"topo_buoyancy_N1V"</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">N1V_interp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span>
+                                                <span class="n">dims</span><span class="o">=</span><span class="p">{</span><span class="s2">"nEdges"</span><span class="p">})</span>
+        <span class="n">twd</span><span class="p">[</span><span class="s2">"topo_buoyancy_N1B"</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">N1B_interp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span>
+                                                <span class="n">dims</span><span class="o">=</span><span class="p">{</span><span class="s2">"nEdges"</span><span class="p">})</span>
+        <span class="n">twd</span><span class="p">[</span><span class="s2">"bathy_stddev"</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">stddev</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">{</span><span class="s2">"nEdges"</span><span class="p">})</span>
+        <span class="n">twd</span><span class="p">[</span><span class="s2">"bed_slope_edges"</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">bed_slope_edges</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">{</span><span class="s2">"nEdges"</span><span class="p">})</span>
+        <span class="n">twd</span><span class="p">[</span><span class="s2">"lonGradEdge"</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">xGradEdges</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">{</span><span class="s2">"nEdges"</span><span class="p">})</span>
+        <span class="n">twd</span><span class="p">[</span><span class="s2">"latGradEdge"</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">yGradEdges</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">{</span><span class="s2">"nEdges"</span><span class="p">})</span>
         <span class="n">twd</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="p">)</span>
 
         <span class="k">del</span> <span class="n">xlon_nn</span>
@@ -354,9 +354,9 @@
 <div class="viewcode-block" id="CalculateWaveDrag.fix_nans">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.fix_nans.html#compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.fix_nans">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">fix_nans</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">mesh_nc</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Replace NaN values with average of surrounding (non-NaN) values</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="p">))):</span>
             <span class="n">edgesOnEdge</span> <span class="o">=</span> <span class="n">mesh_nc</span><span class="o">.</span><span class="n">edgesOnEdge</span><span class="o">.</span><span class="n">data</span>
 
@@ -375,9 +375,9 @@
 <div class="viewcode-block" id="CalculateWaveDrag.make_nn_lists">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.make_nn_lists.html#compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.make_nn_lists">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">make_nn_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ylat_nn</span><span class="p">,</span> <span class="n">xlon_nn</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the nearest neighbor lists</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">ylat_nn</span><span class="p">[</span><span class="n">near</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="n">xlon_nn</span><span class="p">[</span><span class="n">near</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ylat_nn</span><span class="p">,</span> <span class="n">xlon_nn</span></div>
@@ -387,9 +387,9 @@
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.calc_stats.html#compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.calc_stats">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calc_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xlon_nn</span><span class="p">,</span> <span class="n">ylat_nn</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">bed_slope</span><span class="p">,</span>
                    <span class="n">edge</span><span class="p">,</span> <span class="n">xlon</span><span class="p">,</span> <span class="n">ylat</span><span class="p">,</span> <span class="n">elev</span><span class="p">,</span> <span class="n">xgrad</span><span class="p">,</span> <span class="n">ygrad</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Calculate the mean bathymetry slopes/gradients and stadard deviation</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># Prepare for calculating area integral</span>
         <span class="c1"># dlat = ylat[1] - ylat[0]</span>
@@ -436,9 +436,9 @@
 <div class="viewcode-block" id="CalculateWaveDrag.polyfit2d">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.polyfit2d.html#compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.polyfit2d">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">polyfit2d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Calculate linear least squares fit for standard deviation calculation</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># X, Y = np.meshgrid(x, y, copy=False)</span>
         <span class="c1"># X = X.flatten()</span>
         <span class="c1"># Y = Y.flatten()</span>
@@ -456,11 +456,11 @@
 <div class="viewcode-block" id="CalculateWaveDrag.map_to_r3">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.map_to_r3.html#compass.ocean.tests.tides.init.calculate_wave_drag.CalculateWaveDrag.map_to_r3">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">map_to_r3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xlon</span><span class="p">,</span> <span class="n">ylat</span><span class="p">,</span> <span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Map lon-lat coordinates to XYZ points. Restricted to the</span>
 <span class="sd">        panel LAT[HEAD:TAIL] to manage memory use.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">sinx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">xlon</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span>
         <span class="n">cosx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">xlon</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span>

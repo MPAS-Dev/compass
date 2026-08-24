@@ -122,7 +122,7 @@
 <div class="viewcode-block" id="ComputeTopographicWaveDrag">
 <a class="viewcode-back" href="../../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.html#compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ComputeTopographicWaveDrag</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for computing the topographic wave drag</span>
 <span class="sd">    forcing term</span>
 
@@ -137,11 +137,11 @@
 <span class="sd">    self.grid_file : str</span>
 <span class="sd">        Name of mesh file</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="ComputeTopographicWaveDrag.__init__">
 <a class="viewcode-back" href="../../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.html#compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -151,24 +151,24 @@
 
 <span class="sd">        mesh : compass.ocean.tests.global_ocean.mesh.Mesh</span>
 <span class="sd">            The test case that creates the mesh used by this test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;topodrag&#39;</span><span class="p">,</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'topodrag'</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">rinv_file</span> <span class="o">=</span> <span class="s1">&#39;jsl_lim24_inv_hrs.nc&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span> <span class="o">=</span> <span class="s1">&#39;topographic_wave_drag.nc&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grid_file</span> <span class="o">=</span> <span class="s1">&#39;mesh.nc&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rinv_file</span> <span class="o">=</span> <span class="s1">'jsl_lim24_inv_hrs.nc'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span> <span class="o">=</span> <span class="s1">'topographic_wave_drag.nc'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid_file</span> <span class="o">=</span> <span class="s1">'mesh.nc'</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rinv_file</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;jsl_lim24_inv_hrs.nc&#39;</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">'jsl_lim24_inv_hrs.nc'</span><span class="p">,</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">'initial_condition_database'</span><span class="p">)</span>
 
-        <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;cull_mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">'cull_mesh'</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'mesh.nc'</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span><span class="p">)</span></div>
 
@@ -176,23 +176,23 @@
 <div class="viewcode-block" id="ComputeTopographicWaveDrag.interpolate_data_to_grid">
 <a class="viewcode-back" href="../../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.interpolate_data_to_grid.html#compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.interpolate_data_to_grid">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">interpolate_data_to_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_file</span><span class="p">,</span> <span class="n">data_file</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Interpolate time snaps of gridded data field to MPAS mesh</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># Open files</span>
-        <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">grid_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">grid_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+        <span class="n">grid_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">grid_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
 
         <span class="c1"># Get grid from data file</span>
-        <span class="n">lon_data</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;Longitude&#39;</span><span class="p">][:]</span>
-        <span class="n">lat_data</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;Latitude&#39;</span><span class="p">][:]</span>
-        <span class="n">time</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;MT&#39;</span><span class="p">][:]</span>
+        <span class="n">lon_data</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'Longitude'</span><span class="p">][:]</span>
+        <span class="n">lat_data</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'Latitude'</span><span class="p">][:]</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'MT'</span><span class="p">][:]</span>
         <span class="n">nsnaps</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">size</span>
 
         <span class="c1"># Get grid from grid file</span>
-        <span class="n">lonEdge</span> <span class="o">=</span> <span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lonEdge&#39;</span><span class="p">][:]</span>
-        <span class="n">latEdge</span> <span class="o">=</span> <span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latEdge&#39;</span><span class="p">][:]</span>
+        <span class="n">lonEdge</span> <span class="o">=</span> <span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'lonEdge'</span><span class="p">][:]</span>
+        <span class="n">latEdge</span> <span class="o">=</span> <span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'latEdge'</span><span class="p">][:]</span>
         <span class="n">lon_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">lonEdge</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
         <span class="n">lon_grid</span> <span class="o">=</span> <span class="n">lon_grid</span> <span class="o">*</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
         <span class="n">lat_grid</span> <span class="o">=</span> <span class="n">latEdge</span> <span class="o">*</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
@@ -210,7 +210,7 @@
                                                            <span class="mi">1</span> <span class="o">/</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
                                                            <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                                            <span class="n">fill_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                                           <span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+                                                           <span class="n">method</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">)</span>
         <span class="n">interp_data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">interpolator</span><span class="p">(</span><span class="n">grid_points</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">interp_data</span></div>
@@ -219,26 +219,26 @@
 <div class="viewcode-block" id="ComputeTopographicWaveDrag.write_to_file">
 <a class="viewcode-back" href="../../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.write_to_file.html#compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.write_to_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">write_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Write data to netCDF file</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-            <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span>
-                                      <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF3_64BIT_OFFSET&#39;</span><span class="p">)</span>
+            <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">,</span>
+                                      <span class="nb">format</span><span class="o">=</span><span class="s1">'NETCDF3_64BIT_OFFSET'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span>
-                                      <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF3_64BIT_OFFSET&#39;</span><span class="p">)</span>
+            <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">,</span>
+                                      <span class="nb">format</span><span class="o">=</span><span class="s1">'NETCDF3_64BIT_OFFSET'</span><span class="p">)</span>
 
             <span class="c1"># Find dimesions</span>
             <span class="n">nedges</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
             <span class="c1"># Declare dimensions</span>
-            <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nEdges&#39;</span><span class="p">,</span> <span class="n">nedges</span><span class="p">)</span>
-            <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;StrLen&#39;</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+            <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'nEdges'</span><span class="p">,</span> <span class="n">nedges</span><span class="p">)</span>
+            <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'StrLen'</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
 
         <span class="c1"># Set variables</span>
-        <span class="n">data_var</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nEdges&#39;</span><span class="p">))</span>
+        <span class="n">data_var</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="p">(</span><span class="s1">'nEdges'</span><span class="p">))</span>
         <span class="n">data_var</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:]</span>
         <span class="n">data_nc</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
@@ -246,18 +246,18 @@
 <div class="viewcode-block" id="ComputeTopographicWaveDrag.run">
 <a class="viewcode-back" href="../../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.run.html#compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span><span class="p">):</span>
-            <span class="n">check_call</span><span class="p">([</span><span class="s1">&#39;rm&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">check_call</span><span class="p">([</span><span class="s1">'rm'</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># Interpolation of topographic wave drag</span>
         <span class="n">rinv_interp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate_data_to_grid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file</span><span class="p">,</span>
-                                                    <span class="bp">self</span><span class="o">.</span><span class="n">rinv_file</span><span class="p">,</span> <span class="s1">&#39;rinv&#39;</span><span class="p">)</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">rinv_file</span><span class="p">,</span> <span class="s1">'rinv'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">write_to_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span><span class="p">,</span> <span class="n">rinv_interp</span><span class="p">,</span>
-                           <span class="s1">&#39;topographic_wave_drag&#39;</span><span class="p">)</span></div>
+                           <span class="s1">'topographic_wave_drag'</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

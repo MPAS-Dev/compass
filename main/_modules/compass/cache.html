@@ -123,7 +123,7 @@
 <div class="viewcode-block" id="update_cache">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.cache.update_cache.html#compass.cache.update_cache">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">update_cache</span><span class="p">(</span><span class="n">step_paths</span><span class="p">,</span> <span class="n">date_string</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Cache one or more compass output files for use in a cached variant of the</span>
 <span class="sd">    test case or step</span>
 
@@ -134,32 +134,32 @@
 <span class="sd">        directory</span>
 
 <span class="sd">    date_string : str, optional</span>
-<span class="sd">        The datestamp (YYMMDD) to use on the files.  Default is today&#39;s date.</span>
+<span class="sd">        The datestamp (YYMMDD) to use on the files.  Default is today's date.</span>
 
 <span class="sd">    dry_run : bool, optional</span>
 <span class="sd">        Whether this is a dry run (producing the json file but not copying</span>
 <span class="sd">        files to the LCRC server)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s1">&#39;COMPASS_MACHINE&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s1">'COMPASS_MACHINE'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
         <span class="n">machine</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">invalid</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">machine</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;COMPASS_MACHINE&#39;</span><span class="p">]</span>
-        <span class="n">invalid</span> <span class="o">=</span> <span class="n">machine</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;anvil&#39;</span><span class="p">,</span> <span class="s1">&#39;chrysalis&#39;</span><span class="p">]</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'COMPASS_MACHINE'</span><span class="p">]</span>
+        <span class="n">invalid</span> <span class="o">=</span> <span class="n">machine</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'anvil'</span><span class="p">,</span> <span class="s1">'chrysalis'</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">invalid</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You must cache files from either Anvil or Chrysalis&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'You must cache files from either Anvil or Chrysalis'</span><span class="p">)</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="n">CompassConfigParser</span><span class="p">()</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass.machines&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.cfg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">machine</span><span class="p">))</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">'compass.machines'</span><span class="p">,</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">.cfg'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">machine</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">date_string</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">date_string</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">date_string</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%y%m</span><span class="si">%d</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># make a dictionary with MPAS cores as keys, and lists of steps as values</span>
     <span class="n">steps</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">step_paths</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/step.pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/step.pickle'</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
             <span class="n">_</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
 
         <span class="n">mpas_core</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span>
@@ -169,26 +169,26 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">steps</span><span class="p">[</span><span class="n">mpas_core</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">step</span><span class="p">]</span>
 
-    <span class="k">with</span> <span class="n">package_path</span><span class="p">(</span><span class="s1">&#39;compass&#39;</span><span class="p">,</span> <span class="s1">&#39;database_subdirs.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">path</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">package_path</span><span class="p">(</span><span class="s1">'compass'</span><span class="p">,</span> <span class="s1">'database_subdirs.json'</span><span class="p">)</span> <span class="k">as</span> <span class="n">path</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
             <span class="n">database_subdirs</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
 
-    <span class="n">database_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;database_root&#39;</span><span class="p">)</span>
+    <span class="n">database_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'paths'</span><span class="p">,</span> <span class="s1">'database_root'</span><span class="p">)</span>
 
     <span class="c1"># now, iterate over cores and steps</span>
     <span class="k">for</span> <span class="n">mpas_core</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
         <span class="n">core_path</span> <span class="o">=</span> <span class="n">database_subdirs</span><span class="p">[</span><span class="n">mpas_core</span><span class="p">]</span>
-        <span class="n">cache_root</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">database_root</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">core_path</span><span class="si">}</span><span class="s1">/compass_cache&#39;</span>
+        <span class="n">cache_root</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">database_root</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">core_path</span><span class="si">}</span><span class="s1">/compass_cache'</span>
 
-        <span class="n">package</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">package</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">'</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">_cached_files.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">_cached_files.json'</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
                 <span class="n">cached_files</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-            <span class="c1"># we don&#39;t have a local version of the file yet, let&#39;s see if</span>
-            <span class="c1"># there&#39;s a remote one for this MPAS core</span>
+            <span class="c1"># we don't have a local version of the file yet, let's see if</span>
+            <span class="c1"># there's a remote one for this MPAS core</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;cached_files.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">path</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">'cached_files.json'</span><span class="p">)</span> <span class="k">as</span> <span class="n">path</span><span class="p">:</span>
                     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
                         <span class="n">cached_files</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
@@ -206,13 +206,13 @@
                 <span class="c1"># remove the MPAS core from the file path</span>
                 <span class="n">target</span> <span class="o">=</span> <span class="n">out_filename</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
                 <span class="n">path</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-                <span class="n">target</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">date_string</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">date_string</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s1">'</span>
                 <span class="n">cached_files</span><span class="p">[</span><span class="n">out_filename</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span>
 
                 <span class="nb">print</span><span class="p">(</span><span class="n">out_filename</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  ==&gt; </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">output_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cache_root</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  copy to: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  ==&gt; </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">output_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">cache_root</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">'</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  copy to: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">()</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">dry_run</span><span class="p">:</span>
                     <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
@@ -222,30 +222,30 @@
                         <span class="k">pass</span>
                     <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">out_filename</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
 
-        <span class="n">out_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">_cached_files.json&#39;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
+        <span class="n">out_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">_cached_files.json'</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_filename</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">cached_files</span><span class="p">,</span> <span class="n">data_file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
-        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Cache the output files from one or more steps for use in &#39;</span>
-                    <span class="s1">&#39;a cached variant of the step&#39;</span><span class="p">,</span>
-        <span class="n">prog</span><span class="o">=</span><span class="s1">&#39;compass cache&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--orig_steps&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;orig_steps&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">'Cache the output files from one or more steps for use in '</span>
+                    <span class="s1">'a cached variant of the step'</span><span class="p">,</span>
+        <span class="n">prog</span><span class="o">=</span><span class="s1">'compass cache'</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-i"</span><span class="p">,</span> <span class="s2">"--orig_steps"</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">'+'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"orig_steps"</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The relative path of the original (uncached) &quot;</span>
-                             <span class="s2">&quot;steps from the base work directory&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;STEP&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;--date_string&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;date_string&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The datestamp (YYMMDD) to use on the files.  &quot;</span>
-                             <span class="s2">&quot;Default is today&#39;s date.&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;DATE&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-r&quot;</span><span class="p">,</span> <span class="s2">&quot;--dry_run&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;dry_run&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether this is a dry run (producing the json &quot;</span>
-                             <span class="s2">&quot;file but not copying files to the LCRC server).&quot;</span><span class="p">,</span>
-                        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"The relative path of the original (uncached) "</span>
+                             <span class="s2">"steps from the base work directory"</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"STEP"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-d"</span><span class="p">,</span> <span class="s2">"--date_string"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"date_string"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"The datestamp (YYMMDD) to use on the files.  "</span>
+                             <span class="s2">"Default is today's date."</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"DATE"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-r"</span><span class="p">,</span> <span class="s2">"--dry_run"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"dry_run"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"Whether this is a dry run (producing the json "</span>
+                             <span class="s2">"file but not copying files to the LCRC server)."</span><span class="p">,</span>
+                        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
 
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
     <span class="n">update_cache</span><span class="p">(</span><span class="n">step_paths</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">orig_steps</span><span class="p">,</span> <span class="n">date_string</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">date_string</span><span class="p">,</span>

@@ -127,7 +127,7 @@
 <div class="viewcode-block" id="InterpolateAtmForcing">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing.html#compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InterpolateAtmForcing</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for interpolating the atmospheric wind velocities</span>
 <span class="sd">    and pressure onto the MPAS-Ocean mesh to be used as time</span>
 <span class="sd">    varying forcing in the forward run</span>
@@ -152,11 +152,11 @@
 <span class="sd">    self.grid_file : str</span>
 <span class="sd">        Name of mesh file</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="InterpolateAtmForcing.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing.html#compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">storm</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -169,33 +169,33 @@
 
 <span class="sd">        storm : str</span>
 <span class="sd">            The name of the storm to setup</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;interpolate&#39;</span><span class="p">,</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'interpolate'</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">plot</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_interval</span> <span class="o">=</span> <span class="mi">100</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">wind_file</span> <span class="o">=</span> <span class="s1">&#39;wnd10m.nc&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pres_file</span> <span class="o">=</span> <span class="s1">&#39;prmsl.nc&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span> <span class="o">=</span> <span class="s1">&#39;atmospheric_forcing.nc&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grid_file</span> <span class="o">=</span> <span class="s1">&#39;mesh.nc&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wind_file</span> <span class="o">=</span> <span class="s1">'wnd10m.nc'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pres_file</span> <span class="o">=</span> <span class="s1">'prmsl.nc'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span> <span class="o">=</span> <span class="s1">'atmospheric_forcing.nc'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid_file</span> <span class="o">=</span> <span class="s1">'mesh.nc'</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wind_file</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">storm</span><span class="si">}</span><span class="s1">_wnd10m.nc&#39;</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
+            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">storm</span><span class="si">}</span><span class="s1">_wnd10m.nc'</span><span class="p">,</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">'initial_condition_database'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pres_file</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">storm</span><span class="si">}</span><span class="s1">_prmsl.nc&#39;</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
+            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">storm</span><span class="si">}</span><span class="s1">_prmsl.nc'</span><span class="p">,</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">'initial_condition_database'</span><span class="p">)</span>
 
-        <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;cull_mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">'cull_mesh'</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'mesh.nc'</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span><span class="p">)</span></div>
 
@@ -203,34 +203,34 @@
 <div class="viewcode-block" id="InterpolateAtmForcing.interpolate_data_to_grid">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing.interpolate_data_to_grid.html#compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing.interpolate_data_to_grid">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">interpolate_data_to_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_file</span><span class="p">,</span> <span class="n">data_file</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Interpolate time snaps of gridded data field to MPAS mesh</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># Open files</span>
-        <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">grid_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">grid_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+        <span class="n">grid_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">grid_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
 
         <span class="c1"># Get grid from data file</span>
-        <span class="n">lon_data</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">][:]</span>
+        <span class="n">lon_data</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'lon'</span><span class="p">][:]</span>
         <span class="n">lon_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lon_data</span><span class="p">,</span> <span class="mf">360.0</span><span class="p">)</span>
-        <span class="n">lat_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">][:])</span>
+        <span class="n">lat_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">][:])</span>
         <span class="n">lat_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lat_data</span><span class="p">,</span> <span class="mf">180.0</span> <span class="o">-</span> <span class="n">lat_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">time</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">][:]</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'time'</span><span class="p">][:]</span>
         <span class="n">nsnaps</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">size</span>
         <span class="n">nlon</span> <span class="o">=</span> <span class="n">lon_data</span><span class="o">.</span><span class="n">size</span>
         <span class="n">nlat</span> <span class="o">=</span> <span class="n">lat_data</span><span class="o">.</span><span class="n">size</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nsnaps</span><span class="p">,</span> <span class="n">nlat</span><span class="p">,</span> <span class="n">nlon</span><span class="p">))</span>
 
         <span class="c1"># Get grid from grid file</span>
-        <span class="n">lon_grid</span> <span class="o">=</span> <span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lonCell&#39;</span><span class="p">][:]</span> <span class="o">*</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
-        <span class="n">lat_grid</span> <span class="o">=</span> <span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latCell&#39;</span><span class="p">][:]</span> <span class="o">*</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="n">lon_grid</span> <span class="o">=</span> <span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'lonCell'</span><span class="p">][:]</span> <span class="o">*</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="n">lat_grid</span> <span class="o">=</span> <span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'latCell'</span><span class="p">][:]</span> <span class="o">*</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
         <span class="n">ncells</span> <span class="o">=</span> <span class="n">lon_grid</span><span class="o">.</span><span class="n">size</span>
         <span class="n">interp_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nsnaps</span><span class="p">,</span> <span class="n">ncells</span><span class="p">))</span>
 
         <span class="c1"># Interpolate timesnaps</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">time</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Interpolating </span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Interpolating </span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
             <span class="c1"># Get data to interpolate</span>
             <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span>
@@ -242,14 +242,14 @@
                                              <span class="n">lon_grid</span><span class="p">,</span> <span class="n">lat_grid</span><span class="p">)</span>
 
         <span class="c1"># Deal with time</span>
-        <span class="n">ref_date</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">getncattr</span><span class="p">(</span><span class="s1">&#39;units&#39;</span><span class="p">)</span>
-        <span class="n">ref_date</span> <span class="o">=</span> <span class="n">ref_date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;hours since &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.0 +0:00&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">ref_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">ref_date</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+        <span class="n">ref_date</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'time'</span><span class="p">]</span><span class="o">.</span><span class="n">getncattr</span><span class="p">(</span><span class="s1">'units'</span><span class="p">)</span>
+        <span class="n">ref_date</span> <span class="o">=</span> <span class="n">ref_date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'hours since '</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'.0 +0:00'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+        <span class="n">ref_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">ref_date</span><span class="p">,</span> <span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S'</span><span class="p">)</span>
         <span class="n">xtime</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">time</span><span class="p">:</span>
             <span class="n">date</span> <span class="o">=</span> <span class="n">ref_date</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
-            <span class="n">xtime</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M:%S&#39;</span> <span class="o">+</span> <span class="mi">45</span> <span class="o">*</span> <span class="s1">&#39; &#39;</span><span class="p">))</span>
-        <span class="n">xtime</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xtime</span><span class="p">,</span> <span class="s1">&#39;S64&#39;</span><span class="p">)</span>
+            <span class="n">xtime</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M:%S'</span> <span class="o">+</span> <span class="mi">45</span> <span class="o">*</span> <span class="s1">' '</span><span class="p">))</span>
+        <span class="n">xtime</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xtime</span><span class="p">,</span> <span class="s1">'S64'</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">(</span><span class="n">lon_grid</span><span class="p">,</span> <span class="n">lat_grid</span><span class="p">,</span> <span class="n">interp_data</span><span class="p">),</span> \
             <span class="p">(</span><span class="n">lon_data</span><span class="p">,</span> <span class="n">lat_data</span><span class="p">,</span> <span class="n">data</span><span class="p">),</span> \
@@ -260,11 +260,11 @@
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing.plot_interp_data.html#compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing.plot_interp_data">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_interp_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orig_data</span><span class="p">,</span> <span class="n">interp_data</span><span class="p">,</span>
                          <span class="n">var_label</span><span class="p">,</span> <span class="n">var_abrev</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Plot original gridded data and interpolated fields</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">&#39;agg&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">'agg'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">:</span>
             <span class="k">return</span>
@@ -287,7 +287,7 @@
         <span class="n">ax0</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
         <span class="n">ax0</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAKES</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
         <span class="n">ax0</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">COASTLINE</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
-        <span class="n">ax0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;data &#39;</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="n">ax0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'data '</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
         <span class="n">cbar</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cf</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax0</span><span class="p">)</span>
         <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">var_label</span><span class="p">)</span>
 
@@ -300,45 +300,45 @@
         <span class="n">ax1</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAKES</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">COASTLINE</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;interpolated data &#39;</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'interpolated data '</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
         <span class="n">cbar</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cf</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
         <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">var_label</span><span class="p">)</span>
 
         <span class="c1"># Save figure</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">var_abrev</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span><span class="p">,</span>
-                    <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">var_abrev</span> <span class="o">+</span> <span class="s1">'_'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'.png'</span><span class="p">,</span>
+                    <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="InterpolateAtmForcing.write_to_file">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing.write_to_file.html#compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing.write_to_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">write_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">xtime</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Write data to netCDF file</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-            <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span>
-                                      <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF3_64BIT_OFFSET&#39;</span><span class="p">)</span>
+            <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">,</span>
+                                      <span class="nb">format</span><span class="o">=</span><span class="s1">'NETCDF3_64BIT_OFFSET'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span>
-                                      <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF3_64BIT_OFFSET&#39;</span><span class="p">)</span>
+            <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">,</span>
+                                      <span class="nb">format</span><span class="o">=</span><span class="s1">'NETCDF3_64BIT_OFFSET'</span><span class="p">)</span>
 
             <span class="c1"># Find dimesions</span>
             <span class="n">ncells</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
             <span class="c1"># Declare dimensions</span>
-            <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="n">ncells</span><span class="p">)</span>
-            <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;StrLen&#39;</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
-            <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'nCells'</span><span class="p">,</span> <span class="n">ncells</span><span class="p">)</span>
+            <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'StrLen'</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+            <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="c1"># Create time variable</span>
-            <span class="n">time</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;xtime&#39;</span><span class="p">,</span> <span class="s1">&#39;S1&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;StrLen&#39;</span><span class="p">))</span>
-            <span class="n">time</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">stringtochar</span><span class="p">(</span><span class="n">xtime</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'xtime'</span><span class="p">,</span> <span class="s1">'S1'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="s1">'StrLen'</span><span class="p">))</span>
+            <span class="n">time</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">stringtochar</span><span class="p">(</span><span class="n">xtime</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'ascii'</span><span class="p">)</span>
 
         <span class="c1"># Set variables</span>
-        <span class="n">data_var</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">))</span>
+        <span class="n">data_var</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="s1">'nCells'</span><span class="p">))</span>
         <span class="n">data_var</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">:]</span>
         <span class="n">data_nc</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
@@ -346,26 +346,26 @@
 <div class="viewcode-block" id="InterpolateAtmForcing.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing.run.html#compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span><span class="p">):</span>
-            <span class="n">check_call</span><span class="p">([</span><span class="s1">&#39;rm&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">check_call</span><span class="p">([</span><span class="s1">'rm'</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># Interpolation of u and v velocities</span>
         <span class="n">u_interp</span><span class="p">,</span> <span class="n">u_data</span><span class="p">,</span> <span class="n">xtime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate_data_to_grid</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grid_file</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">wind_file</span><span class="p">,</span>
-            <span class="s1">&#39;U_GRD_L103&#39;</span><span class="p">)</span>
+            <span class="s1">'U_GRD_L103'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_to_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span><span class="p">,</span> <span class="n">u_interp</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                           <span class="s1">&#39;windSpeedU&#39;</span><span class="p">,</span> <span class="n">xtime</span><span class="p">)</span>
+                           <span class="s1">'windSpeedU'</span><span class="p">,</span> <span class="n">xtime</span><span class="p">)</span>
 
         <span class="n">v_interp</span><span class="p">,</span> <span class="n">v_data</span><span class="p">,</span> <span class="n">xtime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate_data_to_grid</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grid_file</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">wind_file</span><span class="p">,</span>
-            <span class="s1">&#39;V_GRD_L103&#39;</span><span class="p">)</span>
+            <span class="s1">'V_GRD_L103'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_to_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span><span class="p">,</span> <span class="n">v_interp</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                           <span class="s1">&#39;windSpeedV&#39;</span><span class="p">,</span> <span class="n">xtime</span><span class="p">)</span>
+                           <span class="s1">'windSpeedV'</span><span class="p">,</span> <span class="n">xtime</span><span class="p">)</span>
 
         <span class="c1"># Plot wind velocity</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xtime</span><span class="p">)):</span>
@@ -377,16 +377,16 @@
                 <span class="n">vel_data</span><span class="p">[</span><span class="mi">2</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">u_data</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span> <span class="o">+</span>
                                          <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">v_data</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">plot_interp_data</span><span class="p">(</span><span class="n">vel_data</span><span class="p">,</span> <span class="n">vel_interp</span><span class="p">,</span>
-                                      <span class="s1">&#39;velocity magnitude&#39;</span><span class="p">,</span> <span class="s1">&#39;vel&#39;</span><span class="p">,</span>
+                                      <span class="s1">'velocity magnitude'</span><span class="p">,</span> <span class="s1">'vel'</span><span class="p">,</span>
                                       <span class="n">xtime</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
 
         <span class="c1"># Interpolation of atmospheric pressure</span>
         <span class="n">p_interp</span><span class="p">,</span> <span class="n">p_data</span><span class="p">,</span> <span class="n">xtime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate_data_to_grid</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grid_file</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pres_file</span><span class="p">,</span>
-            <span class="s1">&#39;PRMSL_L101&#39;</span><span class="p">)</span>
+            <span class="s1">'PRMSL_L101'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_to_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span><span class="p">,</span> <span class="n">p_interp</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                           <span class="s1">&#39;atmosPressure&#39;</span><span class="p">,</span> <span class="n">xtime</span><span class="p">)</span>
+                           <span class="s1">'atmosPressure'</span><span class="p">,</span> <span class="n">xtime</span><span class="p">)</span>
 
         <span class="c1"># Plot atmopheric pressure</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xtime</span><span class="p">)):</span>
@@ -394,7 +394,7 @@
                 <span class="n">press_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p_data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p_data</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span>
                 <span class="n">press_interp</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_interp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p_interp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p_interp</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">plot_interp_data</span><span class="p">(</span><span class="n">press_data</span><span class="p">,</span> <span class="n">press_interp</span><span class="p">,</span>
-                                      <span class="s1">&#39;atmospheric pressure&#39;</span><span class="p">,</span> <span class="s1">&#39;pres&#39;</span><span class="p">,</span>
+                                      <span class="s1">'atmospheric pressure'</span><span class="p">,</span> <span class="s1">'pres'</span><span class="p">,</span>
                                       <span class="n">xtime</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span></div>
 </div>
 

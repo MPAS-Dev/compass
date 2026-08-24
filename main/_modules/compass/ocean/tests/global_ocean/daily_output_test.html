@@ -119,16 +119,16 @@
 <div class="viewcode-block" id="DailyOutputTest">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest.html#compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DailyOutputTest</span><span class="p">(</span><span class="n">ForwardTestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test case to test the output for the TimeSeriesStatMonthly analysis</span>
 <span class="sd">    member in E3SM.  In this test, the analysis member for daily output is used</span>
 <span class="sd">    instead for efficiency.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DailyOutputTest.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest.html#compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create test case</span>
 
 <span class="sd">        Parameters</span>
@@ -142,44 +142,44 @@
 <span class="sd">        init : compass.ocean.tests.global_ocean.init.Init</span>
 <span class="sd">            The test case that produces the initial condition for this run</span>
 
-<span class="sd">        time_integrator : {&#39;split_explicit_ab2&#39;, &#39;RK4&#39;}</span>
+<span class="sd">        time_integrator : {'split_explicit_ab2', 'RK4'}</span>
 <span class="sd">            The time integrator to use for the forward run</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
                          <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span>
-                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;daily_output_test&#39;</span><span class="p">)</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s1">'daily_output_test'</span><span class="p">)</span>
 
         <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
                            <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
                            <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">add_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;analysis_members/&#39;</span>
-                     <span class="s1">&#39;mpaso.hist.am.timeSeriesStatsDaily.0001-01-01.nc&#39;</span><span class="p">)</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'analysis_members/'</span>
+                     <span class="s1">'mpaso.hist.am.timeSeriesStatsDaily.0001-01-01.nc'</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">'namelist.forward'</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">'streams.forward'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>
 
 
     <span class="c1"># no run() method is needed</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s1">&#39;timeDaily_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;timeDaily_avg_activeTracers_salinity&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;timeDaily_avg_layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;timeDaily_avg_normalVelocity&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;timeDaily_avg_ssh&#39;</span><span class="p">]</span>
+            <span class="s1">'timeDaily_avg_activeTracers_temperature'</span><span class="p">,</span>
+            <span class="s1">'timeDaily_avg_activeTracers_salinity'</span><span class="p">,</span>
+            <span class="s1">'timeDaily_avg_layerThickness'</span><span class="p">,</span> <span class="s1">'timeDaily_avg_normalVelocity'</span><span class="p">,</span>
+            <span class="s1">'timeDaily_avg_ssh'</span><span class="p">]</span>
 
         <span class="n">compare_variables</span><span class="p">(</span>
             <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-            <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/analysis_members/&#39;</span>
-                      <span class="s1">&#39;mpaso.hist.am.timeSeriesStatsDaily.0001-01-01.nc&#39;</span><span class="p">)</span></div>
+            <span class="n">filename1</span><span class="o">=</span><span class="s1">'forward/analysis_members/'</span>
+                      <span class="s1">'mpaso.hist.am.timeSeriesStatsDaily.0001-01-01.nc'</span><span class="p">)</span></div>
 
 </pre></div>
 

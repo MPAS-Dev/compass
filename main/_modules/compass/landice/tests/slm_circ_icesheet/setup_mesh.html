@@ -128,7 +128,7 @@
 <div class="viewcode-block" id="SetupMesh">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.setup_mesh.SetupMesh.html#compass.landice.tests.slm_circ_icesheet.setup_mesh.SetupMesh">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SetupMesh</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating a mesh with initial conditions plus forcing file for</span>
 <span class="sd">    circular icesheet test</span>
 
@@ -139,12 +139,12 @@
 
 <span class="sd">    nglv : str</span>
 <span class="sd">        Number of Gauss-Legendre nodes in latitude in the SLM</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="SetupMesh.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.setup_mesh.SetupMesh.html#compass.landice.tests.slm_circ_icesheet.setup_mesh.SetupMesh.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">nglv</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -157,11 +157,11 @@
 
 <span class="sd">        nglv : str</span>
 <span class="sd">            Number of Gauss-Legendre nodes in latitude in the SLM</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">res</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nglv</span> <span class="o">=</span> <span class="n">nglv</span></div>
@@ -171,15 +171,15 @@
 <div class="viewcode-block" id="SetupMesh.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.setup_mesh.SetupMesh.run.html#compass.landice.tests.slm_circ_icesheet.setup_mesh.SetupMesh.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circ_icesheet&#39;</span><span class="p">]</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'circ_icesheet'</span><span class="p">]</span>
 
-        <span class="n">lx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;lx&#39;</span><span class="p">)</span>
-        <span class="n">ly</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;ly&#39;</span><span class="p">)</span>
+        <span class="n">lx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'lx'</span><span class="p">)</span>
+        <span class="n">ly</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'ly'</span><span class="p">)</span>
         <span class="n">dc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1000.0</span>
 
         <span class="c1"># calculate the number of grid cells in x and y direction</span>
@@ -198,32 +198,32 @@
         <span class="n">center</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">)</span>
         <span class="c1"># shift the center to a quarter or radius</span>
         <span class="n">shift</span> <span class="o">=</span> <span class="mf">200000.0</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;shifting the center by </span><span class="si">{</span><span class="n">shift</span><span class="si">}</span><span class="s1"> meters&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'shifting the center by </span><span class="si">{</span><span class="n">shift</span><span class="si">}</span><span class="s1"> meters'</span><span class="p">)</span>
         <span class="n">translate</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">shift</span><span class="p">)</span>
 
-        <span class="n">fname_mpas</span> <span class="o">=</span> <span class="s1">&#39;mpas_grid.nc&#39;</span>
+        <span class="n">fname_mpas</span> <span class="o">=</span> <span class="s1">'mpas_grid.nc'</span>
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">fname_mpas</span><span class="p">)</span>
 
         <span class="n">levels</span> <span class="o">=</span> <span class="mi">3</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_landice_grid_from_generic_mpas_grid&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_grid.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">levels</span><span class="p">)]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'create_landice_grid_from_generic_mpas_grid'</span><span class="p">,</span>
+                <span class="s1">'-i'</span><span class="p">,</span> <span class="s1">'mpas_grid.nc'</span><span class="p">,</span>
+                <span class="s1">'-o'</span><span class="p">,</span> <span class="s1">'landice_grid.nc'</span><span class="p">,</span>
+                <span class="s1">'-l'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">levels</span><span class="p">)]</span>
 
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
-        <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
-                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
+        <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">,</span>
+                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">)</span>
 
         <span class="n">_setup_circsheet_initial_conditions</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
-                                            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span>
+                                            <span class="n">filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">)</span>
 
         <span class="n">_create_smb_forcing_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
-                                 <span class="n">mali_mesh_file</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
-                                 <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;smb_forcing.nc&#39;</span><span class="p">)</span>
+                                 <span class="n">mali_mesh_file</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">,</span>
+                                 <span class="n">filename</span><span class="o">=</span><span class="s1">'smb_forcing.nc'</span><span class="p">)</span>
 
         <span class="n">_build_mapping_files</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nglv</span><span class="p">,</span>
-                             <span class="n">mali_mesh_file</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span>
+                             <span class="n">mali_mesh_file</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">)</span>
 
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fname_mpas</span><span class="p">)</span></div>
 </div>
@@ -231,7 +231,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_setup_circsheet_initial_conditions</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create initial condition for circular ice sheet</span>
 
 <span class="sd">    Parameters</span>
@@ -245,28 +245,28 @@
 
 <span class="sd">    filename : str</span>
 <span class="sd">        file to setup circular icesheet</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circ_icesheet&#39;</span><span class="p">]</span>
-    <span class="n">ice_type</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ice_type&#39;</span><span class="p">)</span>
-    <span class="n">set_topo_elev</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;set_topo_elev&#39;</span><span class="p">)</span>
-    <span class="n">topo_elev</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;topo_elev&#39;</span><span class="p">)</span>
-    <span class="n">r0</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;r0&#39;</span><span class="p">)</span>
-    <span class="n">h0</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;h0&#39;</span><span class="p">)</span>
-    <span class="n">put_origin_on_a_cell</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;put_origin_on_a_cell&#39;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'circ_icesheet'</span><span class="p">]</span>
+    <span class="n">ice_type</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ice_type'</span><span class="p">)</span>
+    <span class="n">set_topo_elev</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'set_topo_elev'</span><span class="p">)</span>
+    <span class="n">topo_elev</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'topo_elev'</span><span class="p">)</span>
+    <span class="n">r0</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'r0'</span><span class="p">)</span>
+    <span class="n">h0</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'h0'</span><span class="p">)</span>
+    <span class="n">put_origin_on_a_cell</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'put_origin_on_a_cell'</span><span class="p">)</span>
 
     <span class="c1"># Open the file, get needed dimensions</span>
-    <span class="n">gridfile</span> <span class="o">=</span> <span class="n">NetCDFFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
-    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gridfile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">])</span>
+    <span class="n">gridfile</span> <span class="o">=</span> <span class="n">NetCDFFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">)</span>
+    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gridfile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">])</span>
     <span class="c1"># Get variables</span>
-    <span class="n">xCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xCell&#39;</span><span class="p">]</span>
-    <span class="n">yCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yCell&#39;</span><span class="p">]</span>
-    <span class="n">xEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xEdge&#39;</span><span class="p">]</span>
-    <span class="n">yEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yEdge&#39;</span><span class="p">]</span>
-    <span class="n">xVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xVertex&#39;</span><span class="p">]</span>
-    <span class="n">yVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yVertex&#39;</span><span class="p">]</span>
-    <span class="n">thickness</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span>
-    <span class="n">bedTopography</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bedTopography&#39;</span><span class="p">]</span>
-    <span class="n">layerThicknessFractions</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;layerThicknessFractions&#39;</span><span class="p">]</span>
+    <span class="n">xCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xCell'</span><span class="p">]</span>
+    <span class="n">yCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yCell'</span><span class="p">]</span>
+    <span class="n">xEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xEdge'</span><span class="p">]</span>
+    <span class="n">yEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yEdge'</span><span class="p">]</span>
+    <span class="n">xVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xVertex'</span><span class="p">]</span>
+    <span class="n">yVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yVertex'</span><span class="p">]</span>
+    <span class="n">thickness</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'thickness'</span><span class="p">]</span>
+    <span class="n">bedTopography</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'bedTopography'</span><span class="p">]</span>
+    <span class="n">layerThicknessFractions</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'layerThicknessFractions'</span><span class="p">]</span>
 
     <span class="c1"># Find center of domain</span>
     <span class="n">x0</span> <span class="o">=</span> <span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
@@ -298,16 +298,16 @@
     <span class="c1"># (thickness will be NaN otherwise)</span>
     <span class="n">thickness_field</span> <span class="o">=</span> <span class="n">thickness</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
 
-    <span class="k">if</span> <span class="n">ice_type</span> <span class="o">==</span> <span class="s1">&#39;cylinder&#39;</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;cylinder ice type is chosen&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ice_type</span> <span class="o">==</span> <span class="s1">'cylinder'</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'cylinder ice type is chosen'</span><span class="p">)</span>
         <span class="n">thickness_field</span><span class="p">[</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">r0</span><span class="p">]</span> <span class="o">=</span> <span class="n">h0</span>
-    <span class="k">elif</span> <span class="n">ice_type</span> <span class="o">==</span> <span class="s1">&#39;dome-cism&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">ice_type</span> <span class="o">==</span> <span class="s1">'dome-cism'</span><span class="p">:</span>
         <span class="n">thickness_field</span><span class="p">[</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">r0</span><span class="p">]</span> <span class="o">=</span> <span class="n">h0</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">r0</span><span class="p">]</span> <span class="o">/</span> <span class="n">r0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
-    <span class="k">elif</span> <span class="n">ice_type</span> <span class="o">==</span> <span class="s1">&#39;dome-halfar&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">ice_type</span> <span class="o">==</span> <span class="s1">'dome-halfar'</span><span class="p">:</span>
         <span class="n">thickness_field</span><span class="p">[</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">r0</span><span class="p">]</span> <span class="o">=</span> <span class="n">h0</span> <span class="o">*</span> <span class="p">(</span>
             <span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">r0</span><span class="p">]</span> <span class="o">/</span> <span class="n">r0</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">/</span> <span class="mf">7.0</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected ice_type: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ice_type</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unexpected ice_type: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ice_type</span><span class="p">))</span>
     <span class="n">thickness</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">thickness_field</span>
 
     <span class="c1"># flat bed at sea level</span>
@@ -321,12 +321,12 @@
 
     <span class="n">gridfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Successfully added circular initial conditions to: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Successfully added circular initial conditions to: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">filename</span><span class="p">))</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_create_smb_forcing_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create surface mass balance forcing file for circular ice sheet</span>
 
 <span class="sd">    Parameters</span>
@@ -343,18 +343,18 @@
 
 <span class="sd">    filename : str</span>
 <span class="sd">        file to setup circular icesheet</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circ_icesheet&#39;</span><span class="p">]</span>
-    <span class="n">r0</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;r0&#39;</span><span class="p">)</span>
-    <span class="n">h0</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;h0&#39;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'circ_icesheet'</span><span class="p">]</span>
+    <span class="n">r0</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'r0'</span><span class="p">)</span>
+    <span class="n">h0</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'h0'</span><span class="p">)</span>
 
-    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;smb_forcing&#39;</span><span class="p">]</span>
-    <span class="n">direction</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;direction&#39;</span><span class="p">)</span>
-    <span class="n">start_year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;start_year&#39;</span><span class="p">))</span>
-    <span class="n">end_year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;end_year&#39;</span><span class="p">))</span>
-    <span class="n">dt_year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dt_year&#39;</span><span class="p">))</span>
-    <span class="n">dhdt</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;dhdt&#39;</span><span class="p">)</span>
-    <span class="n">drdt</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;drdt&#39;</span><span class="p">)</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'smb_forcing'</span><span class="p">]</span>
+    <span class="n">direction</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'direction'</span><span class="p">)</span>
+    <span class="n">start_year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'start_year'</span><span class="p">))</span>
+    <span class="n">end_year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'end_year'</span><span class="p">))</span>
+    <span class="n">dt_year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'dt_year'</span><span class="p">))</span>
+    <span class="n">dhdt</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'dhdt'</span><span class="p">)</span>
+    <span class="n">drdt</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'drdt'</span><span class="p">)</span>
 
     <span class="c1"># other constants used in the fuction</span>
     <span class="c1"># pi = 3.1415926535898  # pi value used in the SLM</span>
@@ -362,12 +362,12 @@
 
     <span class="c1"># Open the file, get needed dimensions</span>
     <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mali_mesh_file</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-    <span class="n">smbfile</span> <span class="o">=</span> <span class="n">NetCDFFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+    <span class="n">smbfile</span> <span class="o">=</span> <span class="n">NetCDFFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">)</span>
 
     <span class="c1"># Get variables</span>
-    <span class="n">xCell</span> <span class="o">=</span> <span class="n">smbfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xCell&#39;</span><span class="p">]</span>
-    <span class="n">yCell</span> <span class="o">=</span> <span class="n">smbfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yCell&#39;</span><span class="p">]</span>
-    <span class="n">nCells</span> <span class="o">=</span> <span class="n">smbfile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">xCell</span> <span class="o">=</span> <span class="n">smbfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xCell'</span><span class="p">]</span>
+    <span class="n">yCell</span> <span class="o">=</span> <span class="n">smbfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yCell'</span><span class="p">]</span>
+    <span class="n">nCells</span> <span class="o">=</span> <span class="n">smbfile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nCells'</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
 
     <span class="c1"># time interval for the forcing</span>
     <span class="n">t_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span><span class="p">,</span> <span class="n">dt_year</span><span class="p">)</span>
@@ -382,23 +382,23 @@
     <span class="c1"># calculate the radius of circ ice sheet</span>
     <span class="n">r</span> <span class="o">=</span> <span class="p">((</span><span class="n">xCell</span><span class="p">[:]</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">yCell</span><span class="p">[:]</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
 
-    <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;vertical&#39;</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating a file that prescribes vertical smb&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">'vertical'</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'creating a file that prescribes vertical smb'</span><span class="p">)</span>
         <span class="n">smb</span> <span class="o">=</span> <span class="n">dhdt</span> <span class="o">*</span> <span class="n">rhoi</span> <span class="o">/</span> <span class="p">(</span><span class="mf">365.0</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;prescribed smb is </span><span class="si">{</span><span class="n">smb</span><span class="si">}</span><span class="s1"> kg/m2/s&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'prescribed smb is </span><span class="si">{</span><span class="n">smb</span><span class="si">}</span><span class="s1"> kg/m2/s'</span><span class="p">)</span>
         <span class="n">indx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">r</span> <span class="o">&lt;=</span> <span class="n">r0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="c1"># for loop through time</span>
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t_array</span><span class="p">)):</span>
             <span class="n">Ht</span> <span class="o">=</span> <span class="n">h0</span> <span class="o">+</span> <span class="p">(</span><span class="n">dhdt</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># calculate a new height each time</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;At time </span><span class="si">{</span><span class="n">start_year</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dt_year</span><span class="si">}</span><span class="s1">, </span><span class="se">\</span>
-<span class="s1">                        new height will be </span><span class="si">{</span><span class="n">Ht</span><span class="si">}</span><span class="s1"> km&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'At time </span><span class="si">{</span><span class="n">start_year</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dt_year</span><span class="si">}</span><span class="s1">, </span><span class="se">\</span>
+<span class="s1">                        new height will be </span><span class="si">{</span><span class="n">Ht</span><span class="si">}</span><span class="s1"> km'</span><span class="p">)</span>
             <span class="n">sfcMassBal</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="n">indx</span><span class="p">]</span> <span class="o">=</span> <span class="n">smb</span>  <span class="c1"># assign sfcMassBal</span>
-        <span class="n">smbfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;sfcMassBal&#39;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">sfcMassBal</span><span class="p">[:,</span> <span class="p">:]</span>
+        <span class="n">smbfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'sfcMassBal'</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">sfcMassBal</span><span class="p">[:,</span> <span class="p">:]</span>
 
-    <span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;horizontal&#39;</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating a file that prescribes horizontal smb&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">'horizontal'</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'creating a file that prescribes horizontal smb'</span><span class="p">)</span>
         <span class="n">smb</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="p">((</span><span class="mf">10000.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">rhoi</span> <span class="o">/</span> <span class="p">(</span><span class="mf">365.0</span> <span class="o">*</span> <span class="mf">24.0</span> <span class="o">*</span> <span class="mf">60.0</span> <span class="o">*</span> <span class="mf">60.0</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;prescribed smb is </span><span class="si">{</span><span class="n">smb</span><span class="si">}</span><span class="s1"> kg/m2/s&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'prescribed smb is </span><span class="si">{</span><span class="n">smb</span><span class="si">}</span><span class="s1"> kg/m2/s'</span><span class="p">)</span>
         <span class="c1"># for loop through time</span>
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t_array</span><span class="p">)):</span>
             <span class="c1"># calculate a new radius at each time</span>
@@ -406,26 +406,26 @@
             <span class="k">if</span> <span class="p">(</span><span class="n">Rt</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
                 <span class="n">Rt</span> <span class="o">=</span> <span class="mf">0.0</span>
                 <span class="n">sfcMassBal</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">0.0</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;At time </span><span class="si">{</span><span class="n">start_year</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dt_year</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">t</span><span class="si">}</span><span class="s1">, </span><span class="se">\</span>
-<span class="s1">                      new radius will be </span><span class="si">{</span><span class="n">Rt</span><span class="si">}</span><span class="s1"> km&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'At time </span><span class="si">{</span><span class="n">start_year</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dt_year</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">t</span><span class="si">}</span><span class="s1">, </span><span class="se">\</span>
+<span class="s1">                      new radius will be </span><span class="si">{</span><span class="n">Rt</span><span class="si">}</span><span class="s1"> km'</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">indx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">r</span> <span class="o">&gt;=</span> <span class="n">Rt</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">sfcMassBal</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="n">indx</span><span class="p">]</span> <span class="o">=</span> <span class="n">smb</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;At time </span><span class="si">{</span><span class="n">start_year</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dt_year</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">t</span><span class="si">}</span><span class="s1">, </span><span class="se">\</span>
-<span class="s1">                      new radius will be </span><span class="si">{</span><span class="n">Rt</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="si">}</span><span class="s1"> km&#39;</span><span class="p">)</span>
-        <span class="n">smbfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;sfcMassBal&#39;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">sfcMassBal</span><span class="p">[:,</span> <span class="p">:]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'At time </span><span class="si">{</span><span class="n">start_year</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dt_year</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">t</span><span class="si">}</span><span class="s1">, </span><span class="se">\</span>
+<span class="s1">                      new radius will be </span><span class="si">{</span><span class="n">Rt</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="si">}</span><span class="s1"> km'</span><span class="p">)</span>
+        <span class="n">smbfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'sfcMassBal'</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">sfcMassBal</span><span class="p">[:,</span> <span class="p">:]</span>
 
     <span class="c1"># add xtime variable</span>
-    <span class="n">smbfile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;StrLen&#39;</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
-    <span class="n">xtime</span> <span class="o">=</span> <span class="n">smbfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;xtime&#39;</span><span class="p">,</span> <span class="s1">&#39;S1&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;StrLen&#39;</span><span class="p">))</span>
+    <span class="n">smbfile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'StrLen'</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+    <span class="n">xtime</span> <span class="o">=</span> <span class="n">smbfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'xtime'</span><span class="p">,</span> <span class="s1">'S1'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="s1">'StrLen'</span><span class="p">))</span>
 
     <span class="c1"># initialize SMB value everywhere in the mesh</span>
     <span class="n">xtime_str</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">t_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t_array</span><span class="p">)):</span>
         <span class="n">yr</span> <span class="o">=</span> <span class="n">start_year</span> <span class="o">+</span> <span class="p">(</span><span class="n">t_index</span> <span class="o">*</span> <span class="n">dt_year</span><span class="p">)</span>
-        <span class="n">xtime_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">yr</span><span class="p">)</span><span class="si">}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+        <span class="n">xtime_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">yr</span><span class="p">)</span><span class="si">}</span><span class="s1">-01-01_00:00:00'</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
         <span class="n">xtime_str_padded</span> <span class="o">=</span> <span class="n">xtime_str</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)[:</span><span class="mi">64</span><span class="p">]</span>
-        <span class="n">xtime_char</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">xtime_str_padded</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;S1&#39;</span><span class="p">)</span>
+        <span class="n">xtime_char</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">xtime_str_padded</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'S1'</span><span class="p">)</span>
         <span class="n">xtime</span><span class="p">[</span><span class="n">t_index</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">xtime_char</span>
         <span class="n">xtime</span><span class="p">[</span><span class="n">t_index</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">xtime_char</span>
 
@@ -433,7 +433,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_build_mapping_files</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">nglv</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Build a mapping file if it does not exist.</span>
 <span class="sd">    Mapping file is then used to remap the ismip6 source file in polarstero</span>
 <span class="sd">    coordinate to unstructured mali mesh</span>
@@ -457,71 +457,71 @@
 
 <span class="sd">    mali_mesh_file : str</span>
 <span class="sd">        The MALI mesh file</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;slm&#39;</span><span class="p">]</span>
-    <span class="n">slm_res</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slm_res&#39;</span><span class="p">)</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'slm'</span><span class="p">]</span>
+    <span class="n">slm_res</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'slm_res'</span><span class="p">)</span>
     <span class="n">slm_nglv</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nglv</span><span class="p">)</span>
-    <span class="n">method_mali_to_slm</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mapping_method_mali_to_slm&#39;</span><span class="p">)</span>
-    <span class="n">method_slm_to_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mapping_method_slm_to_mali&#39;</span><span class="p">)</span>
+    <span class="n">method_mali_to_slm</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mapping_method_mali_to_slm'</span><span class="p">)</span>
+    <span class="n">method_slm_to_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mapping_method_slm_to_mali'</span><span class="p">)</span>
 
-    <span class="n">mali_scripfile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;mali</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="si">}</span><span class="s1">km_scripfile.nc&#39;</span>
-    <span class="n">slm_scripfile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;slm</span><span class="si">{</span><span class="n">slm_res</span><span class="si">}</span><span class="s1">_nglv</span><span class="si">{</span><span class="n">slm_nglv</span><span class="si">}</span><span class="s1">scripfile.nc&#39;</span>
+    <span class="n">mali_scripfile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'mali</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="si">}</span><span class="s1">km_scripfile.nc'</span>
+    <span class="n">slm_scripfile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'slm</span><span class="si">{</span><span class="n">slm_res</span><span class="si">}</span><span class="s1">_nglv</span><span class="si">{</span><span class="n">slm_nglv</span><span class="si">}</span><span class="s1">scripfile.nc'</span>
 
     <span class="c1"># create slm scripfile</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;creating scripfile for the SH-degree </span><span class="si">{</span><span class="n">slm_res</span><span class="si">}</span><span class="s1"> &#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;resolution and </span><span class="si">{</span><span class="n">slm_nglv</span><span class="si">}</span><span class="s1"> nglv points for the SLM grid&#39;</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncremap&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">slm_scripfile</span><span class="p">,</span>
-            <span class="s1">&#39;-G&#39;</span><span class="p">,</span>
-            <span class="sa">f</span><span class="s1">&#39;latlon=</span><span class="si">{</span><span class="n">slm_nglv</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">slm_nglv</span><span class="p">)</span><span class="si">}</span><span class="s1">#lat_typ=gss#lat_drc=n2s&#39;</span><span class="p">]</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'creating scripfile for the SH-degree </span><span class="si">{</span><span class="n">slm_res</span><span class="si">}</span><span class="s1"> '</span>
+                <span class="sa">f</span><span class="s1">'resolution and </span><span class="si">{</span><span class="n">slm_nglv</span><span class="si">}</span><span class="s1"> nglv points for the SLM grid'</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'ncremap'</span><span class="p">,</span>
+            <span class="s1">'-g'</span><span class="p">,</span> <span class="n">slm_scripfile</span><span class="p">,</span>
+            <span class="s1">'-G'</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">'latlon=</span><span class="si">{</span><span class="n">slm_nglv</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">slm_nglv</span><span class="p">)</span><span class="si">}</span><span class="s1">#lat_typ=gss#lat_drc=n2s'</span><span class="p">]</span>
 
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># adjust the lat-lon values</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;set_lat_lon_fields_in_planar_grid&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--file&#39;</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">,</span>
-            <span class="s1">&#39;--proj&#39;</span><span class="p">,</span> <span class="s1">&#39;ais-bedmap2-sphere&#39;</span><span class="p">]</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'set_lat_lon_fields_in_planar_grid'</span><span class="p">,</span>
+            <span class="s1">'--file'</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">,</span>
+            <span class="s1">'--proj'</span><span class="p">,</span> <span class="s1">'ais-bedmap2-sphere'</span><span class="p">]</span>
 
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># create scrip files for source and destination grids</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating scrip file for the mali mesh&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'creating scrip file for the mali mesh'</span><span class="p">)</span>
     <span class="n">scrip_from_mpas</span><span class="p">(</span><span class="n">mali_mesh_file</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">)</span>
 
     <span class="c1"># create a mapping file using ESMF weight gen</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Creating a mapping file...&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Creating a mapping file...'</span><span class="p">)</span>
 
-    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parallel&quot;</span><span class="p">,</span> <span class="s2">&quot;parallel_executable&quot;</span><span class="p">)</span>
+    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"parallel"</span><span class="p">,</span> <span class="s2">"parallel_executable"</span><span class="p">)</span>
     <span class="c1"># split the parallel executable into constituents in case it includes flags</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
-    <span class="n">nproc</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">&quot;circ_icesheet&quot;</span><span class="p">,</span> <span class="s2">&quot;esmf_procs&quot;</span><span class="p">)</span>
-    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">nproc</span><span class="p">)])</span>
-    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;ESMF_RegridWeightGen&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">,</span>
-                 <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="n">slm_scripfile</span><span class="p">,</span>
-                 <span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="s1">&#39;mapping_file_mali_to_slm.nc&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">method_mali_to_slm</span><span class="p">,</span>
-                 <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;-64bit_offset&#39;</span><span class="p">,</span> <span class="s1">&#39;--netcdf4&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;--src_regional&#39;</span><span class="p">])</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)</span>
+    <span class="n">nproc</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">"circ_icesheet"</span><span class="p">,</span> <span class="s2">"esmf_procs"</span><span class="p">)</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'-n'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">nproc</span><span class="p">)])</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'ESMF_RegridWeightGen'</span><span class="p">,</span>
+                 <span class="s1">'-s'</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">,</span>
+                 <span class="s1">'-d'</span><span class="p">,</span> <span class="n">slm_scripfile</span><span class="p">,</span>
+                 <span class="s1">'-w'</span><span class="p">,</span> <span class="s1">'mapping_file_mali_to_slm.nc'</span><span class="p">,</span>
+                 <span class="s1">'-m'</span><span class="p">,</span> <span class="n">method_mali_to_slm</span><span class="p">,</span>
+                 <span class="s1">'-i'</span><span class="p">,</span> <span class="s1">'-64bit_offset'</span><span class="p">,</span> <span class="s1">'--netcdf4'</span><span class="p">,</span>
+                 <span class="s1">'--src_regional'</span><span class="p">])</span>
 
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
-    <span class="n">nproc</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">&quot;circ_icesheet&quot;</span><span class="p">,</span> <span class="s2">&quot;esmf_procs&quot;</span><span class="p">)</span>
-    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">nproc</span><span class="p">)])</span>
-    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;ESMF_RegridWeightGen&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="n">slm_scripfile</span><span class="p">,</span>
-                 <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">,</span>
-                 <span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="s1">&#39;mapping_file_slm_to_mali.nc&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">method_slm_to_mali</span><span class="p">,</span>
-                 <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;-64bit_offset&#39;</span><span class="p">,</span> <span class="s1">&#39;--netcdf4&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;--dst_regional&#39;</span><span class="p">])</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)</span>
+    <span class="n">nproc</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">"circ_icesheet"</span><span class="p">,</span> <span class="s2">"esmf_procs"</span><span class="p">)</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'-n'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">nproc</span><span class="p">)])</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'ESMF_RegridWeightGen'</span><span class="p">,</span>
+                 <span class="s1">'-s'</span><span class="p">,</span> <span class="n">slm_scripfile</span><span class="p">,</span>
+                 <span class="s1">'-d'</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">,</span>
+                 <span class="s1">'-w'</span><span class="p">,</span> <span class="s1">'mapping_file_slm_to_mali.nc'</span><span class="p">,</span>
+                 <span class="s1">'-m'</span><span class="p">,</span> <span class="n">method_slm_to_mali</span><span class="p">,</span>
+                 <span class="s1">'-i'</span><span class="p">,</span> <span class="s1">'-64bit_offset'</span><span class="p">,</span> <span class="s1">'--netcdf4'</span><span class="p">,</span>
+                 <span class="s1">'--dst_regional'</span><span class="p">])</span>
 
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># remove the temporary scripfiles once the mapping file is generated</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Removing the temporary mesh and scripfiles...&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Removing the temporary mesh and scripfiles...'</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">slm_scripfile</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mali_scripfile</span><span class="p">)</span>
 </pre></div>

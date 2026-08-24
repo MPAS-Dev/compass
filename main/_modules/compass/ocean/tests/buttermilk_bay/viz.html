@@ -130,7 +130,7 @@
 <div class="viewcode-block" id="Viz">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.buttermilk_bay.viz.Viz.html#compass.ocean.tests.buttermilk_bay.viz.Viz">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Viz</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for visualizing buttermilk bay results</span>
 
 <span class="sd">    Attributes</span>
@@ -140,11 +140,11 @@
 
 <span class="sd">     resolutions : list</span>
 <span class="sd">         The grid resolutions run for this case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Viz.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.buttermilk_bay.viz.Viz.html#compass.ocean.tests.buttermilk_bay.viz.Viz.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">wetdry</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -157,36 +157,36 @@
 
 <span class="sd">         resolutions : list</span>
 <span class="sd">             The grid resolutions run for this case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;viz&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'viz'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="n">resolutions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span> <span class="o">=</span> <span class="n">wetdry</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;buttermilk_bathy.nc&#39;</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;buttermilk_bathy.nc&#39;</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;buttermilk_bay&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'buttermilk_bathy.nc'</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">'buttermilk_bathy.nc'</span><span class="p">,</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">'buttermilk_bay'</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">resolutions</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">m.nc&#39;</span><span class="p">,</span>
-                                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../forward_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">m/output.nc&#39;</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'output_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">m.nc'</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'../forward_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">m/output.nc'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Viz.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.buttermilk_bay.viz.Viz.run.html#compass.ocean.tests.buttermilk_bay.viz.Viz.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;buttermilk_bay&#39;</span><span class="p">,</span>
-                                               <span class="s1">&#39;resolutions&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">'buttermilk_bay'</span><span class="p">,</span>
+                                               <span class="s1">'resolutions'</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
 
-        <span class="n">plot_mode</span> <span class="o">=</span> <span class="s1">&#39;paper&#39;</span>
-        <span class="k">if</span> <span class="n">plot_mode</span> <span class="o">==</span> <span class="s1">&#39;paper&#39;</span><span class="p">:</span>
-            <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;mathtext.fontset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;stix&#39;</span>
-            <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;STIXGeneral&#39;</span>
+        <span class="n">plot_mode</span> <span class="o">=</span> <span class="s1">'paper'</span>
+        <span class="k">if</span> <span class="n">plot_mode</span> <span class="o">==</span> <span class="s1">'paper'</span><span class="p">:</span>
+            <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'mathtext.fontset'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'stix'</span>
+            <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'font.family'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'STIXGeneral'</span>
 
         <span class="n">points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_points</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timeseries_plots</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
@@ -196,12 +196,12 @@
 <div class="viewcode-block" id="Viz.get_points">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.buttermilk_bay.viz.Viz.get_points.html#compass.ocean.tests.buttermilk_bay.viz.Viz.get_points">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the point coordinates for plotting solution timeseries</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;buttermilk_bay_viz&#39;</span><span class="p">,</span> <span class="s1">&#39;points&#39;</span><span class="p">)</span>
-        <span class="n">points</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;[&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'buttermilk_bay_viz'</span><span class="p">,</span> <span class="s1">'points'</span><span class="p">)</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'['</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">']'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span>
         <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">points</span> <span class="o">=</span> <span class="n">points</span> <span class="o">*</span> <span class="mi">1000</span>
 
@@ -211,26 +211,26 @@
 <div class="viewcode-block" id="Viz.timeseries_plots">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.buttermilk_bay.viz.Viz.timeseries_plots.html#compass.ocean.tests.buttermilk_bay.viz.Viz.timeseries_plots">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">timeseries_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Plot solution timeseries at a given number of points</span>
 <span class="sd">        for each resolution</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">plot_mode</span> <span class="o">=</span> <span class="s1">&#39;paper&#39;</span>
+        <span class="n">plot_mode</span> <span class="o">=</span> <span class="s1">'paper'</span>
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">),</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)))</span>
-        <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:orange&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:green&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:red&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;tab:purple&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:brown&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:pink&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:gray&#39;</span><span class="p">]</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'tab:blue'</span><span class="p">,</span> <span class="s1">'tab:orange'</span><span class="p">,</span> <span class="s1">'tab:green'</span><span class="p">,</span> <span class="s1">'tab:red'</span><span class="p">,</span>
+                  <span class="s1">'tab:purple'</span><span class="p">,</span> <span class="s1">'tab:brown'</span><span class="p">,</span> <span class="s1">'tab:pink'</span><span class="p">,</span> <span class="s1">'tab:gray'</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">):</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">m.nc&#39;</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'output_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">m.nc'</span>
             <span class="n">exists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_file_exists</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">:</span>
                 <span class="k">continue</span>
 
             <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
-            <span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M:%S&#39;</span><span class="p">)</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span> <span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M:%S'</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">xtime</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([(</span><span class="n">x</span> <span class="o">-</span> <span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">time</span><span class="p">])</span>
 
@@ -241,71 +241,71 @@
 
                 <span class="n">ssh</span> <span class="o">=</span> <span class="n">interp</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
                 <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
-                    <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;reference&#39;</span>
-                    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span>
+                    <span class="n">label</span> <span class="o">=</span> <span class="s1">'reference'</span>
+                    <span class="n">color</span> <span class="o">=</span> <span class="s1">'k'</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">m&#39;</span>
+                    <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">m'</span>
                     <span class="n">color</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="mi">86400</span><span class="p">,</span> <span class="n">ssh</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
-            <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;t (days)&#39;</span><span class="p">)</span>
-            <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;ssh (m)&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'t (days)'</span><span class="p">)</span>
+            <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'ssh (m)'</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">plot_mode</span> <span class="o">==</span> <span class="s1">&#39;paper&#39;</span><span class="p">:</span>
-                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Station </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">if</span> <span class="n">plot_mode</span> <span class="o">==</span> <span class="s1">'paper'</span><span class="p">:</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Station </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">'</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Point (</span><span class="si">{</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="si">}</span><span class="s1">)&#39;</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Point (</span><span class="si">{</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="si">}</span><span class="s1">)'</span>
             <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">lines</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
             <span class="c1"># ax[i].set_ylim(-2.5,2.5)</span>
 
-        <span class="n">titles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;subgrid&#39;</span><span class="p">:</span> <span class="s1">&#39;a)&#39;</span><span class="p">,</span> <span class="s1">&#39;standard&#39;</span><span class="p">:</span> <span class="s1">&#39;b)&#39;</span><span class="p">}</span>
-        <span class="k">if</span> <span class="n">plot_mode</span> <span class="o">==</span> <span class="s1">&#39;paper&#39;</span><span class="p">:</span>
+        <span class="n">titles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'subgrid'</span><span class="p">:</span> <span class="s1">'a)'</span><span class="p">,</span> <span class="s1">'standard'</span><span class="p">:</span> <span class="s1">'b)'</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">plot_mode</span> <span class="o">==</span> <span class="s1">'paper'</span><span class="p">:</span>
             <span class="n">title</span> <span class="o">=</span> <span class="n">titles</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="p">]</span>
-            <span class="n">ha</span> <span class="o">=</span> <span class="s1">&#39;left&#39;</span>
+            <span class="n">ha</span> <span class="o">=</span> <span class="s1">'left'</span>
             <span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span>
             <span class="n">y</span> <span class="o">=</span> <span class="mf">0.98</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Buttermilk Bay (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">)&#39;</span>
-            <span class="n">ha</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Buttermilk Bay (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">)'</span>
+            <span class="n">ha</span> <span class="o">=</span> <span class="s1">'center'</span>
             <span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span>
             <span class="n">y</span> <span class="o">=</span> <span class="mf">0.98</span>
 
-        <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="n">ha</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-large&#39;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="n">ha</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">'x-large'</span><span class="p">)</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span>
-                   <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;points.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></div>
+                   <span class="n">loc</span><span class="o">=</span><span class="s1">'lower center'</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'points.png'</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Viz.contour_plots">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.buttermilk_bay.viz.Viz.contour_plots.html#compass.ocean.tests.buttermilk_bay.viz.Viz.contour_plots">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">contour_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Plot contour plots at a specified output interval for each resolution</span>
 <span class="sd">        and show where the points used in `points.png` are located.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">sol_min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span>
         <span class="n">sol_max</span> <span class="o">=</span> <span class="mf">2.0</span>
-        <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;RdBu&#39;</span><span class="p">)</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">'RdBu'</span><span class="p">)</span>
 
         <span class="n">minval</span> <span class="o">=</span> <span class="mf">0.2</span>
         <span class="n">maxval</span> <span class="o">=</span> <span class="mf">0.8</span>
         <span class="n">cmap</span> <span class="o">=</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">LinearSegmentedColormap</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span>
-            <span class="s1">&#39;truncated RdBu&#39;</span><span class="p">,</span>
+            <span class="s1">'truncated RdBu'</span><span class="p">,</span>
             <span class="n">cmap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span><span class="p">,</span> <span class="mi">256</span><span class="p">)))</span>
 
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">m.nc&#39;</span><span class="p">)</span>
-        <span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M:%S&#39;</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">'output_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">m.nc'</span><span class="p">)</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span> <span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M:%S'</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">xtime</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
         <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-        <span class="n">plot_interval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;buttermilk_bay_viz&#39;</span><span class="p">,</span>
-                                           <span class="s1">&#39;plot_interval&#39;</span><span class="p">)</span>
+        <span class="n">plot_interval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'buttermilk_bay_viz'</span><span class="p">,</span>
+                                           <span class="s1">'plot_interval'</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tstep</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">time</span><span class="p">):</span>
 
@@ -318,30 +318,30 @@
                                    <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">):</span>
-                <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">m.nc&#39;</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'output_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">m.nc'</span>
                 <span class="n">exists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_file_exists</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">:</span>
                     <span class="k">continue</span>
                 <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
                 <span class="n">descriptor</span> <span class="o">=</span> <span class="n">mosaic</span><span class="o">.</span><span class="n">Descriptor</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
-                <span class="n">cm</span> <span class="o">=</span> <span class="n">mosaic</span><span class="o">.</span><span class="n">polypcolor</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">descriptor</span><span class="p">,</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span>
+                <span class="n">cm</span> <span class="o">=</span> <span class="n">mosaic</span><span class="o">.</span><span class="n">polypcolor</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">descriptor</span><span class="p">,</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span>
                                        <span class="n">vmin</span><span class="o">=</span><span class="n">sol_min</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">sol_max</span><span class="p">,</span>
                                        <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">antialiaseds</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="s1">&#39;box&#39;</span><span class="p">)</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">m resolution&#39;</span><span class="p">)</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x (km)&#39;</span><span class="p">)</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y (km)&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">'equal'</span><span class="p">,</span> <span class="s1">'box'</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">m resolution'</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'x (km)'</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'y (km)'</span><span class="p">)</span>
                 <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
                 <span class="n">formatter</span> <span class="o">=</span> <span class="n">ticker</span><span class="o">.</span><span class="n">FuncFormatter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x_val</span><span class="p">,</span>
-                                                 <span class="n">pos</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">x_val</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                                                 <span class="n">pos</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">x_val</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
                 <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
 
-                <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="s1">&#39;box&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">'equal'</span><span class="p">,</span> <span class="s1">'box'</span><span class="p">)</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
-                              <span class="n">points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+                              <span class="n">points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">'k'</span><span class="p">)</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">])</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">3500</span><span class="p">])</span>
 
@@ -353,29 +353,29 @@
                     <span class="n">xoffset</span> <span class="o">=</span> <span class="mi">0</span>
                     <span class="n">yoffset</span> <span class="o">=</span> <span class="mi">100</span>
                 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">xoffset</span><span class="p">,</span>
-                           <span class="n">points</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">yoffset</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+                           <span class="n">points</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">yoffset</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
 
             <span class="n">tick_step</span> <span class="o">=</span> <span class="mf">0.5</span>
             <span class="n">ticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">sol_min</span><span class="p">,</span> <span class="n">sol_max</span> <span class="o">+</span> <span class="n">tick_step</span><span class="p">,</span> <span class="n">tick_step</span><span class="p">)</span>
             <span class="n">cb</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
-                              <span class="n">ticks</span><span class="o">=</span><span class="n">ticks</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
-            <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;ssh (m)&#39;</span><span class="p">)</span>
+                              <span class="n">ticks</span><span class="o">=</span><span class="n">ticks</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="s1">'both'</span><span class="p">)</span>
+            <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">'ssh (m)'</span><span class="p">)</span>
             <span class="n">t</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">time</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mf">86400.</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="n">plot_mode</span> <span class="o">=</span> <span class="s1">&#39;paper&#39;</span>
-            <span class="k">if</span> <span class="n">plot_mode</span> <span class="o">==</span> <span class="s1">&#39;paper&#39;</span><span class="p">:</span>
-                <span class="n">titles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;subgrid&#39;</span><span class="p">:</span> <span class="s1">&#39;a)&#39;</span><span class="p">,</span> <span class="s1">&#39;standard&#39;</span><span class="p">:</span> <span class="s1">&#39;c)&#39;</span><span class="p">}</span>
+            <span class="n">plot_mode</span> <span class="o">=</span> <span class="s1">'paper'</span>
+            <span class="k">if</span> <span class="n">plot_mode</span> <span class="o">==</span> <span class="s1">'paper'</span><span class="p">:</span>
+                <span class="n">titles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'subgrid'</span><span class="p">:</span> <span class="s1">'a)'</span><span class="p">,</span> <span class="s1">'standard'</span><span class="p">:</span> <span class="s1">'c)'</span><span class="p">}</span>
                 <span class="n">title</span> <span class="o">=</span> <span class="n">titles</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="p">]</span>
-                <span class="n">ha</span> <span class="o">=</span> <span class="s1">&#39;left&#39;</span>
+                <span class="n">ha</span> <span class="o">=</span> <span class="s1">'left'</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span>
                 <span class="n">y</span> <span class="o">=</span> <span class="mf">0.98</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Buttermilk Bay (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">) &#39;</span> \
-                        <span class="sa">f</span><span class="s1">&#39;ssh solution at t=</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s1"> days&#39;</span>
-                <span class="n">ha</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Buttermilk Bay (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">) '</span> \
+                        <span class="sa">f</span><span class="s1">'ssh solution at t=</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s1"> days'</span>
+                <span class="n">ha</span> <span class="o">=</span> <span class="s1">'center'</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span>
                 <span class="n">y</span> <span class="o">=</span> <span class="mf">0.98</span>
-            <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="n">ha</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-large&#39;</span><span class="p">)</span>
-            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;solution_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="n">ha</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">'x-large'</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">'solution_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">.png'</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 

@@ -136,7 +136,7 @@
 <div class="viewcode-block" id="Analysis">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.html#compass.ocean.tests.hurricane.analysis.Analysis">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for producing ssh validation plots at observation stations</span>
 
 <span class="sd">    Attributes</span>
@@ -152,11 +152,11 @@
 
 <span class="sd">    observation : dict</span>
 <span class="sd">        Dictionary of stations belonging to a certain data product</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Analysis.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.html#compass.ocean.tests.hurricane.analysis.Analysis.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">storm</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -166,92 +166,92 @@
 
 <span class="sd">        storm : str</span>
 <span class="sd">            The name of the storm to be plotted</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;analysis&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'analysis'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pointwiseStats.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../forward/pointwiseStats.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../forward/input.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'pointwiseStats.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../forward/pointwiseStats.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'mesh.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../forward/input.nc'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">frmt</span> <span class="o">=</span> <span class="s1">&#39;%Y %m </span><span class="si">%d</span><span class="s1"> %H %M&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frmt</span> <span class="o">=</span> <span class="s1">'%Y %m </span><span class="si">%d</span><span class="s1"> %H %M'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">storm</span> <span class="o">=</span> <span class="n">storm</span></div>
 
 
 <div class="viewcode-block" id="Analysis.setup">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.setup.html#compass.ocean.tests.hurricane.analysis.Analysis.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Setup test case and download data</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">package</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">storm</span> <span class="o">==</span> <span class="s1">&#39;sandy&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">run_min_date</span> <span class="o">=</span> <span class="s1">&#39;2012 10 10 00 00&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">run_max_date</span> <span class="o">=</span> <span class="s1">&#39;2012 11 04 00 00&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">adjust_min_date</span> <span class="o">=</span> <span class="s1">&#39;2012 10 01 00 00&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">adjust_max_date</span> <span class="o">=</span> <span class="s1">&#39;2012 10 25 00 00&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">storm</span> <span class="o">==</span> <span class="s1">'sandy'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_min_date</span> <span class="o">=</span> <span class="s1">'2012 10 10 00 00'</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_max_date</span> <span class="o">=</span> <span class="s1">'2012 11 04 00 00'</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adjust_min_date</span> <span class="o">=</span> <span class="s1">'2012 10 01 00 00'</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adjust_max_date</span> <span class="o">=</span> <span class="s1">'2012 10 25 00 00'</span>
 
-            <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;sandy_stations.json&#39;</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s1">'sandy_stations.json'</span>
             <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">open_text</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span><span class="k">as</span> <span class="n">stations_file</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">observations</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stations_file</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">:</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_data&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_data'</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                    <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_stations.txt&#39;</span><span class="p">,</span>
-                    <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;sandy_stations/</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_stations.txt&#39;</span><span class="p">,</span>
-                    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;hurricane&#39;</span><span class="p">)</span>
+                    <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_stations.txt'</span><span class="p">,</span>
+                    <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'sandy_stations/</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_stations.txt'</span><span class="p">,</span>
+                    <span class="n">database</span><span class="o">=</span><span class="s1">'hurricane'</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">sta</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">[</span><span class="n">obs</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                        <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_data/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">,</span>
-                        <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;sandy_validation/&#39;</span>
-                               <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_stations/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">,</span>
-                        <span class="n">database</span><span class="o">=</span><span class="s1">&#39;hurricane&#39;</span><span class="p">)</span>
+                        <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_data/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">.txt'</span><span class="p">,</span>
+                        <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'sandy_validation/'</span>
+                               <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_stations/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">.txt'</span><span class="p">,</span>
+                        <span class="n">database</span><span class="o">=</span><span class="s1">'hurricane'</span><span class="p">)</span>
 
-            <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.hurricane.init&#39;</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;bathy_data.json&#39;</span>
+            <span class="n">package</span> <span class="o">=</span> <span class="s1">'compass.ocean.tests.hurricane.init'</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s1">'bathy_data.json'</span>
             <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">open_text</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">bathy_file</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">bathy_files</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">bathy_file</span><span class="p">)</span>
 
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/NCEI_data&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/LULC_data&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bathy_files</span><span class="p">[</span><span class="s2">&quot;NCEI&quot;</span><span class="p">]):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/NCEI_data'</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/LULC_data'</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bathy_files</span><span class="p">[</span><span class="s2">"NCEI"</span><span class="p">]):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                    <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;NCEI_data/</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                    <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;ncei/</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
+                    <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'NCEI_data/</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                    <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'ncei/</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                    <span class="n">database</span><span class="o">=</span><span class="s1">'bathymetry_database'</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                    <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;LULC_data/landuse_from_</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                    <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;LULC/landuse_from_</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;hurricane&#39;</span><span class="p">)</span></div>
+                    <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'LULC_data/landuse_from_</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                    <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'LULC/landuse_from_</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                    <span class="n">database</span><span class="o">=</span><span class="s1">'hurricane'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Analysis.read_pointstats">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.read_pointstats.html#compass.ocean.tests.hurricane.analysis.Analysis.read_pointstats">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">read_pointstats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pointstats_file</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Read the pointwiseStats data from the MPAS-Ocean run</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pointstats_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">pointstats_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">pointstats_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">pointstats_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pointstats_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xtime&#39;</span><span class="p">][:]</span>
-        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]:</span>
-            <span class="n">d</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">date</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">'date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pointstats_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xtime'</span><span class="p">][:]</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">'datetime'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">'date'</span><span class="p">]:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">date</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">'datetime'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
-                    <span class="n">d</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">),</span>
-                    <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M:%S&#39;</span><span class="p">))</span>
-        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;O&#39;</span><span class="p">)</span>
-        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span>
-            <span class="n">pointstats_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lonCellPointStats&#39;</span><span class="p">][:])</span>
-        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">180.0</span><span class="p">,</span> <span class="mf">360.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">180.0</span>
-        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span>
-            <span class="n">pointstats_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latCellPointStats&#39;</span><span class="p">][:])</span>
-        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pointstats_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;sshPointStats&#39;</span><span class="p">][:]</span>
+                    <span class="n">d</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'ascii'</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">'</span><span class="se">\x00</span><span class="s1">'</span><span class="p">),</span>
+                    <span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M:%S'</span><span class="p">))</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">'datetime'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'datetime'</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'O'</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">'lon'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span>
+            <span class="n">pointstats_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'lonCellPointStats'</span><span class="p">][:])</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">'lon'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'lon'</span><span class="p">]</span> <span class="o">+</span> <span class="mf">180.0</span><span class="p">,</span> <span class="mf">360.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">180.0</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span>
+            <span class="n">pointstats_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'latCellPointStats'</span><span class="p">][:])</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pointstats_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'sshPointStats'</span><span class="p">][:]</span>
 
         <span class="k">return</span> <span class="n">data</span></div>
 
@@ -259,49 +259,49 @@
 <div class="viewcode-block" id="Analysis.read_station_data">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.read_station_data.html#compass.ocean.tests.hurricane.analysis.Analysis.read_station_data">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">read_station_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs_file</span><span class="p">,</span> <span class="n">obs_type</span><span class="p">,</span> <span class="n">min_date</span><span class="p">,</span> <span class="n">max_date</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Read the observed ssh timeseries data for a given station</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Initialize variable for observation data</span>
         <span class="n">obs_data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">obs_data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">obs_data</span><span class="p">[</span><span class="s1">'datetime'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Get data from observation file between min and max output times</span>
         <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">obs_file</span><span class="p">)</span>
         <span class="n">obs</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">obs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">or</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">'#'</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">or</span>
                     <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span>
                     <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span>
                 <span class="k">continue</span>
-            <span class="k">if</span> <span class="n">obs_type</span> <span class="o">==</span> <span class="s1">&#39;NOAA-COOPS&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">obs_type</span> <span class="o">==</span> <span class="s1">'NOAA-COOPS'</span><span class="p">:</span>
                 <span class="c1"># NOAA-COOPS format</span>
                 <span class="n">date</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">16</span><span class="p">]</span>
                 <span class="n">date_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frmt</span><span class="p">)</span>
                 <span class="n">col</span> <span class="o">=</span> <span class="mi">5</span>
                 <span class="n">convert</span> <span class="o">=</span> <span class="mf">1.0</span>
-            <span class="k">elif</span> <span class="n">obs_type</span> <span class="o">==</span> <span class="s1">&#39;USGS&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">obs_type</span> <span class="o">==</span> <span class="s1">'USGS'</span><span class="p">:</span>
                 <span class="c1"># USGS station format</span>
                 <span class="n">date</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">19</span><span class="p">]</span>
                 <span class="n">date_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
                     <span class="n">date</span><span class="p">,</span>
-                    <span class="s1">&#39;%m-</span><span class="si">%d</span><span class="s1">-%Y %H:%M:%S&#39;</span><span class="p">)</span>
+                    <span class="s1">'%m-</span><span class="si">%d</span><span class="s1">-%Y %H:%M:%S'</span><span class="p">)</span>
                 <span class="n">col</span> <span class="o">=</span> <span class="mi">2</span>
                 <span class="n">convert</span> <span class="o">=</span> <span class="mf">0.3048</span>
             <span class="n">min_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">min_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frmt</span><span class="p">)</span>
             <span class="n">max_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">max_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frmt</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">date_time</span> <span class="o">&gt;=</span> <span class="n">min_datetime</span> <span class="ow">and</span> <span class="n">date_time</span> <span class="o">&lt;=</span> <span class="n">max_datetime</span><span class="p">:</span>
-                <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date_time</span><span class="p">)</span>
-                <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="n">col</span><span class="p">])</span>
+                <span class="n">obs_data</span><span class="p">[</span><span class="s1">'datetime'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date_time</span><span class="p">)</span>
+                <span class="n">obs_data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="n">col</span><span class="p">])</span>
 
         <span class="c1"># Convert observation data and replace fill values with nan</span>
-        <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">])</span>
-        <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">*</span> <span class="n">convert</span>
+        <span class="n">obs_data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">])</span>
+        <span class="n">obs_data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span> <span class="o">=</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">*</span> <span class="n">convert</span>
         <span class="n">fill_val</span> <span class="o">=</span> <span class="mf">99.0</span>
-        <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">fill_val</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">obs_data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">][</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">fill_val</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
-        <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;O&#39;</span><span class="p">)</span>
+        <span class="n">obs_data</span><span class="p">[</span><span class="s1">'datetime'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">'datetime'</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'O'</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">obs_data</span></div>
 
@@ -309,24 +309,24 @@
 <div class="viewcode-block" id="Analysis.read_station_file">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.read_station_file.html#compass.ocean.tests.hurricane.analysis.Analysis.read_station_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">read_station_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">station_file</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Read file containing station locations and names</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">stations</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">stations</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">stations</span><span class="p">[</span><span class="s1">'lon'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">stations</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Read in stations names and location</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">station_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">station_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">sta</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="n">sta</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-            <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">))</span>
-            <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-            <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-        <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">stations</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">])</span>
-        <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">stations</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">])</span>
+            <span class="n">stations</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"'"</span><span class="p">))</span>
+            <span class="n">stations</span><span class="p">[</span><span class="s1">'lon'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">stations</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">stations</span><span class="p">[</span><span class="s1">'lon'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">stations</span><span class="p">[</span><span class="s1">'lon'</span><span class="p">])</span>
+        <span class="n">stations</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">stations</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">stations</span></div>
 
@@ -334,18 +334,18 @@
 <div class="viewcode-block" id="Analysis.adjust_station_data">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.adjust_station_data.html#compass.ocean.tests.hurricane.analysis.Analysis.adjust_station_data">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">adjust_station_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs_data</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Adjust mean sea level in observation data</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">adjust_max_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adjust_max_date</span><span class="p">,</span>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">frmt</span><span class="p">)</span>
 
         <span class="c1"># Get mean sea level within adjust period</span>
         <span class="n">val</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">cnt</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">adjust_max_date</span><span class="p">:</span>
-                <span class="n">val</span> <span class="o">=</span> <span class="n">val</span> <span class="o">+</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">'datetime'</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">'datetime'</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">adjust_max_date</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">val</span> <span class="o">+</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
                 <span class="n">cnt</span> <span class="o">=</span> <span class="n">cnt</span> <span class="o">+</span> <span class="mf">1.0</span>
         <span class="k">if</span> <span class="n">cnt</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
             <span class="n">mean</span> <span class="o">=</span> <span class="n">val</span> <span class="o">/</span> <span class="n">cnt</span>
@@ -353,46 +353,46 @@
             <span class="n">mean</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="c1"># Correct observations for mean sea level</span>
-        <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">mean</span></div>
+        <span class="n">obs_data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span> <span class="o">=</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span> <span class="o">-</span> <span class="n">mean</span></div>
 
 
 <div class="viewcode-block" id="Analysis.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.run.html#compass.ocean.tests.hurricane.analysis.Analysis.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">&#39;agg&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">'agg'</span><span class="p">)</span>
 
-        <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;mathtext.fontset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;stix&#39;</span>
-        <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;STIXGeneral&#39;</span>
+        <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'mathtext.fontset'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'stix'</span>
+        <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'font.family'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'STIXGeneral'</span>
 
-        <span class="n">plot_station_dems</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;hurricane_analysis&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;plot_station_dems&#39;</span><span class="p">)</span>
+        <span class="n">plot_station_dems</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'hurricane_analysis'</span><span class="p">,</span>
+                                                   <span class="s1">'plot_station_dems'</span><span class="p">)</span>
 
         <span class="c1"># Get paths to run data to plot</span>
         <span class="n">pointstats_file</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">comparison_runs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hurricane_analysis&#39;</span><span class="p">,</span>
-                                          <span class="s1">&#39;analysis_runs&#39;</span><span class="p">)</span>
-        <span class="n">comparison_runs_sp</span> <span class="o">=</span> <span class="n">comparison_runs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">comparison_runs_sp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">comparison_runs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'hurricane_analysis'</span><span class="p">,</span>
+                                          <span class="s1">'analysis_runs'</span><span class="p">)</span>
+        <span class="n">comparison_runs_sp</span> <span class="o">=</span> <span class="n">comparison_runs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">comparison_runs_sp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">''</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">comparison_runs_sp</span><span class="p">:</span>
-                <span class="n">run_sp</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+                <span class="n">run_sp</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">':'</span><span class="p">)</span>
                 <span class="n">run_name</span> <span class="o">=</span> <span class="n">run_sp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">run_path</span> <span class="o">=</span> <span class="n">run_sp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">run_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run_path</span><span class="si">}</span><span class="s1">/pointwiseStats.nc&#39;</span>
+                <span class="n">run_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">run_path</span><span class="si">}</span><span class="s1">/pointwiseStats.nc'</span>
 
                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">run_file</span><span class="p">):</span>
                     <span class="n">pointstats_file</span><span class="p">[</span><span class="n">run_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_file</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No run paths specified for analysis&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"No run paths specified for analysis"</span><span class="p">)</span>
 
         <span class="c1"># Read in model point output data and create kd-tree</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">tree</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">pointstats_file</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_pointstats</span><span class="p">(</span><span class="n">pointstats_file</span><span class="p">[</span><span class="n">run</span><span class="p">])</span>
-            <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">'lon'</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">'lat'</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span>
             <span class="n">tree</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">KDTree</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
 
         <span class="c1"># Initialize for plotting high water marks after time series plots</span>
@@ -406,49 +406,49 @@
             <span class="n">never_wet</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Create new colormap for LULC</span>
-        <span class="n">tab20_colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;tab20&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">colors</span>
+        <span class="n">tab20_colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">'tab20'</span><span class="p">)</span><span class="o">.</span><span class="n">colors</span>
         <span class="n">tab20</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">tab20_colors</span><span class="p">:</span>
             <span class="n">tab20</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mcolors</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
         <span class="n">new_colors</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s1">&#39;#91a9b1&#39;</span><span class="p">,</span>  <span class="c1"># Seafoam green</span>
-            <span class="s1">&#39;#b46617&#39;</span><span class="p">,</span>  <span class="c1"># Burnt orange</span>
+            <span class="s1">'#91a9b1'</span><span class="p">,</span>  <span class="c1"># Seafoam green</span>
+            <span class="s1">'#b46617'</span><span class="p">,</span>  <span class="c1"># Burnt orange</span>
         <span class="p">]</span>
         <span class="n">tab20</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">new_colors</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tab25</span> <span class="o">=</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="n">tab20</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;tab25&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tab25</span> <span class="o">=</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="n">tab20</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'tab25'</span><span class="p">)</span>
 
         <span class="c1"># Plot time series</span>
         <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_plots&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_plots'</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="c1"># Read in station file</span>
-            <span class="n">stations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_station_file</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_stations.txt&#39;</span><span class="p">)</span>
+            <span class="n">stations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_station_file</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_stations.txt'</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">sta</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">[</span><span class="n">obs</span><span class="p">]:</span>
 
                 <span class="nb">print</span><span class="p">(</span><span class="n">sta</span><span class="p">)</span>
-                <span class="n">i</span> <span class="o">=</span> <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">sta</span><span class="p">)</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="n">stations</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">sta</span><span class="p">)</span>
 
-                <span class="n">sta_lon</span> <span class="o">=</span> <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
-                <span class="n">sta_lat</span> <span class="o">=</span> <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">sta_lon</span> <span class="o">=</span> <span class="n">stations</span><span class="p">[</span><span class="s1">'lon'</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">sta_lat</span> <span class="o">=</span> <span class="n">stations</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
                 <span class="n">station_lon</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">)</span>
                 <span class="n">station_lat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sta_lat</span><span class="p">)</span>
 
                 <span class="c1"># Read in observed data and get coordinates</span>
-                <span class="n">obs_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_station_data</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_data/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span>
+                <span class="n">obs_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_station_data</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_data/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">.txt'</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span>
                                                   <span class="bp">self</span><span class="o">.</span><span class="n">adjust_min_date</span><span class="p">,</span>
                                                   <span class="bp">self</span><span class="o">.</span><span class="n">run_max_date</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">adjust_station_data</span><span class="p">(</span><span class="n">obs_data</span><span class="p">)</span>
-                <span class="n">hwm_obs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">99.0</span><span class="p">]))</span>
+                <span class="n">hwm_obs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">][</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">99.0</span><span class="p">]))</span>
 
                 <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
 
                     <span class="c1"># Find closest output point to station location</span>
                     <span class="n">d</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">tree</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">]))</span>
 
-                    <span class="n">hwm_mod</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;ssh&#39;</span><span class="p">][:,</span> <span class="n">idx</span><span class="p">]))</span>
-                    <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="mi">1000</span><span class="p">:,</span> <span class="n">idx</span><span class="p">])</span> <span class="o">-</span>
-                                  <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="mi">1000</span><span class="p">:,</span> <span class="n">idx</span><span class="p">]))</span>
+                    <span class="n">hwm_mod</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">'ssh'</span><span class="p">][:,</span> <span class="n">idx</span><span class="p">]))</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">'ssh'</span><span class="p">][</span><span class="mi">1000</span><span class="p">:,</span> <span class="n">idx</span><span class="p">])</span> <span class="o">-</span>
+                                  <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">'ssh'</span><span class="p">][</span><span class="mi">1000</span><span class="p">:,</span> <span class="n">idx</span><span class="p">]))</span>
                     <span class="n">never_wet</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">plot_timeseries</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">sta</span><span class="p">,</span> <span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span>
@@ -474,15 +474,15 @@
 <div class="viewcode-block" id="Analysis.find_data_in_bbox">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.find_data_in_bbox.html#compass.ocean.tests.hurricane.analysis.Analysis.find_data_in_bbox">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_data_in_bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span> <span class="n">eps</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Find data in bounding box</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'mesh.nc'</span><span class="p">)</span>
 
         <span class="c1"># Find DEM tile containing station</span>
-        <span class="n">lat_name</span> <span class="o">=</span> <span class="s1">&#39;lat&#39;</span>
-        <span class="n">lon_name</span> <span class="o">=</span> <span class="s1">&#39;lon&#39;</span>
+        <span class="n">lat_name</span> <span class="o">=</span> <span class="s1">'lat'</span>
+        <span class="n">lon_name</span> <span class="o">=</span> <span class="s1">'lon'</span>
         <span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="n">sta_lon</span> <span class="o">-</span> <span class="n">eps</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">+</span> <span class="n">eps</span><span class="p">],</span>
                 <span class="p">[</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">+</span> <span class="n">eps</span><span class="p">],</span>
                 <span class="p">[</span><span class="n">sta_lon</span> <span class="o">+</span> <span class="n">eps</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">+</span> <span class="n">eps</span><span class="p">],</span>
@@ -498,8 +498,8 @@
         <span class="n">patches1</span><span class="p">,</span> <span class="n">patches2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_cell_patches</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">bbox</span><span class="p">)</span>
 
         <span class="n">dems</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">dem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bathy_files</span><span class="p">[</span><span class="s1">&#39;NCEI&#39;</span><span class="p">]:</span>
-            <span class="n">ds_topo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;NCEI_data/</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">dem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bathy_files</span><span class="p">[</span><span class="s1">'NCEI'</span><span class="p">]:</span>
+            <span class="n">ds_topo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">'NCEI_data/</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
             <span class="n">lon</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">values</span>
             <span class="n">lat</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">values</span>
             <span class="n">da_topo</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">Band1</span>
@@ -529,7 +529,7 @@
 
         <span class="n">lulcs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">dem</span> <span class="ow">in</span> <span class="n">dems</span><span class="p">:</span>
-            <span class="n">ds_lulc</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;LULC_data/landuse_from_</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">ds_lulc</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">'LULC_data/landuse_from_</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
             <span class="n">da_lulc</span> <span class="o">=</span> <span class="n">ds_lulc</span><span class="o">.</span><span class="n">Band1</span>
 
             <span class="n">lulcs</span><span class="p">[</span><span class="n">dem</span><span class="p">]</span> <span class="o">=</span> <span class="n">da_lulc</span>
@@ -541,9 +541,9 @@
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.plot_timeseries.html#compass.ocean.tests.hurricane.analysis.Analysis.plot_timeseries">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_timeseries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">sta</span><span class="p">,</span> <span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span>
                         <span class="n">obs_data</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Plot timeseries</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># Create figure</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
@@ -556,8 +556,8 @@
                        <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAKES</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">coastlines</span><span class="p">(</span><span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span> <span class="s1">&#39;C0o&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">coastlines</span><span class="p">(</span><span class="s1">'50m'</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span> <span class="s1">'C0o'</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">)</span>
 
         <span class="c1"># Plot local observation station location</span>
         <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
@@ -566,13 +566,13 @@
                        <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
         <span class="n">ax2</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
         <span class="n">ax2</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAKES</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">coastlines</span><span class="p">(</span><span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span> <span class="s1">&#39;C0o&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">coastlines</span><span class="p">(</span><span class="s1">'50m'</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span> <span class="s1">'C0o'</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">)</span>
 
         <span class="c1"># Plot observed data</span>
         <span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
-        <span class="n">l1</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">],</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">],</span> <span class="s1">&#39;C0-&#39;</span><span class="p">)</span>
-        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;observed&#39;</span><span class="p">]</span>
+        <span class="n">l1</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">'datetime'</span><span class="p">],</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">],</span> <span class="s1">'C0-'</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'observed'</span><span class="p">]</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">l1</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
@@ -581,37 +581,37 @@
             <span class="n">d</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">tree</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">]))</span>
 
             <span class="c1"># Plot output point location</span>
-            <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
-                     <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
-                     <span class="s1">&#39;C&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
-                     <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
-                     <span class="s1">&#39;C&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">'lon'</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
+                     <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">'lat'</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
+                     <span class="s1">'C'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'o'</span><span class="p">)</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">'lon'</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
+                     <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">'lat'</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
+                     <span class="s1">'C'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'o'</span><span class="p">)</span>
 
             <span class="c1"># Plot modelled data</span>
-            <span class="n">l2</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;datetime&#39;</span><span class="p">],</span>
-                           <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;ssh&#39;</span><span class="p">][:,</span> <span class="n">idx</span><span class="p">],</span>
-                           <span class="s1">&#39;C&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+            <span class="n">l2</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">'datetime'</span><span class="p">],</span>
+                           <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">'ssh'</span><span class="p">][:,</span> <span class="n">idx</span><span class="p">],</span>
+                           <span class="s1">'C'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'-'</span><span class="p">)</span>
             <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l2</span><span class="p">)</span>
 
         <span class="c1"># Set figure labels and axis properties and save</span>
-        <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
-        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;ssh (m)&#39;</span><span class="p">)</span>
-        <span class="n">plot_min_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hurricane_analysis&#39;</span><span class="p">,</span>
-                                        <span class="s1">&#39;plot_min_date&#39;</span><span class="p">)</span>
-        <span class="n">plot_max_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hurricane_analysis&#39;</span><span class="p">,</span>
-                                        <span class="s1">&#39;plot_max_date&#39;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'time'</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'ssh (m)'</span><span class="p">)</span>
+        <span class="n">plot_min_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'hurricane_analysis'</span><span class="p">,</span>
+                                        <span class="s1">'plot_min_date'</span><span class="p">)</span>
+        <span class="n">plot_max_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'hurricane_analysis'</span><span class="p">,</span>
+                                        <span class="s1">'plot_max_date'</span><span class="p">)</span>
         <span class="n">min_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">plot_min_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frmt</span><span class="p">)</span>
         <span class="n">max_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">plot_max_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frmt</span><span class="p">)</span>
         <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">min_date</span><span class="p">,</span> <span class="n">max_date</span><span class="p">])</span>
-        <span class="n">ax3</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">&#39;%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">))</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">'%m-</span><span class="si">%d</span><span class="s1">'</span><span class="p">))</span>
         <span class="n">lgd</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
                          <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">),</span>
-                         <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">fancybox</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
-        <span class="n">st</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Station &#39;</span> <span class="o">+</span> <span class="n">sta</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.025</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+                         <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">fancybox</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">'Station '</span> <span class="o">+</span> <span class="n">sta</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.025</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_plots/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">_sta.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_plots/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">_sta.png'</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">,</span>
                     <span class="n">bbox_extra_artists</span><span class="o">=</span><span class="p">(</span><span class="n">lgd</span><span class="p">,</span> <span class="n">st</span><span class="p">,))</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
@@ -619,9 +619,9 @@
 <div class="viewcode-block" id="Analysis.plot_dem">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.plot_dem.html#compass.ocean.tests.hurricane.analysis.Analysis.plot_dem">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_dem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sta</span><span class="p">,</span> <span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Plot Digital Elevation Model around station</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># eps = 0.25</span>
         <span class="n">eps</span> <span class="o">=</span> <span class="mf">0.76</span>
@@ -654,24 +654,24 @@
                                      <span class="n">lat</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mf">.25</span> <span class="o">*</span> <span class="n">eps</span><span class="p">,</span>
                                                <span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="mf">.25</span> <span class="o">*</span> <span class="n">eps</span><span class="p">))</span>
                 <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;topo slicing failed&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">'topo slicing failed'</span><span class="p">)</span>
                     <span class="n">skip_topo</span> <span class="o">=</span> <span class="kc">True</span>
 
-                <span class="k">if</span> <span class="n">da</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">da</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">da</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'lon'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">da</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">skip_topo</span> <span class="o">=</span> <span class="kc">True</span>
 
                 <span class="k">if</span> <span class="n">skip_topo</span><span class="p">:</span>
                     <span class="k">continue</span>
 
                 <span class="n">j</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
-                <span class="c1"># if da[&quot;lon&quot;].min() &lt; bbox_dems[0]:</span>
-                <span class="c1">#     bbox_dems[0] = da[&quot;lon&quot;].min()</span>
-                <span class="c1"># if da[&quot;lon&quot;].max() &gt; bbox_dems[1]:</span>
-                <span class="c1">#     bbox_dems[1] = da[&quot;lon&quot;].max()</span>
-                <span class="c1"># if da[&quot;lat&quot;].min() &lt; bbox_dems[2]:</span>
-                <span class="c1">#     bbox_dems[2] = da[&quot;lat&quot;].min()</span>
-                <span class="c1"># if da[&quot;lat&quot;].max() &gt; bbox_dems[3]:</span>
-                <span class="c1">#     bbox_dems[3] = da[&quot;lat&quot;].max()</span>
+                <span class="c1"># if da["lon"].min() &lt; bbox_dems[0]:</span>
+                <span class="c1">#     bbox_dems[0] = da["lon"].min()</span>
+                <span class="c1"># if da["lon"].max() &gt; bbox_dems[1]:</span>
+                <span class="c1">#     bbox_dems[1] = da["lon"].max()</span>
+                <span class="c1"># if da["lat"].min() &lt; bbox_dems[2]:</span>
+                <span class="c1">#     bbox_dems[2] = da["lat"].min()</span>
+                <span class="c1"># if da["lat"].max() &gt; bbox_dems[3]:</span>
+                <span class="c1">#     bbox_dems[3] = da["lat"].max()</span>
 
                 <span class="c1"># Plot DEM topo</span>
                 <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -687,11 +687,11 @@
                             <span class="n">cmap</span><span class="o">=</span><span class="n">cmocean</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">topo</span><span class="p">,</span>
                             <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span>
                             <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
-                            <span class="n">cbar_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;bathymetry/topography&#39;</span><span class="p">})</span>
+                            <span class="n">cbar_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">'label'</span><span class="p">:</span> <span class="s1">'bathymetry/topography'</span><span class="p">})</span>
                     <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span>
-                                 <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
-                                 <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">&#39;tab:orange&#39;</span><span class="p">,</span>
-                                 <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
+                                 <span class="n">marker</span><span class="o">=</span><span class="s1">'o'</span><span class="p">,</span>
+                                 <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">'tab:orange'</span><span class="p">,</span>
+                                 <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span>
                                  <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                         <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">patches1</span><span class="p">)</span>
@@ -704,9 +704,9 @@
                             <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
                             <span class="n">add_colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">autoscale</span><span class="p">(</span><span class="n">enable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;longitude&#39;</span><span class="p">)</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;latitude&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'equal'</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'longitude'</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'latitude'</span><span class="p">)</span>
                 <span class="c1"># if j == len(dems):</span>
                 <span class="c1">#     if bbox_dems[0] &gt; bbox[0]:</span>
                 <span class="c1">#         bbox[0] = bbox_dems[0]</span>
@@ -723,28 +723,28 @@
 
                 <span class="c1"># Plot LULC</span>
                 <span class="n">tick_locations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">23.5</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-                <span class="n">tick_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;h.i. dev&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;m.i. dev&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;l.i. dev&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;open dev&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;cul land&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;pasture&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;grassland&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;dec forest&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;eve forest&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;mix forest&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;scrub&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;p.f. wetland&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;p.s. wetland&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;p.e. wetland&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;e.f. wetland&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;e.s. wetland&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;e.e. wetland&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;u.c. shore&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;bare land&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;open water&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;p.a. bed&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;e.a. bed&#39;</span><span class="p">]</span>
+                <span class="n">tick_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'h.i. dev'</span><span class="p">,</span>
+                               <span class="s1">'m.i. dev'</span><span class="p">,</span>
+                               <span class="s1">'l.i. dev'</span><span class="p">,</span>
+                               <span class="s1">'open dev'</span><span class="p">,</span>
+                               <span class="s1">'cul land'</span><span class="p">,</span>
+                               <span class="s1">'pasture'</span><span class="p">,</span>
+                               <span class="s1">'grassland'</span><span class="p">,</span>
+                               <span class="s1">'dec forest'</span><span class="p">,</span>
+                               <span class="s1">'eve forest'</span><span class="p">,</span>
+                               <span class="s1">'mix forest'</span><span class="p">,</span>
+                               <span class="s1">'scrub'</span><span class="p">,</span>
+                               <span class="s1">'p.f. wetland'</span><span class="p">,</span>
+                               <span class="s1">'p.s. wetland'</span><span class="p">,</span>
+                               <span class="s1">'p.e. wetland'</span><span class="p">,</span>
+                               <span class="s1">'e.f. wetland'</span><span class="p">,</span>
+                               <span class="s1">'e.s. wetland'</span><span class="p">,</span>
+                               <span class="s1">'e.e. wetland'</span><span class="p">,</span>
+                               <span class="s1">'u.c. shore'</span><span class="p">,</span>
+                               <span class="s1">'bare land'</span><span class="p">,</span>
+                               <span class="s1">'open water'</span><span class="p">,</span>
+                               <span class="s1">'p.a. bed'</span><span class="p">,</span>
+                               <span class="s1">'e.a. bed'</span><span class="p">]</span>
 
                 <span class="n">da</span> <span class="o">=</span> <span class="n">da_lulc</span>
                 <span class="n">formt</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">FuncFormatter</span><span class="p">(</span>
@@ -756,13 +756,13 @@
                             <span class="n">cmap</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab25</span><span class="p">,</span>
                             <span class="n">vmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                             <span class="n">vmax</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span>
-                            <span class="n">cbar_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;LULC&#39;</span><span class="p">,</span>
-                                         <span class="s1">&#39;ticks&#39;</span><span class="p">:</span> <span class="n">tick_locations</span><span class="p">,</span>
-                                         <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="n">formt</span><span class="p">})</span>
+                            <span class="n">cbar_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">'label'</span><span class="p">:</span> <span class="s1">'LULC'</span><span class="p">,</span>
+                                         <span class="s1">'ticks'</span><span class="p">:</span> <span class="n">tick_locations</span><span class="p">,</span>
+                                         <span class="s1">'format'</span><span class="p">:</span> <span class="n">formt</span><span class="p">})</span>
                     <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span>
-                                 <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
-                                 <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">&#39;tab:orange&#39;</span><span class="p">,</span>
-                                 <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
+                                 <span class="n">marker</span><span class="o">=</span><span class="s1">'o'</span><span class="p">,</span>
+                                 <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">'tab:orange'</span><span class="p">,</span>
+                                 <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span>
                                  <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">da</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">],</span>
@@ -770,14 +770,14 @@
                             <span class="n">add_colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                             <span class="n">vmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                             <span class="n">vmax</span><span class="o">=</span><span class="mi">23</span><span class="p">)</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;longitude&#39;</span><span class="p">)</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;latitude&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'equal'</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'longitude'</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'latitude'</span><span class="p">)</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
 
         <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">_dem.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">_dem.png'</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">)</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
@@ -786,9 +786,9 @@
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.plot_hwm.html#compass.ocean.tests.hurricane.analysis.Analysis.plot_hwm">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_hwm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">station_lon</span><span class="p">,</span> <span class="n">station_lat</span><span class="p">,</span> <span class="n">hwm_obs</span><span class="p">,</span> <span class="n">hwm_mod</span><span class="p">,</span>
                  <span class="n">never_wet</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Plot High-Water Mark statistics</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># Print diagnostics</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">station_lon</span><span class="p">)</span>
@@ -796,14 +796,14 @@
         <span class="n">idx_lon</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">station_lon</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">71.67</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">idx_lon</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">idx_lon</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">never_wet</span><span class="p">[</span><span class="s1">&#39;standard&#39;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">never_wet</span><span class="p">[</span><span class="s1">'standard'</span><span class="p">])</span>
         <span class="n">idx_nw</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">station_lon</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">71.67</span><span class="p">)</span> <span class="o">&amp;</span>
-                           <span class="p">(</span><span class="n">never_wet</span><span class="p">[</span><span class="s1">&#39;standard&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">))</span>
+                           <span class="p">(</span><span class="n">never_wet</span><span class="p">[</span><span class="s1">'standard'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">idx_nw</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">idx_nw</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="n">idx_sg_only</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">station_lon</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">71.67</span><span class="p">)</span> <span class="o">&amp;</span>
-                                <span class="p">(</span><span class="n">never_wet</span><span class="p">[</span><span class="s1">&#39;standard&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">&amp;</span>
-                                <span class="p">(</span><span class="n">never_wet</span><span class="p">[</span><span class="s1">&#39;subgrid&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">))</span>
+                                <span class="p">(</span><span class="n">never_wet</span><span class="p">[</span><span class="s1">'standard'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">&amp;</span>
+                                <span class="p">(</span><span class="n">never_wet</span><span class="p">[</span><span class="s1">'subgrid'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">idx_sg_only</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">idx_sg_only</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
@@ -818,33 +818,33 @@
             <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">diff</span><span class="p">[</span><span class="n">idx_lon</span><span class="p">])))</span>
             <span class="n">mae</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">[</span><span class="n">idx_lon</span><span class="p">]))</span>
             <span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">[</span><span class="n">idx_lon</span><span class="p">],</span> <span class="n">hwm_mod</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="n">idx_lon</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-            <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> RMSE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m&#39;</span><span class="p">)</span>
-            <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> MAE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mae</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m&#39;</span><span class="p">)</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> RMSE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m'</span><span class="p">)</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> MAE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mae</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m'</span><span class="p">)</span>
             <span class="n">scatters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
             <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
-        <span class="n">ln</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">,</span> <span class="n">hwm_obs</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="n">ln</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">,</span> <span class="n">hwm_obs</span><span class="p">,</span> <span class="s1">'k'</span><span class="p">)</span>
         <span class="n">scatters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ln</span><span class="p">)</span>
-        <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;perfect agreement&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;observed HWM (m)&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;modeled HWM (m)&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;a)&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-large&#39;</span><span class="p">)</span>
+        <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'perfect agreement'</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">'top'</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'observed HWM (m)'</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'modeled HWM (m)'</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'a)'</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">'left'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">'x-large'</span><span class="p">)</span>
 
         <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
-        <span class="n">diff</span> <span class="o">=</span> <span class="n">hwm_mod</span><span class="p">[</span><span class="s1">&#39;subgrid&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">hwm_obs</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">hwm_mod</span><span class="p">[</span><span class="s1">'subgrid'</span><span class="p">]</span> <span class="o">-</span> <span class="n">hwm_obs</span>
         <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">diff</span><span class="p">[</span><span class="n">idx_sg_only</span><span class="p">])))</span>
         <span class="n">mae</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">[</span><span class="n">idx_sg_only</span><span class="p">]))</span>
         <span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">[</span><span class="n">idx_sg_only</span><span class="p">],</span>
-                        <span class="n">hwm_mod</span><span class="p">[</span><span class="s1">&#39;subgrid&#39;</span><span class="p">][</span><span class="n">idx_sg_only</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;subgrid RMSE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m&#39;</span><span class="p">,</span>
-                          <span class="sa">f</span><span class="s1">&#39;subgrid MAE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mae</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m&#39;</span><span class="p">])</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
-        <span class="n">ln</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">,</span> <span class="n">hwm_obs</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+                        <span class="n">hwm_mod</span><span class="p">[</span><span class="s1">'subgrid'</span><span class="p">][</span><span class="n">idx_sg_only</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">'subgrid RMSE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m'</span><span class="p">,</span>
+                          <span class="sa">f</span><span class="s1">'subgrid MAE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mae</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m'</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">'top'</span><span class="p">)</span>
+        <span class="n">ln</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">,</span> <span class="n">hwm_obs</span><span class="p">,</span> <span class="s1">'k'</span><span class="p">)</span>
         <span class="n">scatters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ln</span><span class="p">)</span>
-        <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;perfect agreement&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;observed HWM (m)&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;modeled HWM (m)&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;b)&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-large&#39;</span><span class="p">)</span>
+        <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'perfect agreement'</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'observed HWM (m)'</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'modeled HWM (m)'</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'b)'</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">'left'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">'x-large'</span><span class="p">)</span>
 
         <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
@@ -855,23 +855,23 @@
             <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">diff</span><span class="p">[</span><span class="n">idx_nw</span><span class="p">])))</span>
             <span class="n">mae</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">[</span><span class="n">idx_nw</span><span class="p">]))</span>
             <span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">[</span><span class="n">idx_nw</span><span class="p">],</span> <span class="n">hwm_mod</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="n">idx_nw</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-            <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> RMSE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m&#39;</span><span class="p">)</span>
-            <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> MAE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mae</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m&#39;</span><span class="p">)</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> RMSE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m'</span><span class="p">)</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> MAE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mae</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m'</span><span class="p">)</span>
             <span class="n">scatters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
             <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
-        <span class="n">ln</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">,</span> <span class="n">hwm_obs</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">2.8</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+        <span class="n">ln</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">,</span> <span class="n">hwm_obs</span><span class="p">,</span> <span class="s1">'k'</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">2.8</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">,</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">'top'</span><span class="p">)</span>
         <span class="n">scatters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ln</span><span class="p">)</span>
-        <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;perfect agreement&#39;</span><span class="p">)</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">scatters</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;outside lower center&#39;</span><span class="p">,</span>
+        <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'perfect agreement'</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">scatters</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">'outside lower center'</span><span class="p">,</span>
                    <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">),</span>
-                   <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">fancybox</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;observed HWM (m)&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;modeled HWM (m)&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;c)&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-large&#39;</span><span class="p">)</span>
+                   <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">fancybox</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'observed HWM (m)'</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'modeled HWM (m)'</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'c)'</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">'left'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">'x-large'</span><span class="p">)</span>
 
         <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;hwm_mod_obs.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'hwm_mod_obs.png'</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="c1"># Plot geographic hwm error</span>
@@ -883,18 +883,18 @@
 
             <span class="n">diff</span> <span class="o">=</span> <span class="n">hwm_mod</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">-</span> <span class="n">hwm_obs</span>
             <span class="n">cm</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">station_lon</span><span class="p">,</span> <span class="n">station_lat</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">diff</span><span class="p">[</span><span class="n">idx_lon</span><span class="p">],</span>
-                            <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;PuOr&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">3.0</span><span class="p">,</span>
-                            <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+                            <span class="n">cmap</span><span class="o">=</span><span class="s1">'PuOr'</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">3.0</span><span class="p">,</span>
+                            <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
 
             <span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">station_lon</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">,</span>
                            <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">station_lon</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span>
                            <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">station_lat</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">,</span>
                            <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">station_lat</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">],</span>
                           <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">OCEAN</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAKES</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">(</span><span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">(</span><span class="s1">'50m'</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
 
             <span class="n">xticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">station_lon</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">,</span>
                                  <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">station_lon</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
@@ -902,37 +902,37 @@
                                  <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">station_lat</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xticks</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">yticks</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
-            <span class="n">lon_formatter</span> <span class="o">=</span> <span class="n">LongitudeFormatter</span><span class="p">(</span><span class="n">number_format</span><span class="o">=</span><span class="s1">&#39;.2f&#39;</span><span class="p">,</span>
+            <span class="n">lon_formatter</span> <span class="o">=</span> <span class="n">LongitudeFormatter</span><span class="p">(</span><span class="n">number_format</span><span class="o">=</span><span class="s1">'.2f'</span><span class="p">,</span>
                                                <span class="n">zero_direction_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">lat_formatter</span> <span class="o">=</span> <span class="n">LatitudeFormatter</span><span class="p">(</span><span class="n">number_format</span><span class="o">=</span><span class="s1">&#39;.2f&#39;</span><span class="p">)</span>
+            <span class="n">lat_formatter</span> <span class="o">=</span> <span class="n">LatitudeFormatter</span><span class="p">(</span><span class="n">number_format</span><span class="o">=</span><span class="s1">'.2f'</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">lon_formatter</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">lat_formatter</span><span class="p">)</span>
 
-            <span class="n">plot_mode</span> <span class="o">=</span> <span class="s1">&#39;paper&#39;</span>
+            <span class="n">plot_mode</span> <span class="o">=</span> <span class="s1">'paper'</span>
             <span class="n">title</span> <span class="o">=</span> <span class="n">run</span>
-            <span class="k">if</span> <span class="n">plot_mode</span> <span class="o">==</span> <span class="s1">&#39;paper&#39;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="s1">&#39;subgrid&#39;</span> <span class="ow">in</span> <span class="n">run</span><span class="p">:</span>
-                    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;a)&#39;</span>
-                <span class="k">elif</span> <span class="s1">&#39;standard&#39;</span> <span class="ow">in</span> <span class="n">run</span><span class="p">:</span>
-                    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;b)&#39;</span>
-                <span class="n">loc</span> <span class="o">=</span> <span class="s1">&#39;left&#39;</span>
+            <span class="k">if</span> <span class="n">plot_mode</span> <span class="o">==</span> <span class="s1">'paper'</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">'subgrid'</span> <span class="ow">in</span> <span class="n">run</span><span class="p">:</span>
+                    <span class="n">title</span> <span class="o">=</span> <span class="s1">'a)'</span>
+                <span class="k">elif</span> <span class="s1">'standard'</span> <span class="ow">in</span> <span class="n">run</span><span class="p">:</span>
+                    <span class="n">title</span> <span class="o">=</span> <span class="s1">'b)'</span>
+                <span class="n">loc</span> <span class="o">=</span> <span class="s1">'left'</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">loc</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-large&#39;</span><span class="p">)</span>
-            <span class="n">cb</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-            <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;max high water error (m)&#39;</span><span class="p">)</span>
+                <span class="n">loc</span> <span class="o">=</span> <span class="s1">'center'</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">'x-large'</span><span class="p">)</span>
+            <span class="n">cb</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="s1">'both'</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+            <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">'max high water error (m)'</span><span class="p">)</span>
             <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
-            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;hwm_spatial_</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">'hwm_spatial_</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1">.png'</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Analysis.compute_cell_patches">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.compute_cell_patches.html#compass.ocean.tests.hurricane.analysis.Analysis.compute_cell_patches">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_cell_patches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">bbox</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute cell patches</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">patches</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">nVerticesOnCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">nEdgesOnCell</span><span class="o">.</span><span class="n">values</span>
@@ -943,7 +943,7 @@
         <span class="n">lonCell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">lonCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
         <span class="n">latCell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">latCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
         <span class="n">lonCell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">lonCell</span> <span class="o">+</span> <span class="mf">180.0</span><span class="p">,</span> <span class="mf">360.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">180.0</span>
-        <span class="k">for</span> <span class="n">iCell</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">iCell</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nCells'</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">lonCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="k">if</span> <span class="n">lonCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
@@ -974,9 +974,9 @@
         <span class="c1"># need two copies becuase same collection</span>
         <span class="c1"># cannot be added to separate axes</span>
         <span class="n">p1</span> <span class="o">=</span> <span class="n">PatchCollection</span><span class="p">(</span><span class="n">patches</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-                             <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+                             <span class="n">facecolor</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">p2</span> <span class="o">=</span> <span class="n">PatchCollection</span><span class="p">(</span><span class="n">patches</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-                             <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+                             <span class="n">facecolor</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span></div>
 </div>

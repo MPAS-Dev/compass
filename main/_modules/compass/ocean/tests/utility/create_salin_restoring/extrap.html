@@ -122,7 +122,7 @@
 <div class="viewcode-block" id="Extrap">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.create_salin_restoring.Extrap.html#compass.ocean.tests.utility.create_salin_restoring.Extrap">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Extrap</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Extrapolate WOA 2023 monthly sea surface salinity data into missing ocean</span>
 <span class="sd">    regions, including ice cavities and coasts</span>
 
@@ -131,47 +131,47 @@
 <span class="sd">    woa_filename : str</span>
 <span class="sd">        The name of the output file name after extrapolation</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Extrap.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.create_salin_restoring.Extrap.html#compass.ocean.tests.utility.create_salin_restoring.Extrap.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.ocean.tests.utility.create_salin_restoring.CreateSalinRestoring</span>
 <span class="sd">            The test case this step belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;extrap&#39;</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+<span class="sd">        """</span>  <span class="c1"># noqa: E501</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'extrap'</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
                          <span class="n">min_cpus_per_task</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;woa_surface_salinity_monthly.nc&#39;</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../combine/woa_surface_salinity_monthly.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'woa_surface_salinity_monthly.nc'</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">'../combine/woa_surface_salinity_monthly.nc'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">woa_filename</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Determine the output filename</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
 
         <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
-        <span class="n">datestring</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">datestring</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y%m</span><span class="si">%d</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">woa_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;woa23_decav_0.25_sss_monthly_extrap.&#39;</span> \
-                            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">datestring</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">woa_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'woa23_decav_0.25_sss_monthly_extrap.'</span> \
+                            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">datestring</span><span class="si">}</span><span class="s1">.nc'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">woa_filename</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Extrapolate WOA 2023 model temperature and salinity into ice-shelf</span>
 <span class="sd">        cavities.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
         <span class="c1"># extrapolate horizontally using the ocean mask</span>
@@ -181,7 +181,7 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_extrap</span><span class="p">(</span><span class="n">out_filename</span><span class="p">):</span>
 
-    <span class="n">in_filename</span> <span class="o">=</span> <span class="s1">&#39;woa_surface_salinity_monthly.nc&#39;</span>
+    <span class="n">in_filename</span> <span class="o">=</span> <span class="s1">'woa_surface_salinity_monthly.nc'</span>
     <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">in_filename</span><span class="p">)</span>
 
     <span class="n">field</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">SALT</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -207,13 +207,13 @@
 
             <span class="n">new_valid</span> <span class="o">=</span> <span class="n">valid_weight_sum</span> <span class="o">&gt;</span> <span class="n">threshold</span>
 
-            <span class="c1"># don&#39;t want to overwrite original data but do want ot smooth</span>
+            <span class="c1"># don't want to overwrite original data but do want ot smooth</span>
             <span class="c1"># extrapolated data</span>
             <span class="n">fill_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">new_valid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">orig_mask</span><span class="p">))</span>
 
             <span class="n">fill_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">fill_mask</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">fill_count</span> <span class="o">==</span> <span class="n">prev_fill_count</span><span class="p">:</span>
-                <span class="c1"># no change so we&#39;re done</span>
+                <span class="c1"># no change so we're done</span>
                 <span class="k">break</span>
 
             <span class="n">field_extrap</span> <span class="o">=</span> <span class="n">_extrap_with_halo</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">valid</span><span class="p">,</span>
@@ -226,8 +226,8 @@
 
     <span class="n">attrs</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">SALT</span><span class="o">.</span><span class="n">attrs</span>
     <span class="n">dims</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">SALT</span><span class="o">.</span><span class="n">dims</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;SALT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;SALT&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'SALT'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'SALT'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
 
     <span class="n">ds</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="n">out_filename</span><span class="p">)</span>
 
@@ -236,7 +236,7 @@
     <span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">field</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">valid</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.</span>
     <span class="n">field_with_halo</span> <span class="o">=</span> <span class="n">field</span><span class="p">[:,</span> <span class="n">lon_with_halo</span><span class="p">]</span>
-    <span class="n">field_extrap</span> <span class="o">=</span> <span class="n">convolve2d</span><span class="p">(</span><span class="n">field_with_halo</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+    <span class="n">field_extrap</span> <span class="o">=</span> <span class="n">convolve2d</span><span class="p">(</span><span class="n">field_with_halo</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'same'</span><span class="p">)</span>
     <span class="n">field_extrap</span> <span class="o">=</span> <span class="n">field_extrap</span><span class="p">[:,</span> <span class="n">lon_no_halo</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">field_extrap</span>
 </pre></div>

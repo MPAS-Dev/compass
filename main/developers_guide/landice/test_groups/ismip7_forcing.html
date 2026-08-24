@@ -152,7 +152,7 @@
 the Ice Sheet Model Intercomparison for CMIP7 (ISMIP7) protocol from its
 native polar stereographic grid to the MALI unstructured mesh. The test group
 supports both AIS and GrIS via the <code class="docutils literal notranslate"><span class="pre">ice_sheet</span></code> config option. It includes
-two test cases: <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code> and <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code>.</p>
+three test cases: <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code>, <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code>, and <code class="docutils literal notranslate"><span class="pre">fracture</span></code>.</p>
 <section id="framework">
 <span id="dev-landice-ismip7-forcing-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading"></a></h2>
 <p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">ismip7_forcing</span></code> test group are described
@@ -249,6 +249,53 @@ nISMIP6OceanLayers) — no Time dimension</p></li>
 <li><p>Remaps 2D monthly thermal forcing</p></li>
 <li><p>Produces <code class="docutils literal notranslate"><span class="pre">ismip6_2dThermalForcing</span></code> (dims: Time × nCells)</p></li>
 </ul>
+</section>
+<section id="fracture">
+<span id="dev-landice-ismip7-forcing-fracture"></span><h3>fracture<a class="headerlink" href="#fracture" title="Link to this heading"></a></h3>
+<p>The <a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.fracture.Fracture.html#compass.landice.tests.ismip7_forcing.fracture.Fracture" title="compass.landice.tests.ismip7_forcing.fracture.Fracture"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_forcing.fracture.Fracture</span></code></a>
+test case processes the ISMIP7 surface-melt-driven ice shelf collapse
+forcing (AIS only). It implements the three ISMIP7 pathways as independent
+steps, each discovering its source file from the <code class="docutils literal notranslate"><span class="pre">fracture/{version}/</span></code>
+subdirectory of <code class="docutils literal notranslate"><span class="pre">base_path_ismip7</span></code>, building or reusing a mapping file,
+remapping with <code class="docutils literal notranslate"><span class="pre">ncremap</span></code>, and renaming the result to MALI conventions with
+an accompanying <code class="docutils literal notranslate"><span class="pre">xtime</span></code> variable. Per-pathway remapping methods are set in
+the <code class="docutils literal notranslate"><span class="pre">[ismip7_fracture]</span></code> config section. Setting a pathway’s remapping-method
+option to <code class="docutils literal notranslate"><span class="pre">None</span></code> causes that step to return early without processing its
+file, which is useful when only some pathway source files are available.</p>
+<p>Steps:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.html#compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt" title="compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessExcessMelt</span></code></a>
+(Path A) — <code class="docutils literal notranslate"><span class="pre">excess_melt</span></code> → <code class="docutils literal notranslate"><span class="pre">ismip7ExcessMelt</span></code>. The excess melt file
+lacks <code class="docutils literal notranslate"><span class="pre">x</span></code>/<code class="docutils literal notranslate"><span class="pre">y</span></code> coordinate variables and its array is flipped along the
+y axis relative to the other fracture files (it was produced with CDO).
+The <code class="docutils literal notranslate"><span class="pre">_prepare_source_grid()</span></code> method borrows <code class="docutils literal notranslate"><span class="pre">x</span></code>/<code class="docutils literal notranslate"><span class="pre">y</span></code> from a sibling
+fracture file, flips the data to match (raising if the flipped <code class="docutils literal notranslate"><span class="pre">lat</span></code> does
+not match the sibling grid), and writes a reconstructed source file. The
+field is then extrapolated (nearest neighbor, filling NaNs) and remapped
+conservatively by default (it is a flux).</p></li>
+<li><p><a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.html#compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties" title="compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessLakeProperties</span></code></a>
+(Path B) — <code class="docutils literal notranslate"><span class="pre">lake_depth</span></code> → <code class="docutils literal notranslate"><span class="pre">ismip7LakeDepth</span></code> and
+<code class="docutils literal notranslate"><span class="pre">fraction_lake_area</span></code> → <code class="docutils literal notranslate"><span class="pre">ismip7LakeAreaFraction</span></code>. Both variables are
+extrapolated and remapped in a single <code class="docutils literal notranslate"><span class="pre">ncremap</span></code> call (bilinear by
+default).</p></li>
+<li><p><a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.html#compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse" title="compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessShelfCollapse</span></code></a>
+(Path C) — <code class="docutils literal notranslate"><span class="pre">mask</span></code> → <code class="docutils literal notranslate"><span class="pre">calvingMask</span></code>. Remapped with <code class="docutils literal notranslate"><span class="pre">neareststod</span></code> by
+default and rounded to 0/1 so the discrete collapse mask is preserved.</p></li>
+</ul>
+<p>The annual source fields use an integer <code class="docutils literal notranslate"><span class="pre">year</span></code>/<code class="docutils literal notranslate"><span class="pre">time</span></code> coordinate with
+<code class="docutils literal notranslate"><span class="pre">units=&quot;year&quot;</span></code> (not CF-compliant), so each step opens the data with
+<code class="docutils literal notranslate"><span class="pre">decode_times=False</span></code> and constructs <code class="docutils literal notranslate"><span class="pre">xtime</span></code> at January 1st of each year.</p>
+<p>Shared remapping helpers used by the fracture steps live in
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_forcing.fracture.remap_utils</span></code>:
+<code class="docutils literal notranslate"><span class="pre">extrapolate_source</span></code> (nearest-neighbor fill of NaNs on the source grid),
+<code class="docutils literal notranslate"><span class="pre">open_rename_and_trim</span></code> (open a remapped file, rename dimensions/variables
+to MALI conventions, and restrict to the requested year range), and
+<code class="docutils literal notranslate"><span class="pre">add_xtime_and_write</span></code> (add the <code class="docutils literal notranslate"><span class="pre">xtime</span></code> variable, drop auxiliary remapping
+variables, and write the output).</p>
+<p>The output variable names for Paths A and B (<code class="docutils literal notranslate"><span class="pre">ismip7ExcessMelt</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ismip7LakeDepth</span></code>, <code class="docutils literal notranslate"><span class="pre">ismip7LakeAreaFraction</span></code>) are descriptive placeholders
+and may need to be aligned with the MALI Registry once the corresponding
+model input fields are defined.</p>
 </section>
 </section>
 </section>

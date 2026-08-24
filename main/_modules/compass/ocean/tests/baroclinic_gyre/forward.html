@@ -116,7 +116,7 @@
 <div class="viewcode-block" id="Forward">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.forward.Forward.html#compass.ocean.tests.baroclinic_gyre.forward.Forward">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MPAS-Ocean runs as part of</span>
 <span class="sd">    the baroclinic gyre test cases.</span>
 
@@ -125,12 +125,12 @@
 <span class="sd">    resolution : float</span>
 <span class="sd">        The resolution of the test case (m)</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Forward.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.forward.Forward.html#compass.ocean.tests.baroclinic_gyre.forward.Forward.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">long</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -149,77 +149,77 @@
 
 <span class="sd">        long : bool, optional</span>
 <span class="sd">            Whether to run a long (3-year) simulation to quasi-equilibrium</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">long</span> <span class="o">=</span> <span class="n">long</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="k">if</span> <span class="n">resolution</span> <span class="o">&gt;=</span> <span class="mf">1e3</span><span class="p">:</span>
-            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="o">/</span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">km&#39;</span>
+            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="o">/</span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">km'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">m&#39;</span>
+            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">m'</span>
 
-        <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;80km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ntasks&#39;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-                               <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                               <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;01:00:00&#39;&quot;</span><span class="p">,</span>
-                               <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:03:00&#39;&quot;</span><span class="p">,</span>
-                               <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;5.0e11&quot;</span><span class="p">,</span>
-                               <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_03:00:00&#39;&quot;</span><span class="p">},</span>
-                      <span class="s1">&#39;20km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ntasks&#39;</span><span class="p">:</span> <span class="mi">384</span><span class="p">,</span>
-                               <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-                               <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:20:00&#39;&quot;</span><span class="p">,</span>
-                               <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:00:20&#39;&quot;</span><span class="p">,</span>
-                               <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;2.0e10 &quot;</span><span class="p">,</span>
-                               <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_01:00:00&#39;&quot;</span><span class="p">}}</span>
+        <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'80km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'ntasks'</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+                               <span class="s1">'min_tasks'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                               <span class="s1">'dt'</span><span class="p">:</span> <span class="s2">"'01:00:00'"</span><span class="p">,</span>
+                               <span class="s1">'btr_dt'</span><span class="p">:</span> <span class="s2">"'00:03:00'"</span><span class="p">,</span>
+                               <span class="s1">'mom_del4'</span><span class="p">:</span> <span class="s2">"5.0e11"</span><span class="p">,</span>
+                               <span class="s1">'run_duration'</span><span class="p">:</span> <span class="s2">"'0000_03:00:00'"</span><span class="p">},</span>
+                      <span class="s1">'20km'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'ntasks'</span><span class="p">:</span> <span class="mi">384</span><span class="p">,</span>
+                               <span class="s1">'min_tasks'</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+                               <span class="s1">'dt'</span><span class="p">:</span> <span class="s2">"'00:20:00'"</span><span class="p">,</span>
+                               <span class="s1">'btr_dt'</span><span class="p">:</span> <span class="s2">"'0000_00:00:20'"</span><span class="p">,</span>
+                               <span class="s1">'mom_del4'</span><span class="p">:</span> <span class="s2">"2.0e10 "</span><span class="p">,</span>
+                               <span class="s1">'run_duration'</span><span class="p">:</span> <span class="s2">"'0000_01:00:00'"</span><span class="p">}}</span>
 
         <span class="k">if</span> <span class="n">res_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">. Supported values are: &#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s1">'Unsupported resolution </span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">. Supported values are: '</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">res_name</span><span class="p">]</span>
 
-        <span class="n">ntasks</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;ntasks&#39;</span><span class="p">]</span>
-        <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;min_tasks&#39;</span><span class="p">]</span>
+        <span class="n">ntasks</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="s1">'ntasks'</span><span class="p">]</span>
+        <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="s1">'min_tasks'</span><span class="p">]</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">min_tasks</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># make sure output is double precision</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.output&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.streams'</span><span class="p">,</span> <span class="s1">'streams.output'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_gyre&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.baroclinic_gyre'</span><span class="p">,</span>
+                               <span class="s1">'namelist.forward'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">long</span><span class="p">:</span>
-            <span class="n">output_interval</span> <span class="o">=</span> <span class="s2">&quot;0000-01-00_00:00:00&quot;</span>
-            <span class="n">restart_interval</span> <span class="o">=</span> <span class="s2">&quot;0001-00-00_00:00:00&quot;</span>
+            <span class="n">output_interval</span> <span class="o">=</span> <span class="s2">"0000-01-00_00:00:00"</span>
+            <span class="n">restart_interval</span> <span class="o">=</span> <span class="s2">"0001-00-00_00:00:00"</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">output_interval</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;run_duration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">restart_interval</span> <span class="o">=</span> <span class="s2">&quot;0030_00:00:00&quot;</span>
+            <span class="n">output_interval</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="s1">'run_duration'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"'"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+            <span class="n">restart_interval</span> <span class="o">=</span> <span class="s2">"0030_00:00:00"</span>
         <span class="n">replacements</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">output_interval</span><span class="o">=</span><span class="n">output_interval</span><span class="p">,</span> <span class="n">restart_interval</span><span class="o">=</span><span class="n">restart_interval</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.ocean.tests.baroclinic_gyre&#39;</span><span class="p">,</span>
-                              <span class="n">streams</span><span class="o">=</span><span class="s1">&#39;streams.forward&#39;</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="s1">'compass.ocean.tests.baroclinic_gyre'</span><span class="p">,</span>
+                              <span class="n">streams</span><span class="o">=</span><span class="s1">'streams.forward'</span><span class="p">,</span>
                               <span class="n">template_replacements</span><span class="o">=</span><span class="n">replacements</span><span class="p">)</span>
         <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">,</span> <span class="s1">&#39;btr_dt&#39;</span><span class="p">,</span> <span class="s1">&#39;mom_del4&#39;</span><span class="p">,</span> <span class="s1">&#39;run_duration&#39;</span><span class="p">]:</span>
-            <span class="n">options</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;config_</span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">option</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'dt'</span><span class="p">,</span> <span class="s1">'btr_dt'</span><span class="p">,</span> <span class="s1">'mom_del4'</span><span class="p">,</span> <span class="s1">'run_duration'</span><span class="p">]:</span>
+            <span class="n">options</span><span class="p">[</span><span class="sa">f</span><span class="s1">'config_</span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">option</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">long</span><span class="p">:</span>
             <span class="c1"># run for 3 years instead of 3 time steps</span>
-            <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_run_duration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&#39;0003-00-00_00:00:00&#39;&quot;</span>
+            <span class="n">options</span><span class="p">[</span><span class="s1">'config_run_duration'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"'0003-00-00_00:00:00'"</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/initial_state.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;forcing.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/forcing.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/culled_graph.info&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'init.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../initial_state/initial_state.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'forcing.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../initial_state/forcing.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../initial_state/culled_graph.info'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output/output.0001-01-01_00.00.00.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output/output.0001-01-01_00.00.00.nc'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">long</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output/&#39;</span>
-                                 <span class="s1">&#39;timeSeriesStatsMonthly.0001-01-01.nc&#39;</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output/'</span>
+                                 <span class="s1">'timeSeriesStatsMonthly.0001-01-01.nc'</span><span class="p">)</span></div>
 
 
     <span class="c1"># no setup() is needed</span>
@@ -227,14 +227,14 @@
 <div class="viewcode-block" id="Forward.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.forward.Forward.run.html#compass.ocean.tests.baroclinic_gyre.forward.Forward.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partition_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">long</span><span class="p">:</span>
-            <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
-                            <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;file&#39;&quot;</span><span class="p">}</span>
+            <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_do_restart'</span><span class="p">:</span> <span class="s1">'.true.'</span><span class="p">,</span>
+                            <span class="s1">'config_start_time'</span><span class="p">:</span> <span class="s2">"'file'"</span><span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">replacements</span><span class="p">)</span></div>
 </div>
 

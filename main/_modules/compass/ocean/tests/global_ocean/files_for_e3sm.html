@@ -165,7 +165,7 @@
 <div class="viewcode-block" id="FilesForE3SM">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM.html#compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FilesForE3SM</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A test case for assembling files needed for MPAS-Ocean and MPAS-Seaice</span>
 <span class="sd">    initial conditions in E3SM as well as files needed for diagnostics from</span>
 <span class="sd">    the Meridional Overturning Circulation analysis member and MPAS-Analysis</span>
@@ -181,12 +181,12 @@
 <span class="sd">    dynamic_adjustment : compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment</span>
 <span class="sd">        The test case that performs dynamic adjustment to dissipate</span>
 <span class="sd">        fast-moving waves from the initial condition</span>
-<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+<span class="sd">    """</span>  <span class="c1"># noqa: E501</span>
 <div class="viewcode-block" id="FilesForE3SM.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM.html#compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create test case for creating a global MPAS-Ocean mesh</span>
 
 <span class="sd">        Parameters</span>
@@ -203,8 +203,8 @@
 <span class="sd">        dynamic_adjustment : compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment, optional</span>
 <span class="sd">            The test case that performs dynamic adjustment to dissipate</span>
 <span class="sd">            fast-moving waves from the initial condition</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;files_for_e3sm&#39;</span>
+<span class="sd">        """</span>  <span class="c1"># noqa: E501</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'files_for_e3sm'</span>
         <span class="k">if</span> <span class="n">dynamic_adjustment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">time_integrator</span> <span class="o">=</span> <span class="n">dynamic_adjustment</span><span class="o">.</span><span class="n">time_integrator</span>
             <span class="n">subdir</span> <span class="o">=</span> <span class="n">get_forward_subdir</span><span class="p">(</span>
@@ -217,7 +217,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="n">init</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_adjustment</span> <span class="o">=</span> <span class="n">dynamic_adjustment</span>
 
-        <span class="c1"># add metadata if we&#39;re running this on an existing mesh</span>
+        <span class="c1"># add metadata if we're running this on an existing mesh</span>
         <span class="n">add_metadata</span> <span class="o">=</span> <span class="p">(</span><span class="n">dynamic_adjustment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">OceanMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">OceanInitialCondition</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
@@ -244,9 +244,9 @@
 <div class="viewcode-block" id="FilesForE3SM.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM.configure.html#compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Modify the configuration options for this test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">init</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init</span>
         <span class="k">if</span> <span class="n">init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">init</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
@@ -256,41 +256,41 @@
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">work_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
 
-        <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.global_ocean.files_for_e3sm&#39;</span>
-        <span class="k">with</span> <span class="n">package_path</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;README&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">target</span><span class="p">:</span>
-            <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/README&#39;</span><span class="p">)</span>
+        <span class="n">package</span> <span class="o">=</span> <span class="s1">'compass.ocean.tests.global_ocean.files_for_e3sm'</span>
+        <span class="k">with</span> <span class="n">package_path</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">'README'</span><span class="p">)</span> <span class="k">as</span> <span class="n">target</span><span class="p">:</span>
+            <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/README'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;with_ice_shelf_cavities&#39;</span><span class="p">,</span>
-                       <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'files_for_e3sm'</span><span class="p">,</span> <span class="s1">'with_ice_shelf_cavities'</span><span class="p">,</span>
+                       <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
             <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">get_cull_mesh_path</span><span class="p">()</span>
             <span class="n">graph_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span><span class="p">,</span> <span class="n">mesh_path</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span><span class="p">,</span> <span class="n">mesh_path</span><span class="p">,</span> <span class="s1">'culled_graph.info'</span><span class="p">)</span>
             <span class="n">graph_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">graph_filename</span><span class="p">)</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;graph_filename&#39;</span><span class="p">,</span> <span class="n">graph_filename</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'files_for_e3sm'</span><span class="p">,</span> <span class="s1">'graph_filename'</span><span class="p">,</span> <span class="n">graph_filename</span><span class="p">)</span>
 
             <span class="n">base_mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
-                <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">'base_mesh'</span><span class="p">]</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+                <span class="s1">'base_mesh.nc'</span><span class="p">)</span>
             <span class="n">base_mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">)</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;base_mesh_filename&#39;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'files_for_e3sm'</span><span class="p">,</span> <span class="s1">'base_mesh_filename'</span><span class="p">,</span>
                        <span class="n">base_mesh_filename</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">initial_state_filename</span> <span class="o">=</span> \
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/initial_state.nc&#39;</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/initial_state.nc'</span>
             <span class="n">initial_state_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span><span class="p">,</span>
                                                   <span class="n">initial_state_filename</span><span class="p">)</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;ocean_initial_state_filename&#39;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'files_for_e3sm'</span><span class="p">,</span> <span class="s1">'ocean_initial_state_filename'</span><span class="p">,</span>
                        <span class="n">initial_state_filename</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">dynamic_adjustment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">restart_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;dynamic_adjustment&#39;</span><span class="p">,</span>
+                <span class="n">work_dir</span><span class="p">,</span> <span class="s1">'..'</span><span class="p">,</span> <span class="s1">'dynamic_adjustment'</span><span class="p">,</span>
                 <span class="n">dynamic_adjustment</span><span class="o">.</span><span class="n">restart_filenames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="n">restart_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">restart_filename</span><span class="p">)</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;ocean_restart_filename&#39;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'files_for_e3sm'</span><span class="p">,</span> <span class="s1">'ocean_restart_filename'</span><span class="p">,</span>
                        <span class="n">restart_filename</span><span class="p">)</span></div>
 </div>
 

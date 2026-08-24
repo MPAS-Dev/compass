@@ -127,11 +127,11 @@
 <div class="viewcode-block" id="map_to_r3">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.dem.dem_remap.map_to_r3.html#compass.ocean.tests.tides.dem.dem_remap.map_to_r3">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">map_to_r3</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">xlon</span><span class="p">,</span> <span class="n">ylat</span><span class="p">,</span> <span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Map lon-lat coordinates to XYZ points. Restricted to the</span>
 <span class="sd">    panel LAT[HEAD:TAIL] to manage memory use.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">sinx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">xlon</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span>
     <span class="n">cosx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">xlon</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span>
@@ -155,11 +155,11 @@
 <div class="viewcode-block" id="tria_area">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.dem.dem_remap.tria_area.html#compass.ocean.tests.tides.dem.dem_remap.tria_area">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">tria_area</span><span class="p">(</span><span class="n">pa</span><span class="p">,</span> <span class="n">pb</span><span class="p">,</span> <span class="n">pc</span><span class="p">,</span> <span class="n">rs</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Calculate areas of spherical triangles [PA, PB, PC] on a</span>
 <span class="sd">    sphere of radius RS.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">lena</span> <span class="o">=</span> <span class="n">circ_dist</span><span class="p">(</span>
         <span class="n">pa</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">pa</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pb</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">pb</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="mf">1.</span><span class="p">)</span>
@@ -184,11 +184,11 @@
 <div class="viewcode-block" id="circ_dist">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.dem.dem_remap.circ_dist.html#compass.ocean.tests.tides.dem.dem_remap.circ_dist">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">circ_dist</span><span class="p">(</span><span class="n">xa</span><span class="p">,</span> <span class="n">ya</span><span class="p">,</span> <span class="n">xb</span><span class="p">,</span> <span class="n">yb</span><span class="p">,</span> <span class="n">rs</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Calculate geodesic-length of great circles [PA, PB] on a</span>
 <span class="sd">    sphere of radius RS.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">dlon</span> <span class="o">=</span> <span class="mf">.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xa</span> <span class="o">-</span> <span class="n">xb</span><span class="p">)</span>
     <span class="n">dlat</span> <span class="o">=</span> <span class="mf">.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">ya</span> <span class="o">-</span> <span class="n">yb</span><span class="p">)</span>
@@ -205,12 +205,12 @@
 <div class="viewcode-block" id="sample_1d">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.dem.dem_remap.sample_1d.html#compass.ocean.tests.tides.dem.dem_remap.sample_1d">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sample_1d</span><span class="p">(</span><span class="n">xpos</span><span class="p">,</span> <span class="n">ffun</span><span class="p">,</span> <span class="n">xnew</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A fast(er) 1-dim. interpolation routine for DEM sampling.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">ipos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">xpos</span><span class="p">,</span> <span class="n">xnew</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="n">ipos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">xpos</span><span class="p">,</span> <span class="n">xnew</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s2">"left"</span><span class="p">)</span>
 
     <span class="n">ipos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">ipos</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">ipos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">ipos</span><span class="p">,</span> <span class="n">xpos</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
@@ -232,10 +232,10 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">linear_2d</span><span class="p">(</span><span class="n">xxww</span><span class="p">,</span> <span class="n">yyss</span><span class="p">,</span> <span class="n">xxee</span><span class="p">,</span> <span class="n">yynn</span><span class="p">,</span>
               <span class="n">xpos</span><span class="p">,</span> <span class="n">ypos</span><span class="p">,</span>
               <span class="n">ffsw</span><span class="p">,</span> <span class="n">ffse</span><span class="p">,</span> <span class="n">ffne</span><span class="p">,</span> <span class="n">ffnw</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Standard bilinear interpolation on aligned quadrilateral.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">aane</span> <span class="o">=</span> <span class="p">(</span><span class="n">xxee</span> <span class="o">-</span> <span class="n">xpos</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">yynn</span> <span class="o">-</span> <span class="n">ypos</span><span class="p">)</span>
     <span class="n">aanw</span> <span class="o">=</span> <span class="p">(</span><span class="n">xpos</span> <span class="o">-</span> <span class="n">xxww</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">yynn</span> <span class="o">-</span> <span class="n">ypos</span><span class="p">)</span>
@@ -252,10 +252,10 @@
 <div class="viewcode-block" id="sample_2d">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.dem.dem_remap.sample_2d.html#compass.ocean.tests.tides.dem.dem_remap.sample_2d">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sample_2d</span><span class="p">(</span><span class="n">xlon</span><span class="p">,</span> <span class="n">ylat</span><span class="p">,</span> <span class="n">vals</span><span class="p">,</span> <span class="n">xpos</span><span class="p">,</span> <span class="n">ypos</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A fast(er) 2-dim. interpolation routine for DEM sampling.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">cols</span> <span class="o">=</span> <span class="n">xlon</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="n">rows</span> <span class="o">=</span> <span class="n">ylat</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span>
@@ -287,7 +287,7 @@
     <span class="c1"># -- Sub-pixel bilinear interpolation - pixel DEM values are</span>
     <span class="c1"># -- considered to be located at pixel centres; edge middle</span>
     <span class="c1"># -- and corner values are reconstructed using simple linear</span>
-    <span class="c1"># -- averaging. Each pixel is thus split into 4 &quot;sub-pixels&quot;</span>
+    <span class="c1"># -- averaging. Each pixel is thus split into 4 "sub-pixels"</span>
     <span class="c1"># -- with standard bilinear interpolation applied for each.</span>
 
     <span class="c1"># -- Sub-pixel scheme preserves min/max DEM values - without</span>
@@ -375,20 +375,20 @@
 <div class="viewcode-block" id="cell_quad">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.dem.dem_remap.cell_quad.html#compass.ocean.tests.tides.dem.dem_remap.cell_quad">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cell_quad</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">xlon</span><span class="p">,</span> <span class="n">ylat</span><span class="p">,</span> <span class="n">vals</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Eval. finite-volume integrals for mesh cells - splitting</span>
 <span class="sd">    each into a series of triangles and employing an order-2</span>
 <span class="sd">    quadrature rule.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">base</span><span class="p">:</span>
         <span class="k">pass</span>
 
-    <span class="n">ncel</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nCells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">ncel</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">"nCells"</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
     <span class="n">pcel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncel</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">pcel</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;lonCell&quot;</span><span class="p">][:]</span>
-    <span class="n">pcel</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;latCell&quot;</span><span class="p">][:]</span>
+    <span class="n">pcel</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">"lonCell"</span><span class="p">][:]</span>
+    <span class="n">pcel</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">"latCell"</span><span class="p">][:]</span>
 
     <span class="n">pcel</span> <span class="o">=</span> <span class="n">pcel</span> <span class="o">*</span> <span class="mf">180.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
     <span class="n">pcel</span><span class="p">[</span><span class="n">pcel</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">180.</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="mf">360.</span>
@@ -397,10 +397,10 @@
 
     <span class="n">pcel</span> <span class="o">=</span> <span class="n">pcel</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span>
 
-    <span class="n">nvrt</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nVertices&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">nvrt</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">"nVertices"</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
     <span class="n">pvrt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nvrt</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">pvrt</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;lonVertex&quot;</span><span class="p">][:]</span>
-    <span class="n">pvrt</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;latVertex&quot;</span><span class="p">][:]</span>
+    <span class="n">pvrt</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">"lonVertex"</span><span class="p">][:]</span>
+    <span class="n">pvrt</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">"latVertex"</span><span class="p">][:]</span>
 
     <span class="n">pvrt</span> <span class="o">=</span> <span class="n">pvrt</span> <span class="o">*</span> <span class="mf">180.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
     <span class="n">pvrt</span><span class="p">[</span><span class="n">pvrt</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">180.</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="mf">360.</span>
@@ -410,11 +410,11 @@
     <span class="n">pvrt</span> <span class="o">=</span> <span class="n">pvrt</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span>
 
     <span class="n">cell</span> <span class="o">=</span> <span class="n">base</span><span class="p">()</span>
-    <span class="n">cell</span><span class="o">.</span><span class="n">edge</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;edgesOnCell&quot;</span><span class="p">][:,</span> <span class="p">:]</span>
-    <span class="n">cell</span><span class="o">.</span><span class="n">topo</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;nEdgesOnCell&quot;</span><span class="p">][:]</span>
+    <span class="n">cell</span><span class="o">.</span><span class="n">edge</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">"edgesOnCell"</span><span class="p">][:,</span> <span class="p">:]</span>
+    <span class="n">cell</span><span class="o">.</span><span class="n">topo</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">"nEdgesOnCell"</span><span class="p">][:]</span>
 
     <span class="n">edge</span> <span class="o">=</span> <span class="n">base</span><span class="p">()</span>
-    <span class="n">edge</span><span class="o">.</span><span class="n">vert</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;verticesOnEdge&quot;</span><span class="p">][:]</span>
+    <span class="n">edge</span><span class="o">.</span><span class="n">vert</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">"verticesOnEdge"</span><span class="p">][:]</span>
 
     <span class="n">abar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncel</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     <span class="n">fbar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncel</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
@@ -454,17 +454,17 @@
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.dem.dem_remap.cell_prfl.html#compass.ocean.tests.tides.dem.dem_remap.cell_prfl">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cell_prfl</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">smat</span><span class="p">,</span>
               <span class="n">nlev</span><span class="p">,</span> <span class="n">zdem</span><span class="p">,</span> <span class="n">zvrt</span><span class="p">,</span> <span class="n">zcel</span><span class="p">,</span> <span class="n">zbar</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Build elev. profiles for each cell in the mesh - sorting</span>
 <span class="sd">    the DEM pixel values assigned to each cell and assigning</span>
 <span class="sd">    to NLEV bins.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">prfl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">zbar</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nlev</span><span class="p">))</span>
 
-    <span class="n">nvrt</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;nEdgesOnCell&quot;</span><span class="p">][:]</span>
-    <span class="n">ivrt</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;verticesOnCell&quot;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">nvrt</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">"nEdgesOnCell"</span><span class="p">][:]</span>
+    <span class="n">ivrt</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">"verticesOnCell"</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">-</span> <span class="mi">1</span>
 
     <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">smat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
 
@@ -508,56 +508,56 @@
 <div class="viewcode-block" id="dem_remap">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.dem.dem_remap.dem_remap.html#compass.ocean.tests.tides.dem.dem_remap.dem_remap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">dem_remap</span><span class="p">(</span><span class="n">elev_file</span><span class="p">,</span> <span class="n">mpas_file</span><span class="p">,</span> <span class="n">elev_band</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>  <span class="c1"># noqa: C901</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Map elevation and ice+ocn-thickness data from a &quot;zipped&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Map elevation and ice+ocn-thickness data from a "zipped"</span>
 <span class="sd">    RTopo data-set onto the cells in an MPAS mesh.</span>
 
 <span class="sd">    Cell values are a blending of an approx. integral remap</span>
 <span class="sd">    and a local quadrature rule.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">NLEV</span> <span class="o">=</span> <span class="n">elev_band</span> <span class="o">+</span> <span class="mi">1</span>   <span class="c1"># no. of evel. profile bands</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading assests...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Loading assests..."</span><span class="p">)</span>
 
-    <span class="n">elev</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">elev_file</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span>
-    <span class="n">mesh</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">mpas_file</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span>
+    <span class="n">elev</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">elev_file</span><span class="p">,</span> <span class="s2">"r+"</span><span class="p">)</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">mpas_file</span><span class="p">,</span> <span class="s2">"r+"</span><span class="p">)</span>
 
-    <span class="n">xlon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">elev</span><span class="p">[</span><span class="s2">&quot;lon&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">ylat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">elev</span><span class="p">[</span><span class="s2">&quot;lat&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">xlon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">elev</span><span class="p">[</span><span class="s2">"lon"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">ylat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">elev</span><span class="p">[</span><span class="s2">"lat"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
     <span class="c1"># -- add dummy data to elev file if missing</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_elevation&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elev</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*bed_elevation variable not found&quot;</span><span class="p">)</span>
-        <span class="n">elev</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_elevation&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;i2&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;num_row&quot;</span><span class="p">,</span> <span class="s2">&quot;num_col&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"bed_elevation"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elev</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"*bed_elevation variable not found"</span><span class="p">)</span>
+        <span class="n">elev</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"bed_elevation"</span><span class="p">,</span>
+                            <span class="s2">"i2"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"num_row"</span><span class="p">,</span> <span class="s2">"num_col"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_slope&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elev</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*bed_slope variable not found&quot;</span><span class="p">)</span>
-        <span class="n">elev</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_slope&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;num_row&quot;</span><span class="p">,</span> <span class="s2">&quot;num_col&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"bed_slope"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elev</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"*bed_slope variable not found"</span><span class="p">)</span>
+        <span class="n">elev</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"bed_slope"</span><span class="p">,</span>
+                            <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"num_row"</span><span class="p">,</span> <span class="s2">"num_col"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_dz_dx&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elev</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*bed_dz_dx variable not found&quot;</span><span class="p">)</span>
-        <span class="n">elev</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_dz_dx&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;num_row&quot;</span><span class="p">,</span> <span class="s2">&quot;num_col&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"bed_dz_dx"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elev</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"*bed_dz_dx variable not found"</span><span class="p">)</span>
+        <span class="n">elev</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"bed_dz_dx"</span><span class="p">,</span>
+                            <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"num_row"</span><span class="p">,</span> <span class="s2">"num_col"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_dz_dy&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elev</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*bed_dz_dy variable not found&quot;</span><span class="p">)</span>
-        <span class="n">elev</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_dz_dy&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;num_row&quot;</span><span class="p">,</span> <span class="s2">&quot;num_col&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"bed_dz_dy"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elev</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"*bed_dz_dy variable not found"</span><span class="p">)</span>
+        <span class="n">elev</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"bed_dz_dy"</span><span class="p">,</span>
+                            <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"num_row"</span><span class="p">,</span> <span class="s2">"num_col"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ocn_thickness&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elev</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*ocn_thickness variable not found&quot;</span><span class="p">)</span>
-        <span class="n">elev</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;ocn_thickness&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;i2&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;num_row&quot;</span><span class="p">,</span> <span class="s2">&quot;num_col&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"ocn_thickness"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elev</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"*ocn_thickness variable not found"</span><span class="p">)</span>
+        <span class="n">elev</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"ocn_thickness"</span><span class="p">,</span>
+                            <span class="s2">"i2"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"num_row"</span><span class="p">,</span> <span class="s2">"num_col"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ice_thickness&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elev</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*ice_thickness variable not found&quot;</span><span class="p">)</span>
-        <span class="n">elev</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;i2&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;num_row&quot;</span><span class="p">,</span> <span class="s2">&quot;num_col&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"ice_thickness"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elev</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"*ice_thickness variable not found"</span><span class="p">)</span>
+        <span class="n">elev</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"ice_thickness"</span><span class="p">,</span>
+                            <span class="s2">"i2"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"num_row"</span><span class="p">,</span> <span class="s2">"num_col"</span><span class="p">))</span>
 
     <span class="c1"># -- Compute an approximate remapping, associating pixels in</span>
     <span class="c1"># -- the DEM with cells in the MPAS mesh. Since polygons are</span>
@@ -565,17 +565,17 @@
     <span class="c1"># -- finding nearest neighbours. This remapping is an approx.</span>
     <span class="c1"># -- as no partial pixel-cell intersection is computed.</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Building KDtree...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Building KDtree..."</span><span class="p">)</span>
 
     <span class="n">ppos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
-        <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nCells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">ppos</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;xCell&quot;</span><span class="p">][:]</span>
-    <span class="n">ppos</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;yCell&quot;</span><span class="p">][:]</span>
-    <span class="n">ppos</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;zCell&quot;</span><span class="p">][:]</span>
+        <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">"nCells"</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">ppos</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[</span><span class="s2">"xCell"</span><span class="p">][:]</span>
+    <span class="n">ppos</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[</span><span class="s2">"yCell"</span><span class="p">][:]</span>
+    <span class="n">ppos</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[</span><span class="s2">"zCell"</span><span class="p">][:]</span>
 
     <span class="n">tree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">ppos</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Remap elevation...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Remap elevation..."</span><span class="p">)</span>
 
     <span class="n">xmid</span> <span class="o">=</span> <span class="mf">.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xlon</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">xlon</span><span class="p">[</span><span class="mi">1</span><span class="p">::])</span>
     <span class="n">ymid</span> <span class="o">=</span> <span class="mf">.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">ylat</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">ylat</span><span class="p">[</span><span class="mi">1</span><span class="p">::])</span>
@@ -583,7 +583,7 @@
     <span class="n">indx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span>
         <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ymid</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">32</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;* process tiles:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"* process tiles:"</span><span class="p">)</span>
 
     <span class="n">nset</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">tile</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">indx</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
@@ -599,8 +599,8 @@
         <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
             <span class="n">__</span><span class="p">,</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">qpos</span><span class="p">,</span> <span class="n">workers</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">ttoc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;* built node-to-cell map:&quot;</span><span class="p">,</span>
-              <span class="n">tile</span><span class="p">,</span> <span class="s2">&quot;of&quot;</span><span class="p">,</span> <span class="n">indx</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"* built node-to-cell map:"</span><span class="p">,</span>
+              <span class="n">tile</span><span class="p">,</span> <span class="s2">"of"</span><span class="p">,</span> <span class="n">indx</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="n">nset</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">))</span>
@@ -617,11 +617,11 @@
     <span class="c1"># -- Build cell-to-pixel map as a sparse matrix, and average</span>
     <span class="c1"># -- RTopo pixel values within each cell.</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Form map matrix...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Form map matrix..."</span><span class="p">)</span>
 
     <span class="n">ttic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
-    <span class="n">ncel</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nCells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">ncel</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">"nCells"</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
 
     <span class="n">cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">near</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">)</span>
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">near</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
@@ -637,31 +637,31 @@
         <span class="n">smat</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;bed_elevation&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"bed_elevation"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="p">(</span><span class="n">vals</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
     <span class="n">emap</span> <span class="o">=</span> <span class="p">(</span><span class="n">smat</span> <span class="o">*</span> <span class="n">vals</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="n">nmap</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;bed_slope&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"bed_slope"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="p">(</span><span class="n">vals</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
     <span class="n">smap</span> <span class="o">=</span> <span class="p">(</span><span class="n">smat</span> <span class="o">*</span> <span class="n">vals</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="n">nmap</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;bed_dz_dx&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"bed_dz_dx"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="p">(</span><span class="n">vals</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
     <span class="n">xmap</span> <span class="o">=</span> <span class="p">(</span><span class="n">smat</span> <span class="o">*</span> <span class="n">vals</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="n">nmap</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;bed_dz_dy&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"bed_dz_dy"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="p">(</span><span class="n">vals</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
     <span class="n">ymap</span> <span class="o">=</span> <span class="p">(</span><span class="n">smat</span> <span class="o">*</span> <span class="n">vals</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="n">nmap</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;ocn_thickness&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"ocn_thickness"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="p">(</span><span class="n">vals</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
     <span class="n">omap</span> <span class="o">=</span> <span class="p">(</span><span class="n">smat</span> <span class="o">*</span> <span class="n">vals</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="n">nmap</span><span class="p">)</span>
@@ -671,7 +671,7 @@
     <span class="n">ofrc</span> <span class="o">=</span> <span class="p">(</span><span class="n">smat</span> <span class="o">*</span> <span class="n">frac</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="n">nmap</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"ice_thickness"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="p">(</span><span class="n">vals</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
     <span class="n">imap</span> <span class="o">=</span> <span class="p">(</span><span class="n">smat</span> <span class="o">*</span> <span class="n">vals</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="n">nmap</span><span class="p">)</span>
@@ -685,71 +685,71 @@
     <span class="k">del</span> <span class="n">vals</span>
     <span class="k">del</span> <span class="n">frac</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;* built remapping matrix:&quot;</span><span class="p">,</span>
-          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;sec&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"* built remapping matrix:"</span><span class="p">,</span>
+          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">"sec"</span><span class="p">)</span>
 
     <span class="c1"># -- If the resolution of the mesh is greater, or comparable</span>
     <span class="c1"># -- to that of the DEM, the approx. remapping (above) will</span>
     <span class="c1"># -- result in a low order interpolation.</span>
     <span class="c1"># -- Thus, blend with a local order-2 quadrature formulation</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Eval. elevation...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Eval. elevation..."</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;bed_elevation&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"bed_elevation"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
     <span class="n">ttic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">evrt</span><span class="p">,</span> <span class="n">ecel</span><span class="p">,</span> <span class="n">eint</span> <span class="o">=</span> <span class="n">cell_quad</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">xlon</span><span class="p">,</span> <span class="n">ylat</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
     <span class="n">ttoc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;* compute cell integrals:&quot;</span><span class="p">,</span>
-          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;sec&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"* compute cell integrals:"</span><span class="p">,</span>
+          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">"sec"</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;bed_slope&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"bed_slope"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
     <span class="n">ttic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">svrt</span><span class="p">,</span> <span class="n">scel</span><span class="p">,</span> <span class="n">sint</span> <span class="o">=</span> <span class="n">cell_quad</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">xlon</span><span class="p">,</span> <span class="n">ylat</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
     <span class="n">ttoc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;* compute cell integrals:&quot;</span><span class="p">,</span>
-          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;sec&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"* compute cell integrals:"</span><span class="p">,</span>
+          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">"sec"</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;bed_dz_dx&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"bed_dz_dx"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
     <span class="n">ttic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">xvrt</span><span class="p">,</span> <span class="n">xcel</span><span class="p">,</span> <span class="n">xint</span> <span class="o">=</span> <span class="n">cell_quad</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">xlon</span><span class="p">,</span> <span class="n">ylat</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
     <span class="n">ttoc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;* compute cell integrals:&quot;</span><span class="p">,</span>
-          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;sec&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"* compute cell integrals:"</span><span class="p">,</span>
+          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">"sec"</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;bed_dz_dy&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"bed_dz_dy"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
     <span class="n">ttic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">yvrt</span><span class="p">,</span> <span class="n">ycel</span><span class="p">,</span> <span class="n">yint</span> <span class="o">=</span> <span class="n">cell_quad</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">xlon</span><span class="p">,</span> <span class="n">ylat</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
     <span class="n">ttoc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;* compute cell integrals:&quot;</span><span class="p">,</span>
-          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;sec&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"* compute cell integrals:"</span><span class="p">,</span>
+          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">"sec"</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;ocn_thickness&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"ocn_thickness"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
     <span class="n">ttic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">ovrt</span><span class="p">,</span> <span class="n">ocel</span><span class="p">,</span> <span class="n">oint</span> <span class="o">=</span> <span class="n">cell_quad</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">xlon</span><span class="p">,</span> <span class="n">ylat</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
     <span class="n">ttoc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;* compute cell integrals:&quot;</span><span class="p">,</span>
-          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;sec&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"* compute cell integrals:"</span><span class="p">,</span>
+          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">"sec"</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"ice_thickness"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
     <span class="n">ttic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">ivrt</span><span class="p">,</span> <span class="n">icel</span><span class="p">,</span> <span class="n">iint</span> <span class="o">=</span> <span class="n">cell_quad</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">xlon</span><span class="p">,</span> <span class="n">ylat</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
     <span class="n">ttoc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;* compute cell integrals:&quot;</span><span class="p">,</span>
-          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;sec&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"* compute cell integrals:"</span><span class="p">,</span>
+          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">"sec"</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Save to dataset...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Save to dataset..."</span><span class="p">)</span>
 
     <span class="n">ebar</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">nmap</span><span class="p">,</span> <span class="n">emap</span><span class="p">)</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">eint</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">+</span> <span class="n">nmap</span><span class="p">)</span>
     <span class="n">sbar</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">nmap</span><span class="p">,</span> <span class="n">smap</span><span class="p">)</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">sint</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">+</span> <span class="n">nmap</span><span class="p">)</span>
@@ -770,56 +770,56 @@
     <span class="n">tfrc</span><span class="p">[</span><span class="n">ibar</span> <span class="o">&gt;=</span> <span class="o">+</span><span class="mf">1.</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
     <span class="n">ifrc</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">nmap</span><span class="p">,</span> <span class="n">ifrc</span><span class="p">)</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">tfrc</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">+</span> <span class="n">nmap</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_elevation&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_elevation&quot;</span><span class="p">,</span> <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"bed_elevation"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"bed_elevation"</span><span class="p">,</span> <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"nCells"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_slope&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_slope&quot;</span><span class="p">,</span> <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"bed_slope"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"bed_slope"</span><span class="p">,</span> <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"nCells"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_dz_dx&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_dz_dx&quot;</span><span class="p">,</span> <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"bed_dz_dx"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"bed_dz_dx"</span><span class="p">,</span> <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"nCells"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_dz_dy&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_dz_dy&quot;</span><span class="p">,</span> <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"bed_dz_dy"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"bed_dz_dy"</span><span class="p">,</span> <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"nCells"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ocn_thickness&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;ocn_thickness&quot;</span><span class="p">,</span> <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"ocn_thickness"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"ocn_thickness"</span><span class="p">,</span> <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"nCells"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ice_thickness&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">,</span> <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"ice_thickness"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"ice_thickness"</span><span class="p">,</span> <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"nCells"</span><span class="p">))</span>
 
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_elevation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_elevation&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ebar</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_elevation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_elevation</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_elevation"</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">"m"</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_elevation"</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ebar</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_elevation"</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_elevation</span>
 
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ocn_thickness&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ocn_thickness&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">obar</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ocn_thickness&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ocn_thickness</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ocn_thickness"</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">"m"</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ocn_thickness"</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">obar</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ocn_thickness"</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ocn_thickness</span>
 
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ibar</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ice_thickness</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ice_thickness"</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">"m"</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ice_thickness"</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ibar</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ice_thickness"</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ice_thickness</span>
 
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_dz_dx&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">xbar</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_dz_dx&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_dz_dx</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_dz_dy&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ybar</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_dz_dy&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_dz_dy</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_dz_dx"</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">xbar</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_dz_dx"</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_dz_dx</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_dz_dy"</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ybar</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_dz_dy"</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_dz_dy</span>
 
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_slope&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;deg&quot;</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_slope&quot;</span><span class="p">][:]</span> <span class="o">=</span> \
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_slope"</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">"deg"</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_slope"</span><span class="p">][:]</span> <span class="o">=</span> \
         <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">sbar</span><span class="p">)</span> <span class="o">*</span> <span class="mf">180.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>  <span class="c1"># degrees, for ELM</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_slope&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_slope_deg</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_slope"</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_slope_deg</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ocn_cover&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;ocn_cover&quot;</span><span class="p">,</span> <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"ocn_cover"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"ocn_cover"</span><span class="p">,</span> <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"nCells"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ice_cover&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;ice_cover&quot;</span><span class="p">,</span> <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"ice_cover"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"ice_cover"</span><span class="p">,</span> <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"nCells"</span><span class="p">))</span>
 
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ocn_cover&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ofrc</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ocn_cover&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ocn_cover</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ice_cover&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ifrc</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ice_cover&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ice_cover</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ocn_cover"</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ofrc</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ocn_cover"</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ocn_cover</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ice_cover"</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ifrc</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ice_cover"</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ice_cover</span>
 
     <span class="k">del</span> <span class="n">emap</span>
     <span class="k">del</span> <span class="n">eint</span>
@@ -843,110 +843,110 @@
     <span class="k">if</span> <span class="p">(</span><span class="n">elev_band</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
         <span class="k">return</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Eval. histogram...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Eval. histogram..."</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;bed_elevation&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"bed_elevation"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="p">(</span><span class="n">vals</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
 
     <span class="n">ttic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">eprf</span> <span class="o">=</span> <span class="n">cell_prfl</span><span class="p">(</span>
         <span class="n">mesh</span><span class="p">,</span> <span class="n">smat</span><span class="p">,</span> <span class="n">NLEV</span><span class="p">,</span> <span class="n">vals</span><span class="p">,</span> <span class="n">evrt</span><span class="p">,</span> <span class="n">ecel</span><span class="p">,</span> <span class="n">ebar</span><span class="p">)</span>
     <span class="n">ttoc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;* compute elev. profiles:&quot;</span><span class="p">,</span>
-          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;sec&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"* compute elev. profiles:"</span><span class="p">,</span>
+          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">"sec"</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;bed_slope&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"bed_slope"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="p">(</span><span class="n">vals</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
 
     <span class="n">ttic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">sprf</span> <span class="o">=</span> <span class="n">cell_prfl</span><span class="p">(</span>
         <span class="n">mesh</span><span class="p">,</span> <span class="n">smat</span><span class="p">,</span> <span class="n">NLEV</span><span class="p">,</span> <span class="n">vals</span><span class="p">,</span> <span class="n">svrt</span><span class="p">,</span> <span class="n">scel</span><span class="p">,</span> <span class="n">sbar</span><span class="p">)</span>
     <span class="n">ttoc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;* compute elev. profiles:&quot;</span><span class="p">,</span>
-          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;sec&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"* compute elev. profiles:"</span><span class="p">,</span>
+          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">"sec"</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;ocn_thickness&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"ocn_thickness"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="p">(</span><span class="n">vals</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
 
     <span class="n">ttic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">oprf</span> <span class="o">=</span> <span class="n">cell_prfl</span><span class="p">(</span>
         <span class="n">mesh</span><span class="p">,</span> <span class="n">smat</span><span class="p">,</span> <span class="n">NLEV</span><span class="p">,</span> <span class="n">vals</span><span class="p">,</span> <span class="n">ovrt</span><span class="p">,</span> <span class="n">ocel</span><span class="p">,</span> <span class="n">obar</span><span class="p">)</span>
     <span class="n">ttoc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;* compute elev. profiles:&quot;</span><span class="p">,</span>
-          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;sec&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"* compute elev. profiles:"</span><span class="p">,</span>
+          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">"sec"</span><span class="p">)</span>
 
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
-        <span class="n">elev</span><span class="p">[</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">elev</span><span class="p">[</span><span class="s2">"ice_thickness"</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="p">(</span><span class="n">vals</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
 
     <span class="n">ttic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">iprf</span> <span class="o">=</span> <span class="n">cell_prfl</span><span class="p">(</span>
         <span class="n">mesh</span><span class="p">,</span> <span class="n">smat</span><span class="p">,</span> <span class="n">NLEV</span><span class="p">,</span> <span class="n">vals</span><span class="p">,</span> <span class="n">ivrt</span><span class="p">,</span> <span class="n">icel</span><span class="p">,</span> <span class="n">ibar</span><span class="p">)</span>
     <span class="n">ttoc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;* compute elev. profiles:&quot;</span><span class="p">,</span>
-          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;sec&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"* compute elev. profiles:"</span><span class="p">,</span>
+          <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">ttoc</span> <span class="o">-</span> <span class="n">ttic</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">"sec"</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Save to dataset...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Save to dataset..."</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;nProfiles&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s2">&quot;nProfiles&quot;</span><span class="p">,</span> <span class="n">NLEV</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"nProfiles"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s2">"nProfiles"</span><span class="p">,</span> <span class="n">NLEV</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_elevation_profile&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_elevation_profile&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">,</span> <span class="s2">&quot;nProfiles&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"bed_elevation_profile"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"bed_elevation_profile"</span><span class="p">,</span>
+                            <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"nCells"</span><span class="p">,</span> <span class="s2">"nProfiles"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_slope_profile&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_slope_profile&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">,</span> <span class="s2">&quot;nProfiles&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"bed_slope_profile"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"bed_slope_profile"</span><span class="p">,</span>
+                            <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"nCells"</span><span class="p">,</span> <span class="s2">"nProfiles"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ocn_thickness_profile&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;ocn_thickness_profile&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">,</span> <span class="s2">&quot;nProfiles&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"ocn_thickness_profile"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"ocn_thickness_profile"</span><span class="p">,</span>
+                            <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"nCells"</span><span class="p">,</span> <span class="s2">"nProfiles"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ice_thickness_profile&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;ice_thickness_profile&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">,</span> <span class="s2">&quot;nProfiles&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">"ice_thickness_profile"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">"ice_thickness_profile"</span><span class="p">,</span>
+                            <span class="s2">"f4"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"nCells"</span><span class="p">,</span> <span class="s2">"nProfiles"</span><span class="p">))</span>
 
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_elevation_profile&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_elevation_profile&quot;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">eprf</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_elevation_profile&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_elevation_profile</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_elevation_profile"</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">"m"</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_elevation_profile"</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">eprf</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_elevation_profile"</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_elevation_profile</span>
 
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_slope_profile&quot;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">sprf</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bed_slope_profile&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_slope_profile</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_slope_profile"</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">sprf</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"bed_slope_profile"</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_slope_profile</span>
 
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ocn_thickness_profile&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ocn_thickness_profile&quot;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">oprf</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ocn_thickness_profile&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ocn_thickness_profile</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ocn_thickness_profile"</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">"m"</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ocn_thickness_profile"</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">oprf</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ocn_thickness_profile"</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ocn_thickness_profile</span>
 
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ice_thickness_profile&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ice_thickness_profile&quot;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">iprf</span>
-    <span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ice_thickness_profile&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ice_thickness_profile</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ice_thickness_profile"</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">"m"</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ice_thickness_profile"</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">iprf</span>
+    <span class="n">mesh</span><span class="p">[</span><span class="s2">"ice_thickness_profile"</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ice_thickness_profile</span>
 
     <span class="n">elev</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">mesh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
 
-<span class="k">if</span> <span class="p">(</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">):</span>
+<span class="k">if</span> <span class="p">(</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">):</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
         <span class="n">description</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span><span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--mpas-file&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;mpas_file&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of user MPAS mesh.&quot;</span><span class="p">)</span>
+        <span class="s2">"--mpas-file"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"mpas_file"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Name of user MPAS mesh."</span><span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--elev-file&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;elev_file&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of DEM pixel file.&quot;</span><span class="p">)</span>
+        <span class="s2">"--elev-file"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"elev_file"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Name of DEM pixel file."</span><span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--elev-band&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;elev_band&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="s2">"--elev-band"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"elev_band"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Elev. profile band(s).&quot;</span><span class="p">)</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Elev. profile band(s)."</span><span class="p">)</span>
 
     <span class="n">dem_remap</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
 

@@ -123,7 +123,7 @@
 <div class="viewcode-block" id="InitialState">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ziso.initial_state.InitialState.html#compass.ocean.tests.ziso.initial_state.InitialState">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating a mesh and initial condition for ZISO test cases</span>
 
 <span class="sd">    Attributes</span>
@@ -133,12 +133,12 @@
 
 <span class="sd">    with_frazil : bool</span>
 <span class="sd">        Whether frazil formation is included in the simulation</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="InitialState.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ziso.initial_state.InitialState.html#compass.ocean.tests.ziso.initial_state.InitialState.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">with_frazil</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -151,38 +151,38 @@
 
 <span class="sd">        with_frazil : bool</span>
 <span class="sd">            Whether frazil formation is included in the simulation</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'initial_state'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">with_frazil</span> <span class="o">=</span> <span class="n">with_frazil</span>
 
-        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;ocean.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;forcing.nc&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'base_mesh.nc'</span><span class="p">,</span> <span class="s1">'culled_mesh.nc'</span><span class="p">,</span> <span class="s1">'culled_graph.info'</span><span class="p">,</span>
+                     <span class="s1">'ocean.nc'</span><span class="p">,</span> <span class="s1">'forcing.nc'</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="InitialState.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ziso.initial_state.InitialState.run.html#compass.ocean.tests.ziso.initial_state.InitialState.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ziso&#39;</span><span class="p">]</span>
-        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">)</span>
-        <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;dc&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ziso'</span><span class="p">]</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'nx'</span><span class="p">)</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'ny'</span><span class="p">)</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'dc'</span><span class="p">)</span>
 
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span> <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                       <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">'base_mesh.nc'</span><span class="p">)</span>
 
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">'culled_graph.info'</span><span class="p">,</span>
                          <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">'culled_mesh.nc'</span><span class="p">)</span>
 
         <span class="n">ds</span> <span class="o">=</span> <span class="n">_write_initial_state</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_frazil</span><span class="p">)</span>
 
@@ -192,38 +192,38 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_write_initial_state</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">with_frazil</span><span class="p">):</span>
-    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ziso&#39;</span><span class="p">]</span>
-    <span class="n">reference_coriolis</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;reference_coriolis&#39;</span><span class="p">)</span>
-    <span class="n">coriolis_gradient</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;coriolis_gradient&#39;</span><span class="p">)</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ziso'</span><span class="p">]</span>
+    <span class="n">reference_coriolis</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'reference_coriolis'</span><span class="p">)</span>
+    <span class="n">coriolis_gradient</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'coriolis_gradient'</span><span class="p">)</span>
 
     <span class="n">ds</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-    <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
+    <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'vertical_grid'</span><span class="p">,</span> <span class="s1">'bottom_depth'</span><span class="p">)</span>
 
     <span class="n">xCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xCell</span>
     <span class="n">yCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">yCell</span>
 
-    <span class="n">shelf_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;shelf_depth&#39;</span><span class="p">)</span>
-    <span class="n">slope_center_position</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;slope_center_position&#39;</span><span class="p">)</span>
-    <span class="n">slope_half_width</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;slope_half_width&#39;</span><span class="p">)</span>
+    <span class="n">shelf_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'shelf_depth'</span><span class="p">)</span>
+    <span class="n">slope_center_position</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'slope_center_position'</span><span class="p">)</span>
+    <span class="n">slope_half_width</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'slope_half_width'</span><span class="p">)</span>
 
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">shelf_depth</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">bottom_depth</span> <span class="o">-</span> <span class="n">shelf_depth</span><span class="p">)</span> <span class="o">*</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'bottomDepth'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">shelf_depth</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">bottom_depth</span> <span class="o">-</span> <span class="n">shelf_depth</span><span class="p">)</span> <span class="o">*</span>
                          <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">yCell</span> <span class="o">-</span> <span class="n">slope_center_position</span><span class="p">)</span> <span class="o">/</span>
                                            <span class="n">slope_half_width</span><span class="p">)))</span>
 
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
 
     <span class="n">init_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
 
     <span class="n">zMid</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">zMid</span>
 
-    <span class="n">initial_temp_t1</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;initial_temp_t1&#39;</span><span class="p">)</span>
-    <span class="n">initial_temp_t2</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;initial_temp_t2&#39;</span><span class="p">)</span>
-    <span class="n">initial_temp_h1</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;initial_temp_h1&#39;</span><span class="p">)</span>
-    <span class="n">initial_temp_mt</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;initial_temp_mt&#39;</span><span class="p">)</span>
+    <span class="n">initial_temp_t1</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'initial_temp_t1'</span><span class="p">)</span>
+    <span class="n">initial_temp_t2</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'initial_temp_t2'</span><span class="p">)</span>
+    <span class="n">initial_temp_h1</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'initial_temp_h1'</span><span class="p">)</span>
+    <span class="n">initial_temp_mt</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'initial_temp_mt'</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">with_frazil</span><span class="p">:</span>
-        <span class="n">extent</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;meridional_extent&#39;</span><span class="p">)</span>
-        <span class="n">frazil_anomaly</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;frazil_temperature_anomaly&#39;</span><span class="p">)</span>
+        <span class="n">extent</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'meridional_extent'</span><span class="p">)</span>
+        <span class="n">frazil_anomaly</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'frazil_temperature_anomaly'</span><span class="p">)</span>
         <span class="n">distanceX</span> <span class="o">=</span> <span class="n">extent</span><span class="o">/</span><span class="mf">4.0</span> <span class="o">-</span> <span class="n">xCell</span>
         <span class="n">distanceY</span> <span class="o">=</span> <span class="n">extent</span><span class="o">/</span><span class="mf">2.0</span> <span class="o">-</span> <span class="n">yCell</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">distanceY</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">distanceX</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
@@ -242,7 +242,7 @@
 
         <span class="n">temperature</span> <span class="o">=</span> <span class="p">((</span><span class="mf">1.0</span><span class="o">-</span><span class="n">scaleFactor</span><span class="p">)</span> <span class="o">*</span> <span class="n">temperature</span> <span class="o">+</span>
                        <span class="n">scaleFactor</span> <span class="o">*</span> <span class="n">frazil_temp</span><span class="p">)</span>
-        <span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="s1">'nCells'</span><span class="p">,</span> <span class="s1">'nVertLevels'</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">temperature</span> <span class="o">=</span> <span class="p">(</span><span class="n">initial_temp_t1</span> <span class="o">+</span>
                        <span class="n">initial_temp_t2</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">zMid</span> <span class="o">/</span> <span class="n">initial_temp_h1</span><span class="p">)</span> <span class="o">+</span>
@@ -252,35 +252,35 @@
 
     <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
     <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">broadcast_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="p">)</span>
-    <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;nEdges&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
-    <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">'nEdges'</span><span class="p">,</span> <span class="s1">'nVertLevels'</span><span class="p">)</span>
+    <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temperature</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;salinity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinity</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalVelocity</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reference_coriolis</span> <span class="o">+</span> <span class="n">yCell</span> <span class="o">*</span> <span class="n">coriolis_gradient</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fEdge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reference_coriolis</span> <span class="o">+</span> <span class="n">ds</span><span class="o">.</span><span class="n">yEdge</span> <span class="o">*</span> <span class="n">coriolis_gradient</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fVertex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reference_coriolis</span> <span class="o">+</span> <span class="n">ds</span><span class="o">.</span><span class="n">yVertex</span> <span class="o">*</span> <span class="n">coriolis_gradient</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'temperature'</span><span class="p">]</span> <span class="o">=</span> <span class="n">temperature</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'salinity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinity</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'normalVelocity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalVelocity</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'fCell'</span><span class="p">]</span> <span class="o">=</span> <span class="n">reference_coriolis</span> <span class="o">+</span> <span class="n">yCell</span> <span class="o">*</span> <span class="n">coriolis_gradient</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'fEdge'</span><span class="p">]</span> <span class="o">=</span> <span class="n">reference_coriolis</span> <span class="o">+</span> <span class="n">ds</span><span class="o">.</span><span class="n">yEdge</span> <span class="o">*</span> <span class="n">coriolis_gradient</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'fVertex'</span><span class="p">]</span> <span class="o">=</span> <span class="n">reference_coriolis</span> <span class="o">+</span> <span class="n">ds</span><span class="o">.</span><span class="n">yVertex</span> <span class="o">*</span> <span class="n">coriolis_gradient</span>
 
-    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;ocean.nc&#39;</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">'ocean.nc'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ds</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_write_forcing</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">yCell</span><span class="p">,</span> <span class="n">zMid</span><span class="p">):</span>
-    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ziso&#39;</span><span class="p">]</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ziso'</span><span class="p">]</span>
 
-    <span class="n">extent</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;meridional_extent&#39;</span><span class="p">)</span>
-    <span class="n">mean_restoring_temp</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;mean_restoring_temp&#39;</span><span class="p">)</span>
-    <span class="n">restoring_temp_dev_ta</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;restoring_temp_dev_ta&#39;</span><span class="p">)</span>
-    <span class="n">restoring_temp_dev_tb</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;restoring_temp_dev_tb&#39;</span><span class="p">)</span>
-    <span class="n">restoring_temp_piston_vel</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;restoring_temp_piston_vel&#39;</span><span class="p">)</span>
-    <span class="n">y_trans</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;wind_transition_position&#39;</span><span class="p">)</span>
-    <span class="n">wind_stress_max</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;wind_stress_max&#39;</span><span class="p">)</span>
-    <span class="n">front_width</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;antarctic_shelf_front_width&#39;</span><span class="p">)</span>
-    <span class="n">front_max</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;wind_stress_shelf_front_max&#39;</span><span class="p">)</span>
-    <span class="n">restoring_sponge_l</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;restoring_sponge_l&#39;</span><span class="p">)</span>
-    <span class="n">restoring_temp_ze</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;restoring_temp_ze&#39;</span><span class="p">)</span>
-    <span class="n">restoring_temp_tau</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;restoring_temp_tau&#39;</span><span class="p">)</span>
+    <span class="n">extent</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'meridional_extent'</span><span class="p">)</span>
+    <span class="n">mean_restoring_temp</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'mean_restoring_temp'</span><span class="p">)</span>
+    <span class="n">restoring_temp_dev_ta</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'restoring_temp_dev_ta'</span><span class="p">)</span>
+    <span class="n">restoring_temp_dev_tb</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'restoring_temp_dev_tb'</span><span class="p">)</span>
+    <span class="n">restoring_temp_piston_vel</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'restoring_temp_piston_vel'</span><span class="p">)</span>
+    <span class="n">y_trans</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'wind_transition_position'</span><span class="p">)</span>
+    <span class="n">wind_stress_max</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'wind_stress_max'</span><span class="p">)</span>
+    <span class="n">front_width</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'antarctic_shelf_front_width'</span><span class="p">)</span>
+    <span class="n">front_max</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'wind_stress_shelf_front_max'</span><span class="p">)</span>
+    <span class="n">restoring_sponge_l</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'restoring_sponge_l'</span><span class="p">)</span>
+    <span class="n">restoring_temp_ze</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'restoring_temp_ze'</span><span class="p">)</span>
+    <span class="n">restoring_temp_tau</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'restoring_temp_tau'</span><span class="p">)</span>
 
     <span class="c1"># set wind stress</span>
     <span class="n">windStressZonal</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
@@ -293,7 +293,7 @@
     <span class="n">windStressZonal</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">yCell</span> <span class="o">&gt;=</span> <span class="n">y_trans</span> <span class="o">-</span> <span class="n">front_width</span><span class="p">,</span>
                                    <span class="n">windStressZonal</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 
-    <span class="n">windStressZonal</span> <span class="o">=</span> <span class="n">windStressZonal</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">windStressZonal</span> <span class="o">=</span> <span class="n">windStressZonal</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="n">windStressMeridional</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">windStressZonal</span><span class="p">)</span>
 
@@ -304,7 +304,7 @@
         <span class="p">(</span><span class="n">mean_restoring_temp</span> <span class="o">+</span> <span class="n">restoring_temp_dev_ta</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">arg</span><span class="p">)</span> <span class="o">+</span>
          <span class="n">restoring_temp_dev_tb</span> <span class="o">*</span> <span class="n">arg</span><span class="p">)</span>
     <span class="n">temperatureSurfaceRestoringValue</span> <span class="o">=</span> \
-        <span class="n">temperatureSurfaceRestoringValue</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">temperatureSurfaceRestoringValue</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="n">temperaturePistonVelocity</span> <span class="o">=</span> \
         <span class="n">restoring_temp_piston_vel</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span>
@@ -316,7 +316,7 @@
 
     <span class="c1"># set restoring at northern boundary</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">extent</span> <span class="o">-</span> <span class="n">yCell</span> <span class="o">&lt;=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">restoring_sponge_l</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">broadcast_like</span><span class="p">(</span><span class="n">zMid</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">broadcast_like</span><span class="p">(</span><span class="n">zMid</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="s1">'nCells'</span><span class="p">,</span> <span class="s1">'nVertLevels'</span><span class="p">)</span>
 
     <span class="c1"># convert from days to inverse seconds</span>
     <span class="n">rate</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">restoring_temp_tau</span><span class="o">*</span><span class="mf">86400.0</span><span class="p">)</span>
@@ -333,7 +333,7 @@
 
     <span class="c1"># set restoring at southern boundary</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">yCell</span> <span class="o">&lt;=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">restoring_sponge_l</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">broadcast_like</span><span class="p">(</span><span class="n">zMid</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">broadcast_like</span><span class="p">(</span><span class="n">zMid</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="s1">'nCells'</span><span class="p">,</span> <span class="s1">'nVertLevels'</span><span class="p">)</span>
 
     <span class="n">temperatureInteriorRestoringValue</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
         <span class="n">mask</span><span class="p">,</span> <span class="n">temperatureSurfaceRestoringValue</span><span class="p">,</span>
@@ -350,22 +350,22 @@
         <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">temperatureInteriorRestoringRate</span><span class="p">)</span>
 
     <span class="n">dsForcing</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
-    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">&#39;windStressZonal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">windStressZonal</span>
-    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">&#39;windStressMeridional&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">windStressMeridional</span>
-    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">&#39;temperaturePistonVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temperaturePistonVelocity</span>
-    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">&#39;salinityPistonVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinityPistonVelocity</span>
-    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">&#39;temperatureSurfaceRestoringValue&#39;</span><span class="p">]</span> <span class="o">=</span> \
+    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">'windStressZonal'</span><span class="p">]</span> <span class="o">=</span> <span class="n">windStressZonal</span>
+    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">'windStressMeridional'</span><span class="p">]</span> <span class="o">=</span> <span class="n">windStressMeridional</span>
+    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">'temperaturePistonVelocity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">temperaturePistonVelocity</span>
+    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">'salinityPistonVelocity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinityPistonVelocity</span>
+    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">'temperatureSurfaceRestoringValue'</span><span class="p">]</span> <span class="o">=</span> \
         <span class="n">temperatureSurfaceRestoringValue</span>
-    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">&#39;salinitySurfaceRestoringValue&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinitySurfaceRestoringValue</span>
-    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">&#39;temperatureInteriorRestoringRate&#39;</span><span class="p">]</span> <span class="o">=</span> \
+    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">'salinitySurfaceRestoringValue'</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinitySurfaceRestoringValue</span>
+    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">'temperatureInteriorRestoringRate'</span><span class="p">]</span> <span class="o">=</span> \
         <span class="n">temperatureInteriorRestoringRate</span>
-    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">&#39;salinityInteriorRestoringRate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinityInteriorRestoringRate</span>
-    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">&#39;temperatureInteriorRestoringValue&#39;</span><span class="p">]</span> <span class="o">=</span> \
+    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">'salinityInteriorRestoringRate'</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinityInteriorRestoringRate</span>
+    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">'temperatureInteriorRestoringValue'</span><span class="p">]</span> <span class="o">=</span> \
         <span class="n">temperatureInteriorRestoringValue</span>
-    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">&#39;salinityInteriorRestoringValue&#39;</span><span class="p">]</span> <span class="o">=</span> \
+    <span class="n">dsForcing</span><span class="p">[</span><span class="s1">'salinityInteriorRestoringValue'</span><span class="p">]</span> <span class="o">=</span> \
         <span class="n">salinityInteriorRestoringValue</span>
 
-    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsForcing</span><span class="p">,</span> <span class="s1">&#39;forcing.nc&#39;</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsForcing</span><span class="p">,</span> <span class="s1">'forcing.nc'</span><span class="p">)</span>
 </pre></div>
 
            </div>

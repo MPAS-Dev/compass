@@ -129,24 +129,24 @@
 <div class="viewcode-block" id="WC14BaseMesh">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh.html#compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">WC14BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating WC14 mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add some input files</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;coastline_CUSP.geojson&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;land_mask_Kamchatka.geojson&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;land_mask_Mexico.geojson&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;namelist.split_explicit_ab2&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;region_Arctic_Ocean.geojson&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;region_Bering_Sea.geojson&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;region_Bering_Sea_reduced.geojson&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;region_Central_America.geojson&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;region_Gulf_of_Mexico.geojson&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;region_Gulf_Stream_extension.geojson&#39;</span><span class="p">]</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'coastline_CUSP.geojson'</span><span class="p">,</span>
+                  <span class="s1">'land_mask_Kamchatka.geojson'</span><span class="p">,</span>
+                  <span class="s1">'land_mask_Mexico.geojson'</span><span class="p">,</span>
+                  <span class="s1">'namelist.split_explicit_ab2'</span><span class="p">,</span>
+                  <span class="s1">'region_Arctic_Ocean.geojson'</span><span class="p">,</span>
+                  <span class="s1">'region_Bering_Sea.geojson'</span><span class="p">,</span>
+                  <span class="s1">'region_Bering_Sea_reduced.geojson'</span><span class="p">,</span>
+                  <span class="s1">'region_Central_America.geojson'</span><span class="p">,</span>
+                  <span class="s1">'region_Gulf_of_Mexico.geojson'</span><span class="p">,</span>
+                  <span class="s1">'region_Gulf_Stream_extension.geojson'</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
                                 <span class="n">package</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span>
@@ -156,7 +156,7 @@
 <div class="viewcode-block" id="WC14BaseMesh.build_cell_width_lat_lon">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh.build_cell_width_lat_lon.html#compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh.build_cell_width_lat_lon">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create cell width array for this mesh on a regular latitude-longitude</span>
 <span class="sd">        grid</span>
 
@@ -170,22 +170,22 @@
 
 <span class="sd">        lat : numpy.array</span>
 <span class="sd">            longitude in degrees (length m and between -90 and 90)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">dlon</span> <span class="o">=</span> <span class="mf">0.1</span>
         <span class="n">dlat</span> <span class="o">=</span> <span class="n">dlon</span>
-        <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_REARTH&#39;</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Creating cellWidth on a lat-lon grid of: &#39;</span>
-              <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dlon</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> x </span><span class="si">{</span><span class="n">dlat</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> degrees&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This can be set higher for faster test generation</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">'SHR_CONST_REARTH'</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="s1">Creating cellWidth on a lat-lon grid of: '</span>
+              <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">dlon</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> x </span><span class="si">{</span><span class="n">dlat</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> degrees'</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'This can be set higher for faster test generation</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
         <span class="n">nlon</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">360.</span> <span class="o">/</span> <span class="n">dlon</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">nlat</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">180.</span> <span class="o">/</span> <span class="n">dlat</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">180.</span><span class="p">,</span> <span class="mf">180.</span><span class="p">,</span> <span class="n">nlon</span><span class="p">)</span>
         <span class="n">lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">90.</span><span class="p">,</span> <span class="mf">90.</span><span class="p">,</span> <span class="n">nlat</span><span class="p">)</span>
         <span class="n">km</span> <span class="o">=</span> <span class="mf">1.0e3</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;plotting ...&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'plotting ...'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">'Agg'</span><span class="p">)</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">14.0</span><span class="p">)</span>
@@ -198,16 +198,16 @@
 
         <span class="c1"># Expand from 1D to 2D</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">cellWidth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">EC60to30Narrow</span><span class="p">)</span>
-        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;narrow EC60to30&#39;</span><span class="p">,</span> <span class="n">cellWidth</span><span class="p">,</span> <span class="s1">&#39;3Wbgy5&#39;</span><span class="p">)</span>
+        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'narrow EC60to30'</span><span class="p">,</span> <span class="n">cellWidth</span><span class="p">,</span> <span class="s1">'3Wbgy5'</span><span class="p">)</span>
         <span class="n">plotFrame</span> <span class="o">=</span> <span class="mi">3</span>
 
         <span class="c1"># global settings for regionally refines mesh</span>
         <span class="n">highRes</span> <span class="o">=</span> <span class="mf">14.0</span>  <span class="c1"># [km]</span>
 
-        <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;region_Central_America&#39;</span>
+        <span class="n">fileName</span> <span class="o">=</span> <span class="s1">'region_Central_America'</span>
         <span class="n">transitionWidth</span> <span class="o">=</span> <span class="mf">800.0</span> <span class="o">*</span> <span class="n">km</span>
         <span class="n">transitionOffset</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">.geojson'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
         <span class="n">signedDistance</span> <span class="o">=</span> <span class="n">signed_distance_from_geojson</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span>
                                                       <span class="n">earth_radius</span><span class="p">,</span>
                                                       <span class="n">max_length</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
@@ -215,48 +215,48 @@
                                   <span class="p">(</span><span class="n">transitionWidth</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)))</span>
         <span class="n">cellWidth</span> <span class="o">=</span> <span class="mf">30.0</span> <span class="o">*</span> <span class="n">mask</span> <span class="o">+</span> <span class="n">cellWidth</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mask</span><span class="p">)</span>
 
-        <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;coastline_CUSP&#39;</span>
+        <span class="n">fileName</span> <span class="o">=</span> <span class="s1">'coastline_CUSP'</span>
         <span class="n">distanceToTransition</span> <span class="o">=</span> <span class="mf">600.0</span> <span class="o">*</span> <span class="n">km</span>
         <span class="c1"># transitionWidth is distance from 0.07 to 0.03 of transition within</span>
         <span class="c1"># tanh</span>
         <span class="n">transitionWidth</span> <span class="o">=</span> <span class="mf">600.0</span> <span class="o">*</span> <span class="n">km</span>
         <span class="n">transitionOffset</span> <span class="o">=</span> <span class="n">distanceToTransition</span> <span class="o">+</span> <span class="n">transitionWidth</span> <span class="o">/</span> <span class="mf">2.0</span>
-        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">.geojson'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
         <span class="n">signedDistance</span> <span class="o">=</span> <span class="n">signed_distance_from_geojson</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span>
                                                       <span class="n">earth_radius</span><span class="p">,</span>
                                                       <span class="n">max_length</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">transitionOffset</span> <span class="o">-</span> <span class="n">signedDistance</span><span class="p">)</span> <span class="o">/</span>
                                   <span class="p">(</span><span class="n">transitionWidth</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)))</span>
         <span class="n">cellWidth</span> <span class="o">=</span> <span class="n">highRes</span> <span class="o">*</span> <span class="n">mask</span> <span class="o">+</span> <span class="n">cellWidth</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mask</span><span class="p">)</span>
-        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">+</span> <span class="s1">&#39; mask&#39;</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
-        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;cellWidth &#39;</span><span class="p">,</span> <span class="n">cellWidth</span><span class="p">,</span> <span class="s1">&#39;3Wbgy5&#39;</span><span class="p">)</span>
+        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">+</span> <span class="s1">' mask'</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="s1">'Blues'</span><span class="p">)</span>
+        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'cellWidth '</span><span class="p">,</span> <span class="n">cellWidth</span><span class="p">,</span> <span class="s1">'3Wbgy5'</span><span class="p">)</span>
         <span class="n">plotFrame</span> <span class="o">+=</span> <span class="mi">2</span>
 
-        <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;region_Gulf_of_Mexico&#39;</span>
+        <span class="n">fileName</span> <span class="o">=</span> <span class="s1">'region_Gulf_of_Mexico'</span>
         <span class="n">transitionOffset</span> <span class="o">=</span> <span class="mf">600.0</span> <span class="o">*</span> <span class="n">km</span>
         <span class="n">transitionWidth</span> <span class="o">=</span> <span class="mf">600.0</span> <span class="o">*</span> <span class="n">km</span>
-        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">.geojson'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
         <span class="n">signedDistance</span> <span class="o">=</span> <span class="n">signed_distance_from_geojson</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span>
                                                       <span class="n">earth_radius</span><span class="p">,</span>
                                                       <span class="n">max_length</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
         <span class="n">maskSmooth</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">transitionOffset</span> <span class="o">-</span> <span class="n">signedDistance</span><span class="p">)</span> <span class="o">/</span>
                                         <span class="p">(</span><span class="n">transitionWidth</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)))</span>
         <span class="n">maskSharp</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="o">-</span><span class="n">signedDistance</span><span class="p">))</span>
-        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;land_mask_Mexico.geojson&#39;</span><span class="p">)</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">'land_mask_Mexico.geojson'</span><span class="p">)</span>
         <span class="n">signedDistance</span> <span class="o">=</span> <span class="n">signed_distance_from_geojson</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span>
                                                       <span class="n">earth_radius</span><span class="p">,</span>
                                                       <span class="n">max_length</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
         <span class="n">landMask</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="o">-</span><span class="n">signedDistance</span><span class="p">))</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">maskSharp</span> <span class="o">*</span> <span class="n">landMask</span> <span class="o">+</span> <span class="n">maskSmooth</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">landMask</span><span class="p">)</span>
         <span class="n">cellWidth</span> <span class="o">=</span> <span class="n">highRes</span> <span class="o">*</span> <span class="n">mask</span> <span class="o">+</span> <span class="n">cellWidth</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mask</span><span class="p">)</span>
-        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">+</span> <span class="s1">&#39; mask&#39;</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
-        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;cellWidth &#39;</span><span class="p">,</span> <span class="n">cellWidth</span><span class="p">,</span> <span class="s1">&#39;3Wbgy5&#39;</span><span class="p">)</span>
+        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">+</span> <span class="s1">' mask'</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="s1">'Blues'</span><span class="p">)</span>
+        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'cellWidth '</span><span class="p">,</span> <span class="n">cellWidth</span><span class="p">,</span> <span class="s1">'3Wbgy5'</span><span class="p">)</span>
         <span class="n">plotFrame</span> <span class="o">+=</span> <span class="mi">2</span>
 
-        <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;region_Bering_Sea&#39;</span>
+        <span class="n">fileName</span> <span class="o">=</span> <span class="s1">'region_Bering_Sea'</span>
         <span class="n">transitionOffset</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="o">*</span> <span class="n">km</span>
         <span class="n">transitionWidth</span> <span class="o">=</span> <span class="mf">600.0</span> <span class="o">*</span> <span class="n">km</span>
-        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">.geojson'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
         <span class="n">signedDistance</span> <span class="o">=</span> <span class="n">signed_distance_from_geojson</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span>
                                                       <span class="n">earth_radius</span><span class="p">,</span>
                                                       <span class="n">max_length</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
@@ -264,7 +264,7 @@
             <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">transitionOffset</span> <span class="o">-</span> <span class="n">signedDistance</span><span class="p">)</span> <span class="o">/</span>
                         <span class="p">(</span><span class="n">transitionWidth</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)))</span>
 
-        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;region_Bering_Sea_reduced.geojson&#39;</span><span class="p">)</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">'region_Bering_Sea_reduced.geojson'</span><span class="p">)</span>
         <span class="n">signedDistance</span> <span class="o">=</span> <span class="n">signed_distance_from_geojson</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span>
                                                       <span class="n">earth_radius</span><span class="p">,</span>
                                                       <span class="n">max_length</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
@@ -272,50 +272,50 @@
             <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">transitionOffset</span> <span class="o">-</span> <span class="n">signedDistance</span><span class="p">)</span> <span class="o">/</span>
                         <span class="p">(</span><span class="n">transitionWidth</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)))</span>
 
-        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;land_mask_Kamchatka.geojson&#39;</span><span class="p">)</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">'land_mask_Kamchatka.geojson'</span><span class="p">)</span>
         <span class="n">maskWest</span> <span class="o">=</span> <span class="n">mask_from_geojson</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">maskSmoothWest</span> <span class="o">*</span> <span class="n">maskWest</span> <span class="o">+</span> <span class="n">maskSmoothEast</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">maskWest</span><span class="p">)</span>
         <span class="n">cellWidth</span> <span class="o">=</span> <span class="n">highRes</span> <span class="o">*</span> <span class="n">mask</span> <span class="o">+</span> <span class="n">cellWidth</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mask</span><span class="p">)</span>
-        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">+</span> <span class="s1">&#39; mask&#39;</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
-        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;cellWidth &#39;</span><span class="p">,</span> <span class="n">cellWidth</span><span class="p">,</span> <span class="s1">&#39;3Wbgy5&#39;</span><span class="p">)</span>
+        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">+</span> <span class="s1">' mask'</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="s1">'Blues'</span><span class="p">)</span>
+        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'cellWidth '</span><span class="p">,</span> <span class="n">cellWidth</span><span class="p">,</span> <span class="s1">'3Wbgy5'</span><span class="p">)</span>
         <span class="n">plotFrame</span> <span class="o">+=</span> <span class="mi">2</span>
 
-        <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;region_Arctic_Ocean&#39;</span>
+        <span class="n">fileName</span> <span class="o">=</span> <span class="s1">'region_Arctic_Ocean'</span>
         <span class="n">transitionOffset</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="o">*</span> <span class="n">km</span>
         <span class="n">transitionWidth</span> <span class="o">=</span> <span class="mf">600.0</span> <span class="o">*</span> <span class="n">km</span>
-        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">.geojson'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
         <span class="n">signedDistance</span> <span class="o">=</span> <span class="n">signed_distance_from_geojson</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span>
                                                       <span class="n">earth_radius</span><span class="p">,</span>
                                                       <span class="n">max_length</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">transitionOffset</span> <span class="o">-</span> <span class="n">signedDistance</span><span class="p">)</span> <span class="o">/</span>
                                   <span class="p">(</span><span class="n">transitionWidth</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)))</span>
         <span class="n">cellWidth</span> <span class="o">=</span> <span class="n">highRes</span> <span class="o">*</span> <span class="n">mask</span> <span class="o">+</span> <span class="n">cellWidth</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mask</span><span class="p">)</span>
-        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">+</span> <span class="s1">&#39; mask&#39;</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
-        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;cellWidth &#39;</span><span class="p">,</span> <span class="n">cellWidth</span><span class="p">,</span> <span class="s1">&#39;3Wbgy5&#39;</span><span class="p">)</span>
+        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">+</span> <span class="s1">' mask'</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="s1">'Blues'</span><span class="p">)</span>
+        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'cellWidth '</span><span class="p">,</span> <span class="n">cellWidth</span><span class="p">,</span> <span class="s1">'3Wbgy5'</span><span class="p">)</span>
         <span class="n">plotFrame</span> <span class="o">+=</span> <span class="mi">2</span>
 
-        <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;region_Gulf_Stream_extension&#39;</span>
+        <span class="n">fileName</span> <span class="o">=</span> <span class="s1">'region_Gulf_Stream_extension'</span>
         <span class="n">transitionOffset</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="o">*</span> <span class="n">km</span>
         <span class="n">transitionWidth</span> <span class="o">=</span> <span class="mf">600.0</span> <span class="o">*</span> <span class="n">km</span>
-        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">.geojson'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
         <span class="n">signedDistance</span> <span class="o">=</span> <span class="n">signed_distance_from_geojson</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span>
                                                       <span class="n">earth_radius</span><span class="p">,</span>
                                                       <span class="n">max_length</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">transitionOffset</span> <span class="o">-</span> <span class="n">signedDistance</span><span class="p">)</span> <span class="o">/</span>
                                   <span class="p">(</span><span class="n">transitionWidth</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)))</span>
         <span class="n">cellWidth</span> <span class="o">=</span> <span class="n">highRes</span> <span class="o">*</span> <span class="n">mask</span> <span class="o">+</span> <span class="n">cellWidth</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mask</span><span class="p">)</span>
-        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">+</span> <span class="s1">&#39; mask&#39;</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
-        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;cellWidth &#39;</span><span class="p">,</span> <span class="n">cellWidth</span><span class="p">,</span> <span class="s1">&#39;3Wbgy5&#39;</span><span class="p">)</span>
+        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">+</span> <span class="s1">' mask'</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="s1">'Blues'</span><span class="p">)</span>
+        <span class="n">_plot_cartopy</span><span class="p">(</span><span class="n">plotFrame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'cellWidth '</span><span class="p">,</span> <span class="n">cellWidth</span><span class="p">,</span> <span class="s1">'3Wbgy5'</span><span class="p">)</span>
         <span class="n">plotFrame</span> <span class="o">+=</span> <span class="mi">2</span>
 
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">EC60to30</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;original EC60to30&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">EC60to30Narrow</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;narrow EC60to30&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">EC60to30</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'original EC60to30'</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">EC60to30Narrow</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'narrow EC60to30'</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Grid cell size [km] versus latitude&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Grid cell size [km] versus latitude'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"upper left"</span><span class="p">)</span>
 
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;mesh_construction.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'mesh_construction.png'</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">cellWidth</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span></div>
 </div>
@@ -327,21 +327,21 @@
     <span class="n">ax</span><span class="o">.</span><span class="n">set_global</span><span class="p">()</span>
 
     <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">var</span><span class="p">,</span>
-                   <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
+                   <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span>
                    <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span>
                    <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">map_name</span><span class="p">,</span>
                    <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="c1"># all labels were hidden below, so don&#39;t create them in the first place:</span>
-    <span class="c1"># hidden labels confuse cartopy&#39;s title placement, leading to a non-finite</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># all labels were hidden below, so don't create them in the first place:</span>
+    <span class="c1"># hidden labels confuse cartopy's title placement, leading to a non-finite</span>
     <span class="c1"># axes bounding box</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span>
         <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span>
         <span class="n">draw_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span>
         <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">.9</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">varName</span><span class="p">)</span>

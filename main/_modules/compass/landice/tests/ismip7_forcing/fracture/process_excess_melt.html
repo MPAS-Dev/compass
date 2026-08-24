@@ -1,0 +1,421 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip7_forcing.fracture.process_excess_melt &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../../ismip7_forcing.html">compass.landice.tests.ismip7_forcing</a></li>
+          <li class="breadcrumb-item"><a href="../fracture.html">compass.landice.tests.ismip7_forcing.fracture</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip7_forcing.fracture.process_excess_melt</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip7_forcing.fracture.process_excess_melt</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_forcing.create_mapfile</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">build_mapping_file</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_forcing.fracture.remap_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">add_xtime_and_write</span><span class="p">,</span>
+    <span class="n">extrapolate_source</span><span class="p">,</span>
+    <span class="n">open_rename_and_trim</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
+
+
+<div class="viewcode-block" id="ProcessExcessMelt">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.html#compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProcessExcessMelt</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A step for processing the ISMIP7 excess meltwater field (Path A).</span>
+<span class="sd">    Remaps the annual excess melt (melt + rain after firn air content</span>
+<span class="sd">    depletion) from the ISMIP7 polar stereographic grid to the MALI</span>
+<span class="sd">    unstructured mesh.</span>
+
+<span class="sd">    The excess melt file lacks ``x``/``y`` coordinate variables and its</span>
+<span class="sd">    array is flipped along the y axis relative to the other fracture</span>
+<span class="sd">    files (it was produced with CDO). This step reconstructs a source</span>
+<span class="sd">    grid with ``x``/``y`` coordinates and the correct orientation before</span>
+<span class="sd">    remapping.</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="ProcessExcessMelt.__init__">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.html#compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.landice.tests.ismip7_forcing.fracture.Fracture</span>
+<span class="sd">            The test case this step belongs to</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"process_excess_melt"</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProcessExcessMelt.setup">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.setup.html#compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Set up this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip7"</span><span class="p">]</span>
+        <span class="n">base_path_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"base_path_mali"</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_file"</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_mali</span><span class="p">,</span>
+                                                <span class="n">mali_mesh_file</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ProcessExcessMelt.run">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.run.html#compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip7"</span><span class="p">]</span>
+        <span class="n">base_path_ismip7</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"base_path_ismip7"</span><span class="p">)</span>
+        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_name"</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_file"</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model"</span><span class="p">)</span>
+        <span class="n">scenario</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"scenario"</span><span class="p">)</span>
+        <span class="n">output_base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_base_path"</span><span class="p">)</span>
+        <span class="n">ice_sheet</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ice_sheet"</span><span class="p">)</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip7_fracture"</span><span class="p">]</span>
+        <span class="n">method_remap</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"method_remap_excess_melt"</span><span class="p">)</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"version"</span><span class="p">)</span>
+        <span class="n">start_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">"start_year"</span><span class="p">)</span>
+        <span class="n">end_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">"end_year"</span><span class="p">)</span>
+
+        <span class="c1"># Skip this pathway if no remapping method is requested</span>
+        <span class="k">if</span> <span class="n">method_remap</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"none"</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"method_remap_excess_melt is None; skipping excess "</span>
+                        <span class="s2">"melt (Path A) processing."</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Discover the excess melt file</span>
+        <span class="n">input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_ismip7</span><span class="p">,</span> <span class="s2">"fracture"</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+        <span class="n">file_pattern</span> <span class="o">=</span> <span class="s2">"excess_melt_*.nc"</span>
+        <span class="n">all_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">file_pattern</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">all_files</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"No excess melt file found matching pattern:</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span><span class="w"> </span><span class="n">file_pattern</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Expected a single excess melt file but found "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">all_files</span><span class="p">)</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="s2">  "</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">  "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">all_files</span><span class="p">))</span>
+
+        <span class="n">input_file</span> <span class="o">=</span> <span class="n">all_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Processing excess melt: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="c1"># Build a source file with x/y coordinates and correct orientation</span>
+        <span class="n">gridded_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"gridded_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_source_grid</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">input_path</span><span class="p">,</span> <span class="n">gridded_file</span><span class="p">,</span>
+                                  <span class="n">logger</span><span class="p">)</span>
+
+        <span class="c1"># Build mapping file. Excess melt is a flux, so conservative</span>
+        <span class="c1"># remapping is appropriate by default.</span>
+        <span class="n">mapping_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"map_ismip7_</span><span class="si">{</span><span class="n">ice_sheet</span><span class="si">}</span><span class="s2">_fracture_to_"</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Building mapping file for the excess melt grid..."</span><span class="p">)</span>
+            <span class="n">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                               <span class="n">gridded_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+                               <span class="n">mali_mesh_file</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
+                               <span class="n">method_remap</span><span class="o">=</span><span class="n">method_remap</span><span class="p">)</span>
+
+        <span class="c1"># Extrapolate fill values on the source grid before remapping so</span>
+        <span class="c1"># they don't pollute neighboring cells during interpolation</span>
+        <span class="n">extrap_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"extrap_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">extrapolate_source</span><span class="p">(</span><span class="n">gridded_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"excess_melt"</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+        <span class="c1"># Remap the excess melt onto the MALI mesh</span>
+        <span class="n">remapped_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"remapped_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Remapping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncremap"</span><span class="p">,</span>
+                <span class="s2">"-i"</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span>
+                <span class="s2">"-o"</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">,</span>
+                <span class="s2">"-m"</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+                <span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"excess_melt"</span><span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="c1"># Rename to MALI conventions</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Renaming variables to MALI conventions..."</span><span class="p">)</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rename_to_mali_vars</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
+                                  <span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span><span class="p">)</span>
+
+        <span class="c1"># Clean up temporary files</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">[</span><span class="n">gridded_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="c1"># Place output in the appropriate directory</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="s2">"excess_melt"</span><span class="p">,</span>
+                                   <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+
+        <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done. Output: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_source_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">input_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
+                             <span class="n">logger</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Build a source file for the excess melt data with ``x``/``y``</span>
+<span class="sd">        coordinate variables and the standard ISMIP7 orientation</span>
+<span class="sd">        (south-to-north). The excess melt file only has 2D ``lat``/``lon``</span>
+<span class="sd">        and its array is flipped along the y axis relative to the other</span>
+<span class="sd">        fracture files, so ``x``/``y`` are borrowed from a sibling</span>
+<span class="sd">        fracture file and the data are flipped to match.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        input_file : str</span>
+<span class="sd">            Path to the excess melt file</span>
+
+<span class="sd">        input_path : str</span>
+<span class="sd">            Directory containing the fracture forcing files</span>
+
+<span class="sd">        output_file : str</span>
+<span class="sd">            Path to write the reconstructed source file</span>
+
+<span class="sd">        logger : logging.Logger</span>
+<span class="sd">            Logger for status messages</span>
+<span class="sd">        """</span>
+        <span class="c1"># Find a sibling fracture file that has x/y coordinate variables</span>
+        <span class="n">grid_donor</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"lake_properties_*.nc"</span><span class="p">,</span>
+                        <span class="s2">"ice_shelf_collapse_mask_*.nc"</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span>
+                                                           <span class="n">pattern</span><span class="p">))):</span>
+                <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">candidate</span><span class="p">)</span> <span class="k">as</span> <span class="n">dtest</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">"x"</span> <span class="ow">in</span> <span class="n">dtest</span><span class="o">.</span><span class="n">variables</span> <span class="ow">and</span> <span class="s2">"y"</span> <span class="ow">in</span> <span class="n">dtest</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+                        <span class="n">grid_donor</span> <span class="o">=</span> <span class="n">candidate</span>
+                        <span class="k">break</span>
+            <span class="k">if</span> <span class="n">grid_donor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">grid_donor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="s2">"Could not find a sibling fracture file with x/y "</span>
+                <span class="s2">"coordinate variables to define the excess melt grid."</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Using grid from sibling file: "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">grid_donor</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">grid_donor</span><span class="p">)</span> <span class="k">as</span> <span class="n">donor</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">donor</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">donor</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">donor_lat</span> <span class="o">=</span> <span class="n">donor</span><span class="p">[</span><span class="s2">"lat"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Flip along the y axis to match the sibling grid orientation</span>
+        <span class="n">flipped_lat</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">"lat"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">flipped_lat</span> <span class="o">-</span> <span class="n">donor_lat</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">1.0e-3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"Excess melt grid does not match the sibling grid after a "</span>
+                <span class="s2">"y-axis flip; orientation cannot be determined "</span>
+                <span class="s2">"automatically."</span><span class="p">)</span>
+
+        <span class="n">excess</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">"excess_melt"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">years</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">"year"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+        <span class="n">out</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"x"</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">out</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"y"</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">out</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"time"</span><span class="p">,</span> <span class="n">years</span><span class="p">)</span>
+        <span class="n">out</span><span class="p">[</span><span class="s2">"excess_melt"</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s2">"time"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">),</span> <span class="n">excess</span><span class="p">)</span>
+        <span class="n">out</span><span class="p">[</span><span class="s2">"excess_melt"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s2">"excess_melt"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">)</span>
+
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_rename_to_mali_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
+                             <span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Rename dimensions/variables of the remapped excess melt to MALI</span>
+<span class="sd">        conventions, restrict to the requested year range, and add an</span>
+<span class="sd">        ``xtime`` variable.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        remapped_file : str</span>
+<span class="sd">            Excess melt remapped onto the MALI mesh</span>
+
+<span class="sd">        output_file : str</span>
+<span class="sd">            Output file with MALI variable/dimension names</span>
+
+<span class="sd">        start_year : int</span>
+<span class="sd">            First year (inclusive) to retain</span>
+
+<span class="sd">        end_year : int</span>
+<span class="sd">            Last year (inclusive) to retain</span>
+<span class="sd">        """</span>
+        <span class="n">ds</span><span class="p">,</span> <span class="n">years</span> <span class="o">=</span> <span class="n">open_rename_and_trim</span><span class="p">(</span>
+            <span class="n">remapped_file</span><span class="p">,</span> <span class="p">{</span><span class="s2">"excess_melt"</span><span class="p">:</span> <span class="s2">"ismip7ExcessMelt"</span><span class="p">},</span>
+            <span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span><span class="p">)</span>
+
+        <span class="c1"># Convert from mm w.e. yr-1 to SI units of kg m-2 s-1</span>
+        <span class="c1"># (1 mm w.e. = 1 kg m-2; 365-day year, as used elsewhere in MALI)</span>
+        <span class="n">seconds_per_year</span> <span class="o">=</span> <span class="mf">365.0</span> <span class="o">*</span> <span class="mf">24.0</span> <span class="o">*</span> <span class="mf">3600.0</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip7ExcessMelt"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip7ExcessMelt"</span><span class="p">]</span> <span class="o">/</span> <span class="n">seconds_per_year</span>
+
+        <span class="n">ds</span><span class="p">[</span><span class="s2">"ismip7ExcessMelt"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"long_name"</span><span class="p">:</span> <span class="s2">"excess meltwater after firn air content depletion"</span><span class="p">,</span>
+            <span class="s2">"units"</span><span class="p">:</span> <span class="s2">"kg m-2 s-1"</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">add_xtime_and_write</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">years</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

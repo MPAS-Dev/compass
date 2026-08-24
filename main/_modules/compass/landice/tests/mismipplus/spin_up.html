@@ -121,43 +121,43 @@
 <div class="viewcode-block" id="SpinUp">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.spin_up.SpinUp.html#compass.landice.tests.mismipplus.spin_up.SpinUp">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpinUp</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Test case for creating the MISMIP+ mesh, initial conditions,</span>
 <span class="sd">    input files, and runs a short segment of the spin up experiments</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="SpinUp.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.spin_up.SpinUp.html#compass.landice.tests.mismipplus.spin_up.SpinUp.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_group : compass.landice.test.mismipplus</span>
 <span class="sd">            The test group that this test case belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;spin_up&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">"spin_up"</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># Mesh generation step</span>
-        <span class="n">step_name</span> <span class="o">=</span> <span class="s1">&#39;setup_mesh&#39;</span>
+        <span class="n">step_name</span> <span class="o">=</span> <span class="s1">'setup_mesh'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">SetupMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">))</span>
 
         <span class="c1"># Simulation step</span>
-        <span class="n">step_name</span> <span class="o">=</span> <span class="s1">&#39;run_model&#39;</span>
+        <span class="n">step_name</span> <span class="o">=</span> <span class="s1">'run_model'</span>
         <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">)</span>
 
         <span class="c1"># add the mesh file from the previous step as dependency</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">&#39;landice_grid.nc&#39;</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../setup_mesh/landice_grid.nc&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">'landice_grid.nc'</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../setup_mesh/landice_grid.nc'</span><span class="p">)</span>
 
-        <span class="n">package</span> <span class="o">=</span> <span class="s2">&quot;compass.landice.tests.mismipplus.spin_up&quot;</span>
+        <span class="n">package</span> <span class="o">=</span> <span class="s2">"compass.landice.tests.mismipplus.spin_up"</span>
         <span class="c1"># modify the namelist options and streams file</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.spin_up&#39;</span><span class="p">)</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.spin_up&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">'streams.spin_up'</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">'namelist.spin_up'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>
 
@@ -165,15 +165,15 @@
 <div class="viewcode-block" id="SpinUp.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.spin_up.SpinUp.configure.html#compass.landice.tests.mismipplus.spin_up.SpinUp.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up the directory structure, based on the requested resolution.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># get the config options from the TestCase, which</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
         <span class="c1"># get the resolution from the parsed config file(s)</span>
-        <span class="n">resolution</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;resolution&#39;</span><span class="p">)</span>
+        <span class="n">resolution</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'mesh'</span><span class="p">,</span> <span class="s1">'resolution'</span><span class="p">)</span>
 
         <span class="c1"># loop over the steps of the `TestCase` and create a consistent</span>
         <span class="c1"># directory structure based on the value of `resolution` at the time</span>
@@ -181,8 +181,8 @@
         <span class="k">for</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
             <span class="c1"># format resolution for creating subdirectory structure</span>
-            <span class="n">resolution_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">:</span><span class="s1">4.0f</span><span class="si">}</span><span class="s1">m&#39;</span>
-            <span class="n">step</span><span class="o">.</span><span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution_key</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">resolution_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution</span><span class="si">:</span><span class="s1">4.0f</span><span class="si">}</span><span class="s1">m'</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution_key</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
 
             <span class="c1"># set the path attribute, based on the subdir attribute set above.</span>
             <span class="n">step</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -202,10 +202,10 @@
             <span class="n">step</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
 
             <span class="c1"># read the density value from config file and update the namelist</span>
-            <span class="k">if</span> <span class="n">step_name</span> <span class="o">==</span> <span class="s2">&quot;run_model&quot;</span><span class="p">:</span>
-                <span class="n">ice_density</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;ice_density&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">step_name</span> <span class="o">==</span> <span class="s2">"run_model"</span><span class="p">:</span>
+                <span class="n">ice_density</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'mesh'</span><span class="p">]</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'ice_density'</span><span class="p">)</span>
                 <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span>
-                    <span class="p">{</span><span class="s1">&#39;config_ice_density&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ice_density</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">})</span></div>
+                    <span class="p">{</span><span class="s1">'config_ice_density'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">ice_density</span><span class="si">}</span><span class="s1">'</span><span class="p">})</span></div>
 </div>
 
 </pre></div>

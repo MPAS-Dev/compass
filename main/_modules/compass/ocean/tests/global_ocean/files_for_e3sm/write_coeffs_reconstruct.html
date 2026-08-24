@@ -124,14 +124,14 @@
 <div class="viewcode-block" id="WriteCoeffsReconstruct">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct.WriteCoeffsReconstruct.html#compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct.WriteCoeffsReconstruct">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">WriteCoeffsReconstruct</span><span class="p">(</span><span class="n">ForwardStep</span><span class="p">,</span> <span class="n">FilesForE3SMStep</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for writing out ``coeffs_reconstruct`` for a given MPAS mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="WriteCoeffsReconstruct.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct.WriteCoeffsReconstruct.html#compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct.WriteCoeffsReconstruct.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new step</span>
 
 <span class="sd">        Parameters</span>
@@ -144,46 +144,46 @@
 
 <span class="sd">        init : compass.ocean.tests.global_ocean.init.Init</span>
 <span class="sd">            The test case that produces the initial condition for this run</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                         <span class="n">time_integrator</span><span class="o">=</span><span class="s1">&#39;split_explicit_ab2&#39;</span><span class="p">,</span>
-                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;write_coeffs_reconstruct&#39;</span><span class="p">,</span> <span class="n">add_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                         <span class="n">time_integrator</span><span class="o">=</span><span class="s1">'split_explicit_ab2'</span><span class="p">,</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s1">'write_coeffs_reconstruct'</span><span class="p">,</span> <span class="n">add_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.global_ocean.files_for_e3sm.&#39;</span> \
-                  <span class="s1">&#39;write_coeffs_reconstruct&#39;</span>
+        <span class="n">package</span> <span class="o">=</span> <span class="s1">'compass.ocean.tests.global_ocean.files_for_e3sm.'</span> \
+                  <span class="s1">'write_coeffs_reconstruct'</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.reconstruct&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.reconstruct&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">'namelist.reconstruct'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">'streams.reconstruct'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="WriteCoeffsReconstruct.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct.WriteCoeffsReconstruct.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct.WriteCoeffsReconstruct.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the testcase</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
         <span class="c1"># perform a test reconstruction to make sure things are working</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;vector_reconstruct&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;restart.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;velocity_components.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="s1">&#39;coeffs_reconstruct.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;--out_variables&#39;</span><span class="p">,</span> <span class="s1">&#39;velocity&#39;</span><span class="p">]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'vector_reconstruct'</span><span class="p">,</span>
+                <span class="s1">'-i'</span><span class="p">,</span> <span class="s1">'restart.nc'</span><span class="p">,</span>
+                <span class="s1">'-o'</span><span class="p">,</span> <span class="s1">'velocity_components.nc'</span><span class="p">,</span>
+                <span class="s1">'-w'</span><span class="p">,</span> <span class="s1">'coeffs_reconstruct.nc'</span><span class="p">,</span>
+                <span class="s1">'-v'</span><span class="p">,</span> <span class="s1">'normalVelocity'</span><span class="p">,</span>
+                <span class="s1">'--out_variables'</span><span class="p">,</span> <span class="s1">'velocity'</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="n">reconstruct_dir</span> <span class="o">=</span> \
-            <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/reconstruct&#39;</span>
+            <span class="s1">'../assembled_files/diagnostics/mpas_analysis/reconstruct'</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">reconstruct_dir</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="n">reconstruct_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">_coeffs_reconstruct.nc&#39;</span>
+        <span class="n">reconstruct_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">_coeffs_reconstruct.nc'</span>
         <span class="c1"># make links in diagnostics directory</span>
-        <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;coeffs_reconstruct.nc&#39;</span><span class="p">),</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">reconstruct_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">reconstruct_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+        <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">'coeffs_reconstruct.nc'</span><span class="p">),</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">reconstruct_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">reconstruct_filename</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

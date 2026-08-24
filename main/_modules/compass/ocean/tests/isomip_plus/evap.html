@@ -122,12 +122,12 @@
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.evap.update_evaporation_flux.html#compass.ocean.tests.isomip_plus.evap.update_evaporation_flux">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">update_evaporation_flux</span><span class="p">(</span><span class="n">in_forcing_file</span><span class="p">,</span> <span class="n">out_forcing_file</span><span class="p">,</span>
                             <span class="n">out_forcing_link</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Update the &quot;evaporation&quot; fluxes used to keep sea level under control for</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Update the "evaporation" fluxes used to keep sea level under control for</span>
 <span class="sd">    the ISOMIP+ experiments.  The fields ``evaporationFlux``,</span>
 <span class="sd">    ``seaIceSalinityFlux`` and ``seaIceHeatFlux`` are used to apply thickness,</span>
 <span class="sd">    salt and heat fluxes at the surface near the northern boundary to act as</span>
-<span class="sd">    a &quot;spillway&quot; preventing sea level from rising much above zero.</span>
+<span class="sd">    a "spillway" preventing sea level from rising much above zero.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -135,29 +135,29 @@
 <span class="sd">        The original forcing file to be copied and be altered</span>
 
 <span class="sd">    out_forcing_file : str</span>
-<span class="sd">        The new forcing file with updated &quot;evaporation&quot; fluxes</span>
+<span class="sd">        The new forcing file with updated "evaporation" fluxes</span>
 
 <span class="sd">    out_forcing_link : str</span>
 <span class="sd">        A symlink that initially pointed ``in_forcing_file`` but will be</span>
 <span class="sd">        updated to point to ``out_forcing_file``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">in_forcing_file</span><span class="p">,</span> <span class="n">out_forcing_file</span><span class="p">)</span>
 
     <span class="n">symlink</span><span class="p">(</span><span class="n">out_forcing_file</span><span class="p">,</span> <span class="n">out_forcing_link</span><span class="p">)</span>
 
-    <span class="n">lastFileName</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;timeSeriesStatsMonthly*.nc&#39;</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">lastFileName</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'timeSeriesStatsMonthly*.nc'</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-    <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">out_forcing_file</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+    <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">out_forcing_file</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">)</span>
 
-    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-    <span class="n">areaCell</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">][:]</span>
-    <span class="n">ssh0</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s1">'init.nc'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+    <span class="n">areaCell</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'areaCell'</span><span class="p">][:]</span>
+    <span class="n">ssh0</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'ssh'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
     <span class="n">inFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="n">evaporationFluxVar</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;evaporationFlux&#39;</span><span class="p">]</span>
-    <span class="n">seaIceSalinityFluxVar</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;seaIceSalinityFlux&#39;</span><span class="p">]</span>
-    <span class="n">seaIceHeatFluxVar</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;seaIceHeatFlux&#39;</span><span class="p">]</span>
+    <span class="n">evaporationFluxVar</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'evaporationFlux'</span><span class="p">]</span>
+    <span class="n">seaIceSalinityFluxVar</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'seaIceSalinityFlux'</span><span class="p">]</span>
+    <span class="n">seaIceHeatFluxVar</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'seaIceHeatFlux'</span><span class="p">]</span>
     <span class="n">evaporationFlux</span> <span class="o">=</span> <span class="n">evaporationFluxVar</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
 
     <span class="n">evapMask</span> <span class="o">=</span> <span class="n">evaporationFlux</span> <span class="o">!=</span> <span class="mf">0.</span>
@@ -178,14 +178,14 @@
 
     <span class="n">meanSSH0</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ssh0</span> <span class="o">*</span> <span class="n">evapMask</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">)</span> <span class="o">/</span> <span class="n">evapArea</span>
 
-    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">lastFileName</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-    <span class="n">ssh</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_ssh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">lastFileName</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+    <span class="n">ssh</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'timeMonthly_avg_ssh'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
     <span class="n">inFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">meanSSH</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ssh</span> <span class="o">*</span> <span class="n">evapMask</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">)</span> <span class="o">/</span> <span class="n">evapArea</span>
 
     <span class="n">deltaSSH</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">meanSSH</span> <span class="o">-</span> <span class="n">meanSSH0</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
 
-    <span class="c1"># parameterize the outgoing flux as a &quot;spillway&quot; with the given width,</span>
+    <span class="c1"># parameterize the outgoing flux as a "spillway" with the given width,</span>
     <span class="c1"># chosen to be 500 m so that a 20-m excess height is dissipated in about 2</span>
     <span class="c1"># months</span>
     <span class="n">spillwayWidth</span> <span class="o">=</span> <span class="mf">500.</span>
@@ -202,12 +202,12 @@
 
     <span class="n">evaporationFlux</span> <span class="o">=</span> <span class="n">evapRate</span> <span class="o">*</span> <span class="n">rho_sw</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;update evap: mean sea-level increase: </span><span class="si">{}</span><span class="s1"> m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">deltaSSH</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'update evap: mean sea-level increase: </span><span class="si">{}</span><span class="s1"> m'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">deltaSSH</span><span class="p">))</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;update evap: est. one-month reduction by evap: </span><span class="si">{}</span><span class="s1"> m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'update evap: est. one-month reduction by evap: </span><span class="si">{}</span><span class="s1"> m'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">estimatedHeightChange</span><span class="p">))</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;update evap: evaporation rate: </span><span class="si">{}</span><span class="s1"> m/yr&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'update evap: evaporation rate: </span><span class="si">{}</span><span class="s1"> m/yr'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">meanEvapRate</span> <span class="o">*</span> <span class="n">secPerYear</span><span class="p">))</span>
 
     <span class="n">evaporationFluxVar</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">evaporationFlux</span>

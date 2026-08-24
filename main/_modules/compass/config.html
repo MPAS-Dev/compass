@@ -115,43 +115,43 @@
 <div class="viewcode-block" id="CompassConfigParser">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.config.CompassConfigParser.html#compass.config.CompassConfigParser">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CompassConfigParser</span><span class="p">(</span><span class="n">MpasConfigParser</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A &quot;meta&quot; config parser that keeps a dictionary of config parsers and their</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A "meta" config parser that keeps a dictionary of config parsers and their</span>
 <span class="sd">    sources to combine when needed.  The custom config parser allows provenance</span>
-<span class="sd">    of the source of different config options and allows the &quot;user&quot; config</span>
+<span class="sd">    of the source of different config options and allows the "user" config</span>
 <span class="sd">    options to always take precedence over other config options (even if they</span>
 <span class="sd">    are added later).</span>
 
 <span class="sd">    This version simply overrides the ``combine()`` method to also ensure that</span>
 <span class="sd">    certain paths are absolute, rather than relative.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">combine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Combine the config files into one</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        raw : bool, optional</span>
-<span class="sd">            Whether to combine config &quot;raw&quot; config options, rather than using</span>
+<span class="sd">            Whether to combine config "raw" config options, rather than using</span>
 <span class="sd">            extended interpolation</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">raw</span><span class="o">=</span><span class="n">raw</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_absolute_paths</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_absolute_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        make sure all paths in the paths, namelists, streams, and executables</span>
 <span class="sd">        sections are absolute paths</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined</span>
-        <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;namelists&#39;</span><span class="p">,</span> <span class="s1">&#39;streams&#39;</span><span class="p">,</span> <span class="s1">&#39;executables&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'paths'</span><span class="p">,</span> <span class="s1">'namelists'</span><span class="p">,</span> <span class="s1">'streams'</span><span class="p">,</span> <span class="s1">'executables'</span><span class="p">]:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
                 <span class="k">continue</span>
             <span class="k">for</span> <span class="n">option</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
                 <span class="c1"># not safe to make paths that start with other config options</span>
                 <span class="c1"># into absolute paths</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'$'</span><span class="p">):</span>
                     <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 

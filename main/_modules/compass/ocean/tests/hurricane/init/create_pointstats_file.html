@@ -121,7 +121,7 @@
 <div class="viewcode-block" id="CreatePointstatsFile">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile.html#compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CreatePointstatsFile</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating the input file for the pointwiseStats</span>
 <span class="sd">    analysis member</span>
 
@@ -136,11 +136,11 @@
 <span class="sd">    pointstats_file : str</span>
 <span class="sd">        Name of output file contiaining pointstats information</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="CreatePointstatsFile.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile.html#compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">storm</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -153,27 +153,27 @@
 
 <span class="sd">        storm : str</span>
 <span class="sd">            The name of the storm used</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pointstats&#39;</span><span class="p">,</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'pointstats'</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">&#39;mesh.nc&#39;</span>
-        <span class="k">if</span> <span class="n">storm</span> <span class="o">==</span> <span class="s1">&#39;sandy&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">station_files</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;NOAA-COOPS_stations.txt&#39;</span><span class="p">,</span>
-                                  <span class="s1">&#39;USGS_stations.txt&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pointstats_file</span> <span class="o">=</span> <span class="s1">&#39;points.nc&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">'mesh.nc'</span>
+        <span class="k">if</span> <span class="n">storm</span> <span class="o">==</span> <span class="s1">'sandy'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">station_files</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'NOAA-COOPS_stations.txt'</span><span class="p">,</span>
+                                  <span class="s1">'USGS_stations.txt'</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pointstats_file</span> <span class="o">=</span> <span class="s1">'points.nc'</span>
 
-        <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;cull_mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">'cull_mesh'</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc'</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">station_files</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">storm</span><span class="si">}</span><span class="s1">_stations/</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="n">database</span><span class="o">=</span><span class="s1">&#39;hurricane&#39;</span><span class="p">)</span>
+                <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">storm</span><span class="si">}</span><span class="s1">_stations/</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                <span class="n">database</span><span class="o">=</span><span class="s1">'hurricane'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pointstats_file</span><span class="p">)</span></div>
 
@@ -181,17 +181,17 @@
 <div class="viewcode-block" id="CreatePointstatsFile.create_pointstats_file">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile.create_pointstats_file.html#compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile.create_pointstats_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_pointstats_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_file</span><span class="p">,</span> <span class="n">stations_files</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Find grid points nearest to observation stations</span>
 <span class="sd">        and create pointwiseStats file</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">&#39;agg&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">'agg'</span><span class="p">)</span>
 
         <span class="c1"># Read in station locations</span>
         <span class="n">lon</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">lat</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">stations_file</span> <span class="ow">in</span> <span class="n">stations_files</span><span class="p">:</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">stations_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">stations_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
             <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
                 <span class="n">lon</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
@@ -205,9 +205,9 @@
         <span class="n">stations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
 
         <span class="c1"># Read in cell center coordinates</span>
-        <span class="n">mesh_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">mesh_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">lonCell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mesh_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;lonCell&quot;</span><span class="p">][:])</span>
-        <span class="n">latCell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mesh_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;latCell&quot;</span><span class="p">][:])</span>
+        <span class="n">mesh_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">mesh_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+        <span class="n">lonCell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mesh_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">"lonCell"</span><span class="p">][:])</span>
+        <span class="n">latCell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mesh_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">"latCell"</span><span class="p">][:])</span>
         <span class="n">meshCells</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">lonCell</span><span class="p">,</span> <span class="n">latCell</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
 
         <span class="c1"># Find nearest cell center to each station</span>
@@ -216,26 +216,26 @@
 
         <span class="c1"># Plot the station locations and nearest cell centers</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lonCell</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">latCell</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;station_locations.png&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lonCell</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">latCell</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="s1">'.'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="s1">'.'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'station_locations.png'</span><span class="p">)</span>
 
         <span class="c1"># Open netCDF file for writing</span>
-        <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pointstats_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span>
-                                  <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF3_64BIT_OFFSET&#39;</span><span class="p">)</span>
+        <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pointstats_file</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">,</span>
+                                  <span class="nb">format</span><span class="o">=</span><span class="s1">'NETCDF3_64BIT_OFFSET'</span><span class="p">)</span>
 
         <span class="c1"># Find dimesions</span>
         <span class="n">npts</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">ncells</span> <span class="o">=</span> <span class="n">lonCell</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Declare dimensions</span>
-        <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="n">ncells</span><span class="p">)</span>
-        <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;StrLen&#39;</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
-        <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nPoints&#39;</span><span class="p">,</span> <span class="n">npts</span><span class="p">)</span>
+        <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'nCells'</span><span class="p">,</span> <span class="n">ncells</span><span class="p">)</span>
+        <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'StrLen'</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+        <span class="n">data_nc</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">'nPoints'</span><span class="p">,</span> <span class="n">npts</span><span class="p">)</span>
 
         <span class="c1"># Declear variables</span>
-        <span class="n">npts</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nPoints&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
-        <span class="n">pnt_ids</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;pointCellGlobalID&#39;</span><span class="p">,</span>
+        <span class="n">npts</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nPoints'</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">pnt_ids</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'pointCellGlobalID'</span><span class="p">,</span>
                                          <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="p">(</span><span class="n">npts</span><span class="p">,))</span>
 
         <span class="c1"># Set variables</span>
@@ -246,9 +246,9 @@
 <div class="viewcode-block" id="CreatePointstatsFile.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile.run.html#compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the testcase</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create_pointstats_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">station_files</span><span class="p">)</span></div>
 </div>
 

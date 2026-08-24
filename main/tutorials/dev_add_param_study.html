@@ -182,7 +182,7 @@ value) as an input and uses that value to give the step a unique name and
 subdirectory within the test case.  For example, this is from the <code class="docutils literal notranslate"><span class="pre">mesh</span></code>
 step:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a new step</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -190,10 +190,10 @@ step:</p>
 <span class="sd">        The test case this step belongs to</span>
 <span class="sd">    resolution : int</span>
 <span class="sd">        The resolution of the (uniform) mesh in km</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span>
-                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_mesh&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
-                     <span class="n">subdir</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">/mesh&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+                     <span class="n">name</span><span class="o">=</span><span class="s1">'QU</span><span class="si">{}</span><span class="s1">_mesh'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
+                     <span class="n">subdir</span><span class="o">=</span><span class="s1">'QU</span><span class="si">{}</span><span class="s1">/mesh'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>This is a general requirement of test cases that support parameter studies.
@@ -214,7 +214,7 @@ requires using output from all of the <code class="docutils literal notranslate"
 different resolutions.  <code class="docutils literal notranslate"><span class="pre">analysis</span></code> differs from other steps in this test case
 in that it takes all parameter values (in this case resolutions) as an input:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create the step</span>
 
 <span class="sd">    Parameters</span>
@@ -224,20 +224,20 @@ in that it takes all parameter values (in this case resolutions) as an input:</p
 
 <span class="sd">    resolutions : list of int</span>
 <span class="sd">        The resolutions of the meshes that have been run</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;analysis&#39;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'analysis'</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="n">resolutions</span>
 
     <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="n">resolutions</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_namelist.ocean&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../QU</span><span class="si">{}</span><span class="s1">/init/namelist.ocean&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'QU</span><span class="si">{}</span><span class="s1">_namelist.ocean'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">'../QU</span><span class="si">{}</span><span class="s1">/init/namelist.ocean'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_init.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../QU</span><span class="si">{}</span><span class="s1">/init/initial_state.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'QU</span><span class="si">{}</span><span class="s1">_init.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">'../QU</span><span class="si">{}</span><span class="s1">/init/initial_state.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../QU</span><span class="si">{}</span><span class="s1">/forward/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'QU</span><span class="si">{}</span><span class="s1">_output.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">'../QU</span><span class="si">{}</span><span class="s1">/forward/output.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
 
     <span class="o">...</span>
 </pre></div>
@@ -265,10 +265,10 @@ the parameter values have been changed from the defaults.  If so, we remove the
 old steps and add new ones with the new parameter values.  To do this, we use
 a “private” method <code class="docutils literal notranslate"><span class="pre">_setup_steps()</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_setup_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; setup steps given resolutions &quot;&quot;&quot;</span>
-    <span class="n">resolutions</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="s1">&#39;resolutions&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">""" setup steps given resolutions """</span>
+    <span class="n">resolutions</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'cosine_bell'</span><span class="p">,</span> <span class="s1">'resolutions'</span><span class="p">)</span>
     <span class="n">resolutions</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span> <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span>
-                   <span class="n">resolutions</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+                   <span class="n">resolutions</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">','</span><span class="p">,</span> <span class="s1">' '</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">==</span> <span class="n">resolutions</span><span class="p">:</span>
         <span class="k">return</span>
@@ -295,27 +295,27 @@ previous resolutions but they’re different from the ones from the config
 options, we start over, adding steps for the given resolutions.</p>
 <p>Here’s how this function is called from <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> and <code class="docutils literal notranslate"><span class="pre">configure()</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create test case for creating a global MPAS-Ocean mesh</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    test_group : compass.ocean.tests.cosine_bell.GlobalOcean</span>
 <span class="sd">        The global ocean test group that this test case belongs to</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'cosine_bell'</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># add the steps with default resolutions so they can be listed</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">(</span>
         <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
-    <span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.cfg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+    <span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">.cfg'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_setup_steps</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Set config options for the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
     <span class="c1"># set up the steps again in case a user has provided new resolutions</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_setup_steps</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
@@ -350,14 +350,14 @@ resolution) to a target number of tasks that is a heuristic function of the
 resolution. Similarly, we set the minimum number of tasks (below which the step
 will refuse to run) based on another heuristic function.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">update_cores</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Update the number of cores and min_tasks for each forward step &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Update the number of cores and min_tasks for each forward step """</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-    <span class="n">goal_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span>
-                                          <span class="s1">&#39;goal_cells_per_core&#39;</span><span class="p">)</span>
-    <span class="n">max_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span>
-                                         <span class="s1">&#39;max_cells_per_core&#39;</span><span class="p">)</span>
+    <span class="n">goal_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'cosine_bell'</span><span class="p">,</span>
+                                          <span class="s1">'goal_cells_per_core'</span><span class="p">)</span>
+    <span class="n">max_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'cosine_bell'</span><span class="p">,</span>
+                                         <span class="s1">'max_cells_per_core'</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">:</span>
         <span class="c1"># a heuristic based on QU30 (65275 cells) and QU240 (10383 cells)</span>
@@ -369,15 +369,15 @@ will refuse to run) based on another heuristic function.</p>
         <span class="c1"># In a pinch, about 3000 cells per core</span>
         <span class="n">min_tasks</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
                         <span class="nb">round</span><span class="p">(</span><span class="n">approx_cells</span> <span class="o">/</span> <span class="n">max_cells_per_core</span><span class="p">))</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_forward&#39;</span><span class="p">]</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="sa">f</span><span class="s1">'QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_forward'</span><span class="p">]</span>
         <span class="n">step</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">ntasks</span>
         <span class="n">step</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">min_tasks</span>
 
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_ntasks&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ntasks</span><span class="p">),</span>
-                   <span class="n">comment</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Target core count for </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1"> km mesh&#39;</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_min_tasks&#39;</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'cosine_bell'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_ntasks'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ntasks</span><span class="p">),</span>
+                   <span class="n">comment</span><span class="o">=</span><span class="sa">f</span><span class="s1">'Target core count for </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1"> km mesh'</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'cosine_bell'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_min_tasks'</span><span class="p">,</span>
                    <span class="nb">str</span><span class="p">(</span><span class="n">min_tasks</span><span class="p">),</span>
-                   <span class="n">comment</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Minimum core count for </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1"> km mesh&#39;</span><span class="p">)</span>
+                   <span class="n">comment</span><span class="o">=</span><span class="sa">f</span><span class="s1">'Minimum core count for </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1"> km mesh'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This method is called in the <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method of the test case when it
@@ -389,15 +389,15 @@ to set <code class="docutils literal notranslate"><span class="pre">step.ntasks<
 these config options before running the test case.  We do this before we run
 the steps.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Run each step of the testcase</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
     <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">:</span>
-        <span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_ntasks&#39;</span><span class="p">)</span>
-        <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span>
-                                  <span class="sa">f</span><span class="s1">&#39;QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_min_tasks&#39;</span><span class="p">)</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_forward&#39;</span><span class="p">]</span>
+        <span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'cosine_bell'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_ntasks'</span><span class="p">)</span>
+        <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'cosine_bell'</span><span class="p">,</span>
+                                  <span class="sa">f</span><span class="s1">'QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_min_tasks'</span><span class="p">)</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="sa">f</span><span class="s1">'QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_forward'</span><span class="p">]</span>
         <span class="n">step</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">ntasks</span>
         <span class="n">step</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">min_tasks</span>
 

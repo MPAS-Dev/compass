@@ -118,7 +118,7 @@
 <div class="viewcode-block" id="Decomp">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.decomp.Decomp.html#compass.ocean.tests.drying_slope.decomp.Decomp">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Decomp</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A decomposition test case for the baroclinic channel test group, which</span>
 <span class="sd">    makes sure the model produces identical results on 1 and 12 cores.</span>
 
@@ -129,12 +129,12 @@
 
 <span class="sd">    coord_type : str</span>
 <span class="sd">        The type of vertical coordinate (``sigma``, ``single_layer``, etc.)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="Decomp.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.decomp.Decomp.html#compass.ocean.tests.drying_slope.decomp.Decomp.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">coord_type</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -150,48 +150,48 @@
 
 <span class="sd">        method : str</span>
 <span class="sd">            The type of wetting-and-drying algorithm</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;decomp&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'decomp'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coord_type</span> <span class="o">=</span> <span class="n">coord_type</span>
         <span class="k">if</span> <span class="n">resolution</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="p">:</span>
-            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="o">*</span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">m&#39;</span>
+            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="o">*</span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">m'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">km&#39;</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">coord_type</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">km'</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">coord_type</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">'single_layer'</span><span class="p">:</span>
             <span class="n">damping_coeff</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">damping_coeff</span> <span class="o">=</span> <span class="mf">0.01</span>
         <span class="k">for</span> <span class="n">procs</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">]:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">proc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">proc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
             <span class="n">forward_step</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                                    <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
                                    <span class="n">ntasks</span><span class="o">=</span><span class="n">procs</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                    <span class="n">damping_coeff</span><span class="o">=</span><span class="n">damping_coeff</span><span class="p">,</span>
                                    <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;ramp&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">'ramp'</span><span class="p">:</span>
                 <span class="n">forward_step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span>
-                    <span class="p">{</span><span class="s1">&#39;config_zero_drying_velocity_ramp&#39;</span><span class="p">:</span> <span class="s2">&quot;.true.&quot;</span><span class="p">})</span>
+                    <span class="p">{</span><span class="s1">'config_zero_drying_velocity_ramp'</span><span class="p">:</span> <span class="s2">".true."</span><span class="p">})</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">forward_step</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Decomp.validate">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.decomp.Decomp.validate.html#compass.ocean.tests.drying_slope.decomp.Decomp.validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'temperature'</span><span class="p">,</span> <span class="s1">'salinity'</span><span class="p">,</span> <span class="s1">'layerThickness'</span><span class="p">,</span>
+                     <span class="s1">'normalVelocity'</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;1proc/output.nc&#39;</span><span class="p">,</span>
-                          <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;12proc/output.nc&#39;</span><span class="p">)</span></div>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">'1proc/output.nc'</span><span class="p">,</span>
+                          <span class="n">filename2</span><span class="o">=</span><span class="s1">'12proc/output.nc'</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

@@ -119,19 +119,19 @@
 <div class="viewcode-block" id="Visualize">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.dome.visualize.Visualize.html#compass.landice.tests.dome.visualize.Visualize">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Visualize</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for visualizing the output from a dome test case</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    mesh_type : str</span>
 <span class="sd">        The resolution or mesh type of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="Visualize.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.dome.visualize.Visualize.html#compass.landice.tests.dome.visualize.Visualize.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;visualize&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">input_dir</span><span class="o">=</span><span class="s1">&#39;run_model&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'visualize'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">input_dir</span><span class="o">=</span><span class="s1">'run_model'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -151,15 +151,15 @@
 <span class="sd">        input_dir : str, optional</span>
 <span class="sd">            The input directory within the test case with a file ``output.nc``</span>
 <span class="sd">            to visualize</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">=</span> <span class="n">mesh_type</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../</span><span class="si">{}</span><span class="s1">/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_dir</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../</span><span class="si">{}</span><span class="s1">/output.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_dir</span><span class="p">))</span></div>
 
 
-        <span class="c1"># depending on settings, this may produce no outputs, so we won&#39;t add</span>
+        <span class="c1"># depending on settings, this may produce no outputs, so we won't add</span>
         <span class="c1"># any</span>
 
     <span class="c1"># no setup method is needed</span>
@@ -167,10 +167,10 @@
 <div class="viewcode-block" id="Visualize.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.dome.visualize.Visualize.run.html#compass.landice.tests.dome.visualize.Visualize.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">visualize_dome</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span></div>
+<span class="sd">        """</span>
+        <span class="n">visualize_dome</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">)</span></div>
 </div>
 
 
@@ -178,7 +178,7 @@
 <div class="viewcode-block" id="visualize_dome">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.dome.visualize.visualize_dome.html#compass.landice.tests.dome.visualize.visualize_dome">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">visualize_dome</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot the output from a dome test case</span>
 
 <span class="sd">    Parameters</span>
@@ -192,136 +192,136 @@
 
 <span class="sd">    filename : str</span>
 <span class="sd">        file to visualize</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;dome_viz&#39;</span><span class="p">]</span>
+<span class="sd">    """</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'dome_viz'</span><span class="p">]</span>
 
-    <span class="n">time_slice</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;time_slice&#39;</span><span class="p">)</span>
-    <span class="n">save_images</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;save_images&#39;</span><span class="p">)</span>
-    <span class="n">hide_figs</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;hide_figs&#39;</span><span class="p">)</span>
+    <span class="n">time_slice</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'time_slice'</span><span class="p">)</span>
+    <span class="n">save_images</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'save_images'</span><span class="p">)</span>
+    <span class="n">hide_figs</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'hide_figs'</span><span class="p">)</span>
 
     <span class="c1"># Note: this may be slightly wrong for some calendar types!</span>
     <span class="n">secInYr</span> <span class="o">=</span> <span class="mf">3600.0</span> <span class="o">*</span> <span class="mf">24.0</span> <span class="o">*</span> <span class="mf">365.0</span>
 
-    <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
 
-    <span class="n">times</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xtime&#39;</span><span class="p">]</span>
-    <span class="n">thickness</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span>
-    <span class="c1"># dcEdge = f.variables[&#39;dcEdge&#39;]</span>
-    <span class="c1"># bedTopography = f.variables[&#39;bedTopography&#39;]  # not needed</span>
-    <span class="n">xCell</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xCell&#39;</span><span class="p">]</span>
-    <span class="n">yCell</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yCell&#39;</span><span class="p">]</span>
-    <span class="n">xEdge</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xEdge&#39;</span><span class="p">]</span>
-    <span class="n">yEdge</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yEdge&#39;</span><span class="p">]</span>
-    <span class="n">angleEdge</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;angleEdge&#39;</span><span class="p">]</span>
-    <span class="n">temperature</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span>
-    <span class="n">lowerSurface</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lowerSurface&#39;</span><span class="p">]</span>
-    <span class="n">upperSurface</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;upperSurface&#39;</span><span class="p">]</span>
-    <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
-    <span class="c1"># uReconstructX = f.variables[&#39;uReconstructX&#39;]</span>
-    <span class="n">uReconstructX</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;uReconstructX&#39;</span><span class="p">]</span>
-    <span class="n">uReconstructY</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;uReconstructY&#39;</span><span class="p">]</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xtime'</span><span class="p">]</span>
+    <span class="n">thickness</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'thickness'</span><span class="p">]</span>
+    <span class="c1"># dcEdge = f.variables['dcEdge']</span>
+    <span class="c1"># bedTopography = f.variables['bedTopography']  # not needed</span>
+    <span class="n">xCell</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xCell'</span><span class="p">]</span>
+    <span class="n">yCell</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yCell'</span><span class="p">]</span>
+    <span class="n">xEdge</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xEdge'</span><span class="p">]</span>
+    <span class="n">yEdge</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yEdge'</span><span class="p">]</span>
+    <span class="n">angleEdge</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'angleEdge'</span><span class="p">]</span>
+    <span class="n">temperature</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'temperature'</span><span class="p">]</span>
+    <span class="n">lowerSurface</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'lowerSurface'</span><span class="p">]</span>
+    <span class="n">upperSurface</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'upperSurface'</span><span class="p">]</span>
+    <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'normalVelocity'</span><span class="p">]</span>
+    <span class="c1"># uReconstructX = f.variables['uReconstructX']</span>
+    <span class="n">uReconstructX</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'uReconstructX'</span><span class="p">]</span>
+    <span class="n">uReconstructY</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'uReconstructY'</span><span class="p">]</span>
 
-    <span class="n">vert_levs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">])</span>
+    <span class="n">vert_levs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">])</span>
 
     <span class="n">time_length</span> <span class="o">=</span> <span class="n">times</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;vert_levs = </span><span class="si">{}</span><span class="s2">;  time_length = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vert_levs</span><span class="p">,</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"vert_levs = </span><span class="si">{}</span><span class="s2">;  time_length = </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vert_levs</span><span class="p">,</span>
                                                            <span class="n">time_length</span><span class="p">))</span>
 
     <span class="n">var_slice</span> <span class="o">=</span> <span class="n">thickness</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:]</span>
 
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">'w'</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">'equal'</span><span class="p">)</span>
     <span class="c1"># C = plt.contourf(xCell, yCell, var_slice )</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="mi">80</span><span class="p">,</span> <span class="n">var_slice</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span>
-                <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="mi">80</span><span class="p">,</span> <span class="n">var_slice</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'h'</span><span class="p">,</span>
+                <span class="n">edgecolors</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;thickness at time </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_slice</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'thickness at time </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_slice</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">save_images</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Saving figures to files.&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;dome_thickness.png&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Saving figures to files."</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'dome_thickness.png'</span><span class="p">)</span>
 
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">'equal'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="mi">80</span><span class="p">,</span> <span class="n">lowerSurface</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:],</span>
-                <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+                <span class="n">marker</span><span class="o">=</span><span class="s1">'h'</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;lower surface at time </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_slice</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'lower surface at time </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_slice</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">'equal'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="mi">80</span><span class="p">,</span> <span class="n">upperSurface</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:],</span>
-                <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+                <span class="n">marker</span><span class="o">=</span><span class="s1">'h'</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;upper surface at time </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_slice</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'upper surface at time </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_slice</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">save_images</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;dome_surfaces.png&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'dome_surfaces.png'</span><span class="p">)</span>
 
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">templevel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">vert_levs</span><span class="p">):</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">templevel</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">templevel</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">'equal'</span><span class="p">)</span>
         <span class="n">var_slice</span> <span class="o">=</span> <span class="n">temperature</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="n">templevel</span><span class="p">]</span>
         <span class="c1"># C = plt.contourf(xCell, yCell, var_slice )</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="mi">40</span><span class="p">,</span> <span class="n">var_slice</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span>
-                    <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="mi">40</span><span class="p">,</span> <span class="n">var_slice</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'h'</span><span class="p">,</span>
+                    <span class="n">edgecolors</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;temperature at level </span><span class="si">{}</span><span class="s1"> at time </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">templevel</span><span class="p">,</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'temperature at level </span><span class="si">{}</span><span class="s1"> at time </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">templevel</span><span class="p">,</span>
                                                               <span class="n">time_slice</span><span class="p">))</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">save_images</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;dome_temperature.png&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'dome_temperature.png'</span><span class="p">)</span>
 
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">'equal'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xEdge</span><span class="p">[:],</span> <span class="n">yEdge</span><span class="p">[:],</span> <span class="mi">80</span><span class="p">,</span>
                 <span class="n">normalVelocity</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="n">vert_levs</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">,</span>
-                <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+                <span class="n">marker</span><span class="o">=</span><span class="s1">'h'</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
     <span class="n">normalVel</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="n">vert_levs</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">xEdge</span><span class="p">[:],</span> <span class="n">yEdge</span><span class="p">[:],</span>
                <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angleEdge</span><span class="p">[:])</span> <span class="o">*</span> <span class="n">normalVel</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">,</span>
                <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angleEdge</span><span class="p">[:])</span> <span class="o">*</span> <span class="n">normalVel</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;normalVelocity of bottom layer at time </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_slice</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'normalVelocity of bottom layer at time </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_slice</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">'equal'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xEdge</span><span class="p">[:],</span> <span class="n">yEdge</span><span class="p">[:],</span> <span class="mi">80</span><span class="p">,</span>
-                <span class="n">normalVelocity</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span>
-                <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+                <span class="n">normalVelocity</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'h'</span><span class="p">,</span>
+                <span class="n">edgecolors</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
     <span class="n">normalVel</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">xEdge</span><span class="p">[:],</span> <span class="n">yEdge</span><span class="p">[:],</span>
                <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angleEdge</span><span class="p">[:])</span> <span class="o">*</span> <span class="n">normalVel</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">,</span>
                <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angleEdge</span><span class="p">[:])</span> <span class="o">*</span> <span class="n">normalVel</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;normalVelocity of top layer at time </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_slice</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'normalVelocity of top layer at time </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_slice</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">save_images</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;dome_normalVelocity.png&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'dome_normalVelocity.png'</span><span class="p">)</span>
 
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">'w'</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">'equal'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="mi">80</span><span class="p">,</span>
-                <span class="n">uReconstructX</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span>
-                <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+                <span class="n">uReconstructX</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'h'</span><span class="p">,</span>
+                <span class="n">edgecolors</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="n">uReconstructX</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">,</span>
                <span class="n">uReconstructY</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;uReconstructX of top layer at time </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_slice</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'uReconstructX of top layer at time </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_slice</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">'equal'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="mi">80</span><span class="p">,</span>
-                <span class="n">uReconstructY</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span>
-                <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+                <span class="n">uReconstructY</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'h'</span><span class="p">,</span>
+                <span class="n">edgecolors</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">xCell</span><span class="p">[:],</span> <span class="n">yCell</span><span class="p">[:],</span> <span class="n">uReconstructX</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">,</span>
                <span class="n">uReconstructY</span><span class="p">[</span><span class="n">time_slice</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">secInYr</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;uReconstructY of top layer at time </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_slice</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'uReconstructY of top layer at time </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_slice</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">save_images</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;dome_uReconstruct.png&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'dome_uReconstruct.png'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">hide_figs</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Plot display disabled with hide_plot config option.&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Plot display disabled with hide_plot config option."</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 

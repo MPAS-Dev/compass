@@ -118,8 +118,8 @@
 
 <div class="viewcode-block" id="clean_cases">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.clean.clean_cases.html#compass.clean.clean_cases">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">clean_cases</span><span class="p">(</span><span class="n">tests</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suite_name</span><span class="o">=</span><span class="s1">&#39;custom&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">clean_cases</span><span class="p">(</span><span class="n">tests</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suite_name</span><span class="o">=</span><span class="s1">'custom'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Set up one or more test cases</span>
 
 <span class="sd">    Parameters</span>
@@ -135,11 +135,11 @@
 
 <span class="sd">    suite_name : str, optional</span>
 <span class="sd">        The name of the test suite if tests to clean up belong to a test</span>
-<span class="sd">        suite or ``&#39;custom&#39;`` if not</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        suite or ``'custom'`` if not</span>
+<span class="sd">    """</span>
 
     <span class="k">if</span> <span class="n">tests</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">numbers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least one of tests or numbers is needed.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'At least one of tests or numbers is needed.'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">work_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">work_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
@@ -157,23 +157,23 @@
         <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">all_test_cases</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">number</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;test number </span><span class="si">{}</span><span class="s1"> is out of range.  There are &#39;</span>
-                                 <span class="s1">&#39;only </span><span class="si">{}</span><span class="s1"> tests.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'test number </span><span class="si">{}</span><span class="s1"> is out of range.  There are '</span>
+                                 <span class="s1">'only </span><span class="si">{}</span><span class="s1"> tests.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)))</span>
             <span class="n">path</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">number</span><span class="p">]</span>
             <span class="n">test_cases</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_test_cases</span><span class="p">[</span><span class="n">path</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">tests</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">tests</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_test_cases</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Test case with path </span><span class="si">{}</span><span class="s1"> is not in &#39;</span>
-                                 <span class="s1">&#39;the list of test cases&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Test case with path </span><span class="si">{}</span><span class="s1"> is not in '</span>
+                                 <span class="s1">'the list of test cases'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
             <span class="n">test_cases</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_test_cases</span><span class="p">[</span><span class="n">path</span><span class="p">]</span>
 
     <span class="n">provenance</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">test_cases</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cleaning test cases:&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Cleaning test cases:'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">test_cases</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'  </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
 
         <span class="n">test_case_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -182,7 +182,7 @@
             <span class="k">pass</span>
 
     <span class="c1"># delete the pickle file for the test suite (if any)</span>
-    <span class="n">pickle_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.pickle&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suite_name</span><span class="p">))</span>
+    <span class="n">pickle_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">.pickle'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suite_name</span><span class="p">))</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">pickle_file</span><span class="p">)</span>
@@ -193,20 +193,20 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
-        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Clean up one or more test cases&#39;</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s1">&#39;compass clean&#39;</span><span class="p">)</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">'Clean up one or more test cases'</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s1">'compass clean'</span><span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--test&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Relative path for a test case to set up&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;PATH&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="s2">&quot;--case_number&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;case_num&quot;</span><span class="p">,</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-t"</span><span class="p">,</span> <span class="s2">"--test"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"test"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"Relative path for a test case to set up"</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"PATH"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-n"</span><span class="p">,</span> <span class="s2">"--case_number"</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">'+'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"case_num"</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Case number(s) to setup, as listed from &quot;</span>
-                             <span class="s2">&quot;&#39;compass list&#39;. Can be a space-separated&quot;</span>
-                             <span class="s2">&quot;list of case numbers.&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;NUM&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-w&quot;</span><span class="p">,</span> <span class="s2">&quot;--work_dir&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;work_dir&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If set, case directories are created in &quot;</span>
-                             <span class="s2">&quot;work_dir rather than the current directory.&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;PATH&quot;</span><span class="p">)</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"Case number(s) to setup, as listed from "</span>
+                             <span class="s2">"'compass list'. Can be a space-separated"</span>
+                             <span class="s2">"list of case numbers."</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">"NUM"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-w"</span><span class="p">,</span> <span class="s2">"--work_dir"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"work_dir"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"If set, case directories are created in "</span>
+                             <span class="s2">"work_dir rather than the current directory."</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"PATH"</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">test</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">tests</span> <span class="o">=</span> <span class="kc">None</span>

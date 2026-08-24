@@ -125,7 +125,7 @@
 <div class="viewcode-block" id="ForwardStep">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.forward.ForwardStep.html#compass.ocean.tests.global_ocean.forward.ForwardStep">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ForwardStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MPAS-Ocean runs as part of global ocean test</span>
 <span class="sd">    cases.</span>
 
@@ -137,7 +137,7 @@
 <span class="sd">    init : compass.ocean.tests.global_ocean.init.Init</span>
 <span class="sd">        The test case that produces the initial condition for this run</span>
 
-<span class="sd">    time_integrator : {&#39;split_explicit_ab2&#39;, &#39;RK4&#39;}</span>
+<span class="sd">    time_integrator : {'split_explicit_ab2', 'RK4'}</span>
 <span class="sd">        The time integrator to use for the forward run</span>
 
 <span class="sd">    dynamic_ntasks : bool</span>
@@ -148,15 +148,15 @@
 <span class="sd">    get_dt_from_min_res : bool</span>
 <span class="sd">        Whether to automatically compute `config_dt` and `config_btr_dt`</span>
 <span class="sd">        namelist options from the minimum resolution of the mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="ForwardStep.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.forward.ForwardStep.html#compass.ocean.tests.global_ocean.forward.ForwardStep.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s1">'forward'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">openmp_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">get_dt_from_min_res</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">land_ice_flux_mode</span><span class="o">=</span><span class="s1">&#39;pressure_only&#39;</span><span class="p">,</span> <span class="n">add_metadata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">land_ice_flux_mode</span><span class="o">=</span><span class="s1">'pressure_only'</span><span class="p">,</span> <span class="n">add_metadata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new step</span>
 
 <span class="sd">        Parameters</span>
@@ -167,7 +167,7 @@
 <span class="sd">        mesh : compass.ocean.tests.global_ocean.mesh.Mesh</span>
 <span class="sd">            The test case that produces the mesh for this run</span>
 
-<span class="sd">        time_integrator : {&#39;split_explicit_ab2&#39;, &#39;RK4&#39;}</span>
+<span class="sd">        time_integrator : {'split_explicit_ab2', 'RK4'}</span>
 <span class="sd">            The time integrator to use for the forward run</span>
 
 <span class="sd">        init : compass.ocean.tests.global_ocean.init.Init, optional</span>
@@ -196,17 +196,17 @@
 <span class="sd">            ``config_btr_dt`` namelist options from the minimum resolution of</span>
 <span class="sd">            the mesh</span>
 
-<span class="sd">        land_ice_flux_mode : {&#39;pressure_only&#39;, &#39;standalone&#39;, &#39;data&#39;}, optional</span>
-<span class="sd">            Whether to have no ice-shelf melt fluxes (&quot;pressure_only&quot;),</span>
-<span class="sd">            prognostic melt (&quot;standalone&quot;) or data melt from a</span>
-<span class="sd">            satellite-derived climatology (&quot;data&quot;).</span>
+<span class="sd">        land_ice_flux_mode : {'pressure_only', 'standalone', 'data'}, optional</span>
+<span class="sd">            Whether to have no ice-shelf melt fluxes ("pressure_only"),</span>
+<span class="sd">            prognostic melt ("standalone") or data melt from a</span>
+<span class="sd">            satellite-derived climatology ("data").</span>
 
 <span class="sd">        add_metadata : bool, optional</span>
 <span class="sd">            Whether to add mesh and initial-condition metadata to output files</span>
 <span class="sd">            (assuming the ``add_metadata`` config option is also set to True).</span>
 <span class="sd">            This should be set to ``False`` for regression tests where the</span>
 <span class="sd">            metadata is unlikely to be used.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="n">init</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_integrator</span> <span class="o">=</span> <span class="n">time_integrator</span>
@@ -218,62 +218,62 @@
                          <span class="n">openmp_threads</span><span class="o">=</span><span class="n">openmp_threads</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">ntasks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">openmp_threads</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You must specify both ntasks and openmp_threads &#39;</span>
-                             <span class="s1">&#39;or neither.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'You must specify both ntasks and openmp_threads '</span>
+                             <span class="s1">'or neither.'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_ntasks</span> <span class="o">=</span> <span class="p">(</span><span class="n">ntasks</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">min_tasks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_dt_from_min_res</span> <span class="o">=</span> <span class="n">get_dt_from_min_res</span>
 
         <span class="c1"># make sure output is double precision</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.output&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.streams'</span><span class="p">,</span> <span class="s1">'streams.output'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.ocean.tests.global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+            <span class="s1">'compass.ocean.tests.global_ocean'</span><span class="p">,</span> <span class="s1">'namelist.forward'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.ocean.tests.global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+            <span class="s1">'compass.ocean.tests.global_ocean'</span><span class="p">,</span> <span class="s1">'streams.forward'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config_check_ssh_consistency</span><span class="o">=</span><span class="s1">&#39;.false.&#39;</span><span class="p">,</span>
-                           <span class="n">config_land_ice_flux_mode</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">land_ice_flux_mode</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config_check_ssh_consistency</span><span class="o">=</span><span class="s1">'.false.'</span><span class="p">,</span>
+                           <span class="n">config_land_ice_flux_mode</span><span class="o">=</span><span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">land_ice_flux_mode</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">land_ice_flux_mode</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
-                <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;prescribed_ismf_paolo2023.nc&#39;</span>
-                <span class="n">target</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/remap_ice_shelf_melt/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">if</span> <span class="n">land_ice_flux_mode</span> <span class="o">==</span> <span class="s1">'data'</span><span class="p">:</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="s1">'prescribed_ismf_paolo2023.nc'</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/remap_ice_shelf_melt/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">'</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-                    <span class="s1">&#39;compass.ocean.tests.global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.dismf&#39;</span><span class="p">)</span>
+                    <span class="s1">'compass.ocean.tests.global_ocean'</span><span class="p">,</span> <span class="s1">'streams.dismf'</span><span class="p">)</span>
 
         <span class="n">mesh_package</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">package</span>
         <span class="n">mesh_package_contents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">contents</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">))</span>
-        <span class="n">mesh_namelists</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;namelist.forward&#39;</span><span class="p">,</span>
-                          <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="n">time_integrator</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+        <span class="n">mesh_namelists</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'namelist.forward'</span><span class="p">,</span>
+                          <span class="sa">f</span><span class="s1">'namelist.</span><span class="si">{</span><span class="n">time_integrator</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">mesh_namelist</span> <span class="ow">in</span> <span class="n">mesh_namelists</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">mesh_namelist</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="n">mesh_namelist</span><span class="p">)</span>
 
-        <span class="n">mesh_streams</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;streams.forward&#39;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s1">&#39;streams.</span><span class="si">{</span><span class="n">time_integrator</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+        <span class="n">mesh_streams</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'streams.forward'</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s1">'streams.</span><span class="si">{</span><span class="n">time_integrator</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">mesh_stream</span> <span class="ow">in</span> <span class="n">mesh_streams</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">mesh_stream</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="n">mesh_stream</span><span class="p">)</span>
 
         <span class="n">mesh_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">get_cull_mesh_path</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'mesh.nc'</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">initial_state_target</span> <span class="o">=</span> \
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/initial_state.nc&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/initial_state.nc'</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'init.nc'</span><span class="p">,</span>
                                 <span class="n">work_dir_target</span><span class="o">=</span><span class="n">initial_state_target</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;forcing_data.nc&#39;</span><span class="p">,</span>
-                <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/&#39;</span>
-                                <span class="sa">f</span><span class="s1">&#39;init_mode_forcing_data.nc&#39;</span><span class="p">)</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">'forcing_data.nc'</span><span class="p">,</span>
+                <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/'</span>
+                                <span class="sa">f</span><span class="s1">'init_mode_forcing_data.nc'</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/graph.info&#39;</span><span class="p">)</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span>
+                <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/graph.info'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span></div>
 
@@ -281,89 +281,89 @@
 <div class="viewcode-block" id="ForwardStep.setup">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.forward.ForwardStep.setup.html#compass.ocean.tests.global_ocean.forward.ForwardStep.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set the number of MPI tasks and the time step based on config options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_ntasks</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_ntasks</span><span class="p">:</span>
-            <span class="n">mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;init.nc&#39;</span><span class="p">)</span>
+            <span class="n">mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'init.nc'</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">get_ntasks_from_cell_count</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">at_setup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="o">=</span><span class="n">mesh_filename</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
-                                                <span class="s1">&#39;forward_threads&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span>
+                                                <span class="s1">'forward_threads'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dt_from_min_res</span><span class="p">:</span>
             <span class="n">dt</span><span class="p">,</span> <span class="n">btr_dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dts</span><span class="p">()</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit_ab2&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">({</span><span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="n">dt</span><span class="p">,</span>
-                                           <span class="s1">&#39;config_btr_dt&#39;</span><span class="p">:</span> <span class="n">btr_dt</span><span class="p">})</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">'split_explicit_ab2'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">({</span><span class="s1">'config_dt'</span><span class="p">:</span> <span class="n">dt</span><span class="p">,</span>
+                                           <span class="s1">'config_btr_dt'</span><span class="p">:</span> <span class="n">btr_dt</span><span class="p">})</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># RK4, so use the smaller time step</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">({</span><span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="n">btr_dt</span><span class="p">})</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">({</span><span class="s1">'config_dt'</span><span class="p">:</span> <span class="n">btr_dt</span><span class="p">})</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update resources at runtime from config options</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_ntasks</span><span class="p">:</span>
-            <span class="n">mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;mesh.nc&#39;</span><span class="p">)</span>
+            <span class="n">mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'mesh.nc'</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">get_ntasks_from_cell_count</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">at_setup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="o">=</span><span class="n">mesh_filename</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
-                                                <span class="s1">&#39;forward_threads&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span>
+                                                <span class="s1">'forward_threads'</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">runtime_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update the time step based on config options that a user might have</span>
 <span class="sd">        changed</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dt_from_min_res</span><span class="p">:</span>
             <span class="n">dt</span><span class="p">,</span> <span class="n">btr_dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dts</span><span class="p">()</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit_ab2&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">({</span><span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="n">dt</span><span class="p">,</span>
-                                                 <span class="s1">&#39;config_btr_dt&#39;</span><span class="p">:</span> <span class="n">btr_dt</span><span class="p">})</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">'split_explicit_ab2'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">({</span><span class="s1">'config_dt'</span><span class="p">:</span> <span class="n">dt</span><span class="p">,</span>
+                                                 <span class="s1">'config_btr_dt'</span><span class="p">:</span> <span class="n">btr_dt</span><span class="p">})</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># RK4, so use the smaller time step</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">({</span><span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="n">btr_dt</span><span class="p">})</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">({</span><span class="s1">'config_dt'</span><span class="p">:</span> <span class="n">btr_dt</span><span class="p">})</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">runtime_setup</span><span class="p">()</span>
 
 <div class="viewcode-block" id="ForwardStep.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.forward.ForwardStep.run.html#compass.ocean.tests.global_ocean.forward.ForwardStep.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the testcase</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-        <span class="n">update_pio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
-                                            <span class="s1">&#39;forward_update_pio&#39;</span><span class="p">)</span>
+        <span class="n">update_pio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span>
+                                            <span class="s1">'forward_update_pio'</span><span class="p">)</span>
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="n">update_pio</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_metadata</span><span class="p">:</span>
             <span class="n">add_mesh_and_init_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
-                                       <span class="n">init_filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">)</span></div>
+                                       <span class="n">init_filename</span><span class="o">=</span><span class="s1">'init.nc'</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_dts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the time step and barotropic time steps</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="c1"># dt is proportional to resolution: default 30 seconds per km</span>
-        <span class="n">dt_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_per_km&#39;</span><span class="p">)</span>
-        <span class="n">btr_dt_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;btr_dt_per_km&#39;</span><span class="p">)</span>
-        <span class="n">min_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;min_res&#39;</span><span class="p">)</span>
+        <span class="n">dt_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'dt_per_km'</span><span class="p">)</span>
+        <span class="n">btr_dt_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'btr_dt_per_km'</span><span class="p">)</span>
+        <span class="n">min_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'global_ocean'</span><span class="p">,</span> <span class="s1">'min_res'</span><span class="p">)</span>
 
         <span class="n">dt</span> <span class="o">=</span> <span class="n">dt_per_km</span> <span class="o">*</span> <span class="n">min_res</span>
         <span class="c1"># https://stackoverflow.com/a/1384565/7728169</span>
-        <span class="n">dt</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">(</span><span class="n">dt</span><span class="p">))</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%H:%M:%S'</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">(</span><span class="n">dt</span><span class="p">))</span>
 
         <span class="n">btr_dt</span> <span class="o">=</span> <span class="n">btr_dt_per_km</span> <span class="o">*</span> <span class="n">min_res</span>
-        <span class="n">btr_dt</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">(</span><span class="n">btr_dt</span><span class="p">))</span>
+        <span class="n">btr_dt</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%H:%M:%S'</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">(</span><span class="n">btr_dt</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">dt</span><span class="p">,</span> <span class="n">btr_dt</span></div>
 
@@ -372,7 +372,7 @@
 <div class="viewcode-block" id="ForwardTestCase">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.forward.ForwardTestCase.html#compass.ocean.tests.global_ocean.forward.ForwardTestCase">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ForwardTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A parent class for test cases for forward runs with global MPAS-Ocean mesh</span>
 
 <span class="sd">    Attributes</span>
@@ -383,14 +383,14 @@
 <span class="sd">    init : compass.ocean.tests.global_ocean.init.Init</span>
 <span class="sd">        The test case that produces the initial condition for this run</span>
 
-<span class="sd">    time_integrator : {&#39;split_explicit_ab2&#39;, &#39;RK4&#39;}</span>
+<span class="sd">    time_integrator : {'split_explicit_ab2', 'RK4'}</span>
 <span class="sd">        The time integrator to use for the forward run</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ForwardTestCase.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.forward.ForwardTestCase.html#compass.ocean.tests.global_ocean.forward.ForwardTestCase.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create test case</span>
 
 <span class="sd">        Parameters</span>
@@ -404,12 +404,12 @@
 <span class="sd">        init : compass.ocean.tests.global_ocean.init.Init</span>
 <span class="sd">            The test case that produces the initial condition for this run</span>
 
-<span class="sd">        time_integrator : {&#39;split_explicit_ab2&#39;, &#39;RK4&#39;}</span>
+<span class="sd">        time_integrator : {'split_explicit_ab2', 'RK4'}</span>
 <span class="sd">            The time integrator to use for the forward run</span>
 
 <span class="sd">        name : str</span>
 <span class="sd">            the name of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="n">init</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_integrator</span> <span class="o">=</span> <span class="n">time_integrator</span>
@@ -420,27 +420,27 @@
 <div class="viewcode-block" id="ForwardTestCase.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.forward.ForwardTestCase.configure.html#compass.ocean.tests.global_ocean.forward.ForwardTestCase.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Modify the configuration options for this test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span></div>
 </div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_forward_subdir</span><span class="p">(</span><span class="n">init_subdir</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the subdirectory for a test case that is based on a forward run with</span>
 <span class="sd">    a time integrator</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit_ab2&#39;</span><span class="p">:</span>
-        <span class="c1"># this is the default so we won&#39;t make a subdir for the time</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">'split_explicit_ab2'</span><span class="p">:</span>
+        <span class="c1"># this is the default so we won't make a subdir for the time</span>
         <span class="c1"># integrator</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">init_subdir</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;RK4&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">'RK4'</span><span class="p">:</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">init_subdir</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unexpected time integrator </span><span class="si">{</span><span class="n">time_integrator</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Unexpected time integrator </span><span class="si">{</span><span class="n">time_integrator</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">subdir</span>
 </pre></div>

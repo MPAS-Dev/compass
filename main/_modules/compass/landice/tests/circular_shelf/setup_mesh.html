@@ -123,7 +123,7 @@
 <div class="viewcode-block" id="SetupMesh">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.circular_shelf.setup_mesh.SetupMesh.html#compass.landice.tests.circular_shelf.setup_mesh.SetupMesh">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SetupMesh</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating a mesh and initial condition for circular_shelf</span>
 <span class="sd">    test cases</span>
 
@@ -131,23 +131,23 @@
 <span class="sd">    ----------</span>
 <span class="sd">    mesh_type : str</span>
 <span class="sd">        The resolution or mesh type of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="SetupMesh.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.circular_shelf.setup_mesh.SetupMesh.html#compass.landice.tests.circular_shelf.setup_mesh.SetupMesh.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.TestCase</span>
 <span class="sd">            The test case this step belongs to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;setup_mesh&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'setup_mesh'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">mesh_type</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">)</span></div>
 
 
     <span class="c1"># no setup() method is needed</span>
@@ -155,47 +155,47 @@
 <div class="viewcode-block" id="SetupMesh.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.circular_shelf.setup_mesh.SetupMesh.run.html#compass.landice.tests.circular_shelf.setup_mesh.SetupMesh.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circular_shelf&#39;</span><span class="p">]</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'circular_shelf'</span><span class="p">]</span>
 
-        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">)</span>
-        <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;dc&#39;</span><span class="p">)</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'nx'</span><span class="p">)</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'ny'</span><span class="p">)</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'dc'</span><span class="p">)</span>
 
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span>
                                       <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                       <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;grid.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">'grid.nc'</span><span class="p">)</span>
 
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;mpas_grid.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">'mpas_grid.nc'</span><span class="p">)</span>
 
-        <span class="n">levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;levels&#39;</span><span class="p">)</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_landice_grid_from_generic_mpas_grid&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_grid.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span>
-                <span class="s1">&#39;--diri&#39;</span><span class="p">]</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'levels'</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'create_landice_grid_from_generic_mpas_grid'</span><span class="p">,</span>
+                <span class="s1">'-i'</span><span class="p">,</span> <span class="s1">'mpas_grid.nc'</span><span class="p">,</span>
+                <span class="s1">'-o'</span><span class="p">,</span> <span class="s1">'landice_grid.nc'</span><span class="p">,</span>
+                <span class="s1">'-l'</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span>
+                <span class="s1">'--diri'</span><span class="p">]</span>
 
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
-        <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
-                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
+        <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">,</span>
+                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">)</span>
 
         <span class="n">_setup_circular_shelf_initial_conditions</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
-                                                 <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span></div>
+                                                 <span class="n">filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">)</span></div>
 </div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_setup_circular_shelf_initial_conditions</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Add the initial condition to the given MPAS mesh file</span>
 
 <span class="sd">    Parameters</span>
@@ -209,37 +209,37 @@
 
 <span class="sd">    filename : str</span>
 <span class="sd">        file to setup circular_shelf</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circular_shelf&#39;</span><span class="p">]</span>
-    <span class="n">use_mu</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;use_mu&#39;</span><span class="p">)</span>
-    <span class="n">use_7cells</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;use_7cells&#39;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'circular_shelf'</span><span class="p">]</span>
+    <span class="n">use_mu</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'use_mu'</span><span class="p">)</span>
+    <span class="n">use_7cells</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'use_7cells'</span><span class="p">)</span>
 
     <span class="c1"># Open the file, get needed dimensions</span>
-    <span class="n">gridfile</span> <span class="o">=</span> <span class="n">NetCDFFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
-    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gridfile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">])</span>
+    <span class="n">gridfile</span> <span class="o">=</span> <span class="n">NetCDFFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">)</span>
+    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gridfile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">nVertLevels</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;nVertLevels in the supplied file was </span><span class="si">{}</span><span class="s1">.  &#39;</span>
-                    <span class="s1">&#39;This test case is typically run with 5 levels.&#39;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'nVertLevels in the supplied file was </span><span class="si">{}</span><span class="s1">.  '</span>
+                    <span class="s1">'This test case is typically run with 5 levels.'</span>
                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">))</span>
     <span class="c1"># Get variables</span>
-    <span class="n">xCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xCell&#39;</span><span class="p">]</span>
-    <span class="n">yCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yCell&#39;</span><span class="p">]</span>
-    <span class="n">xEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xEdge&#39;</span><span class="p">]</span>
-    <span class="n">yEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yEdge&#39;</span><span class="p">]</span>
-    <span class="n">xVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xVertex&#39;</span><span class="p">]</span>
-    <span class="n">yVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yVertex&#39;</span><span class="p">]</span>
-    <span class="n">thickness</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span>
-    <span class="n">bedTopography</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bedTopography&#39;</span><span class="p">]</span>
-    <span class="n">layerThicknessFractions</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;layerThicknessFractions&#39;</span><span class="p">]</span>
-    <span class="n">cellsOnCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;cellsOnCell&#39;</span><span class="p">]</span>
+    <span class="n">xCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xCell'</span><span class="p">]</span>
+    <span class="n">yCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yCell'</span><span class="p">]</span>
+    <span class="n">xEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xEdge'</span><span class="p">]</span>
+    <span class="n">yEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yEdge'</span><span class="p">]</span>
+    <span class="n">xVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xVertex'</span><span class="p">]</span>
+    <span class="n">yVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yVertex'</span><span class="p">]</span>
+    <span class="n">thickness</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'thickness'</span><span class="p">]</span>
+    <span class="n">bedTopography</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'bedTopography'</span><span class="p">]</span>
+    <span class="n">layerThicknessFractions</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'layerThicknessFractions'</span><span class="p">]</span>
+    <span class="n">cellsOnCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'cellsOnCell'</span><span class="p">]</span>
     <span class="c1"># Get b.c. variables</span>
-    <span class="n">SMB</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;sfcMassBal&#39;</span><span class="p">]</span>
+    <span class="n">SMB</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'sfcMassBal'</span><span class="p">]</span>
 
     <span class="c1"># Center the circular_shelf in the center of the cell that is closest to</span>
     <span class="c1"># the center of the domain.</span>
     <span class="c1"># Only do this if it appears this has not already been done:</span>
     <span class="k">if</span> <span class="n">xVertex</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Shifting x/y coordinates to center domain at 0,0.&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Shifting x/y coordinates to center domain at 0,0."</span><span class="p">)</span>
         <span class="c1"># Find center of domain</span>
         <span class="n">x0</span> <span class="o">=</span> <span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
         <span class="n">y0</span> <span class="o">=</span> <span class="n">yCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">yCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">yCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
@@ -276,29 +276,29 @@
     <span class="n">bedTopography</span><span class="p">[:]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2000.0</span>
     <span class="n">bedTopography</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">centerCellIndex</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">880.0</span>
     <span class="k">if</span> <span class="n">use_7cells</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Making the grounded portion of the domain cover 7 cells &#39;</span>
-                    <span class="s1">&#39;- the center cell and its 6 neighbors.&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Making the grounded portion of the domain cover 7 cells '</span>
+                    <span class="s1">'- the center cell and its 6 neighbors.'</span><span class="p">)</span>
         <span class="n">bedTopography</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">cellsOnCell</span><span class="p">[</span><span class="n">centerCellIndex</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">880.0</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Making the grounded portion of the domain cover 1 cell&#39;</span>
-                    <span class="s1">&#39;- the center cell.&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Making the grounded portion of the domain cover 1 cell'</span>
+                    <span class="s1">'- the center cell.'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">use_mu</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Setting no-slip on the grounded portion of the domain&#39;</span>
-                    <span class="s1">&#39;by setting a high mu field there.&#39;</span><span class="p">)</span>
-        <span class="n">mu</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;muFriction&#39;</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Setting no-slip on the grounded portion of the domain'</span>
+                    <span class="s1">'by setting a high mu field there.'</span><span class="p">)</span>
+        <span class="n">mu</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'muFriction'</span><span class="p">]</span>
         <span class="c1"># mu is 0 everywhere except a high value in the grounded cell</span>
         <span class="n">mu</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">mu</span><span class="p">[</span><span class="n">centerCellIndex</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0e8</span>
         <span class="k">if</span> <span class="n">use_7cells</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">[</span><span class="n">cellsOnCell</span><span class="p">[</span><span class="n">centerCellIndex</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0e8</span>
     <span class="k">else</span><span class="p">:</span>  <span class="c1"># use Dirichlet b.c.</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Setting no-slip on the grounded portion of the domain&#39;</span>
-                    <span class="s1">&#39;by setting no-slip Dirichlet velocity boundary&#39;</span>
-                    <span class="s1">&#39;conditions there.&#39;</span><span class="p">)</span>
-        <span class="n">dirMask</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;dirichletVelocityMask&#39;</span><span class="p">]</span>
-        <span class="n">uvel</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;uReconstructX&#39;</span><span class="p">]</span>
-        <span class="n">vvel</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;uReconstructY&#39;</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Setting no-slip on the grounded portion of the domain'</span>
+                    <span class="s1">'by setting no-slip Dirichlet velocity boundary'</span>
+                    <span class="s1">'conditions there.'</span><span class="p">)</span>
+        <span class="n">dirMask</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'dirichletVelocityMask'</span><span class="p">]</span>
+        <span class="n">uvel</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'uReconstructX'</span><span class="p">]</span>
+        <span class="n">vvel</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'uReconstructY'</span><span class="p">]</span>
         <span class="n">dirMask</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">uvel</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">vvel</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -316,7 +316,7 @@
 
     <span class="n">gridfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Successfully added circular shelf initial conditions to: </span><span class="si">{}</span><span class="s1">&#39;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Successfully added circular shelf initial conditions to: </span><span class="si">{}</span><span class="s1">'</span>
                 <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
 </pre></div>
 

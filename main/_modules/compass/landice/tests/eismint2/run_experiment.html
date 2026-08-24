@@ -122,12 +122,12 @@
 <div class="viewcode-block" id="RunExperiment">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.eismint2.run_experiment.RunExperiment.html#compass.landice.tests.eismint2.run_experiment.RunExperiment">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunExperiment</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for performing forward MALI runs as part of eismint2 test cases.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    experiment : {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;f&#39;, &#39;g&#39;}</span>
+<span class="sd">    experiment : {'a', 'b', 'c', 'd', 'f', 'g'}</span>
 <span class="sd">        The EISMINT2 experiment (a-d or f-g) to perform</span>
 
 <span class="sd">    suffixes : list of str, optional</span>
@@ -137,12 +137,12 @@
 <span class="sd">        the ``restart_run`` step of the ``restart_test`` runs the model</span>
 <span class="sd">        twice, the second time with ``namelist.landice.rst`` and</span>
 <span class="sd">        ``streams.landice.rst``</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="RunExperiment.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.eismint2.run_experiment.RunExperiment.html#compass.landice.tests.eismint2.run_experiment.RunExperiment.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">experiment</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;run_model&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">experiment</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'run_model'</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -150,7 +150,7 @@
 <span class="sd">        test_case : compass.TestCase</span>
 <span class="sd">            The test case this step belongs to</span>
 
-<span class="sd">        experiment : {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;f&#39;, &#39;g&#39;}</span>
+<span class="sd">        experiment : {'a', 'b', 'c', 'd', 'f', 'g'}</span>
 <span class="sd">            The EISMINT2 experiment (a-d or f-g) to perform</span>
 
 <span class="sd">        name : str, optional</span>
@@ -178,10 +178,10 @@
 <span class="sd">            the ``restart_run`` step of the ``restart_test`` runs the model</span>
 <span class="sd">            twice, the second time with ``namelist.landice.rst`` and</span>
 <span class="sd">            ``streams.landice.rst``</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">experiment</span> <span class="o">=</span> <span class="n">experiment</span>
         <span class="k">if</span> <span class="n">suffixes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">suffixes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;landice&#39;</span><span class="p">]</span>
+            <span class="n">suffixes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'landice'</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suffixes</span> <span class="o">=</span> <span class="n">suffixes</span>
         <span class="k">if</span> <span class="n">min_tasks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">ntasks</span>
@@ -191,25 +191,25 @@
 
         <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">suffixes</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.landice.tests.eismint2&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.landice&#39;</span><span class="p">,</span>
-                <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+                <span class="s1">'compass.landice.tests.eismint2'</span><span class="p">,</span> <span class="s1">'namelist.landice'</span><span class="p">,</span>
+                <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.landice.tests.eismint2&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
-                <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+                <span class="s1">'compass.landice.tests.eismint2'</span><span class="p">,</span> <span class="s1">'streams.landice'</span><span class="p">,</span>
+                <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
-                                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../setup_mesh/landice_grid.nc&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'landice_grid.nc'</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="s1">'../setup_mesh/landice_grid.nc'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;experiment_a_output.nc&#39;</span><span class="p">,</span>
-                                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../experiment_a/output.nc&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'experiment_a_output.nc'</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="s1">'../experiment_a/output.nc'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../setup_mesh/graph.info&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'graph.info'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../setup_mesh/graph.info'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output.nc'</span><span class="p">)</span></div>
 
 
     <span class="c1"># no setup() is needed</span>
@@ -217,21 +217,21 @@
 <div class="viewcode-block" id="RunExperiment.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.eismint2.run_experiment.RunExperiment.run.html#compass.landice.tests.eismint2.run_experiment.RunExperiment.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">_setup_eismint2_initial_conditions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment</span><span class="p">,</span>
-                                           <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;initial_condition.nc&#39;</span><span class="p">)</span>
+                                           <span class="n">filename</span><span class="o">=</span><span class="s1">'initial_condition.nc'</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">suffixes</span><span class="p">:</span>
-            <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
-                      <span class="n">streams</span><span class="o">=</span><span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span></div>
+            <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">'namelist.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
+                      <span class="n">streams</span><span class="o">=</span><span class="s1">'streams.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span></div>
 </div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_setup_eismint2_initial_conditions</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">experiment</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Add the initial condition for the given EISMINT2 experiment to the given</span>
 <span class="sd">    MPAS mesh file</span>
 
@@ -240,19 +240,19 @@
 <span class="sd">    logger : logging.Logger</span>
 <span class="sd">        A logger for output from the step</span>
 
-<span class="sd">    experiment : {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;f&#39;, &#39;g&#39;}</span>
+<span class="sd">    experiment : {'a', 'b', 'c', 'd', 'f', 'g'}</span>
 <span class="sd">        The name of the experiment</span>
 
 <span class="sd">    filename : str</span>
 <span class="sd">        file to add the initial condition to</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Setting up EISMINT2 Experiment </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">experiment</span><span class="p">))</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Setting up EISMINT2 Experiment </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">experiment</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid experiment specified: </span><span class="si">{}</span><span class="s2">.  Please specify &quot;</span>
-                         <span class="s2">&quot;an experiment between &#39;a&#39; and &#39;g&#39;, excluding &quot;</span>
-                         <span class="s2">&quot;&#39;e&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">experiment</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Invalid experiment specified: </span><span class="si">{}</span><span class="s2">.  Please specify "</span>
+                         <span class="s2">"an experiment between 'a' and 'g', excluding "</span>
+                         <span class="s2">"'e'"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">experiment</span><span class="p">))</span>
 
     <span class="c1"># Setup dictionaries of parameter values for each experiment</span>
     <span class="c1"># Mmax: Maximum SMB at center of domain (m a-1)</span>
@@ -262,50 +262,50 @@
     <span class="c1"># ST: gradient of air temperature with horizontal distance (K km-1)</span>
     <span class="c1"># beta: basal traction coefficient (Pa m-1 a)</span>
     <span class="c1">#       Note: beta is the inverse of parameter B in Payne et al. (2000)</span>
-    <span class="n">exp_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Mmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;Sb&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="o">**-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Rel&#39;</span><span class="p">:</span> <span class="mf">450.0</span><span class="p">,</span>
-                        <span class="s1">&#39;Tmin&#39;</span><span class="p">:</span> <span class="mf">238.15</span><span class="p">,</span> <span class="s1">&#39;ST&#39;</span><span class="p">:</span> <span class="mf">1.67e-2</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">:</span> <span class="mf">1.0e8</span><span class="p">},</span>
-                  <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Mmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;Sb&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="o">**-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Rel&#39;</span><span class="p">:</span> <span class="mf">450.0</span><span class="p">,</span>
-                        <span class="s1">&#39;Tmin&#39;</span><span class="p">:</span> <span class="mf">243.15</span><span class="p">,</span> <span class="s1">&#39;ST&#39;</span><span class="p">:</span> <span class="mf">1.67e-2</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">:</span> <span class="mf">1.0e8</span><span class="p">},</span>
-                  <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Mmax&#39;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">&#39;Sb&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="o">**-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Rel&#39;</span><span class="p">:</span> <span class="mf">425.0</span><span class="p">,</span>
-                        <span class="s1">&#39;Tmin&#39;</span><span class="p">:</span> <span class="mf">238.15</span><span class="p">,</span> <span class="s1">&#39;ST&#39;</span><span class="p">:</span> <span class="mf">1.67e-2</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">:</span> <span class="mf">1.0e8</span><span class="p">},</span>
-                  <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Mmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;Sb&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="o">**-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Rel&#39;</span><span class="p">:</span> <span class="mf">425.0</span><span class="p">,</span>
-                        <span class="s1">&#39;Tmin&#39;</span><span class="p">:</span> <span class="mf">238.15</span><span class="p">,</span> <span class="s1">&#39;ST&#39;</span><span class="p">:</span> <span class="mf">1.67e-2</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">:</span> <span class="mf">1.0e8</span><span class="p">},</span>
-                  <span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Mmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;Sb&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="o">**-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Rel&#39;</span><span class="p">:</span> <span class="mf">450.0</span><span class="p">,</span>
-                        <span class="s1">&#39;Tmin&#39;</span><span class="p">:</span> <span class="mf">223.15</span><span class="p">,</span> <span class="s1">&#39;ST&#39;</span><span class="p">:</span> <span class="mf">1.67e-2</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">:</span> <span class="mf">1.0e8</span><span class="p">},</span>
-                  <span class="s1">&#39;g&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Mmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;Sb&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="o">**-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Rel&#39;</span><span class="p">:</span> <span class="mf">450.0</span><span class="p">,</span>
-                        <span class="s1">&#39;Tmin&#39;</span><span class="p">:</span> <span class="mf">238.15</span><span class="p">,</span> <span class="s1">&#39;ST&#39;</span><span class="p">:</span> <span class="mf">1.67e-2</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">:</span> <span class="mf">1.0e3</span><span class="p">}}</span>
+    <span class="n">exp_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'a'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'Mmax'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">'Sb'</span><span class="p">:</span> <span class="mf">10.0</span><span class="o">**-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'Rel'</span><span class="p">:</span> <span class="mf">450.0</span><span class="p">,</span>
+                        <span class="s1">'Tmin'</span><span class="p">:</span> <span class="mf">238.15</span><span class="p">,</span> <span class="s1">'ST'</span><span class="p">:</span> <span class="mf">1.67e-2</span><span class="p">,</span> <span class="s1">'beta'</span><span class="p">:</span> <span class="mf">1.0e8</span><span class="p">},</span>
+                  <span class="s1">'b'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'Mmax'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">'Sb'</span><span class="p">:</span> <span class="mf">10.0</span><span class="o">**-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'Rel'</span><span class="p">:</span> <span class="mf">450.0</span><span class="p">,</span>
+                        <span class="s1">'Tmin'</span><span class="p">:</span> <span class="mf">243.15</span><span class="p">,</span> <span class="s1">'ST'</span><span class="p">:</span> <span class="mf">1.67e-2</span><span class="p">,</span> <span class="s1">'beta'</span><span class="p">:</span> <span class="mf">1.0e8</span><span class="p">},</span>
+                  <span class="s1">'c'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'Mmax'</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">'Sb'</span><span class="p">:</span> <span class="mf">10.0</span><span class="o">**-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'Rel'</span><span class="p">:</span> <span class="mf">425.0</span><span class="p">,</span>
+                        <span class="s1">'Tmin'</span><span class="p">:</span> <span class="mf">238.15</span><span class="p">,</span> <span class="s1">'ST'</span><span class="p">:</span> <span class="mf">1.67e-2</span><span class="p">,</span> <span class="s1">'beta'</span><span class="p">:</span> <span class="mf">1.0e8</span><span class="p">},</span>
+                  <span class="s1">'d'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'Mmax'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">'Sb'</span><span class="p">:</span> <span class="mf">10.0</span><span class="o">**-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'Rel'</span><span class="p">:</span> <span class="mf">425.0</span><span class="p">,</span>
+                        <span class="s1">'Tmin'</span><span class="p">:</span> <span class="mf">238.15</span><span class="p">,</span> <span class="s1">'ST'</span><span class="p">:</span> <span class="mf">1.67e-2</span><span class="p">,</span> <span class="s1">'beta'</span><span class="p">:</span> <span class="mf">1.0e8</span><span class="p">},</span>
+                  <span class="s1">'f'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'Mmax'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">'Sb'</span><span class="p">:</span> <span class="mf">10.0</span><span class="o">**-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'Rel'</span><span class="p">:</span> <span class="mf">450.0</span><span class="p">,</span>
+                        <span class="s1">'Tmin'</span><span class="p">:</span> <span class="mf">223.15</span><span class="p">,</span> <span class="s1">'ST'</span><span class="p">:</span> <span class="mf">1.67e-2</span><span class="p">,</span> <span class="s1">'beta'</span><span class="p">:</span> <span class="mf">1.0e8</span><span class="p">},</span>
+                  <span class="s1">'g'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'Mmax'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">'Sb'</span><span class="p">:</span> <span class="mf">10.0</span><span class="o">**-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'Rel'</span><span class="p">:</span> <span class="mf">450.0</span><span class="p">,</span>
+                        <span class="s1">'Tmin'</span><span class="p">:</span> <span class="mf">238.15</span><span class="p">,</span> <span class="s1">'ST'</span><span class="p">:</span> <span class="mf">1.67e-2</span><span class="p">,</span> <span class="s1">'beta'</span><span class="p">:</span> <span class="mf">1.0e3</span><span class="p">}}</span>
     <span class="n">xsummit</span> <span class="o">=</span> <span class="mf">750000.0</span>
     <span class="n">ysummit</span> <span class="o">=</span> <span class="mf">750000.0</span>
     <span class="n">rhoi</span> <span class="o">=</span> <span class="mf">910.0</span>
     <span class="n">scyr</span> <span class="o">=</span> <span class="mf">3600.0</span> <span class="o">*</span> <span class="mf">24.0</span> <span class="o">*</span> <span class="mf">365.0</span>
 
     <span class="c1"># Some experiments start from scratch, others start from the SS of a previous experiment</span>
-    <span class="k">if</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">):</span>
         <span class="c1"># we will build the mesh from scratch</span>
-        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="s1">'landice_grid.nc'</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># use the final state of experiment A</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncks&#39;</span><span class="p">,</span> <span class="s1">&#39;-O&#39;</span><span class="p">,</span> <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;Time,-1&#39;</span><span class="p">,</span> <span class="s1">&#39;experiment_a_output.nc&#39;</span><span class="p">,</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'ncks'</span><span class="p">,</span> <span class="s1">'-O'</span><span class="p">,</span> <span class="s1">'-d'</span><span class="p">,</span> <span class="s1">'Time,-1'</span><span class="p">,</span> <span class="s1">'experiment_a_output.nc'</span><span class="p">,</span>
                 <span class="n">filename</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># Open the new input file, get needed dimensions &amp; variables</span>
-    <span class="n">gridfile</span> <span class="o">=</span> <span class="n">NetCDFFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
-    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gridfile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">])</span>
+    <span class="n">gridfile</span> <span class="o">=</span> <span class="n">NetCDFFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">)</span>
+    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gridfile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">])</span>
     <span class="c1"># Get variables</span>
-    <span class="n">xCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xCell&#39;</span><span class="p">][:]</span>
-    <span class="n">yCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yCell&#39;</span><span class="p">][:]</span>
-    <span class="n">xEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xEdge&#39;</span><span class="p">][:]</span>
-    <span class="n">yEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yEdge&#39;</span><span class="p">][:]</span>
-    <span class="n">xVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xVertex&#39;</span><span class="p">][:]</span>
-    <span class="n">yVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yVertex&#39;</span><span class="p">][:]</span>
+    <span class="n">xCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xCell'</span><span class="p">][:]</span>
+    <span class="n">yCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yCell'</span><span class="p">][:]</span>
+    <span class="n">xEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xEdge'</span><span class="p">][:]</span>
+    <span class="n">yEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yEdge'</span><span class="p">][:]</span>
+    <span class="n">xVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xVertex'</span><span class="p">][:]</span>
+    <span class="n">yVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yVertex'</span><span class="p">][:]</span>
 
     <span class="c1"># ===================</span>
     <span class="c1"># initial conditions</span>
     <span class="c1"># ===================</span>
     <span class="c1"># If starting from scratch, setup dimension variables and initial condition</span>
     <span class="c1"># variables</span>
-    <span class="k">if</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">):</span>
         <span class="c1"># Find center of domain</span>
         <span class="n">x0</span> <span class="o">=</span> <span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
         <span class="n">y0</span> <span class="o">=</span> <span class="n">yCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">yCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">yCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
@@ -326,27 +326,27 @@
         <span class="n">yEdge</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">yEdge</span><span class="p">[:]</span> <span class="o">+</span> <span class="n">yShift</span>
         <span class="n">xVertex</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">xVertex</span><span class="p">[:]</span> <span class="o">+</span> <span class="n">xShift</span>
         <span class="n">yVertex</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">yVertex</span><span class="p">[:]</span> <span class="o">+</span> <span class="n">yShift</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xCell&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">xCell</span><span class="p">[:]</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yCell&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">yCell</span><span class="p">[:]</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xEdge&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">xEdge</span><span class="p">[:]</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yEdge&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">yEdge</span><span class="p">[:]</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xVertex&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">xVertex</span><span class="p">[:]</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yVertex&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">yVertex</span><span class="p">[:]</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xCell'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">xCell</span><span class="p">[:]</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yCell'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">yCell</span><span class="p">[:]</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xEdge'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">xEdge</span><span class="p">[:]</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yEdge'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">yEdge</span><span class="p">[:]</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xVertex'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">xVertex</span><span class="p">[:]</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'yVertex'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">yVertex</span><span class="p">[:]</span>
 
         <span class="c1"># Assign initial condition variable values for EISMINT-2 experiment</span>
         <span class="c1"># Start with no ice</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'thickness'</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="c1"># flat bed at sea level</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bedTopography&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="c1"># constant, arbitrary temperature, degrees K (doesn&#39;t matter since</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'bedTopography'</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="c1"># constant, arbitrary temperature, degrees K (doesn't matter since</span>
         <span class="c1"># there is no ice initially)</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">273.15</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'temperature'</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">273.15</span>
         <span class="c1"># Setup layerThicknessFractions</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;layerThicknessFractions&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">nVertLevels</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'layerThicknessFractions'</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">nVertLevels</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">StrLen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gridfile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;StrLen&#39;</span><span class="p">])</span>
-        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xtime&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-            <span class="s1">&#39;000000-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">StrLen</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">))</span>
+        <span class="n">StrLen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gridfile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'StrLen'</span><span class="p">])</span>
+        <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'xtime'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="s1">'000000-01-01_00:00:00'</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">StrLen</span><span class="p">,</span> <span class="s1">' '</span><span class="p">))</span>
 
     <span class="c1"># Now update/set origin location and distance array</span>
     <span class="n">r</span> <span class="o">=</span> <span class="p">((</span><span class="n">xCell</span><span class="p">[:]</span> <span class="o">-</span> <span class="n">xsummit</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">yCell</span><span class="p">[:]</span> <span class="o">-</span> <span class="n">ysummit</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
@@ -357,60 +357,60 @@
     <span class="c1"># Define values prescribed by Payne et al. 2000 paper.</span>
 
     <span class="n">params</span> <span class="o">=</span> <span class="n">exp_params</span><span class="p">[</span><span class="n">experiment</span><span class="p">]</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parameters for this experiment: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Parameters for this experiment: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
 
     <span class="c1"># SMB field specified by EISMINT, constant in time for EISMINT2</span>
     <span class="c1"># It is a function of geographical position (not elevation)</span>
 
     <span class="c1"># maximum accumulation rate [m/yr] converted to [m/s]</span>
-    <span class="n">Mmax</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;Mmax&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">scyr</span>
+    <span class="n">Mmax</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'Mmax'</span><span class="p">]</span> <span class="o">/</span> <span class="n">scyr</span>
     <span class="c1"># gradient of accumulation rate change with horizontal distance  [m/a/km]</span>
     <span class="c1"># converted to [m/s/m]</span>
-    <span class="n">Sb</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;Sb&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">scyr</span> <span class="o">/</span> <span class="mf">1000.0</span>
+    <span class="n">Sb</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'Sb'</span><span class="p">]</span> <span class="o">/</span> <span class="n">scyr</span> <span class="o">/</span> <span class="mf">1000.0</span>
     <span class="c1"># accumulation rate at 0 position  [km] converted to [m]</span>
-    <span class="n">Rel</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;Rel&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1000.0</span>
+    <span class="n">Rel</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'Rel'</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1000.0</span>
 
     <span class="n">SMB</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">Mmax</span><span class="p">,</span> <span class="n">Sb</span> <span class="o">*</span> <span class="p">(</span><span class="n">Rel</span> <span class="o">-</span> <span class="n">r</span><span class="p">))</span>  <span class="c1"># [m ice/s]</span>
     <span class="n">SMB</span> <span class="o">=</span> <span class="n">SMB</span> <span class="o">*</span> <span class="n">rhoi</span>  <span class="c1"># in kg/m2/s</span>
-    <span class="k">if</span> <span class="s1">&#39;sfcMassBal&#39;</span> <span class="ow">in</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
-        <span class="n">sfcMassBalVar</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;sfcMassBal&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">'sfcMassBal'</span> <span class="ow">in</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+        <span class="n">sfcMassBalVar</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'sfcMassBal'</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">datatype</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span>
-            <span class="s1">&#39;xCell&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span>  <span class="c1"># Get the datatype for double precision float</span>
-        <span class="n">sfcMassBalVar</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;sfcMassBal&#39;</span><span class="p">,</span> <span class="n">datatype</span><span class="p">,</span>
-                                                <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">))</span>
+            <span class="s1">'xCell'</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span>  <span class="c1"># Get the datatype for double precision float</span>
+        <span class="n">sfcMassBalVar</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'sfcMassBal'</span><span class="p">,</span> <span class="n">datatype</span><span class="p">,</span>
+                                                <span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="s1">'nCells'</span><span class="p">))</span>
     <span class="n">sfcMassBalVar</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">SMB</span>
 
     <span class="c1"># Surface temperature</span>
 
     <span class="c1"># minimum surface air temperature [K]</span>
-    <span class="n">Tmin</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;Tmin&#39;</span><span class="p">]</span>
+    <span class="n">Tmin</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'Tmin'</span><span class="p">]</span>
     <span class="c1"># gradient of air temperature change with horizontal distance [K/km]</span>
     <span class="c1"># converted to [K/m]</span>
-    <span class="n">ST</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;ST&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1000.0</span>
+    <span class="n">ST</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'ST'</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1000.0</span>
 
-    <span class="k">if</span> <span class="s1">&#39;surfaceAirTemperature&#39;</span> <span class="ow">in</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
-        <span class="n">surfaceAirTemperatureVar</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;surfaceAirTemperature&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">'surfaceAirTemperature'</span> <span class="ow">in</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+        <span class="n">surfaceAirTemperatureVar</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'surfaceAirTemperature'</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">datatype</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span>
-            <span class="s1">&#39;xCell&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span>  <span class="c1"># Get the datatype for double precision float</span>
+            <span class="s1">'xCell'</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span>  <span class="c1"># Get the datatype for double precision float</span>
         <span class="n">surfaceAirTemperatureVar</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-            <span class="s1">&#39;surfaceAirTemperature&#39;</span><span class="p">,</span> <span class="n">datatype</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">))</span>
+            <span class="s1">'surfaceAirTemperature'</span><span class="p">,</span> <span class="n">datatype</span><span class="p">,</span> <span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="s1">'nCells'</span><span class="p">))</span>
     <span class="n">surfaceAirTemperatureVar</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">Tmin</span> <span class="o">+</span> <span class="n">ST</span> <span class="o">*</span> <span class="n">r</span>
 
     <span class="c1"># beta</span>
-    <span class="n">beta</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s1">&#39;beta&#39;</span> <span class="ow">in</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
-        <span class="n">betaVar</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">]</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'beta'</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">'beta'</span> <span class="ow">in</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+        <span class="n">betaVar</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'beta'</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">datatype</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span>
-            <span class="s1">&#39;xCell&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span>  <span class="c1"># Get the datatype for double precision float</span>
-        <span class="n">betaVar</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="n">datatype</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">))</span>
+            <span class="s1">'xCell'</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span>  <span class="c1"># Get the datatype for double precision float</span>
+        <span class="n">betaVar</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">'beta'</span><span class="p">,</span> <span class="n">datatype</span><span class="p">,</span> <span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="s1">'nCells'</span><span class="p">))</span>
     <span class="n">betaVar</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">beta</span>
 
     <span class="n">gridfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Successfully added initial conditions for EISMINT2, &#39;</span>
-                <span class="s1">&#39;experiment </span><span class="si">{}</span><span class="s1"> to the file: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">experiment</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Successfully added initial conditions for EISMINT2, '</span>
+                <span class="s1">'experiment </span><span class="si">{}</span><span class="s1"> to the file: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">experiment</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
 </pre></div>
 
            </div>

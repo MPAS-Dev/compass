@@ -116,10 +116,10 @@
 
 <div class="viewcode-block" id="extrapolate_variable">
 <a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.extrapolate.extrapolate_variable.html#compass.landice.extrapolate.extrapolate_variable">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">extrapolate_variable</span><span class="p">(</span><span class="n">nc_file</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">extrap_method</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>  <span class="c1"># noqa: C901</span>
-                         <span class="n">valid_region_method</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">extrapolate_variable</span><span class="p">(</span><span class="n">nc_file</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">extrap_method</span><span class="o">=</span><span class="s1">'auto'</span><span class="p">,</span>  <span class="c1"># noqa: C901</span>
+                         <span class="n">valid_region_method</span><span class="o">=</span><span class="s1">'auto'</span><span class="p">,</span>
                          <span class="n">set_value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Function to extrapolate variable values into undefined regions</span>
 
 <span class="sd">    Parameters</span>
@@ -139,45 +139,45 @@
 <span class="sd">    set_value : float</span>
 <span class="sd">        value to set variable to outside keepCellMask</span>
 <span class="sd">        when using -v value</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">nc_file</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">nc_file</span><span class="p">,</span> <span class="s1">'r+'</span><span class="p">)</span>
     <span class="n">varValue</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">var_name</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
     <span class="c1"># Extrapolation</span>
-    <span class="n">nCells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
-    <span class="k">if</span> <span class="s1">&#39;thickness&#39;</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">thickness</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
-        <span class="n">bed</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;bedTopography&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
-    <span class="n">cellsOnCell</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;cellsOnCell&#39;</span><span class="p">][:]</span>
-    <span class="n">nEdgesOnCell</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">][:]</span>
-    <span class="n">xCell</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;yCell&quot;</span><span class="p">][:]</span>
-    <span class="n">yCell</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;xCell&quot;</span><span class="p">][:]</span>
+    <span class="n">nCells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">'nCells'</span><span class="p">])</span>
+    <span class="k">if</span> <span class="s1">'thickness'</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">thickness</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'thickness'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">bed</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">"bedTopography"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">cellsOnCell</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'cellsOnCell'</span><span class="p">][:]</span>
+    <span class="n">nEdgesOnCell</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">'nEdgesOnCell'</span><span class="p">][:]</span>
+    <span class="n">xCell</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">"yCell"</span><span class="p">][:]</span>
+    <span class="n">yCell</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">"xCell"</span><span class="p">][:]</span>
 
     <span class="c1"># Define extrap method</span>
-    <span class="k">if</span> <span class="n">extrap_method</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;effectivePressure&quot;</span><span class="p">,</span> <span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="s2">&quot;muFriction&quot;</span><span class="p">]:</span>
-            <span class="n">extrap_method</span> <span class="o">=</span> <span class="s1">&#39;min&#39;</span>
-        <span class="k">elif</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;floatingBasalMassBal&quot;</span><span class="p">]:</span>
-            <span class="n">extrap_method</span> <span class="o">=</span> <span class="s1">&#39;idw&#39;</span>
+    <span class="k">if</span> <span class="n">extrap_method</span> <span class="o">==</span> <span class="s1">'auto'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"effectivePressure"</span><span class="p">,</span> <span class="s2">"beta"</span><span class="p">,</span> <span class="s2">"muFriction"</span><span class="p">]:</span>
+            <span class="n">extrap_method</span> <span class="o">=</span> <span class="s1">'min'</span>
+        <span class="k">elif</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"floatingBasalMassBal"</span><span class="p">]:</span>
+            <span class="n">extrap_method</span> <span class="o">=</span> <span class="s1">'idw'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">extrap_method</span> <span class="o">=</span> <span class="s1">&#39;idw&#39;</span>
+            <span class="n">extrap_method</span> <span class="o">=</span> <span class="s1">'idw'</span>
 
     <span class="c1"># Define region of good data to extrapolate from.</span>
-    <span class="k">if</span> <span class="n">valid_region_method</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;effectivePressure&quot;</span><span class="p">,</span> <span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="s2">&quot;muFriction&quot;</span><span class="p">]:</span>
-            <span class="n">valid_region_method</span> <span class="o">=</span> <span class="s1">&#39;grounded_ice&#39;</span>
-        <span class="k">elif</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;floatingBasalMassBal&quot;</span><span class="p">]:</span>
-            <span class="n">valid_region_method</span> <span class="o">=</span> <span class="s1">&#39;floating_ice&#39;</span>
+    <span class="k">if</span> <span class="n">valid_region_method</span> <span class="o">==</span> <span class="s1">'auto'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"effectivePressure"</span><span class="p">,</span> <span class="s2">"beta"</span><span class="p">,</span> <span class="s2">"muFriction"</span><span class="p">]:</span>
+            <span class="n">valid_region_method</span> <span class="o">=</span> <span class="s1">'grounded_ice'</span>
+        <span class="k">elif</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"floatingBasalMassBal"</span><span class="p">]:</span>
+            <span class="n">valid_region_method</span> <span class="o">=</span> <span class="s1">'floating_ice'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">valid_region_method</span> <span class="o">=</span> <span class="s1">&#39;ice&#39;</span>
+            <span class="n">valid_region_method</span> <span class="o">=</span> <span class="s1">'ice'</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start </span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s2"> extrapolation using </span><span class="si">{</span><span class="n">extrap_method</span><span class="si">}</span><span class="s2"> method, &quot;</span>
-          <span class="sa">f</span><span class="s2">&quot;defining good data using </span><span class="si">{</span><span class="n">valid_region_method</span><span class="si">}</span><span class="s2"> method&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Start </span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s2"> extrapolation using </span><span class="si">{</span><span class="n">extrap_method</span><span class="si">}</span><span class="s2"> method, "</span>
+          <span class="sa">f</span><span class="s2">"defining good data using </span><span class="si">{</span><span class="n">valid_region_method</span><span class="si">}</span><span class="s2"> method"</span><span class="p">)</span>
 
     <span class="c1"># Calculate seed mask baed on method for defining valid data</span>
-    <span class="k">if</span> <span class="n">valid_region_method</span> <span class="o">==</span> <span class="s1">&#39;positive_val&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">valid_region_method</span> <span class="o">==</span> <span class="s1">'positive_val'</span><span class="p">:</span>
         <span class="n">keepCellMask</span> <span class="o">=</span> <span class="p">(</span><span class="n">varValue</span><span class="p">[:]</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">valid_region_method</span> <span class="o">==</span> <span class="s1">&#39;grounded_ice&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">valid_region_method</span> <span class="o">==</span> <span class="s1">'grounded_ice'</span><span class="p">:</span>
         <span class="n">groundedMask</span> <span class="o">=</span> <span class="p">(</span><span class="n">thickness</span> <span class="o">&gt;</span> <span class="p">(</span><span class="o">-</span><span class="mf">1028.0</span> <span class="o">/</span> <span class="mf">910.0</span> <span class="o">*</span> <span class="n">bed</span><span class="p">))</span>
         <span class="n">keepCellMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">groundedMask</span><span class="p">)</span>
         <span class="c1"># grow mask by one cell oceanward of GL</span>
@@ -189,18 +189,18 @@
                     <span class="k">continue</span>
         <span class="c1"># ensure zero muFriction does not get extrapolated</span>
         <span class="n">keepCellMask</span> <span class="o">*=</span> <span class="p">(</span><span class="n">varValue</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">valid_region_method</span> <span class="o">==</span> <span class="s1">&#39;floating_ice&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">valid_region_method</span> <span class="o">==</span> <span class="s1">'floating_ice'</span><span class="p">:</span>
         <span class="n">floatingMask</span> <span class="o">=</span> <span class="p">(</span><span class="n">thickness</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1028.0</span> <span class="o">/</span> <span class="mf">910.0</span> <span class="o">*</span> <span class="n">bed</span><span class="p">))</span>
         <span class="n">keepCellMask</span> <span class="o">=</span> <span class="n">floatingMask</span> <span class="o">*</span> <span class="p">(</span><span class="n">varValue</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">valid_region_method</span> <span class="o">==</span> <span class="s1">&#39;ice&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">valid_region_method</span> <span class="o">==</span> <span class="s1">'ice'</span><span class="p">:</span>
         <span class="n">keepCellMask</span> <span class="o">=</span> <span class="p">(</span><span class="n">thickness</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;Unexpected value of valid_region_method encountered &quot;</span>
-                 <span class="s2">&quot;in landice/extrapolate.py&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">"Unexpected value of valid_region_method encountered "</span>
+                 <span class="s2">"in landice/extrapolate.py"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">keepCellMask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;In landice/extrapolate.py, initial keepCellMask has &quot;</span>
-                 <span class="s2">&quot;no valid cells&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">"In landice/extrapolate.py, initial keepCellMask has "</span>
+                 <span class="s2">"no valid cells"</span><span class="p">)</span>
 
     <span class="c1"># make a copy to edit that will be used later</span>
     <span class="n">keepCellMaskNew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">keepCellMask</span><span class="p">)</span>
@@ -215,7 +215,7 @@
     <span class="c1"># 5) Update mask</span>
     <span class="c1"># 6) go to step 1)</span>
 
-    <span class="k">if</span> <span class="n">extrap_method</span> <span class="o">==</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">extrap_method</span> <span class="o">==</span> <span class="s1">'value'</span><span class="p">:</span>
         <span class="n">varValue</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">keepCellMask</span><span class="p">))]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">set_value</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">while</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">keepCellMask</span><span class="p">)</span> <span class="o">!=</span> <span class="n">nCells</span><span class="p">:</span>
@@ -225,7 +225,7 @@
 
             <span class="k">for</span> <span class="n">iCell</span> <span class="ow">in</span> <span class="n">searchCells</span><span class="p">:</span>
                 <span class="n">neighborcellID</span> <span class="o">=</span> <span class="n">cellsOnCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">,</span> <span class="p">:</span><span class="n">nEdgesOnCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]]</span> <span class="o">-</span> <span class="mi">1</span>
-                <span class="c1"># Important: ignore the phantom &quot;neighbors&quot; that are off</span>
+                <span class="c1"># Important: ignore the phantom "neighbors" that are off</span>
                 <span class="c1"># the edge of the mesh (0 values in cellsOnCell)</span>
                 <span class="n">neighborcellID</span> <span class="o">=</span> <span class="n">neighborcellID</span><span class="p">[</span><span class="n">neighborcellID</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">]</span>
 
@@ -244,22 +244,22 @@
                     <span class="n">x_adj</span> <span class="o">=</span> <span class="n">xCell</span><span class="p">[</span><span class="n">nonzero_id</span><span class="p">]</span>
                     <span class="n">y_adj</span> <span class="o">=</span> <span class="n">yCell</span><span class="p">[</span><span class="n">nonzero_id</span><span class="p">]</span>
                     <span class="n">var_adj</span> <span class="o">=</span> <span class="n">varValueOld</span><span class="p">[</span><span class="n">nonzero_id</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="n">extrap_method</span> <span class="o">==</span> <span class="s1">&#39;idw&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">extrap_method</span> <span class="o">==</span> <span class="s1">'idw'</span><span class="p">:</span>
                         <span class="n">ds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x_i</span> <span class="o">-</span> <span class="n">x_adj</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y_i</span> <span class="o">-</span> <span class="n">y_adj</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
                         <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
                         <span class="n">var_interp</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">ds</span><span class="p">)</span> <span class="o">*</span> \
                             <span class="nb">sum</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">ds</span> <span class="o">*</span> <span class="n">var_adj</span><span class="p">)</span>
                         <span class="n">varValue</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">=</span> <span class="n">var_interp</span>
-                    <span class="k">elif</span> <span class="n">extrap_method</span> <span class="o">==</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span>
+                    <span class="k">elif</span> <span class="n">extrap_method</span> <span class="o">==</span> <span class="s1">'min'</span><span class="p">:</span>
                         <span class="n">varValue</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">var_adj</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;ERROR: invalid extrapolation scheme! &quot;</span>
-                                 <span class="s2">&quot;Set option m as idw or min!&quot;</span><span class="p">)</span>
+                        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">"ERROR: invalid extrapolation scheme! "</span>
+                                 <span class="s2">"Set option m as idw or min!"</span><span class="p">)</span>
 
                     <span class="n">keepCellMaskNew</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
-            <span class="c1"># print (&quot;{0:8d} cells left for extrapolation in total {1:8d} &quot;</span>
-            <span class="c1"># &quot;cells&quot;.format(nCells-np.count_nonzero(keepCellMask),  nCells))</span>
+            <span class="c1"># print ("{0:8d} cells left for extrapolation in total {1:8d} "</span>
+            <span class="c1"># "cells".format(nCells-np.count_nonzero(keepCellMask),  nCells))</span>
 
     <span class="c1"># Put updated array back into file</span>
     <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">var_name</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">varValue</span>

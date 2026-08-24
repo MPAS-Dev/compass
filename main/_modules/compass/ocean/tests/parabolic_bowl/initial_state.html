@@ -120,15 +120,15 @@
 <div class="viewcode-block" id="InitialState">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.initial_state.InitialState.html#compass.ocean.tests.parabolic_bowl.initial_state.InitialState">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for creating a mesh and initial condition for drying slope test</span>
 <span class="sd">    cases</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="InitialState.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.initial_state.InitialState.html#compass.ocean.tests.parabolic_bowl.initial_state.InitialState.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span>
-                 <span class="n">coord_type</span><span class="o">=</span><span class="s1">&#39;single_layer&#39;</span><span class="p">,</span> <span class="n">wetdry</span><span class="o">=</span><span class="s1">&#39;standard&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">coord_type</span><span class="o">=</span><span class="s1">'single_layer'</span><span class="p">,</span> <span class="n">wetdry</span><span class="o">=</span><span class="s1">'standard'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -147,25 +147,25 @@
 
 <span class="sd">         wetdry : str</span>
 <span class="sd">             The wetting and drying approach used</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coord_type</span> <span class="o">=</span> <span class="n">coord_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                          <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.parabolic_bowl'</span><span class="p">,</span>
+                               <span class="s1">'namelist.init'</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'init'</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">wetdry</span> <span class="o">==</span> <span class="s1">&#39;subgrid&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
-                                   <span class="s1">&#39;namelist.subgrid.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">wetdry</span> <span class="o">==</span> <span class="s1">'subgrid'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.parabolic_bowl'</span><span class="p">,</span>
+                                   <span class="s1">'namelist.subgrid.init'</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'init'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;streams.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">'compass.ocean.tests.parabolic_bowl'</span><span class="p">,</span>
+                              <span class="s1">'streams.init'</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'init'</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;ocean.nc&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'base_mesh.nc'</span><span class="p">,</span> <span class="s1">'culled_mesh.nc'</span><span class="p">,</span> <span class="s1">'culled_graph.info'</span><span class="p">,</span>
+                     <span class="s1">'ocean.nc'</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span></div>
@@ -174,56 +174,56 @@
 <div class="viewcode-block" id="InitialState.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.initial_state.InitialState.run.html#compass.ocean.tests.parabolic_bowl.initial_state.InitialState.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
         <span class="c1"># Set vertical levels</span>
         <span class="n">coord_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coord_type</span>
-        <span class="k">if</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">:</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_parabolic_bowl_vert_levels&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">'single_layer'</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_parabolic_bowl_vert_levels'</span><span class="p">:</span> <span class="s1">'1'</span><span class="p">}</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_parabolic_bowl_vert_levels&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">vert_levels</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+            <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'vertical_grid'</span><span class="p">,</span> <span class="s1">'vert_levels'</span><span class="p">)</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_parabolic_bowl_vert_levels'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">vert_levels</span><span class="si">}</span><span class="s1">'</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
         <span class="c1"># Set test case parameters</span>
-        <span class="n">eta_max</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span> <span class="s1">&#39;eta_max&#39;</span><span class="p">)</span>
-        <span class="n">depth_max</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span> <span class="s1">&#39;depth_max&#39;</span><span class="p">)</span>
-        <span class="n">coriolis</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span> <span class="s1">&#39;coriolis_parameter&#39;</span><span class="p">)</span>
-        <span class="n">omega</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span> <span class="s1">&#39;omega&#39;</span><span class="p">)</span>
-        <span class="n">gravity</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span> <span class="s1">&#39;gravity&#39;</span><span class="p">)</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_parabolic_bowl_Coriolis_parameter&#39;</span><span class="p">:</span> <span class="n">coriolis</span><span class="p">,</span>
-                   <span class="s1">&#39;config_parabolic_bowl_eta0&#39;</span><span class="p">:</span> <span class="n">eta_max</span><span class="p">,</span>
-                   <span class="s1">&#39;config_parabolic_bowl_b0&#39;</span><span class="p">:</span> <span class="n">depth_max</span><span class="p">,</span>
-                   <span class="s1">&#39;config_parabolic_bowl_omega&#39;</span><span class="p">:</span> <span class="n">omega</span><span class="p">,</span>
-                   <span class="s1">&#39;config_parabolic_bowl_gravity&#39;</span><span class="p">:</span> <span class="n">gravity</span><span class="p">}</span>
+        <span class="n">eta_max</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span> <span class="s1">'eta_max'</span><span class="p">)</span>
+        <span class="n">depth_max</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span> <span class="s1">'depth_max'</span><span class="p">)</span>
+        <span class="n">coriolis</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span> <span class="s1">'coriolis_parameter'</span><span class="p">)</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span> <span class="s1">'omega'</span><span class="p">)</span>
+        <span class="n">gravity</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span> <span class="s1">'gravity'</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_parabolic_bowl_Coriolis_parameter'</span><span class="p">:</span> <span class="n">coriolis</span><span class="p">,</span>
+                   <span class="s1">'config_parabolic_bowl_eta0'</span><span class="p">:</span> <span class="n">eta_max</span><span class="p">,</span>
+                   <span class="s1">'config_parabolic_bowl_b0'</span><span class="p">:</span> <span class="n">depth_max</span><span class="p">,</span>
+                   <span class="s1">'config_parabolic_bowl_omega'</span><span class="p">:</span> <span class="n">omega</span><span class="p">,</span>
+                   <span class="s1">'config_parabolic_bowl_gravity'</span><span class="p">:</span> <span class="n">gravity</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
         <span class="c1"># Determine mesh parameters</span>
-        <span class="n">Lx</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span> <span class="s1">&#39;Lx&#39;</span><span class="p">)</span>
-        <span class="n">Ly</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;parabolic_bowl&#39;</span><span class="p">,</span> <span class="s1">&#39;Ly&#39;</span><span class="p">)</span>
+        <span class="n">Lx</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span> <span class="s1">'Lx'</span><span class="p">)</span>
+        <span class="n">Ly</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'parabolic_bowl'</span><span class="p">,</span> <span class="s1">'Ly'</span><span class="p">)</span>
         <span class="n">nx</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">Lx</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span>
         <span class="n">ny</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">Ly</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span>
         <span class="n">dc</span> <span class="o">=</span> <span class="mf">1e3</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Make planar hex mesh&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">' * Make planar hex mesh'</span><span class="p">)</span>
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span> <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                       <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Completed Make planar hex mesh&#39;</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">' * Completed Make planar hex mesh'</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">'base_mesh.nc'</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Cull mesh&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">' * Cull mesh'</span><span class="p">)</span>
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Convert mesh&#39;</span><span class="p">)</span>
-        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">' * Convert mesh'</span><span class="p">)</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">'culled_graph.info'</span><span class="p">,</span>
                          <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Completed Convert mesh&#39;</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
-        <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">&#39;namelist.ocean&#39;</span><span class="p">,</span>
-                  <span class="n">streams</span><span class="o">=</span><span class="s1">&#39;streams.ocean&#39;</span><span class="p">)</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">' * Completed Convert mesh'</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">'culled_mesh.nc'</span><span class="p">)</span>
+        <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">'namelist.ocean'</span><span class="p">,</span>
+                  <span class="n">streams</span><span class="o">=</span><span class="s1">'streams.ocean'</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

@@ -113,7 +113,7 @@
 <div class="viewcode-block" id="TestCase">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.html#compass.TestCase">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TestCase</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The base class for test cases---such as a decomposition, threading or</span>
 <span class="sd">    restart test---that are made up of one or more steps</span>
 
@@ -142,7 +142,7 @@
 
 <span class="sd">    path : str</span>
 <span class="sd">        the path within the base work directory of the test case, made up of</span>
-<span class="sd">        ``mpas_core``, ``test_group``, and the test case&#39;s ``subdir``</span>
+<span class="sd">        ``mpas_core``, ``test_group``, and the test case's ``subdir``</span>
 
 <span class="sd">    config : compass.config.CompassConfigParser</span>
 <span class="sd">        Configuration options for this test case, a combination of the defaults</span>
@@ -153,7 +153,7 @@
 <span class="sd">        during setup and read from during run</span>
 
 <span class="sd">    work_dir : str</span>
-<span class="sd">        The test case&#39;s work directory, defined during setup as the combination</span>
+<span class="sd">        The test case's work directory, defined during setup as the combination</span>
 <span class="sd">        of ``base_work_dir`` and ``path``</span>
 
 <span class="sd">    base_work_dir : str</span>
@@ -183,12 +183,12 @@
 <span class="sd">        A dictionary with the status of internal and baseline comparisons, used</span>
 <span class="sd">        by the ``compass`` framework to determine whether the test case passed</span>
 <span class="sd">        or failed internal and baseline validation.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="TestCase.__init__">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.html#compass.TestCase.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -201,7 +201,7 @@
 
 <span class="sd">        subdir : str, optional</span>
 <span class="sd">            the subdirectory for the test case.  The default is ``name``</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span> <span class="o">=</span> <span class="n">test_group</span><span class="o">.</span><span class="n">mpas_core</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">test_group</span> <span class="o">=</span> <span class="n">test_group</span>
@@ -236,41 +236,41 @@
 <div class="viewcode-block" id="TestCase.configure">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.configure.html#compass.TestCase.configure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Modify the configuration options for this test case. Test cases should</span>
 <span class="sd">        override this method if they want to add config options specific to</span>
-<span class="sd">        the test case, e.g. from a config file stored in the test case&#39;s python</span>
+<span class="sd">        the test case, e.g. from a config file stored in the test case's python</span>
 <span class="sd">        package.  If a test case overrides this method, it should assume that</span>
 <span class="sd">        the ``&lt;self.name&gt;.cfg`` file in its package has already been added</span>
 <span class="sd">        to the config options prior to calling ``configure()``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="TestCase.run">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.run.html#compass.TestCase.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        This method is deprecated. Use ``step.constrain_resources()`` and</span>
 <span class="sd">        ``step.runtime_setup()`` instead</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="TestCase.validate">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.validate.html#compass.TestCase.validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="TestCase.add_step">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.add_step.html#compass.TestCase.add_step">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">run_by_default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add a step to the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -282,36 +282,36 @@
 <span class="sd">            Whether to add this step to the list of steps to run when the</span>
 <span class="sd">            ``run()`` method gets called.  If ``run_by_default=False``, users</span>
 <span class="sd">            would need to run this step manually.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span>
         <span class="k">if</span> <span class="n">run_by_default</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">check_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check the test case&#39;s &quot;validation&quot; dictionary to see if validation</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Check the test case's "validation" dictionary to see if validation</span>
 <span class="sd">        failed.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">validation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="k">if</span> <span class="n">validation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">internal_pass</span> <span class="o">=</span> <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;internal_pass&#39;</span><span class="p">]</span>
-            <span class="n">baseline_pass</span> <span class="o">=</span> <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;baseline_pass&#39;</span><span class="p">]</span>
+            <span class="n">internal_pass</span> <span class="o">=</span> <span class="n">validation</span><span class="p">[</span><span class="s1">'internal_pass'</span><span class="p">]</span>
+            <span class="n">baseline_pass</span> <span class="o">=</span> <span class="n">validation</span><span class="p">[</span><span class="s1">'baseline_pass'</span><span class="p">]</span>
 
             <span class="n">both_pass</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">if</span> <span class="n">internal_pass</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">internal_pass</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Comparison failed between files within the test &#39;</span>
-                             <span class="s1">&#39;case.&#39;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">'Comparison failed between files within the test '</span>
+                             <span class="s1">'case.'</span><span class="p">)</span>
                 <span class="n">both_pass</span> <span class="o">=</span> <span class="kc">False</span>
 
             <span class="k">if</span> <span class="n">baseline_pass</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">baseline_pass</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Comparison failed between the test case and the &#39;</span>
-                             <span class="s1">&#39;baseline.&#39;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">'Comparison failed between the test case and the '</span>
+                             <span class="s1">'baseline.'</span><span class="p">)</span>
                 <span class="n">both_pass</span> <span class="o">=</span> <span class="kc">False</span>
 
             <span class="k">if</span> <span class="n">both_pass</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Comparison failed, see above.&#39;</span><span class="p">)</span></div>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Comparison failed, see above.'</span><span class="p">)</span></div>
 
 </pre></div>
 

@@ -120,17 +120,17 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">setup_suite</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">suite_name</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">copy_executable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Set up a test suite</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    mpas_core : str</span>
-<span class="sd">        The MPAS core (&#39;ocean&#39;, &#39;landice&#39;, etc.) of the test suite</span>
+<span class="sd">        The MPAS core ('ocean', 'landice', etc.) of the test suite</span>
 
 <span class="sd">    suite_name : str</span>
 <span class="sd">        The name of the test suite.  A file ``&lt;suite_name&gt;.txt`` must exist</span>
-<span class="sd">        within the core&#39;s ``suites`` package that lists the paths of the tests</span>
+<span class="sd">        within the core's ``suites`` package that lists the paths of the tests</span>
 <span class="sd">        in the suite</span>
 
 <span class="sd">    config_file : str, optional</span>
@@ -154,9 +154,9 @@
 
 <span class="sd">    copy_executable : bool, optional</span>
 <span class="sd">        Whether to copy the MPAS executable to the work directory</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s1">&#39;compass.</span><span class="si">{}</span><span class="s1">.suites&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">),</span>
-                               <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suite_name</span><span class="p">))</span>
+<span class="sd">    """</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s1">'compass.</span><span class="si">{}</span><span class="s1">.suites'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">),</span>
+                               <span class="s1">'</span><span class="si">{}</span><span class="s1">.txt'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suite_name</span><span class="p">))</span>
 
     <span class="n">tests</span><span class="p">,</span> <span class="n">cached</span> <span class="o">=</span> <span class="n">_parse_suite</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
@@ -170,26 +170,26 @@
 <div class="viewcode-block" id="clean_suite">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.suite.clean_suite.html#compass.suite.clean_suite">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">clean_suite</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">suite_name</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Clean up a test suite by removing its test cases and run script</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    mpas_core : str</span>
-<span class="sd">        The MPAS core (&#39;ocean&#39;, &#39;landice&#39;, etc.) of the test suite</span>
+<span class="sd">        The MPAS core ('ocean', 'landice', etc.) of the test suite</span>
 
 <span class="sd">    suite_name : str</span>
 <span class="sd">        The name of the test suite.  A file ``&lt;suite_name&gt;.txt`` must exist</span>
-<span class="sd">        within the core&#39;s ``suites`` package that lists the paths of the tests</span>
+<span class="sd">        within the core's ``suites`` package that lists the paths of the tests</span>
 <span class="sd">        in the suite</span>
 
 <span class="sd">    work_dir : str, optional</span>
 <span class="sd">        A directory that will serve as the base for creating test case</span>
 <span class="sd">        directories</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">text</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s1">&#39;compass.</span><span class="si">{}</span><span class="s1">.suites&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">),</span>
-                               <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suite_name</span><span class="p">))</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s1">'compass.</span><span class="si">{}</span><span class="s1">.suites'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">),</span>
+                               <span class="s1">'</span><span class="si">{}</span><span class="s1">.txt'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suite_name</span><span class="p">))</span>
 
     <span class="n">tests</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_parse_suite</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
@@ -199,45 +199,45 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
-        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Set up a regression test suite&#39;</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s1">&#39;compass suite&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--core&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;core&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The MPAS core for the test suite&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;CORE&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--test_suite&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;test_suite&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to file containing a test suite to setup&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;SUITE&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--config_file&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;config_file&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Configuration file for test case setup&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;FILE&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--setup&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;setup&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Option to determine if regression suite should &quot;</span>
-                             <span class="s2">&quot;be setup or not.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--clean&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;clean&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Option to determine if regression suite should &quot;</span>
-                             <span class="s2">&quot;be cleaned or not.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;--machine&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;machine&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The name of the machine for loading machine-&quot;</span>
-                             <span class="s2">&quot;related config options&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;MACH&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="s2">&quot;--baseline_dir&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;baseline_dir&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Location of baseslines that can be compared to&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;PATH&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-w&quot;</span><span class="p">,</span> <span class="s2">&quot;--work_dir&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;work_dir&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If set, script will setup the test suite in &quot;</span>
-                        <span class="s2">&quot;work_dir rather in this script&#39;s location.&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;PATH&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;--mpas_model&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;mpas_model&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The path to the build of the MPAS model for the &quot;</span>
-                             <span class="s2">&quot;core.&quot;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;PATH&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--copy_executable&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;copy_executable&quot;</span><span class="p">,</span>
-                        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If the MPAS executable should be copied to the &quot;</span>
-                             <span class="s2">&quot;work directory&quot;</span><span class="p">)</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">'Set up a regression test suite'</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s1">'compass suite'</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"--core"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"core"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"The MPAS core for the test suite"</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"CORE"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-t"</span><span class="p">,</span> <span class="s2">"--test_suite"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"test_suite"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"Path to file containing a test suite to setup"</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"SUITE"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-f"</span><span class="p">,</span> <span class="s2">"--config_file"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"config_file"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"Configuration file for test case setup"</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"FILE"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-s"</span><span class="p">,</span> <span class="s2">"--setup"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"setup"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"Option to determine if regression suite should "</span>
+                             <span class="s2">"be setup or not."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--clean"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"clean"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"Option to determine if regression suite should "</span>
+                             <span class="s2">"be cleaned or not."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-m"</span><span class="p">,</span> <span class="s2">"--machine"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"machine"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"The name of the machine for loading machine-"</span>
+                             <span class="s2">"related config options"</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">"MACH"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-b"</span><span class="p">,</span> <span class="s2">"--baseline_dir"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"baseline_dir"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"Location of baseslines that can be compared to"</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"PATH"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-w"</span><span class="p">,</span> <span class="s2">"--work_dir"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"work_dir"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"If set, script will setup the test suite in "</span>
+                        <span class="s2">"work_dir rather in this script's location."</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"PATH"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-p"</span><span class="p">,</span> <span class="s2">"--mpas_model"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"mpas_model"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"The path to the build of the MPAS model for the "</span>
+                             <span class="s2">"core."</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">"PATH"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--copy_executable"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"copy_executable"</span><span class="p">,</span>
+                        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">"If the MPAS executable should be copied to the "</span>
+                             <span class="s2">"work directory"</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">clean</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">setup</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least one of -s/--setup or --clean must be &#39;</span>
-                         <span class="s1">&#39;specified&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'At least one of -s/--setup or --clean must be '</span>
+                         <span class="s1">'specified'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">clean</span><span class="p">:</span>
         <span class="n">clean_suite</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">core</span><span class="p">,</span> <span class="n">suite_name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">test_suite</span><span class="p">,</span>
@@ -252,20 +252,20 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_parse_suite</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Parse the text of a file defining a test suite &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Parse the text of a file defining a test suite """</span>
 
     <span class="n">tests</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="n">cached</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">):</span>
         <span class="n">test</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">test</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">test</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'#'</span><span class="p">):</span>
             <span class="c1"># a blank line or comment</span>
             <span class="k">continue</span>
 
-        <span class="k">if</span> <span class="n">test</span> <span class="o">==</span> <span class="s1">&#39;cached&#39;</span><span class="p">:</span>
-            <span class="n">cached</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_all&#39;</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="n">test</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;cached:&#39;</span><span class="p">):</span>
-            <span class="n">steps</span> <span class="o">=</span> <span class="n">test</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="s1">&#39;cached:&#39;</span><span class="p">):]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">test</span> <span class="o">==</span> <span class="s1">'cached'</span><span class="p">:</span>
+            <span class="n">cached</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'_all'</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">test</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'cached:'</span><span class="p">):</span>
+            <span class="n">steps</span> <span class="o">=</span> <span class="n">test</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="s1">'cached:'</span><span class="p">):]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)</span>
             <span class="n">cached</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">tests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>

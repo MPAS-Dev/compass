@@ -182,16 +182,16 @@ the test case.</p>
 <span class="na">source_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">TO BE SUPPLIED BY USER</span>
 
 <span class="c1"># method for defining region</span>
-<span class="c1"># one of &#39;region_mask_file&#39; or &#39;geojson&#39;</span>
+<span class="c1"># one of 'region_mask_file' or 'geojson'</span>
 <span class="na">region_definition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">region_mask_file</span>
 
-<span class="c1"># path to geojson file to be used if region_definition=&#39;geojson&#39;</span>
+<span class="c1"># path to geojson file to be used if region_definition='geojson'</span>
 <span class="na">geojson_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">TO BE SUPPLIED BY USER</span>
 
-<span class="c1"># path to region mask file for if region_definition=&#39;region_mask_file&#39;</span>
+<span class="c1"># path to region mask file for if region_definition='region_mask_file'</span>
 <span class="na">region_mask_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">TO BE SUPPLIED BY USER</span>
 
-<span class="c1"># region number to extract if region_definition=&#39;region_mask_file&#39;</span>
+<span class="c1"># region number to extract if region_definition='region_mask_file'</span>
 <span class="na">region_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
 
 <span class="c1"># filename for the subdomain to be generated</span>
@@ -199,7 +199,7 @@ the test case.</p>
 
 <span class="c1"># mesh projection to be used for setting lat/lon values</span>
 <span class="c1"># Should match the projection used in the source_file</span>
-<span class="c1"># Likely one of &#39;ais-bedmap2&#39; or &#39;gis-gimp&#39;</span>
+<span class="c1"># Likely one of 'ais-bedmap2' or 'gis-gimp'</span>
 <span class="na">mesh_projection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ais-bedmap2</span>
 
 <span class="c1"># whether to extend mesh into the open ocean along the ice-shelf margin</span>
@@ -216,18 +216,18 @@ the test case.</p>
 <span class="na">grow_iters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">15</span>
 
 <span class="c1"># method for performing interpolation</span>
-<span class="c1"># &#39;ncremap&#39; uses pyremap to call ESMF_RegridWeightGen to generate a</span>
+<span class="c1"># 'ncremap' uses pyremap to call ESMF_RegridWeightGen to generate a</span>
 <span class="c1"># nstd weight file and then uses ncremap to perform remapping.</span>
 <span class="c1"># This method supports interpolating ancillary files (below)</span>
 <span class="c1"># but likely needs to be run on a compute node and is more fragile.</span>
-<span class="c1"># &#39;mali_interp&#39; uses the MALI interpolation script interpolate_to_mpasli_grid</span>
+<span class="c1"># 'mali_interp' uses the MALI interpolation script interpolate_to_mpasli_grid</span>
 <span class="c1"># This method does not support ancillary files but may be more robust</span>
 <span class="c1"># and can likely be run quickly on a login node.</span>
 <span class="na">interp_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ncremap</span>
 
 <span class="c1"># optional forcing files that could also be interpolated</span>
 <span class="c1"># e.g. SMB or TF files</span>
-<span class="c1"># interpolating these files requires using the &#39;ncremap&#39; interp_method</span>
+<span class="c1"># interpolating these files requires using the 'ncremap' interp_method</span>
 <span class="na">extra_file1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
 <span class="na">extra_file2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
 <span class="na">extra_file3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>

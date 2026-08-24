@@ -127,24 +127,24 @@
 <div class="viewcode-block" id="SetUpExperiment">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.html#compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SetUpExperiment</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A step for setting up an ISMIP6 experiment</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="SetUpExperiment.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.html#compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">exp</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set up a new experiment</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 
 <span class="sd">        exp : experiment</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">=</span> <span class="n">exp</span>
 
@@ -155,54 +155,54 @@
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.setup.html#compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># noqa:C901</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Setting up experiment </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Setting up experiment </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ismip6_run_ais_2300&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ntasks&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip6_run_ais_2300'</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'ntasks'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span>
-        <span class="n">mesh_res</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;mesh_res&#39;</span><span class="p">)</span>
-        <span class="n">forcing_basepath</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;forcing_basepath&#39;</span><span class="p">)</span>
-        <span class="n">init_cond_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;init_cond_path&#39;</span><span class="p">)</span>
+        <span class="n">mesh_res</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'mesh_res'</span><span class="p">)</span>
+        <span class="n">forcing_basepath</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'forcing_basepath'</span><span class="p">)</span>
+        <span class="n">init_cond_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'init_cond_path'</span><span class="p">)</span>
         <span class="n">init_cond_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">init_cond_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">melt_params_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;melt_params_path&#39;</span><span class="p">)</span>
+        <span class="n">melt_params_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'melt_params_path'</span><span class="p">)</span>
         <span class="n">melt_params_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">melt_params_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">region_mask_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region_mask_path&#39;</span><span class="p">)</span>
+        <span class="n">region_mask_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'region_mask_path'</span><span class="p">)</span>
         <span class="n">region_mask_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">region_mask_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">calving_method</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;calving_method&#39;</span><span class="p">)</span>
-        <span class="n">use_face_melting</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;use_face_melting&#39;</span><span class="p">)</span>
-        <span class="n">sea_level_model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;sea_level_model&#39;</span><span class="p">)</span>
+        <span class="n">calving_method</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'calving_method'</span><span class="p">)</span>
+        <span class="n">use_face_melting</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'use_face_melting'</span><span class="p">)</span>
+        <span class="n">sea_level_model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'sea_level_model'</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
-            <span class="n">exp_fcg</span> <span class="o">=</span> <span class="s1">&#39;ctrlAE&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">'hist'</span><span class="p">:</span>
+            <span class="n">exp_fcg</span> <span class="o">=</span> <span class="s1">'ctrlAE'</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">exp_fcg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span>
 
         <span class="c1"># Define where to get namelist, streams, yaml, etc. templates</span>
         <span class="c1"># (in current package)</span>
         <span class="n">resource_location</span> <span class="o">=</span> \
-            <span class="s1">&#39;compass.landice.tests.ismip6_run.ismip6_ais_proj2300&#39;</span>
+            <span class="s1">'compass.landice.tests.ismip6_run.ismip6_ais_proj2300'</span>
 
         <span class="c1"># Define calving method</span>
-        <span class="k">if</span> <span class="n">calving_method</span> <span class="o">==</span> <span class="s1">&#39;von_mises&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">calving_method</span> <span class="o">==</span> <span class="s1">'von_mises'</span><span class="p">:</span>
             <span class="n">use_vM_calving</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">elif</span> <span class="n">calving_method</span> <span class="o">==</span> <span class="s1">&#39;restore&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">calving_method</span> <span class="o">==</span> <span class="s1">'restore'</span><span class="p">:</span>
             <span class="n">use_vM_calving</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># Figure out if the forcing is in tier1 or tier2 subdir</span>
-        <span class="k">if</span> <span class="s1">&#39;exp&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'exp'</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span> <span class="o">&gt;=</span> <span class="mi">7</span><span class="p">:</span>
                 <span class="n">forcing_basepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forcing_basepath</span><span class="p">,</span>
-                                                <span class="s1">&#39;tier2_experiments&#39;</span><span class="p">)</span>
+                                                <span class="s1">'tier2_experiments'</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">forcing_basepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forcing_basepath</span><span class="p">,</span>
-                                                <span class="s1">&#39;tier1_experiments&#39;</span><span class="p">)</span>
+                                                <span class="s1">'tier1_experiments'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">forcing_basepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forcing_basepath</span><span class="p">,</span>
-                                            <span class="s1">&#39;tier1_experiments&#39;</span><span class="p">)</span>
+                                            <span class="s1">'tier1_experiments'</span><span class="p">)</span>
 
-        <span class="c1"># Copy files we&#39;ll need from local paths specified in cfg file</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
+        <span class="c1"># Copy files we'll need from local paths specified in cfg file</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">'hist'</span><span class="p">:</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">init_cond_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">melt_params_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">region_mask_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
@@ -210,26 +210,26 @@
         <span class="c1"># Find and copy correct forcing files</span>
         <span class="n">smb_search_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="n">forcing_basepath</span><span class="p">,</span> <span class="n">exp_fcg</span><span class="p">,</span>
-            <span class="s1">&#39;*smb*bare*.nc&#39;</span><span class="p">)</span>
+            <span class="s1">'*smb*bare*.nc'</span><span class="p">)</span>
         <span class="n">fcgFileList</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">smb_search_path</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fcgFileList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">smb_path</span> <span class="o">=</span> <span class="n">fcgFileList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">smb_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">smb_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">smb_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;ERROR: Did not find exactly one matching SMB file at &quot;</span>
-                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">smb_search_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fcgFileList</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">"ERROR: Did not find exactly one matching SMB file at "</span>
+                     <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">smb_search_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fcgFileList</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">tf_search_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forcing_basepath</span><span class="p">,</span> <span class="n">exp_fcg</span><span class="p">,</span>
-                                      <span class="s1">&#39;*TF_*.nc&#39;</span><span class="p">)</span>
+                                      <span class="s1">'*TF_*.nc'</span><span class="p">)</span>
         <span class="n">fcgFileList</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">tf_search_path</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fcgFileList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">tf_path</span> <span class="o">=</span> <span class="n">fcgFileList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">tf_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">tf_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">tf_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;ERROR: Did not find exactly one matching TF file at &quot;</span>
-                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tf_search_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fcgFileList</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">"ERROR: Did not find exactly one matching TF file at "</span>
+                     <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">tf_search_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fcgFileList</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># copy calving mask files for exp11-14</span>
         <span class="n">useCalvingMask</span> <span class="o">=</span> <span class="kc">False</span>
@@ -238,7 +238,7 @@
             <span class="k">if</span> <span class="n">exp_num</span> <span class="o">&gt;=</span> <span class="mi">11</span><span class="p">:</span>
                 <span class="n">mask_search_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                     <span class="n">forcing_basepath</span><span class="p">,</span> <span class="n">exp_fcg</span><span class="p">,</span>
-                    <span class="s1">&#39;Antarctica_8to30km_ice_shelf_collapse_mask_*.nc&#39;</span><span class="p">)</span>
+                    <span class="s1">'Antarctica_8to30km_ice_shelf_collapse_mask_*.nc'</span><span class="p">)</span>
                 <span class="n">fcgFileList</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">mask_search_path</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fcgFileList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="n">mask_path</span> <span class="o">=</span> <span class="n">fcgFileList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -246,177 +246,177 @@
                     <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mask_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
                     <span class="n">useCalvingMask</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;ERROR: Did not find exactly one matching &quot;</span>
-                             <span class="s2">&quot;calving mask file at &quot;</span>
-                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mask_search_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fcgFileList</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">"ERROR: Did not find exactly one matching "</span>
+                             <span class="s2">"calving mask file at "</span>
+                             <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mask_search_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fcgFileList</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Make stream modifications based on files that were determined above</span>
-        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;input_file_SMB_forcing&#39;</span><span class="p">:</span> <span class="n">smb_fname</span><span class="p">,</span>
-                               <span class="s1">&#39;input_file_TF_forcing&#39;</span><span class="p">:</span> <span class="n">tf_fname</span><span class="p">}</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
-            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;input_file_init_cond&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_cond_fname</span>
-            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;input_file_region_mask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_mask_fname</span>
-            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;input_file_melt_params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">melt_params_fname</span>
+        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'input_file_SMB_forcing'</span><span class="p">:</span> <span class="n">smb_fname</span><span class="p">,</span>
+                               <span class="s1">'input_file_TF_forcing'</span><span class="p">:</span> <span class="n">tf_fname</span><span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">'hist'</span><span class="p">:</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">'input_file_init_cond'</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_cond_fname</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">'input_file_region_mask'</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_mask_fname</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">'input_file_melt_params'</span><span class="p">]</span> <span class="o">=</span> <span class="n">melt_params_fname</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;input_file_init_cond&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="s1">&#39;USE_RESTART_FILE_INSTEAD&#39;</span>
-            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;input_file_region_mask&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="s1">&#39;USE_RESTART_FILE_INSTEAD&#39;</span>
-            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;input_file_melt_params&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="s1">&#39;USE_RESTART_FILE_INSTEAD&#39;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;hist&#39;</span><span class="p">,</span> <span class="s1">&#39;ctrlAE&#39;</span><span class="p">]:</span>
-            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;forcing_interval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;initial_only&#39;</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">'input_file_init_cond'</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="s1">'USE_RESTART_FILE_INSTEAD'</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">'input_file_region_mask'</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="s1">'USE_RESTART_FILE_INSTEAD'</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">'input_file_melt_params'</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="s1">'USE_RESTART_FILE_INSTEAD'</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'hist'</span><span class="p">,</span> <span class="s1">'ctrlAE'</span><span class="p">]:</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">'forcing_interval'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'initial_only'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;forcing_interval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0001-00-00_00:00:00&#39;</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">'forcing_interval'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'0001-00-00_00:00:00'</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
             <span class="n">resource_location</span><span class="p">,</span>
-            <span class="s1">&#39;streams.landice.template&#39;</span><span class="p">,</span>
-            <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
+            <span class="s1">'streams.landice.template'</span><span class="p">,</span>
+            <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.landice'</span><span class="p">,</span>
             <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">useCalvingMask</span><span class="p">:</span>
-            <span class="n">mask_stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;input_file_calving_mask_forcing_name&#39;</span><span class="p">:</span>
+            <span class="n">mask_stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'input_file_calving_mask_forcing_name'</span><span class="p">:</span>
                                         <span class="n">mask_fname</span><span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-                <span class="n">resource_location</span><span class="p">,</span> <span class="s1">&#39;streams.mask_calving&#39;</span><span class="p">,</span>
-                <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
+                <span class="n">resource_location</span><span class="p">,</span> <span class="s1">'streams.mask_calving'</span><span class="p">,</span>
+                <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.landice'</span><span class="p">,</span>
                 <span class="n">template_replacements</span><span class="o">=</span><span class="n">mask_stream_replacements</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">use_vM_calving</span><span class="p">:</span>
-            <span class="n">vM_param_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;von_mises_parameter_path&#39;</span><span class="p">)</span>
-            <span class="n">vM_stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;input_file_VM_params&#39;</span><span class="p">:</span> <span class="n">vM_param_path</span><span class="p">}</span>
+            <span class="n">vM_param_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'von_mises_parameter_path'</span><span class="p">)</span>
+            <span class="n">vM_stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'input_file_VM_params'</span><span class="p">:</span> <span class="n">vM_param_path</span><span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-                <span class="n">resource_location</span><span class="p">,</span> <span class="s1">&#39;streams.vM_params&#39;</span><span class="p">,</span>
-                <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
+                <span class="n">resource_location</span><span class="p">,</span> <span class="s1">'streams.vM_params'</span><span class="p">,</span>
+                <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.landice'</span><span class="p">,</span>
                 <span class="n">template_replacements</span><span class="o">=</span><span class="n">vM_stream_replacements</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">use_face_melting</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-                <span class="n">resource_location</span><span class="p">,</span> <span class="s1">&#39;streams.faceMelting&#39;</span><span class="p">,</span>
-                <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">)</span>
+                <span class="n">resource_location</span><span class="p">,</span> <span class="s1">'streams.faceMelting'</span><span class="p">,</span>
+                <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.landice'</span><span class="p">)</span>
 
         <span class="c1"># Set up namelist and customize as needed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-            <span class="n">resource_location</span><span class="p">,</span> <span class="s1">&#39;namelist.landice&#39;</span><span class="p">,</span>
-            <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+            <span class="n">resource_location</span><span class="p">,</span> <span class="s1">'namelist.landice'</span><span class="p">,</span>
+            <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
 
         <span class="c1"># set up pio options because we are not using compass run</span>
-        <span class="n">pio_stride</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;pio_stride&#39;</span><span class="p">)</span>
+        <span class="n">pio_stride</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'pio_stride'</span><span class="p">)</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">%</span> <span class="n">pio_stride</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> \
-            <span class="s1">&#39;pio_stride is not evenly divisble into ntasks&#39;</span>
+            <span class="s1">'pio_stride is not evenly divisble into ntasks'</span>
         <span class="n">io_tasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">//</span> <span class="n">pio_stride</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_pio_stride&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pio_stride</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;config_pio_num_iotasks&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">io_tasks</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_pio_stride'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">pio_stride</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                   <span class="s1">'config_pio_num_iotasks'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">io_tasks</span><span class="si">}</span><span class="s1">'</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
-                                  <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+                                  <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s2">&quot;.false.&quot;</span><span class="p">,</span>
-                       <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;2000-01-01_00:00:00&#39;&quot;</span><span class="p">,</span>
-                       <span class="s1">&#39;config_stop_time&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;2015-01-01_00:00:00&#39;&quot;</span><span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">'hist'</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_do_restart'</span><span class="p">:</span> <span class="s2">".false."</span><span class="p">,</span>
+                       <span class="s1">'config_start_time'</span><span class="p">:</span> <span class="s2">"'2000-01-01_00:00:00'"</span><span class="p">,</span>
+                       <span class="s1">'config_stop_time'</span><span class="p">:</span> <span class="s2">"'2015-01-01_00:00:00'"</span><span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
-                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">use_vM_calving</span><span class="p">:</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_calving&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;von_Mises_stress&#39;&quot;</span><span class="p">,</span>
-                       <span class="s1">&#39;config_restore_calving_front&#39;</span><span class="p">:</span> <span class="s2">&quot;.false.&quot;</span><span class="p">,</span>
-                       <span class="s1">&#39;config_floating_von_Mises_threshold_stress_source&#39;</span><span class="p">:</span>
-                       <span class="s2">&quot;&#39;data&#39;&quot;</span><span class="p">,</span>
-                       <span class="s1">&#39;config_grounded_von_Mises_threshold_stress_source&#39;</span><span class="p">:</span>
-                       <span class="s2">&quot;&#39;data&#39;&quot;</span><span class="p">}</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_calving'</span><span class="p">:</span> <span class="s2">"'von_Mises_stress'"</span><span class="p">,</span>
+                       <span class="s1">'config_restore_calving_front'</span><span class="p">:</span> <span class="s2">".false."</span><span class="p">,</span>
+                       <span class="s1">'config_floating_von_Mises_threshold_stress_source'</span><span class="p">:</span>
+                       <span class="s2">"'data'"</span><span class="p">,</span>
+                       <span class="s1">'config_grounded_von_Mises_threshold_stress_source'</span><span class="p">:</span>
+                       <span class="s2">"'data'"</span><span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
-                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
 
         <span class="c1"># Include facemelting if needed</span>
         <span class="k">if</span> <span class="n">use_face_melting</span><span class="p">:</span>
             <span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;config_front_mass_bal_grounded&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;ismip6&#39;&quot;</span><span class="p">,</span>
-                <span class="s1">&#39;config_use_3d_thermal_forcing_for_face_melt&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">}</span>
+                <span class="s1">'config_front_mass_bal_grounded'</span><span class="p">:</span> <span class="s2">"'ismip6'"</span><span class="p">,</span>
+                <span class="s1">'config_use_3d_thermal_forcing_for_face_melt'</span><span class="p">:</span> <span class="s1">'.true.'</span><span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
-                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">useCalvingMask</span><span class="p">:</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_calving&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;none&#39;&quot;</span><span class="p">,</span>
-                       <span class="s1">&#39;config_apply_calving_mask&#39;</span><span class="p">:</span> <span class="s2">&quot;.true.&quot;</span><span class="p">}</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_calving'</span><span class="p">:</span> <span class="s2">"'none'"</span><span class="p">,</span>
+                       <span class="s1">'config_apply_calving_mask'</span><span class="p">:</span> <span class="s2">".true."</span><span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
-                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">sea_level_model</span><span class="p">:</span>
             <span class="c1"># get config options</span>
-            <span class="n">slm_input_ice</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slm_input_ice&#39;</span><span class="p">)</span>
-            <span class="n">slm_input_earth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slm_input_earth&#39;</span><span class="p">)</span>
-            <span class="n">slm_earth_structure</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slm_earth_structure&#39;</span><span class="p">)</span>
-            <span class="n">slm_input_others</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slm_input_others&#39;</span><span class="p">)</span>
-            <span class="n">nglv</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nglv&#39;</span><span class="p">)</span>
+            <span class="n">slm_input_ice</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'slm_input_ice'</span><span class="p">)</span>
+            <span class="n">slm_input_earth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'slm_input_earth'</span><span class="p">)</span>
+            <span class="n">slm_earth_structure</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'slm_earth_structure'</span><span class="p">)</span>
+            <span class="n">slm_input_others</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'slm_input_others'</span><span class="p">)</span>
+            <span class="n">nglv</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'nglv'</span><span class="p">)</span>
 
             <span class="c1"># complete the full paths to the SLM inputs</span>
             <span class="n">slm_input_ice</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">slm_input_ice</span><span class="p">,</span>
-                                         <span class="sa">f</span><span class="s1">&#39;GL</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/ice_noGrIS_GL</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">)</span>
+                                         <span class="sa">f</span><span class="s1">'GL</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/ice_noGrIS_GL</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/'</span><span class="p">)</span>
             <span class="n">slm_input_others</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">slm_input_others</span><span class="p">,</span>
-                                            <span class="sa">f</span><span class="s1">&#39;GL</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">)</span>
+                                            <span class="sa">f</span><span class="s1">'GL</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/'</span><span class="p">)</span>
             <span class="c1"># incorporate the SLM config in the landice namelist</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_uplift_method&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;sealevelmodel&#39;&quot;</span><span class="p">}</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_uplift_method'</span><span class="p">:</span> <span class="s2">"'sealevelmodel'"</span><span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
-                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
 
             <span class="c1"># change the sealevel namelist</span>
             <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">resources</span><span class="o">.</span><span class="n">read_text</span>
                                 <span class="p">(</span><span class="n">resource_location</span><span class="p">,</span>
-                                 <span class="s1">&#39;namelist.sealevel.template&#39;</span><span class="p">))</span>
+                                 <span class="s1">'namelist.sealevel.template'</span><span class="p">))</span>
             <span class="n">text</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">nglv</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">nglv</span><span class="p">),</span> <span class="n">slm_input_ice</span><span class="o">=</span><span class="n">slm_input_ice</span><span class="p">,</span>
                                    <span class="n">slm_input_earth</span><span class="o">=</span><span class="n">slm_input_earth</span><span class="p">,</span>
                                    <span class="n">slm_earth_structure</span><span class="o">=</span><span class="n">slm_earth_structure</span><span class="p">,</span>
                                    <span class="n">slm_input_others</span><span class="o">=</span><span class="n">slm_input_others</span><span class="p">)</span>
 
             <span class="c1"># write out the namelist.sealevel file</span>
-            <span class="n">file_slm_nl</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;namelist.sealevel&#39;</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_slm_nl</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+            <span class="n">file_slm_nl</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'namelist.sealevel'</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_slm_nl</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
                 <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
             <span class="c1"># create SLM output paths</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;OUTPUT_SLM/&#39;</span><span class="p">),</span>
-                        <span class="n">exist_ok</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">)</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;ICELOAD_SLM/&#39;</span><span class="p">),</span>
-                        <span class="n">exist_ok</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'OUTPUT_SLM/'</span><span class="p">),</span>
+                        <span class="n">exist_ok</span><span class="o">=</span><span class="s1">'True'</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'ICELOAD_SLM/'</span><span class="p">),</span>
+                        <span class="n">exist_ok</span><span class="o">=</span><span class="s1">'True'</span><span class="p">)</span>
 
             <span class="c1"># link in SLM mapping files</span>
-            <span class="c1"># they don&#39;t exist yet, but we can create symlinks now</span>
-            <span class="n">map_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;mapping_files&#39;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">map_file</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mapfile_mali_to_slm.nc&#39;</span><span class="p">,</span>
-                             <span class="s1">&#39;mapfile_slm_to_mali.nc&#39;</span><span class="p">):</span>
+            <span class="c1"># they don't exist yet, but we can create symlinks now</span>
+            <span class="n">map_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'..'</span><span class="p">,</span> <span class="s1">'mapping_files'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">map_file</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'mapfile_mali_to_slm.nc'</span><span class="p">,</span>
+                             <span class="s1">'mapfile_slm_to_mali.nc'</span><span class="p">):</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">map_dir</span><span class="p">,</span> <span class="n">map_file</span><span class="p">),</span>
                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">map_file</span><span class="p">))</span>
 
         <span class="c1"># For all projection runs, symlink the restart file for the</span>
         <span class="c1"># historical run</span>
-        <span class="c1"># don&#39;t symlink restart_timestamp or you&#39;ll have a mighty mess</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;../hist_</span><span class="si">{</span><span class="n">mesh_res</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">/rst.2015-01-01.nc&quot;</span><span class="p">,</span>
-                       <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;rst.2015-01-01.nc&#39;</span><span class="p">))</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s2">&quot;restart_timestamp&quot;</span><span class="p">),</span>
-                      <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">text_file</span><span class="p">:</span>
-                <span class="n">text_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;2015-01-01_00:00:00&quot;</span><span class="p">)</span>
+        <span class="c1"># don't symlink restart_timestamp or you'll have a mighty mess</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">'hist'</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="sa">f</span><span class="s2">"../hist_</span><span class="si">{</span><span class="n">mesh_res</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">/rst.2015-01-01.nc"</span><span class="p">,</span>
+                       <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'rst.2015-01-01.nc'</span><span class="p">))</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s2">"restart_timestamp"</span><span class="p">),</span>
+                      <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">text_file</span><span class="p">:</span>
+                <span class="n">text_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"2015-01-01_00:00:00"</span><span class="p">)</span>
 
         <span class="c1"># add the albany_input.yaml file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;albany_input.yaml&#39;</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'albany_input.yaml'</span><span class="p">,</span>
             <span class="n">package</span><span class="o">=</span><span class="n">resource_location</span><span class="p">,</span>
             <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># create graph file</span>
         <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="n">init_cond_path</span><span class="p">,</span>
                         <span class="n">graph_filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
-                                                    <span class="s1">&#39;graph.info&#39;</span><span class="p">))</span>
+                                                    <span class="s1">'graph.info'</span><span class="p">))</span>
 
         <span class="n">symlink_load_script</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
 
         <span class="c1"># customize job script</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;job&#39;</span><span class="p">,</span> <span class="s1">&#39;job_name&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">)</span>
-        <span class="n">machine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;deploy&#39;</span><span class="p">,</span> <span class="s1">&#39;machine&#39;</span><span class="p">)</span>
-        <span class="n">pre_run_cmd</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;LOGDIR=previous_logs_`date +&quot;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H-%M-%S&quot;`;&#39;</span>
-                       <span class="s1">&#39;mkdir $LOGDIR; cp log* $LOGDIR; date&#39;</span><span class="p">)</span>
-        <span class="n">post_run_cmd</span> <span class="o">=</span> <span class="s2">&quot;date&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'job'</span><span class="p">,</span> <span class="s1">'job_name'</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">)</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'deploy'</span><span class="p">,</span> <span class="s1">'machine'</span><span class="p">)</span>
+        <span class="n">pre_run_cmd</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'LOGDIR=previous_logs_`date +"%Y-%m-</span><span class="si">%d</span><span class="s1">_%H-%M-%S"`;'</span>
+                       <span class="s1">'mkdir $LOGDIR; cp log* $LOGDIR; date'</span><span class="p">)</span>
+        <span class="n">post_run_cmd</span> <span class="o">=</span> <span class="s2">"date"</span>
         <span class="n">write_job_script</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span>
                          <span class="n">target_cores</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span><span class="p">,</span>
                          <span class="n">work_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
@@ -430,26 +430,26 @@
 <div class="viewcode-block" id="SetUpExperiment.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.run.html#compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run this step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ismip6_run_ais_2300&#39;</span><span class="p">]</span>
-        <span class="n">sea_level_model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;sea_level_model&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip6_run_ais_2300'</span><span class="p">]</span>
+        <span class="n">sea_level_model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'sea_level_model'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">sea_level_model</span><span class="p">:</span>
             <span class="c1"># Check if mapping files were generated</span>
-            <span class="n">map_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;mapping_files&#39;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">map_file</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mapfile_mali_to_slm.nc&#39;</span><span class="p">,</span>
-                             <span class="s1">&#39;mapfile_slm_to_mali.nc&#39;</span><span class="p">):</span>
+            <span class="n">map_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'..'</span><span class="p">,</span> <span class="s1">'mapping_files'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">map_file</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'mapfile_mali_to_slm.nc'</span><span class="p">,</span>
+                             <span class="s1">'mapfile_slm_to_mali.nc'</span><span class="p">):</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">map_dir</span><span class="p">,</span> <span class="n">map_file</span><span class="p">)):</span>
-                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERROR: &#39;mapping_files/</span><span class="si">{</span><span class="n">map_file</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
-                             <span class="s2">&quot;does not exist in workdir.&quot;</span>
-                             <span class="s2">&quot;Please run the &#39;mapping_files&#39; step&quot;</span>
-                             <span class="s2">&quot;before proceeding.&quot;</span><span class="p">)</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: 'mapping_files/</span><span class="si">{</span><span class="n">map_file</span><span class="si">}</span><span class="s2">'"</span>
+                             <span class="s2">"does not exist in workdir."</span>
+                             <span class="s2">"Please run the 'mapping_files' step"</span>
+                             <span class="s2">"before proceeding."</span><span class="p">)</span>
 
-        <span class="n">run_model</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">,</span>
-                  <span class="n">streams</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">)</span></div>
+        <span class="n">run_model</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">,</span>
+                  <span class="n">streams</span><span class="o">=</span><span class="s1">'streams.landice'</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

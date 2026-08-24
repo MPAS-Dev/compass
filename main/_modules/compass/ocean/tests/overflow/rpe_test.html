@@ -121,7 +121,7 @@
 <div class="viewcode-block" id="RpeTest">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.rpe_test.RpeTest.html#compass.ocean.tests.overflow.rpe_test.RpeTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RpeTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The reference potential energy (RPE) test case for the overflow</span>
 <span class="sd">    test group performs a 40h integration of the model forward in time at</span>
 <span class="sd">    5 different values of the viscosity at the given resolution.</span>
@@ -130,12 +130,12 @@
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="RpeTest.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.rpe_test.RpeTest.html#compass.ocean.tests.overflow.rpe_test.RpeTest.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="s1">&#39;1km&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="s1">'1km'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -143,9 +143,9 @@
 <span class="sd">        test_group : compass.ocean.tests.overflow.Overflow</span>
 <span class="sd">            The test group that this test case belongs to</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test&#39;</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="sd">        """</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'rpe_test'</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -154,39 +154,39 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Modify the configuration options for this test case.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
 
         <span class="n">overflow</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
-        <span class="n">nus</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;overflow&#39;</span><span class="p">,</span> <span class="s1">&#39;viscosities&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">nus</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">'overflow'</span><span class="p">,</span> <span class="s1">'viscosities'</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nus</span> <span class="o">=</span> <span class="n">nus</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
             <span class="n">InitialStateFromInitMode</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">nu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nus</span><span class="p">):</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;rpe_test_</span><span class="si">{</span><span class="n">index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">_nu_</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">nu</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'rpe_test_</span><span class="si">{</span><span class="n">index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">_nu_</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">nu</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span>
             <span class="n">step</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span>
                 <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                 <span class="n">ntasks</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                 <span class="n">nu</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">nu</span><span class="p">))</span>
 
             <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.ocean.tests.overflow.rpe_test&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+                <span class="s1">'compass.ocean.tests.overflow.rpe_test'</span><span class="p">,</span>
+                <span class="s1">'namelist.forward'</span><span class="p">)</span>
             <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.ocean.tests.overflow.rpe_test&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+                <span class="s1">'compass.ocean.tests.overflow.rpe_test'</span><span class="p">,</span>
+                <span class="s1">'streams.forward'</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
             <span class="n">Analysis</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">nus</span><span class="o">=</span><span class="n">nus</span><span class="p">))</span></div>
 
-    <span class="c1"># no run() is needed because we&#39;re doing the default: running all steps</span>
+    <span class="c1"># no run() is needed because we're doing the default: running all steps</span>
 </pre></div>
 
            </div>

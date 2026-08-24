@@ -125,7 +125,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">ismip6_grid_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
                        <span class="n">scrip_from_latlon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">method_remap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Build a mapping file if it does not exist.</span>
 <span class="sd">    Mapping file is then used to remap the ismip6 source file in polarstero</span>
 <span class="sd">    coordinate to unstructured mali mesh</span>
@@ -156,38 +156,38 @@
 
 <span class="sd">    method_remap : str, optional</span>
 <span class="sd">        Remapping method used in building a mapping file</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Mapping file exists. Not building a new one.&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Mapping file exists. Not building a new one."</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="c1"># create the scrip files if mapping file does not exist</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Mapping file does not exist. Building one based on the&quot;</span>
-                <span class="s2">&quot; input/output meshes&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating temporary scrip files for source and &quot;</span>
-                <span class="s2">&quot;destination grids...&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Mapping file does not exist. Building one based on the"</span>
+                <span class="s2">" input/output meshes"</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Creating temporary scrip files for source and "</span>
+                <span class="s2">"destination grids..."</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">mali_mesh_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Mapping file does not exist. To build one, Mali &quot;</span>
-                         <span class="s2">&quot;mesh file with &#39;-f&#39; should be provided. &quot;</span>
-                         <span class="s2">&quot;Type --help for info&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Mapping file does not exist. To build one, Mali "</span>
+                         <span class="s2">"mesh file with '-f' should be provided. "</span>
+                         <span class="s2">"Type --help for info"</span><span class="p">)</span>
 
     <span class="c1"># name temporary scrip files that will be used to build mapping file</span>
-    <span class="n">source_grid_scripfile</span> <span class="o">=</span> <span class="s2">&quot;temp_source_scrip.nc&quot;</span>
-    <span class="n">mali_scripfile</span> <span class="o">=</span> <span class="s2">&quot;temp_mali_scrip.nc&quot;</span>
+    <span class="n">source_grid_scripfile</span> <span class="o">=</span> <span class="s2">"temp_source_scrip.nc"</span>
+    <span class="n">mali_scripfile</span> <span class="o">=</span> <span class="s2">"temp_mali_scrip.nc"</span>
     <span class="c1"># this is the projection of ismip6 data for Antarctica</span>
-    <span class="n">ismip6_projection</span> <span class="o">=</span> <span class="s2">&quot;ais-bedmap2&quot;</span>
+    <span class="n">ismip6_projection</span> <span class="o">=</span> <span class="s2">"ais-bedmap2"</span>
 
     <span class="c1"># create the scrip file for the forcing dataset</span>
     <span class="k">if</span> <span class="n">scrip_from_latlon</span><span class="p">:</span>
         <span class="n">create_scrip_from_latlon</span><span class="p">(</span><span class="n">ismip6_grid_file</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;create_scrip_file_from_planar_rectangular_grid&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;--input&quot;</span><span class="p">,</span> <span class="n">ismip6_grid_file</span><span class="p">,</span>
-                <span class="s2">&quot;--scrip&quot;</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">,</span>
-                <span class="s2">&quot;--proj&quot;</span><span class="p">,</span> <span class="n">ismip6_projection</span><span class="p">,</span>
-                <span class="s2">&quot;--rank&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"create_scrip_file_from_planar_rectangular_grid"</span><span class="p">,</span>
+                <span class="s2">"--input"</span><span class="p">,</span> <span class="n">ismip6_grid_file</span><span class="p">,</span>
+                <span class="s2">"--scrip"</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">,</span>
+                <span class="s2">"--proj"</span><span class="p">,</span> <span class="n">ismip6_projection</span><span class="p">,</span>
+                <span class="s2">"--rank"</span><span class="p">,</span> <span class="s2">"2"</span><span class="p">]</span>
 
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
@@ -196,12 +196,12 @@
     <span class="c1"># make changes on a duplicated file to avoid making changes to the</span>
     <span class="c1"># original mesh file</span>
 
-    <span class="n">mali_mesh_copy</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_file</span><span class="si">}</span><span class="s2">_copy&quot;</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mali_mesh_file</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_file</span><span class="si">}</span><span class="s2">_copy&quot;</span><span class="p">)</span>
+    <span class="n">mali_mesh_copy</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_file</span><span class="si">}</span><span class="s2">_copy"</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mali_mesh_file</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_file</span><span class="si">}</span><span class="s2">_copy"</span><span class="p">)</span>
 
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;set_lat_lon_fields_in_planar_grid&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--file&quot;</span><span class="p">,</span> <span class="n">mali_mesh_copy</span><span class="p">,</span>
-            <span class="s2">&quot;--proj&quot;</span><span class="p">,</span> <span class="n">ismip6_projection</span><span class="p">]</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"set_lat_lon_fields_in_planar_grid"</span><span class="p">,</span>
+            <span class="s2">"--file"</span><span class="p">,</span> <span class="n">mali_mesh_copy</span><span class="p">,</span>
+            <span class="s2">"--proj"</span><span class="p">,</span> <span class="n">ismip6_projection</span><span class="p">]</span>
 
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
@@ -209,29 +209,29 @@
     <span class="n">scrip_from_mpas</span><span class="p">(</span><span class="n">mali_mesh_copy</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">)</span>
 
     <span class="c1"># create a mapping file using ESMF weight gen</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating a mapping file. Mapping method used: </span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Creating a mapping file. Mapping method used: </span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">method_remap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Desired remapping option should be provided with &quot;</span>
-                         <span class="s2">&quot;--method. Available options are &#39;bilinear&#39;,&quot;</span>
-                         <span class="s2">&quot;&#39;neareststod&#39;, &#39;conserve&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Desired remapping option should be provided with "</span>
+                         <span class="s2">"--method. Available options are 'bilinear',"</span>
+                         <span class="s2">"'neareststod', 'conserve'."</span><span class="p">)</span>
 
-    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parallel&quot;</span><span class="p">,</span> <span class="s2">&quot;parallel_executable&quot;</span><span class="p">)</span>
+    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"parallel"</span><span class="p">,</span> <span class="s2">"parallel_executable"</span><span class="p">)</span>
     <span class="c1"># split the parallel executable into constituents in case it includes flags</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
-    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;ESMF_RegridWeightGen&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">,</span>
-                 <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">,</span>
-                 <span class="s2">&quot;-w&quot;</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
-                 <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="n">method_remap</span><span class="p">,</span>
-                 <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;-64bit_offset&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;--dst_regional&quot;</span><span class="p">,</span> <span class="s2">&quot;--src_regional&quot;</span><span class="p">])</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">"-n"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                 <span class="s2">"ESMF_RegridWeightGen"</span><span class="p">,</span>
+                 <span class="s2">"-s"</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">,</span>
+                 <span class="s2">"-d"</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">,</span>
+                 <span class="s2">"-w"</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+                 <span class="s2">"-m"</span><span class="p">,</span> <span class="n">method_remap</span><span class="p">,</span>
+                 <span class="s2">"-i"</span><span class="p">,</span> <span class="s2">"-64bit_offset"</span><span class="p">,</span>
+                 <span class="s2">"--dst_regional"</span><span class="p">,</span> <span class="s2">"--src_regional"</span><span class="p">])</span>
 
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># remove the temporary scripfiles once the mapping file is generated</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removing the temporary mesh and scripfiles...&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Removing the temporary mesh and scripfiles..."</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">source_grid_scripfile</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mali_scripfile</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mali_mesh_copy</span><span class="p">)</span></div>
@@ -241,7 +241,7 @@
 <div class="viewcode-block" id="create_scrip_from_latlon">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon.html#compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_scrip_from_latlon</span><span class="p">(</span><span class="n">source_grid_file</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a scripfile based on the `lat`/`lon` coordinates of a source</span>
 <span class="sd">    dataset.</span>
 
@@ -258,38 +258,38 @@
 
 <span class="sd">    source_grid_scripfile : str</span>
 <span class="sd">        output scrip file of the input smb data</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">source_grid_file</span><span class="p">)</span>
     <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
 
     <span class="c1"># RACMO datasets, which use a rotated-pole grid, do not contain `x`/`y`</span>
     <span class="c1"># dimensions, instead use `rlat`/`rlon` dimensions to find `nx`/`ny`</span>
-    <span class="k">if</span> <span class="s2">&quot;rlon&quot;</span> <span class="ow">in</span> <span class="n">ds</span> <span class="ow">and</span> <span class="s2">&quot;rlat&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
-        <span class="n">nx</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">&quot;rlon&quot;</span><span class="p">]</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">&quot;rlat&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">"rlon"</span> <span class="ow">in</span> <span class="n">ds</span> <span class="ow">and</span> <span class="s2">"rlat"</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">"rlon"</span><span class="p">]</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">"rlat"</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">nx</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span>
 
     <span class="n">grid_size</span> <span class="o">=</span> <span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span>
 
     <span class="c1"># place the information from our source dataset into the scrip dataset</span>
-    <span class="n">ds_out</span><span class="p">[</span><span class="s2">&quot;grid_center_lat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;grid_size&quot;</span><span class="p">,),</span> <span class="n">ds</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span>
-    <span class="n">ds_out</span><span class="p">[</span><span class="s2">&quot;grid_center_lon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;grid_size&quot;</span><span class="p">,),</span> <span class="n">ds</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span>
-    <span class="n">ds_out</span><span class="p">[</span><span class="s2">&quot;grid_dims&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;grid_rank&quot;</span><span class="p">,),</span> <span class="p">[</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">])</span>
-    <span class="n">ds_out</span><span class="p">[</span><span class="s2">&quot;grid_imask&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">ds_out</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">&quot;grid_size&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int32&quot;</span><span class="p">),</span> <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;grid_size&quot;</span><span class="p">,)</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="s2">"grid_center_lat"</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s2">"grid_size"</span><span class="p">,),</span> <span class="n">ds</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="s2">"grid_center_lon"</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s2">"grid_size"</span><span class="p">,),</span> <span class="n">ds</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="s2">"grid_dims"</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s2">"grid_rank"</span><span class="p">,),</span> <span class="p">[</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">])</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="s2">"grid_imask"</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">ds_out</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">"grid_size"</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"int32"</span><span class="p">),</span> <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s2">"grid_size"</span><span class="p">,)</span>
     <span class="p">)</span>
 
     <span class="c1"># determine the corners of gricells</span>
-    <span class="k">if</span> <span class="s2">&quot;lat_bnds&quot;</span> <span class="ow">in</span> <span class="n">ds</span> <span class="ow">and</span> <span class="s2">&quot;lon_bnds&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"lat_bnds"</span> <span class="ow">in</span> <span class="n">ds</span> <span class="ow">and</span> <span class="s2">"lon_bnds"</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
         <span class="n">lat_corner</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">lat_bnds</span>
-        <span class="k">if</span> <span class="s2">&quot;time&quot;</span> <span class="ow">in</span> <span class="n">lat_corner</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"time"</span> <span class="ow">in</span> <span class="n">lat_corner</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
             <span class="n">lat_corner</span> <span class="o">=</span> <span class="n">lat_corner</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">lon_corner</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">lon_bnds</span>
-        <span class="k">if</span> <span class="s2">&quot;time&quot;</span> <span class="ow">in</span> <span class="n">lon_corner</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"time"</span> <span class="ow">in</span> <span class="n">lon_corner</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
             <span class="n">lon_corner</span> <span class="o">=</span> <span class="n">lon_corner</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">lat_corner</span> <span class="o">=</span> <span class="n">lat_corner</span><span class="o">.</span><span class="n">values</span>
@@ -304,21 +304,21 @@
     <span class="n">grid_corner_lat</span> <span class="o">=</span> <span class="n">lat_corner</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">grid_size</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
     <span class="n">grid_corner_lon</span> <span class="o">=</span> <span class="n">lon_corner</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">grid_size</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
-    <span class="n">ds_out</span><span class="p">[</span><span class="s2">&quot;grid_corner_lat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="p">(</span><span class="s2">&quot;grid_size&quot;</span><span class="p">,</span> <span class="s2">&quot;grid_corners&quot;</span><span class="p">),</span> <span class="n">grid_corner_lat</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="s2">"grid_corner_lat"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="s2">"grid_size"</span><span class="p">,</span> <span class="s2">"grid_corners"</span><span class="p">),</span> <span class="n">grid_corner_lat</span>
     <span class="p">)</span>
-    <span class="n">ds_out</span><span class="p">[</span><span class="s2">&quot;grid_corner_lon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="p">(</span><span class="s2">&quot;grid_size&quot;</span><span class="p">,</span> <span class="s2">&quot;grid_corners&quot;</span><span class="p">),</span> <span class="n">grid_corner_lon</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="s2">"grid_corner_lon"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="s2">"grid_size"</span><span class="p">,</span> <span class="s2">"grid_corners"</span><span class="p">),</span> <span class="n">grid_corner_lon</span>
     <span class="p">)</span>
 
-    <span class="n">ds_out</span><span class="o">.</span><span class="n">grid_center_lat</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;units&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;degrees&quot;</span>
-    <span class="n">ds_out</span><span class="o">.</span><span class="n">grid_center_lon</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;units&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;degrees&quot;</span>
-    <span class="n">ds_out</span><span class="o">.</span><span class="n">grid_corner_lat</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;units&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;degrees&quot;</span>
-    <span class="n">ds_out</span><span class="o">.</span><span class="n">grid_corner_lon</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;units&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;degrees&quot;</span>
-    <span class="n">ds_out</span><span class="o">.</span><span class="n">grid_imask</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;units&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;unitless&quot;</span>
+    <span class="n">ds_out</span><span class="o">.</span><span class="n">grid_center_lat</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"units"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"degrees"</span>
+    <span class="n">ds_out</span><span class="o">.</span><span class="n">grid_center_lon</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"units"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"degrees"</span>
+    <span class="n">ds_out</span><span class="o">.</span><span class="n">grid_corner_lat</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"units"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"degrees"</span>
+    <span class="n">ds_out</span><span class="o">.</span><span class="n">grid_corner_lon</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"units"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"degrees"</span>
+    <span class="n">ds_out</span><span class="o">.</span><span class="n">grid_imask</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"units"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"unitless"</span>
 
-    <span class="n">ds_out</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;mesh_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_grid_file</span>
-    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;NETCDF3_64BIT&quot;</span><span class="p">)</span></div>
+    <span class="n">ds_out</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"mesh_name"</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_grid_file</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"NETCDF3_64BIT"</span><span class="p">)</span></div>
 
 </pre></div>
 
