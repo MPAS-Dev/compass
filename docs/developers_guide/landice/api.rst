@@ -661,6 +661,7 @@ Landice Framework
    mesh.set_cell_width
    mesh.subset_gridded_dataset_to_bounds
    mesh.get_dist_to_edge_and_gl
+   mesh.geojson_to_grid_mask
    mesh.build_cell_width
    mesh.build_mali_mesh
    mesh.make_region_masks
