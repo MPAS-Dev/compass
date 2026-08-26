@@ -64,6 +64,7 @@ class SetUpExperiment(Step):
         reference_surface_fname = os.path.split(reference_surface_path)[-1]
         calving_method = section.get('calving_method')
         sea_level_model = section.getboolean('sea_level_model')
+        fastisostasy = section.getboolean('fastisostasy')
 
         exp_info = self.exp_info
         scenario = exp_info['scenario']
@@ -347,6 +348,34 @@ class SetUpExperiment(Step):
                 os.symlink(os.path.join(map_dir, map_file),
                            os.path.join(self.work_dir, map_file))
 
+        # FastIsostasy options
+        if fastisostasy:
+            options = {
+                'config_uplift_method': "'fastisostasy'",
+                'config_MALI_to_FASTISOSTASY_weights_file':
+                    "'mapfile_mali_to_fastiso.nc'",
+                'config_FASTISOSTASY_to_MALI_weights_file':
+                    "'mapfile_fastiso_to_mali.nc'",
+                'config_fastisostasy_parameter_file':
+                    "'fastisostasy.nml'"
+            }
+            self.add_namelist_options(options=options,
+                                      out_name='namelist.landice')
+
+            # Copy FastIsostasy namelist file
+            self.add_input_file(
+                filename='fastisostasy.nml',
+                target='namelist.fastisostasy.template',
+                package=resource_location,
+                copy=True)
+
+            # Symlink mapping files
+            map_dir = os.path.join('..', 'fastiso_mapping_files')
+            for map_file in ('mapfile_mali_to_fastiso.nc',
+                             'mapfile_fastiso_to_mali.nc'):
+                os.symlink(os.path.join(map_dir, map_file),
+                           os.path.join(self.work_dir, map_file))
+
         # --- Symlink restart for projections/ctrl ---
         if not is_historical:
             hist_exp = f"historical_{model}"
@@ -396,6 +425,17 @@ class SetUpExperiment(Step):
                     sys.exit(f"ERROR: 'mapping_files/{map_file}' "
                              "does not exist in workdir. "
                              "Please run the 'mapping_files' step "
+                             "before proceeding.")
+
+        fastisostasy = section.getboolean('fastisostasy')
+        if fastisostasy:
+            map_dir = os.path.join('..', 'fastiso_mapping_files')
+            for map_file in ('mapfile_mali_to_fastiso.nc',
+                             'mapfile_fastiso_to_mali.nc'):
+                if not os.path.isfile(os.path.join(map_dir, map_file)):
+                    sys.exit(f"ERROR: 'fastiso_mapping_files/{map_file}' "
+                             "does not exist in workdir. "
+                             "Please run the 'fastiso_mapping_files' step "
                              "before proceeding.")
 
         run_model(step=self, namelist='namelist.landice',
