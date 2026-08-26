@@ -24,6 +24,8 @@ from scipy import ndimage
 from scipy.interpolate import interpn
 from scipy.ndimage import binary_dilation, distance_transform_edt
 
+from compass.step import Step
+
 
 def mpas_flood_fill(seed_mask, grow_mask, cellsOnCell, nEdgesOnCell,
                     grow_iters=sys.maxsize):
@@ -864,6 +866,26 @@ def build_mali_mesh(self, cell_width, x1, y1, geom_points,
     args = ['set_lat_lon_fields_in_planar_grid', '-f',
             mesh_name, '-p', projection]
     check_call(args, logger=logger)
+
+
+class LandiceMeshStep(Step):
+    """
+    A base class for land-ice mesh-generation steps that should use all
+    available cores for serial post-processing steps.
+    """
+
+    def constrain_resources(self, available_resources):
+        """
+        Update ``cpus_per_task`` to use all available cores
+
+        Parameters
+        ----------
+        available_resources : dict
+            A dictionary containing available resources (cores, tasks, nodes
+            and cores_per_node)
+        """
+        super().constrain_resources(available_resources)
+        self.cpus_per_task = available_resources['cores']
 
 
 def make_region_masks(self, mesh_filename, mask_filename,
