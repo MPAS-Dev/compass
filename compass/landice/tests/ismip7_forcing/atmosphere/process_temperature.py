@@ -69,6 +69,8 @@ class ProcessTemperature(Step):
         prefix = params['prefix']
         resolution = params['atm_resolution']
         version = params['atm_version']
+        if params['atm_model'] is not None:
+            model = params['atm_model']
         input_path = os.path.join(base_path_ismip7, "ts", version)
         file_pattern = (f"ts_{prefix}_{model}_{scenario}_"
                         f"SDBN1-{resolution}_{version}_*.nc")

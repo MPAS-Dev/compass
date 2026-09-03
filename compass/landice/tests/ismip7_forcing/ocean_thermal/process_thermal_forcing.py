@@ -91,11 +91,14 @@ class ProcessThermalForcing(Step):
         # Discover input files
         prefix = params['prefix']
         ocean_version = params['ocean_version']
+        ocean_grid = params['ocean_grid']
         ocean_3d = params['ocean_3d']
+        if params['ocean_model'] is not None:
+            model = params['ocean_model']
         input_path = os.path.join(base_path_ismip7, "ocean", "tf",
                                   ocean_version)
         file_pattern = (f"tf_{prefix}_{model}_{scenario}_"
-                        f"ocean_{ocean_version}_*.nc")
+                        f"{ocean_grid}_{ocean_version}_*.nc")
         all_files = sorted(glob.glob(os.path.join(input_path, file_pattern)))
 
         if not all_files:

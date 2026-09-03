@@ -24,10 +24,18 @@ ice_sheet_params
 
 The module :py:mod:`compass.landice.tests.ismip7_forcing.ice_sheet_params`
 defines a dictionary of ice-sheet-specific parameters (projection, file
-naming prefix, grid resolution, data version, ocean dimensionality) and
-provides the function
+naming prefix, grid resolution, data version, ocean dimensionality, and the
+atmosphere/ocean source names) and provides the function
 :py:func:`compass.landice.tests.ismip7_forcing.ice_sheet_params.get_params`
 to retrieve them based on the ``ice_sheet`` config option.
+
+When ``scenario = OCX``, ``get_params`` applies a set of OCX overrides on top
+of the ice-sheet defaults: data version ``v1``, the ocean file-name grid token
+(e.g. ``ocean-1000m``), and the fixed reanalysis sources (``atm_model`` =
+``RACMO2.3p2-ERA`` and ``ocean_model`` = ``EN4``). The processing steps use
+``atm_model`` / ``ocean_model`` in place of the ``[ismip7] model`` option when
+they are set, so the OCX ``model`` option is ignored. This keeps OCX handling
+centralized and lets a single config file drive both test cases.
 
 configure
 ~~~~~~~~~
@@ -39,6 +47,8 @@ the user (i.e., are not ``NotAvailable``).
 Repository-local example user configs are available at
 ``compass/landice/tests/ismip7_forcing/ismip7_forcing_test.cfg`` (AIS) and
 ``compass/landice/tests/ismip7_forcing/ismip7_forcing_test_gis.cfg`` (GrIS).
+The GrIS OCX scenario has a dedicated example
+``ismip7_forcing_ocx_gis.cfg`` in the same directory.
 These are intended for development/testing and include environment-specific
 paths.
 
