@@ -78,6 +78,17 @@ pass a pre-built ``hull_path`` (from
 :py:func:`compass.landice.mesh.build_dst_scrip_hull()`) to avoid recomputing the
 hull for each dataset.
 
+Optionally, ``extrap_varnames`` may be passed to extrapolate a raw,
+unextrapolated source dataset on the fly. The listed variables are
+nearest-filled into their no-data (non-finite) cells on the source raster using
+a fast Euclidean-distance transform, written to a temporary copy that is
+remapped in place of the original. This lets a plain conservative remap have
+valid data across the whole mesh footprint, so margins are free of
+interpolation ramps and single-pixel fill artifacts, without requiring an
+offline pre-extrapolated source file. When ``extrap_varnames`` is ``None`` (the
+default), the source is remapped as-is (appropriate for datasets that are
+already gap-free or intentionally left unfilled, e.g. bed topography).
+
 :py:func:`compass.landice.mesh.build_dst_scrip_hull()` builds a buffered
 concave boundary from a destination SCRIP file and returns it as a
 ``matplotlib.path.Path``. The boundary is constructed by rasterising
@@ -98,7 +109,9 @@ fall within the concave boundary of the destination SCRIP footprint (plus a
 configurable buffer, default 50 km).  The function projects both SCRIP files
 into a planar stereographic coordinate system (determined by the ``domain``
 argument, e.g. ``'gis-gimp'`` or ``'ais-bedmap2'``) and uses a
-``matplotlib.path.Path`` point-in-polygon test for efficiency.  The resulting
+``matplotlib.path.Path`` point-in-polygon test for efficiency.  If an optional
+``valid_mask`` array is supplied, ``grid_imask`` is further intersected with it
+so no-data source cells are also excluded.  The resulting
 masked SCRIP file is passed to ``ESMF_RegridWeightGen`` in place of the
 full-domain source SCRIP.
 
