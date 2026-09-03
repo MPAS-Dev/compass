@@ -308,7 +308,8 @@ class ProcessThermalForcing(Step):
             Last year to include in output
         """
         ds = xr.open_mfdataset(remapped_files, concat_dim="time",
-                               combine="nested", engine="netcdf4")
+                               combine="nested", engine="netcdf4",
+                               drop_variables="time_bnds")
 
         # Subset to requested year range
         years = ds.time.dt.year
@@ -422,7 +423,8 @@ class ProcessThermalForcing(Step):
             Last year to include in output
         """
         ds = xr.open_mfdataset(remapped_files, concat_dim="time",
-                               combine="nested", engine="netcdf4")
+                               combine="nested", engine="netcdf4",
+                               drop_variables="time_bnds")
 
         # Subset to requested year range
         years = ds.time.dt.year

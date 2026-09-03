@@ -85,7 +85,11 @@ class ProcessSmbGradient(Step):
         # Filter to requested year range
         input_files = []
         for f in all_files:
-            year = int(os.path.basename(f).split("_")[-1].replace(".nc", ""))
+            # skip non-yearly files such as climatology averages (*_avg.nc)
+            token = os.path.basename(f).split("_")[-1].replace(".nc", "")
+            if not token.isdigit():
+                continue
+            year = int(token)
             if start_year <= year <= end_year:
                 input_files.append(f)
 
@@ -167,7 +171,8 @@ class ProcessSmbGradient(Step):
             Output file path
         """
         ds = xr.open_mfdataset(remapped_files, concat_dim="time",
-                               combine="nested", engine="netcdf4")
+                               combine="nested", engine="netcdf4",
+                               drop_variables="time_bnds")
 
         # Rename dimensions to MALI conventions
         rename_dims = {}
