@@ -77,6 +77,31 @@ The ``[ismip7] model`` option is ignored for OCX (set it to ``None``), so a
 single config file processes both the ``atmosphere`` and ``ocean_thermal``
 test cases, just like the ESM scenarios.
 
+.. _landice_ismip7_forcing_output:
+
+Output Layout
+-------------
+
+Processed forcing is written under ``output_base_path`` in a layout that the
+:ref:`landice_ismip7_run` test group can ingest directly:
+
+.. code-block:: none
+
+   {output_base_path}/{group}/atmosphere/{mesh}_SMB_{source}_{scenario}_{years}.nc
+   {output_base_path}/{group}/atmosphere/{mesh}_temperature_{source}_{scenario}_{years}.nc
+   {output_base_path}/{group}/atmosphere/{mesh}_runoff_...  (and the two gradients)
+   {output_base_path}/{group}/ocean_thermal_forcing/{mesh}_thermal_forcing_{source}_{scenario}_{years}.nc
+
+The ``group`` directory is ``{model}_{scenario}`` for the ESM scenarios and
+``{scenario}`` (i.e. ``OCX``) for OCX, whose atmosphere and ocean use
+different sources (``RACMO2.3p2-ERA`` and ``EN4``) but must share one
+directory. To feed :ref:`landice_ismip7_run`, point its ``forcing_basepath``
+at ``output_base_path`` for ESM scenarios, or its ``ocx_forcing_path`` at
+``{output_base_path}/OCX`` for OCX.
+
+Process only one year range into a given ``group`` directory: the run setup
+expects exactly one file per forcing field there.
+
 .. _landice_ismip7_forcing_input_data:
 
 Input Data

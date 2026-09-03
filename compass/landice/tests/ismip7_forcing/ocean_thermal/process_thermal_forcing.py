@@ -94,7 +94,10 @@ class ProcessThermalForcing(Step):
         ocean_grid = params['ocean_grid']
         ocean_3d = params['ocean_3d']
         if params['ocean_model'] is not None:
+            forcing_group = scenario
             model = params['ocean_model']
+        else:
+            forcing_group = f"{model}_{scenario}"
         input_path = os.path.join(base_path_ismip7, "ocean", "tf",
                                   ocean_version)
         file_pattern = (f"tf_{prefix}_{model}_{scenario}_"
@@ -187,8 +190,8 @@ class ProcessThermalForcing(Step):
                 os.remove(f)
 
         # Place output in appropriate directory
-        output_path = os.path.join(output_base_path, "ocean_thermal_forcing",
-                                   f"{model}_{scenario}")
+        output_path = os.path.join(output_base_path, forcing_group,
+                                   "ocean_thermal_forcing")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
