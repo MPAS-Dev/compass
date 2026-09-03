@@ -9,9 +9,9 @@ from compass.landice.tests.ismip7_forcing.create_mapfile import (
 )
 from compass.landice.tests.ismip7_forcing.fracture.remap_utils import (
     add_xtime_and_write,
-    extrapolate_source,
     open_rename_and_trim,
 )
+from compass.landice.tests.ismip7_forcing.remap_utils import extrapolate_source
 from compass.step import Step
 
 

@@ -2,16 +2,15 @@ import glob
 import os
 import shutil
 
-import numpy as np
 import xarray as xr
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
-from scipy.ndimage import distance_transform_edt
 
 from compass.landice.tests.ismip7_forcing.create_mapfile import (
     build_mapping_file,
 )
 from compass.landice.tests.ismip7_forcing.ice_sheet_params import get_params
+from compass.landice.tests.ismip7_forcing.remap_utils import extrapolate_source
 from compass.step import Step
 
 
@@ -156,8 +155,7 @@ class ProcessThermalForcing(Step):
             # so they don't pollute neighboring cells during interpolation
             extrap_file = f"extrap_{basename}"
             if not os.path.exists(extrap_file):
-                self._extrapolate_source(input_file, extrap_file, "tf",
-                                         logger)
+                extrapolate_source(input_file, extrap_file, "tf", logger)
 
             logger.info(f"  Remapping: {basename}")
             args = ["ncremap",
@@ -252,8 +250,7 @@ class ProcessThermalForcing(Step):
         if not os.path.exists(remapped_file):
             extrap_file = f"extrap_{basename}"
             if not os.path.exists(extrap_file):
-                self._extrapolate_source(input_file, extrap_file, "tf",
-                                         logger)
+                extrapolate_source(input_file, extrap_file, "tf", logger)
 
             logger.info(f"  Remapping: {basename}")
             args = ["ncremap",
@@ -569,61 +566,5 @@ class ProcessThermalForcing(Step):
         # Drop the z coordinate if it persists
         if "nISMIP6OceanLayers" in ds.coords:
             ds = ds.drop_vars("nISMIP6OceanLayers")
-
-        write_netcdf(ds, output_file)
-
-    def _extrapolate_source(self, input_file, output_file, varname, logger):
-        """
-        Extrapolate fill/missing values on the source polar stereographic
-        grid using nearest-neighbor interpolation from valid cells. This
-        must be done before remapping so that fill values don't contaminate
-        the interpolation stencil.
-
-        Parameters
-        ----------
-        input_file : str
-            Path to the input NetCDF file on the source grid
-
-        output_file : str
-            Path to write the extrapolated file
-
-        varname : str
-            Name of the variable to extrapolate (e.g., "tf")
-
-        logger : logging.Logger
-            Logger for status messages
-        """
-        logger.info(f"    Extrapolating fill values on source grid: "
-                    f"{os.path.basename(input_file)}")
-
-        ds = xr.open_dataset(input_file, engine="netcdf4")
-        data = ds[varname]
-
-        # Process each time step (and z level if 3D)
-        # Source files have dims like (time, z, y, x) or (time, y, x)
-        values = data.values.copy()
-        non_spatial_shape = values.shape[:-2]  # (time,) or (time, z)
-
-        # Use distance_transform_edt with return_indices to find the
-        # nearest valid cell index for each invalid cell. This is O(n)
-        # on the grid and much faster than KD-tree approaches.
-        for idx in np.ndindex(non_spatial_shape):
-            slab = values[idx]  # shape (ny, nx)
-            valid_mask = np.isfinite(slab)
-            if valid_mask.all() or not valid_mask.any():
-                continue
-            nearest_inds = distance_transform_edt(
-                ~valid_mask, return_distances=False, return_indices=True)
-            invalid = ~valid_mask
-            values[idx][invalid] = slab[
-                nearest_inds[0, invalid],
-                nearest_inds[1, invalid]]
-
-        ds[varname] = (data.dims, values)
-        ds[varname].attrs = data.attrs
-
-        # Remove _FillValue encoding so output has no masked values
-        if "_FillValue" in ds[varname].encoding:
-            del ds[varname].encoding["_FillValue"]
 
         write_netcdf(ds, output_file)
