@@ -104,7 +104,13 @@ test case mirrors ``ismip7_ais`` but for the Greenland Ice Sheet.
 
 Key differences from the AIS test case:
 
-* Ocean thermal forcing is 2D (depth-averaged) rather than 3D.
+* Ocean thermal forcing is 2D (depth-averaged) by default rather than 3D;
+  setting ``use_3d_thermal_forcing = true`` in ``[ismip7_run_gris]`` switches
+  to the AIS-style 3D convention (``ismip6shelfMelt_3dThermalForcing`` +
+  ``ismip6shelfMelt_zOcean``, plus the ``ismip7_params`` stream for
+  ``ismip6shelfMelt_deltaT``/``_basin``/``_gamma0`` read from
+  ``melt_params_path``), consuming the output of the ``build_3d_thermal_forcing``
+  step in ``landice/ismip7_forcing/ocean_thermal``.
 * No sea-level model coupling.
 * Default calving method is ``crevasse_depth``.
 * Config section is ``[ismip7_run_gris]``.
@@ -115,4 +121,9 @@ set_up_experiment (GrIS)
 The class
 :py:class:`compass.landice.tests.ismip7_run.ismip7_gris.set_up_experiment.SetUpExperiment`
 follows the same logic as the AIS version, with the differences noted
-above (2D TF stream, no SLM support).
+above (no SLM support). The ``ismip7_TF`` stream's variable list, filename
+glob pattern (``*2dThermalForcing_*.nc`` vs ``*3dThermalForcing_*.nc``), and
+input interval (monthly vs annual) are all conditioned on
+``use_3d_thermal_forcing`` via the templated ``streams.landice.template``;
+when 3D forcing is enabled, ``config_use_3d_thermal_forcing_for_face_melt``
+is also set to ``.true.`` in the namelist.
