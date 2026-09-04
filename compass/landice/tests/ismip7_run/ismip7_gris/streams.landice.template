@@ -66,10 +66,15 @@
 <stream name="ismip7_TF"
         type="input"
         filename_template="{{ input_file_TF_forcing }}"
-        input_interval="{{ forcing_interval_monthly }}"
+        input_interval="{{ forcing_interval_TF }}"
         reference_time="2000-01-01_00:00:00"
         runtime_format="single_file">
+{% if use_3d_thermal_forcing %}
+        <var name="ismip6shelfMelt_3dThermalForcing"/>
+        <var name="ismip6shelfMelt_zOcean"/>
+{% else %}
         <var name="ismip6_2dThermalForcing"/>
+{% endif %}
 </stream>
 
 <stream name="ismip7_runoff"
@@ -80,6 +85,18 @@
         runtime_format="single_file">
         <var name="ismip6Runoff"/>
 </stream>
+
+{% if use_3d_thermal_forcing %}
+<stream name="ismip7_params"
+        type="input"
+        filename_template="{{ input_file_melt_params }}"
+        input_interval="initial_only"
+        runtime_format="single_file">
+        <var name="ismip6shelfMelt_deltaT"/>
+        <var name="ismip6shelfMelt_basin"/>
+        <var name="ismip6shelfMelt_gamma0"/>
+</stream>
+{% endif %}
 
 <stream name="reference_surface"
         type="input"
