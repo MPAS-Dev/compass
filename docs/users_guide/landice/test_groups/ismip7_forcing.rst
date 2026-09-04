@@ -17,11 +17,14 @@ and ``fracture``.
   ``process_smb``, ``process_temperature``, ``process_smb_gradient``,
   ``process_temperature_gradient``, and ``process_runoff``.
 
-* The ``ocean_thermal`` test case has one step: ``process_thermal_forcing``.
-  For AIS this produces 3D thermal forcing (with 30 ocean depth layers); for
-  GrIS it produces 2D (depth-averaged) thermal forcing. The step can also
-  process the observational ocean thermal forcing climatology (Zhou et al.)
-  for AIS, controlled by the ``process_ocean_climatology`` config option.
+* The ``ocean_thermal`` test case has two steps: ``process_thermal_forcing``
+  and ``build_3d_thermal_forcing``. ``process_thermal_forcing`` produces, for
+  AIS, 3D thermal forcing (with 30 ocean depth layers) and, for GrIS, 2D
+  (depth-averaged) thermal forcing. It can also process the observational
+  ocean thermal forcing climatology (Zhou et al.) for AIS, controlled by the
+  ``process_ocean_climatology`` config option. ``build_3d_thermal_forcing``
+  optionally converts the GrIS 2D forcing into a 3D field (GrIS only,
+  controlled by ``process_ocean_thermal_3d``).
 
 * The ``fracture`` test case has three steps: ``process_excess_melt``
   (Path A), ``process_lake_properties`` (Path B), and
@@ -90,7 +93,8 @@ Processed forcing is written under ``output_base_path`` in a layout that the
    {output_base_path}/{group}/atmosphere/{mesh}_SMB_{source}_{scenario}_{years}.nc
    {output_base_path}/{group}/atmosphere/{mesh}_temperature_{source}_{scenario}_{years}.nc
    {output_base_path}/{group}/atmosphere/{mesh}_runoff_...  (and the two gradients)
-   {output_base_path}/{group}/ocean_thermal_forcing/{mesh}_thermal_forcing_{source}_{scenario}_{years}.nc
+   {output_base_path}/{group}/ocean_thermal_forcing/{mesh}_2dThermalForcing_{source}_{scenario}_{years}.nc  (GrIS)
+   {output_base_path}/{group}/ocean_thermal_forcing/{mesh}_3dThermalForcing_{source}_{scenario}_{years}.nc  (AIS; optional GrIS 3-D)
 
 The ``group`` directory is ``{model}_{scenario}`` for the ESM scenarios and
 ``{scenario}`` (i.e. ``OCX``) for OCX, whose atmosphere and ocean use
@@ -214,6 +218,10 @@ values are:
    # Whether to process observational ocean thermal forcing climatology
    process_ocean_climatology = true
 
+   # Whether to build regional 3-D Greenland ocean thermal forcing from the
+   # 2-D forcing (GrIS only; Antarctica already produces 3-D forcing)
+   process_ocean_thermal_3d = false
+
    # config options for ismip7 atmosphere forcing
    [ismip7_atmosphere]
 
@@ -246,6 +254,14 @@ values are:
 
    # Base path to observational climatology data
    base_path_climatology = /path/to/ISMIP7/forcing/AIS/obs/zhou_annual_06_nov
+
+   # config options for building 3-D Greenland ocean thermal forcing
+   [ismip7_ocean_thermal_3d]
+
+   # Path to the JSON config with the 3-D-specific parameters (EN4 directory,
+   # region-mask file, source-region GeoJSON, calibration, vertical grid).
+   # User must supply when process_ocean_thermal_3d is true.
+   config_file = NotAvailable
 
    # config options for ismip7 fracture (Path C, ice shelf collapse) forcing
    [ismip7_fracture]
@@ -342,6 +358,28 @@ but without a Time dimension, producing a single static file.
 For **GrIS**, thermal forcing is 2D (depth-averaged), with monthly temporal
 resolution and yearly input files. The output variable is
 ``ismip6_2dThermalForcing``.
+
+build_3d_thermal_forcing (GrIS 3-D)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The optional ``build_3d_thermal_forcing`` step (GrIS only, gated by
+``process_ocean_thermal_3d = true``) converts the GrIS 2D thermal forcing into
+a 30-level 3D field for MALI's nonlocal (Jourdain et al. 2020) melt scheme. It
+auto-chains from the 2D forcing the ``process_thermal_forcing`` step just
+wrote, builds seven regional vertical profiles from monthly EN4 objective
+analyses, anchors each cell's profile to the effective seafloor to match the
+2D forcing, and calibrates one ``ismip6shelfMelt_deltaT`` per region while
+holding ``ismip6shelfMelt_gamma0`` fixed.
+
+The 3-D-specific parameters (EN4 directory, region-mask file, source-region
+GeoJSON, calibration targets, vertical grid, physical constants) are supplied
+through a JSON config file referenced by the ``[ismip7_ocean_thermal_3d]``
+``config_file`` option; the mesh, 2D forcing, output, and diagnostics paths
+are injected automatically. The output supplements (does not replace) the 2D
+forcing and uses the variables ``ismip6shelfMelt_3dThermalForcing``,
+``ismip6shelfMelt_deltaT``, ``ismip6shelfMelt_gamma0``,
+``ismip6shelfMelt_zOcean``, and ``ismip6shelfMelt_basin``, matching the AIS
+3D convention.
 
 .. _landice_ismip7_forcing_fracture:
 

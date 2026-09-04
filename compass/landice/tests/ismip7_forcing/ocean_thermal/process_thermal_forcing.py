@@ -171,7 +171,8 @@ class ProcessThermalForcing(Step):
 
         # Combine remapped files and rename to MALI conventions
         logger.info("Combining remapped files and renaming variables...")
-        output_file = (f"{mali_mesh_name}_thermal_forcing_{model}_{scenario}_"
+        tf_label = "3dThermalForcing" if ocean_3d else "2dThermalForcing"
+        output_file = (f"{mali_mesh_name}_{tf_label}_{model}_{scenario}_"
                        f"{start_year}-{end_year}.nc")
 
         if ocean_3d:

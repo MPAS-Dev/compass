@@ -201,7 +201,7 @@ class SetUpExperiment(Step):
                            os.path.join(self.work_dir, temp_grad_fname))
 
             # GrIS uses 2D thermal forcing
-            tf_search = os.path.join(ocean_dir, '*thermal_forcing_*.nc')
+            tf_search = os.path.join(ocean_dir, '*2dThermalForcing_*.nc')
             tf_list = glob.glob(tf_search)
             if len(tf_list) == 1:
                 tf_fname = os.path.split(tf_list[0])[-1]
