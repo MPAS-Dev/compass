@@ -111,6 +111,8 @@
   <h1>Source code for compass.landice.tests.mismipplus.run_model</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.mismipplus.tasks</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">approx_cell_count</span><span class="p">,</span>
     <span class="n">exact_cell_count</span><span class="p">,</span>
@@ -138,11 +140,16 @@
 
 <span class="sd">    resolution : float</span>
 <span class="sd">        The nominal distance [m] between horizontal grid points (dcEdge).</span>
+
+<span class="sd">    basal_friction : {'weertman', 'regularized_coulomb', 'debris_friction'}</span>
+<span class="sd">        The basal-friction variant for this run.</span>
 <span class="sd">    """</span>
 <div class="viewcode-block" id="RunModel.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.run_model.RunModel.html#compass.landice.tests.mismipplus.run_model.RunModel.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">basal_friction</span><span class="o">=</span><span class="s1">'weertman'</span><span class="p">,</span>
+                 <span class="n">update_mesh_for_basal_friction</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new test case</span>
 
@@ -182,11 +189,35 @@
 <span class="sd">            the ``restart_run`` step of the ``restart_test`` runs the model</span>
 <span class="sd">            twice, the second time with ``namelist.landice.rst`` and</span>
 <span class="sd">            ``streams.landice.rst``</span>
+
+<span class="sd">        basal_friction : {'weertman', 'regularized_coulomb',</span>
+<span class="sd">                          'debris_friction'}, optional</span>
+<span class="sd">            The basal-friction variant for this run.</span>
+
+<span class="sd">        update_mesh_for_basal_friction : bool, optional</span>
+<span class="sd">            Whether to apply basal-friction-specific updates to mesh fields</span>
+<span class="sd">            before the run.</span>
 <span class="sd">        """</span>
 
         <span class="k">if</span> <span class="n">suffixes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">suffixes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'landice'</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suffixes</span> <span class="o">=</span> <span class="n">suffixes</span>
+        <span class="n">valid_basal_friction</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">'weertman'</span><span class="p">,</span>
+            <span class="s1">'regularized_coulomb'</span><span class="p">,</span>
+            <span class="s1">'debris_friction'</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">basal_friction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_basal_friction</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">'Unsupported basal_friction "</span><span class="si">{</span><span class="n">basal_friction</span><span class="si">}</span><span class="s1">". '</span>
+                <span class="sa">f</span><span class="s1">'Valid options are: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">valid_basal_friction</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basal_friction</span> <span class="o">=</span> <span class="n">basal_friction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_mesh_for_basal_friction</span> <span class="o">=</span> <span class="n">update_mesh_for_basal_friction</span>
+        <span class="n">albany_input_yaml</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">'weertman'</span><span class="p">:</span> <span class="s1">'albany_input_weertman.yaml'</span><span class="p">,</span>
+            <span class="s1">'regularized_coulomb'</span><span class="p">:</span> <span class="s1">'albany_input_regularized_coulomb.yaml'</span><span class="p">,</span>
+            <span class="s1">'debris_friction'</span><span class="p">:</span> <span class="s1">'albany_input_debrisfriction.yaml'</span>
+        <span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">basal_friction</span><span class="p">]</span>
 
         <span class="c1"># The condition below will only be true for the `SpinUp` testcase</span>
         <span class="c1"># where resolution is not know at the time of object construction</span>
@@ -220,8 +251,9 @@
                 <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'albany_input.yaml'</span><span class="p">,</span>
-                            <span class="n">package</span><span class="o">=</span><span class="s1">'compass.landice.tests.mismipplus'</span><span class="p">,</span>
-                            <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">target</span><span class="o">=</span><span class="n">albany_input_yaml</span><span class="p">,</span>
+                    <span class="n">package</span><span class="o">=</span><span class="s1">'compass.landice.tests.mismipplus'</span><span class="p">,</span>
+                    <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
@@ -286,6 +318,31 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="RunModel.process_inputs_and_outputs">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.run_model.RunModel.process_inputs_and_outputs.html#compass.landice.tests.mismipplus.run_model.RunModel.process_inputs_and_outputs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_inputs_and_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Process inputs/outputs and apply optional mesh updates during setup.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Overriding ``process_inputs_and_outputs()`` is uncommon in COMPASS</span>
+<span class="sd">        steps, where most customization happens in ``setup()`` or</span>
+<span class="sd">        ``runtime_setup()``.  We override it here so friction-specific mesh</span>
+<span class="sd">        updates are applied only after all input files have been staged,</span>
+<span class="sd">        ensuring ``landice_grid.nc`` exists and that users can inspect the</span>
+<span class="sd">        updated mesh directly after ``compass setup`` and prior to</span>
+<span class="sd">        ``compass run``.</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">process_inputs_and_outputs</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_mesh_for_basal_friction</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basal_friction</span> <span class="o">==</span> <span class="s1">'regularized_coulomb'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_mesh_for_regularized_coulomb</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">basal_friction</span> <span class="o">==</span> <span class="s1">'debris_friction'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_mesh_for_debris_friction</span><span class="p">()</span></div>
+
+
 <div class="viewcode-block" id="RunModel.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.run_model.RunModel.run.html#compass.landice.tests.mismipplus.run_model.RunModel.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -308,7 +365,29 @@
         <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">suffixes</span><span class="p">:</span>
             <span class="n">run_model</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">'namelist.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
                       <span class="n">streams</span><span class="o">=</span><span class="s1">'streams.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span></div>
-</div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_mesh_for_debris_friction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_mesh</span><span class="p">:</span>
+            <span class="n">ds_mesh</span><span class="p">[</span><span class="s1">'muFriction'</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.4</span>
+            <span class="n">ds_mesh</span><span class="p">[</span><span class="s1">'bedRoughnessRC'</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">[</span><span class="s1">'muFriction'</span><span class="p">],</span>
+                                                     <span class="mf">6000.0</span><span class="p">)</span>
+            <span class="n">ds_mesh</span><span class="p">[</span><span class="s1">'basalDebrisFactor'</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                <span class="n">ds_mesh</span><span class="p">[</span><span class="s1">'xCell'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">200000.0</span><span class="p">,</span> <span class="mf">3.2e-2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">ds_mesh</span><span class="p">[</span><span class="s1">'bulkFriction'</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                <span class="n">ds_mesh</span><span class="p">[</span><span class="s1">'xCell'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">400000.0</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">ds_mesh</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'a'</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_mesh_for_regularized_coulomb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_mesh</span><span class="p">:</span>
+            <span class="n">ds_mesh</span><span class="p">[</span><span class="s1">'muFriction'</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.4</span>
+            <span class="n">ds_mesh</span><span class="p">[</span><span class="s1">'bedRoughnessRC'</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">[</span><span class="s1">'muFriction'</span><span class="p">],</span>
+                                                     <span class="mf">6250.0</span><span class="p">)</span>
+            <span class="n">ds_mesh</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'a'</span><span class="p">)</span></div>
 
 </pre></div>
 

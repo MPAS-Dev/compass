@@ -42,7 +42,15 @@ five years using a spun-up
 `2km mesh <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/MISMIP_2km_20220502.nc>`_.
 The simulation is run with the adaptive timestepper on.
 There are no configuration options for this test case.
-Currently 2000m is the only resolution supported. In the future, the 
+Currently 2000m is the only resolution supported.
+
+The smoke test is available in three basal-friction variants:
+
+* ``landice/mismipplus/smoke_test/2000m/weertman``
+* ``landice/mismipplus/smoke_test/2000m/regularized_coulomb``
+* ``landice/mismipplus/smoke_test/2000m/debris_friction``
+
+In the future, the 
 ``spin_up`` test case will be used to generate new versions of the
 mesh at 8000m, 4000m, 2000m, and 1000m resolutions. 
 

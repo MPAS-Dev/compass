@@ -128,7 +128,7 @@
 
 <div class="viewcode-block" id="SmokeTest.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.smoke_test.SmokeTest.html#compass.landice.tests.mismipplus.smoke_test.SmokeTest.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">basal_friction</span><span class="o">=</span><span class="s1">'weertman'</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create the test case</span>
 
@@ -140,14 +140,38 @@
 <span class="sd">        resolution : float</span>
 <span class="sd">            The resolution of the test case. Valid options are defined in the</span>
 <span class="sd">            test group constructor.</span>
+
+<span class="sd">        basal_friction : {'weertman', 'regularized_coulomb',</span>
+<span class="sd">                          'debris_friction'}, optional</span>
+<span class="sd">            The basal-friction variant to configure.</span>
 <span class="sd">        """</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">'smoke_test'</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">resolution</span><span class="si">:</span><span class="s2">4.0f</span><span class="si">}</span><span class="s2">m"</span>
+        <span class="n">base_name</span> <span class="o">=</span> <span class="s1">'smoke_test'</span>
+        <span class="n">valid_basal_friction</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">'weertman'</span><span class="p">,</span>
+            <span class="s1">'regularized_coulomb'</span><span class="p">,</span>
+            <span class="s1">'debris_friction'</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">basal_friction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_basal_friction</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">'Unsupported basal_friction "</span><span class="si">{</span><span class="n">basal_friction</span><span class="si">}</span><span class="s1">". '</span>
+                <span class="sa">f</span><span class="s1">'Valid options are: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">valid_basal_friction</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">resolution</span> <span class="o">!=</span> <span class="mi">2000</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">'Unsupported resolution "</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">". '</span>
+                <span class="s1">'The only valid resolution is 2000m.'</span><span class="p">)</span>
+
+        <span class="n">resolution_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">resolution</span><span class="si">:</span><span class="s1">0.0f</span><span class="si">}</span><span class="s1">m'</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">base_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">resolution_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">basal_friction</span><span class="si">}</span><span class="s1">'</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">base_name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">resolution_name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">basal_friction</span><span class="si">}</span><span class="s2">"</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="n">step_name</span> <span class="o">=</span> <span class="s1">'run_model'</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span>
+                <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                <span class="n">basal_friction</span><span class="o">=</span><span class="n">basal_friction</span><span class="p">,</span>
+                <span class="n">update_mesh_for_basal_friction</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># download and link the mesh, eventually this will need to be</span>
         <span class="c1"># resolution aware. ``configure`` method is probably a better place</span>
@@ -155,7 +179,8 @@
         <span class="n">step</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">'landice_grid.nc'</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span>
                             <span class="n">target</span><span class="o">=</span><span class="s1">'MISMIP_2km_20220502.nc'</span><span class="p">,</span>
-                            <span class="n">database</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+                            <span class="n">database</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span>
+                            <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>
 

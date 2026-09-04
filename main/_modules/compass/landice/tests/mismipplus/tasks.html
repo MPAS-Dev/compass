@@ -109,7 +109,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.mismipplus.tasks</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">multiprocessing</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 
 <span class="c1"># Following from:</span>
 <span class="c1">#   compass/ocean/tests/global_ocean/tasks.py</span>
@@ -145,7 +147,10 @@
 <span class="sd">    """</span>
 
     <span class="c1"># read MPI related parameters from configuration file</span>
-    <span class="n">cores_per_node</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'parallel'</span><span class="p">,</span> <span class="s1">'cores_per_node'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">'parallel'</span><span class="p">,</span> <span class="s1">'cores_per_node'</span><span class="p">):</span>
+        <span class="n">cores_per_node</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'parallel'</span><span class="p">,</span> <span class="s1">'cores_per_node'</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cores_per_node</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
     <span class="n">max_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'mismipplus'</span><span class="p">,</span> <span class="s1">'max_cells_per_core'</span><span class="p">)</span>
     <span class="n">goal_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'mismipplus'</span><span class="p">,</span> <span class="s1">'goal_cells_per_core'</span><span class="p">)</span>
 

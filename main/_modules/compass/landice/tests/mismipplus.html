@@ -131,8 +131,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">SpinUp</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2000</span><span class="p">]:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">SmokeTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                         <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span></div>
+            <span class="k">for</span> <span class="n">basal_friction</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'weertman'</span><span class="p">,</span>
+                                   <span class="s1">'regularized_coulomb'</span><span class="p">,</span>
+                                   <span class="s1">'debris_friction'</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">SmokeTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                             <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                                             <span class="n">basal_friction</span><span class="o">=</span><span class="n">basal_friction</span><span class="p">))</span></div>
 </div>
 
 </pre></div>
