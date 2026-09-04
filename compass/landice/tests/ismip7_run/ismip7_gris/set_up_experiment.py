@@ -59,6 +59,11 @@ class SetUpExperiment(Step):
         reference_surface_path = section.get('reference_surface_path')
         reference_surface_fname = os.path.split(reference_surface_path)[-1]
         calving_method = section.get('calving_method')
+        use_3d_thermal_forcing = section.getboolean('use_3d_thermal_forcing')
+        if use_3d_thermal_forcing and melt_params_path == 'NotAvailable':
+            raise ValueError(
+                "melt_params_path must be supplied when "
+                "use_3d_thermal_forcing is true")
 
         exp_info = self.exp_info
         scenario = exp_info['scenario']
@@ -200,8 +205,14 @@ class SetUpExperiment(Step):
                 os.symlink(temp_grad_list[0],
                            os.path.join(self.work_dir, temp_grad_fname))
 
-            # GrIS uses 2D thermal forcing
-            tf_search = os.path.join(ocean_dir, '*thermal_forcing_*.nc')
+            # GrIS thermal forcing: 2D by default, or 3D when
+            # use_3d_thermal_forcing is true (see build_3d_thermal_forcing
+            # in landice/ismip7_forcing/ocean_thermal)
+            if use_3d_thermal_forcing:
+                tf_pattern = '*3dThermalForcing_*.nc'
+            else:
+                tf_pattern = '*2dThermalForcing_*.nc'
+            tf_search = os.path.join(ocean_dir, tf_pattern)
             tf_list = glob.glob(tf_search)
             if len(tf_list) == 1:
                 tf_fname = os.path.split(tf_list[0])[-1]
@@ -215,9 +226,13 @@ class SetUpExperiment(Step):
         if scenario == 'ctrl':
             forcing_interval_monthly = 'initial_only'
             forcing_interval_annual = 'initial_only'
+            forcing_interval_TF = 'initial_only'
         else:
             forcing_interval_monthly = '0000-01-00_00:00:00'
             forcing_interval_annual = '0001-00-00_00:00:00'
+            forcing_interval_TF = (forcing_interval_annual
+                                   if use_3d_thermal_forcing
+                                   else forcing_interval_monthly)
 
         stream_replacements = {
             'input_file_init_cond': init_cond_fname if is_historical
@@ -234,6 +249,8 @@ class SetUpExperiment(Step):
             'input_file_temperature_gradient_forcing': temp_grad_fname,
             'forcing_interval_monthly': forcing_interval_monthly,
             'forcing_interval_annual': forcing_interval_annual,
+            'forcing_interval_TF': forcing_interval_TF,
+            'use_3d_thermal_forcing': use_3d_thermal_forcing,
         }
 
         self.add_streams_file(
@@ -254,6 +271,11 @@ class SetUpExperiment(Step):
                    'config_pio_num_iotasks': f'{io_tasks}'}
         self.add_namelist_options(options=options,
                                   out_name='namelist.landice')
+
+        if use_3d_thermal_forcing:
+            options = {'config_use_3d_thermal_forcing_for_face_melt': ".true."}
+            self.add_namelist_options(options=options,
+                                      out_name='namelist.landice')
 
         if is_historical:
             options = {'config_do_restart': ".false.",

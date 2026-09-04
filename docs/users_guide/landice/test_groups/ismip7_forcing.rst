@@ -17,11 +17,14 @@ and ``fracture``.
   ``process_smb``, ``process_temperature``, ``process_smb_gradient``,
   ``process_temperature_gradient``, and ``process_runoff``.
 
-* The ``ocean_thermal`` test case has one step: ``process_thermal_forcing``.
-  For AIS this produces 3D thermal forcing (with 30 ocean depth layers); for
-  GrIS it produces 2D (depth-averaged) thermal forcing. The step can also
-  process the observational ocean thermal forcing climatology (Zhou et al.)
-  for AIS, controlled by the ``process_ocean_climatology`` config option.
+* The ``ocean_thermal`` test case has two steps: ``process_thermal_forcing``
+  and ``build_3d_thermal_forcing``. ``process_thermal_forcing`` produces, for
+  AIS, 3D thermal forcing (with 30 ocean depth layers) and, for GrIS, 2D
+  (depth-averaged) thermal forcing. It can also process the observational
+  ocean thermal forcing climatology (Zhou et al.) for AIS, controlled by the
+  ``process_ocean_climatology`` config option. ``build_3d_thermal_forcing``
+  optionally converts the GrIS 2D forcing into a 3D field (GrIS only,
+  controlled by ``process_ocean_thermal_3d``).
 
 * The ``fracture`` test case has three steps: ``process_excess_melt``
   (Path A), ``process_lake_properties`` (Path B), and
@@ -68,6 +71,40 @@ your environment before using it with ``compass setup ... -f USER.cfg``.
 The AIS example enables both ocean processing modes and uses a 2015-2300
 processing window for both atmosphere and ocean thermal scenario forcing.
 The GrIS example enables scenario ocean processing only and uses 1980-2015.
+
+For the GrIS OCX (reanalysis) scenario, use the dedicated example config
+``compass/landice/tests/ismip7_forcing/ismip7_forcing_ocx_gis.cfg``. OCX has
+no distinct ESM model: it uses ``RACMO2.3p2-ERA`` for the atmosphere and
+``EN4`` for the ocean, both selected automatically when ``scenario = OCX``.
+The ``[ismip7] model`` option is ignored for OCX (set it to ``None``), so a
+single config file processes both the ``atmosphere`` and ``ocean_thermal``
+test cases, just like the ESM scenarios.
+
+.. _landice_ismip7_forcing_output:
+
+Output Layout
+-------------
+
+Processed forcing is written under ``output_base_path`` in a layout that the
+:ref:`landice_ismip7_run` test group can ingest directly:
+
+.. code-block:: none
+
+   {output_base_path}/{group}/atmosphere/{mesh}_SMB_{source}_{scenario}_{years}.nc
+   {output_base_path}/{group}/atmosphere/{mesh}_temperature_{source}_{scenario}_{years}.nc
+   {output_base_path}/{group}/atmosphere/{mesh}_runoff_...  (and the two gradients)
+   {output_base_path}/{group}/ocean_thermal_forcing/{mesh}_2dThermalForcing_{source}_{scenario}_{years}.nc  (GrIS)
+   {output_base_path}/{group}/ocean_thermal_forcing/{mesh}_3dThermalForcing_{source}_{scenario}_{years}.nc  (AIS; optional GrIS 3-D)
+
+The ``group`` directory is ``{model}_{scenario}`` for the ESM scenarios and
+``{scenario}`` (i.e. ``OCX``) for OCX, whose atmosphere and ocean use
+different sources (``RACMO2.3p2-ERA`` and ``EN4``) but must share one
+directory. To feed :ref:`landice_ismip7_run`, point its ``forcing_basepath``
+at ``output_base_path`` for ESM scenarios, or its ``ocx_forcing_path`` at
+``{output_base_path}/OCX`` for OCX.
+
+Process only one year range into a given ``group`` directory: the run setup
+expects exactly one file per forcing field there.
 
 .. _landice_ismip7_forcing_input_data:
 
@@ -121,6 +158,20 @@ For GrIS ocean thermal (same 1km grid, 2D, yearly files):
 
    ocean/tf/v2/tf_GrIS_{model}_{scenario}_ocean_v2_{year}.nc
 
+The OCX (reanalysis) scenario follows the same directory layout as the ESM
+scenarios, but uses fixed reanalysis sources, data version ``v1``, and a
+named grid resolution in the ocean file names. For GrIS OCX the atmosphere
+source is ``RACMO2.3p2-ERA`` and the ocean source is ``EN4``:
+
+.. code-block:: none
+
+   acabf/v1/acabf_GrIS_RACMO2.3p2-ERA_OCX_SDBN1-1000m_v1_{year}.nc
+   ocean/tf/v1/tf_GrIS_EN4_OCX_ocean-1000m_v1_{year}.nc
+
+Set ``base_path_ismip7`` to the ``OCX`` directory and ``scenario = OCX``.
+The sources, version, and ocean grid token are selected automatically for
+OCX, and the ``[ismip7] model`` option is ignored (set it to ``None``).
+
 .. _landice_ismip7_forcing_config:
 
 config options
@@ -167,6 +218,10 @@ values are:
    # Whether to process observational ocean thermal forcing climatology
    process_ocean_climatology = true
 
+   # Whether to build regional 3-D Greenland ocean thermal forcing from the
+   # 2-D forcing (GrIS only; Antarctica already produces 3-D forcing)
+   process_ocean_thermal_3d = false
+
    # config options for ismip7 atmosphere forcing
    [ismip7_atmosphere]
 
@@ -199,6 +254,14 @@ values are:
 
    # Base path to observational climatology data
    base_path_climatology = /path/to/ISMIP7/forcing/AIS/obs/zhou_annual_06_nov
+
+   # config options for building 3-D Greenland ocean thermal forcing
+   [ismip7_ocean_thermal_3d]
+
+   # Path to the JSON config with the 3-D-specific parameters (EN4 directory,
+   # region-mask file, source-region GeoJSON, calibration, vertical grid).
+   # User must supply when process_ocean_thermal_3d is true.
+   config_file = NotAvailable
 
    # config options for ismip7 fracture (Path C, ice shelf collapse) forcing
    [ismip7_fracture]
@@ -295,6 +358,28 @@ but without a Time dimension, producing a single static file.
 For **GrIS**, thermal forcing is 2D (depth-averaged), with monthly temporal
 resolution and yearly input files. The output variable is
 ``ismip6_2dThermalForcing``.
+
+build_3d_thermal_forcing (GrIS 3-D)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The optional ``build_3d_thermal_forcing`` step (GrIS only, gated by
+``process_ocean_thermal_3d = true``) converts the GrIS 2D thermal forcing into
+a 30-level 3D field for MALI's nonlocal (Jourdain et al. 2020) melt scheme. It
+auto-chains from the 2D forcing the ``process_thermal_forcing`` step just
+wrote, builds seven regional vertical profiles from monthly EN4 objective
+analyses, anchors each cell's profile to the effective seafloor to match the
+2D forcing, and calibrates one ``ismip6shelfMelt_deltaT`` per region while
+holding ``ismip6shelfMelt_gamma0`` fixed.
+
+The 3-D-specific parameters (EN4 directory, region-mask file, source-region
+GeoJSON, calibration targets, vertical grid, physical constants) are supplied
+through a JSON config file referenced by the ``[ismip7_ocean_thermal_3d]``
+``config_file`` option; the mesh, 2D forcing, output, and diagnostics paths
+are injected automatically. The output supplements (does not replace) the 2D
+forcing and uses the variables ``ismip6shelfMelt_3dThermalForcing``,
+``ismip6shelfMelt_deltaT``, ``ismip6shelfMelt_gamma0``,
+``ismip6shelfMelt_zOcean``, and ``ismip6shelfMelt_basin``, matching the AIS
+3D convention.
 
 .. _landice_ismip7_forcing_fracture:
 

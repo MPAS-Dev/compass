@@ -385,6 +385,7 @@ ismip7_forcing
    configure.configure
    ice_sheet_params.get_params
    create_mapfile.build_mapping_file
+   remap_utils.extrapolate_source
 
    atmosphere.Atmosphere
    atmosphere.Atmosphere.configure
@@ -409,10 +410,13 @@ ismip7_forcing
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run
+   ocean_thermal.build_3d_thermal_forcing.BuildGreenland3dThermalForcing
+   ocean_thermal.build_3d_thermal_forcing.BuildGreenland3dThermalForcing.run
+   ocean_thermal.greenland_3d.Config
+   ocean_thermal.greenland_3d.run
 
    fracture.Fracture
    fracture.Fracture.configure
-   fracture.remap_utils.extrapolate_source
    fracture.remap_utils.open_rename_and_trim
    fracture.remap_utils.add_xtime_and_write
    fracture.process_excess_melt.ProcessExcessMelt

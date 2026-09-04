@@ -2,16 +2,15 @@ import glob
 import os
 import shutil
 
-import numpy as np
 import xarray as xr
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
-from scipy.ndimage import distance_transform_edt
 
 from compass.landice.tests.ismip7_forcing.create_mapfile import (
     build_mapping_file,
 )
 from compass.landice.tests.ismip7_forcing.ice_sheet_params import get_params
+from compass.landice.tests.ismip7_forcing.remap_utils import extrapolate_source
 from compass.step import Step
 
 
@@ -72,6 +71,11 @@ class ProcessRunoff(Step):
         prefix = params['prefix']
         resolution = params['atm_resolution']
         version = params['atm_version']
+        if params['atm_model'] is not None:
+            forcing_group = scenario
+            model = params['atm_model']
+        else:
+            forcing_group = f"{model}_{scenario}"
         input_path = os.path.join(base_path_ismip7, "mrro", version)
         file_pattern = (f"mrro_{prefix}_{model}_{scenario}_"
                         f"SDBN1-{resolution}_{version}_*.nc")
@@ -85,7 +89,11 @@ class ProcessRunoff(Step):
         # Filter to requested year range
         input_files = []
         for f in all_files:
-            year = int(os.path.basename(f).split("_")[-1].replace(".nc", ""))
+            # skip non-yearly files such as climatology averages (*_avg.nc)
+            token = os.path.basename(f).split("_")[-1].replace(".nc", "")
+            if not token.isdigit():
+                continue
+            year = int(token)
             if start_year <= year <= end_year:
                 input_files.append(f)
 
@@ -123,8 +131,7 @@ class ProcessRunoff(Step):
             # so they don't pollute neighboring cells during interpolation
             extrap_file = f"extrap_{basename}"
             if not os.path.exists(extrap_file):
-                self._extrapolate_source(input_file, extrap_file, "mrro",
-                                         logger)
+                extrapolate_source(input_file, extrap_file, "mrro", logger)
 
             logger.info(f"  Remapping: {basename}")
             args = ["ncremap",
@@ -152,8 +159,8 @@ class ProcessRunoff(Step):
                 os.remove(f)
 
         # Place output in appropriate directory
-        output_path = os.path.join(output_base_path, "atmosphere_forcing",
-                                   f"{model}_{scenario}")
+        output_path = os.path.join(output_base_path, forcing_group,
+                                   "atmosphere")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
@@ -176,7 +183,8 @@ class ProcessRunoff(Step):
             Output file path
         """
         ds = xr.open_mfdataset(remapped_files, concat_dim="time",
-                               combine="nested", engine="netcdf4")
+                               combine="nested", engine="netcdf4",
+                               drop_variables="time_bnds")
 
         # Rename dimensions to MALI conventions
         rename_dims = {}
@@ -223,58 +231,5 @@ class ProcessRunoff(Step):
         # MALI uses xtime, not CF-encoded time coordinates
         if "Time" in ds.coords:
             ds = ds.drop_vars("Time")
-
-        write_netcdf(ds, output_file)
-
-    def _extrapolate_source(self, input_file, output_file, varname, logger):
-        """
-        Extrapolate fill/missing values on the source polar stereographic
-        grid using nearest-neighbor via distance_transform_edt. This must
-        be done before remapping so that fill values don't contaminate the
-        interpolation stencil.
-
-        Parameters
-        ----------
-        input_file : str
-            Path to the input NetCDF file on the source grid
-
-        output_file : str
-            Path to write the extrapolated file
-
-        varname : str
-            Name of the variable to extrapolate (e.g., "mrro")
-
-        logger : logging.Logger
-            Logger for status messages
-        """
-        logger.info(f"    Extrapolating fill values on source grid: "
-                    f"{os.path.basename(input_file)}")
-
-        ds = xr.open_dataset(input_file, engine="netcdf4")
-        data = ds[varname]
-
-        # Process each time step
-        # Source files have dims like (time, y, x)
-        values = data.values.copy()
-        non_spatial_shape = values.shape[:-2]  # (time,)
-
-        for idx in np.ndindex(non_spatial_shape):
-            slab = values[idx]  # shape (ny, nx)
-            valid_mask = np.isfinite(slab)
-            if valid_mask.all() or not valid_mask.any():
-                continue
-            nearest_inds = distance_transform_edt(
-                ~valid_mask, return_distances=False, return_indices=True)
-            invalid = ~valid_mask
-            values[idx][invalid] = slab[
-                nearest_inds[0, invalid],
-                nearest_inds[1, invalid]]
-
-        ds[varname] = (data.dims, values)
-        ds[varname].attrs = data.attrs
-
-        # Remove _FillValue encoding so output has no masked values
-        if "_FillValue" in ds[varname].encoding:
-            del ds[varname].encoding["_FillValue"]
 
         write_netcdf(ds, output_file)
