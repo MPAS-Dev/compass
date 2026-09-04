@@ -1,3 +1,5 @@
+import multiprocessing
+
 import xarray as xr
 
 # Following from:
@@ -32,7 +34,10 @@ def get_ntasks_from_cell_count(config, cell_count):
     """
 
     # read MPI related parameters from configuration file
-    cores_per_node = config.getint('parallel', 'cores_per_node')
+    if config.has_option('parallel', 'cores_per_node'):
+        cores_per_node = config.getint('parallel', 'cores_per_node')
+    else:
+        cores_per_node = multiprocessing.cpu_count()
     max_cells_per_core = config.getint('mismipplus', 'max_cells_per_core')
     goal_cells_per_core = config.getint('mismipplus', 'goal_cells_per_core')
 
