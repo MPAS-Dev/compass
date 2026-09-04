@@ -410,6 +410,10 @@ ismip7_forcing
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run
+   ocean_thermal.build_3d_thermal_forcing.BuildGreenland3dThermalForcing
+   ocean_thermal.build_3d_thermal_forcing.BuildGreenland3dThermalForcing.run
+   ocean_thermal.greenland_3d.Config
+   ocean_thermal.greenland_3d.run
 
    fracture.Fracture
    fracture.Fracture.configure
