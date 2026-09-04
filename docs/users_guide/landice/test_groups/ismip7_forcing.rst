@@ -69,6 +69,39 @@ The AIS example enables both ocean processing modes and uses a 2015-2300
 processing window for both atmosphere and ocean thermal scenario forcing.
 The GrIS example enables scenario ocean processing only and uses 1980-2015.
 
+For the GrIS OCX (reanalysis) scenario, use the dedicated example config
+``compass/landice/tests/ismip7_forcing/ismip7_forcing_ocx_gis.cfg``. OCX has
+no distinct ESM model: it uses ``RACMO2.3p2-ERA`` for the atmosphere and
+``EN4`` for the ocean, both selected automatically when ``scenario = OCX``.
+The ``[ismip7] model`` option is ignored for OCX (set it to ``None``), so a
+single config file processes both the ``atmosphere`` and ``ocean_thermal``
+test cases, just like the ESM scenarios.
+
+.. _landice_ismip7_forcing_output:
+
+Output Layout
+-------------
+
+Processed forcing is written under ``output_base_path`` in a layout that the
+:ref:`landice_ismip7_run` test group can ingest directly:
+
+.. code-block:: none
+
+   {output_base_path}/{group}/atmosphere/{mesh}_SMB_{source}_{scenario}_{years}.nc
+   {output_base_path}/{group}/atmosphere/{mesh}_temperature_{source}_{scenario}_{years}.nc
+   {output_base_path}/{group}/atmosphere/{mesh}_runoff_...  (and the two gradients)
+   {output_base_path}/{group}/ocean_thermal_forcing/{mesh}_thermal_forcing_{source}_{scenario}_{years}.nc
+
+The ``group`` directory is ``{model}_{scenario}`` for the ESM scenarios and
+``{scenario}`` (i.e. ``OCX``) for OCX, whose atmosphere and ocean use
+different sources (``RACMO2.3p2-ERA`` and ``EN4``) but must share one
+directory. To feed :ref:`landice_ismip7_run`, point its ``forcing_basepath``
+at ``output_base_path`` for ESM scenarios, or its ``ocx_forcing_path`` at
+``{output_base_path}/OCX`` for OCX.
+
+Process only one year range into a given ``group`` directory: the run setup
+expects exactly one file per forcing field there.
+
 .. _landice_ismip7_forcing_input_data:
 
 Input Data
@@ -120,6 +153,20 @@ For GrIS ocean thermal (same 1km grid, 2D, yearly files):
 .. code-block:: none
 
    ocean/tf/v2/tf_GrIS_{model}_{scenario}_ocean_v2_{year}.nc
+
+The OCX (reanalysis) scenario follows the same directory layout as the ESM
+scenarios, but uses fixed reanalysis sources, data version ``v1``, and a
+named grid resolution in the ocean file names. For GrIS OCX the atmosphere
+source is ``RACMO2.3p2-ERA`` and the ocean source is ``EN4``:
+
+.. code-block:: none
+
+   acabf/v1/acabf_GrIS_RACMO2.3p2-ERA_OCX_SDBN1-1000m_v1_{year}.nc
+   ocean/tf/v1/tf_GrIS_EN4_OCX_ocean-1000m_v1_{year}.nc
+
+Set ``base_path_ismip7`` to the ``OCX`` directory and ``scenario = OCX``.
+The sources, version, and ocean grid token are selected automatically for
+OCX, and the ``[ismip7] model`` option is ignored (set it to ``None``).
 
 .. _landice_ismip7_forcing_config:
 

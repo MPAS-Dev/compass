@@ -10,6 +10,7 @@ from compass.landice.tests.ismip7_forcing.create_mapfile import (
     build_mapping_file,
 )
 from compass.landice.tests.ismip7_forcing.ice_sheet_params import get_params
+from compass.landice.tests.ismip7_forcing.remap_utils import extrapolate_source
 from compass.step import Step
 
 
@@ -71,6 +72,11 @@ class ProcessTemperatureGradient(Step):
         prefix = params['prefix']
         resolution = params['atm_resolution']
         version = params['atm_version']
+        if params['atm_model'] is not None:
+            forcing_group = scenario
+            model = params['atm_model']
+        else:
+            forcing_group = f"{model}_{scenario}"
         input_path = os.path.join(base_path_ismip7, "dtsdz", version)
         file_pattern = (f"dtsdz_{prefix}_{model}_{scenario}_"
                         f"SDBN1-{resolution}_{version}_*.nc")
@@ -84,7 +90,11 @@ class ProcessTemperatureGradient(Step):
         # Filter to requested year range
         input_files = []
         for f in all_files:
-            year = int(os.path.basename(f).split("_")[-1].replace(".nc", ""))
+            # skip non-yearly files such as climatology averages (*_avg.nc)
+            token = os.path.basename(f).split("_")[-1].replace(".nc", "")
+            if not token.isdigit():
+                continue
+            year = int(token)
             if start_year <= year <= end_year:
                 input_files.append(f)
 
@@ -119,14 +129,23 @@ class ProcessTemperatureGradient(Step):
                 logger.info(f"  Remapped file exists, skipping: {basename}")
                 continue
 
+            # Extrapolate fill values on source grid before remapping
+            # so they don't pollute neighboring cells during interpolation
+            extrap_file = f"extrap_{basename}"
+            if not os.path.exists(extrap_file):
+                extrapolate_source(input_file, extrap_file, "dtsdz", logger)
+
             logger.info(f"  Remapping: {basename}")
             args = ["ncremap",
-                    "-i", input_file,
+                    "-i", extrap_file,
                     "-o", remapped_file,
                     "-m", mapping_file,
                     "-v", "dtsdz"]
 
             check_call(args, logger=logger)
+
+            # Clean up extrapolated source file
+            os.remove(extrap_file)
 
         # Combine remapped files and rename to MALI conventions
         logger.info("Combining remapped files and renaming variables...")
@@ -142,8 +161,8 @@ class ProcessTemperatureGradient(Step):
                 os.remove(f)
 
         # Place output in appropriate directory
-        output_path = os.path.join(output_base_path, "atmosphere_forcing",
-                                   f"{model}_{scenario}")
+        output_path = os.path.join(output_base_path, forcing_group,
+                                   "atmosphere")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
@@ -166,7 +185,8 @@ class ProcessTemperatureGradient(Step):
             Output file path
         """
         ds = xr.open_mfdataset(remapped_files, concat_dim="time",
-                               combine="nested", engine="netcdf4")
+                               combine="nested", engine="netcdf4",
+                               drop_variables="time_bnds")
 
         # Rename dimensions to MALI conventions
         rename_dims = {}
