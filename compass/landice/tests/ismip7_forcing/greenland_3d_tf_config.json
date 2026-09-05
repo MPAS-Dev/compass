@@ -1,0 +1,52 @@
+{
+  "files": {
+    "region_masks": "/global/cfs/cdirs/fanssie/MALI_input_files/GIS_1to10km_r03/GIS_1to10km_r03_20260903_ismip6_regionMasks.nc",
+    "en4_directory": "/global/cfs/cdirs/m4288/users/trhille/ISMIP7/EN4",
+    "en4_source_region_geojson": "/global/cfs/cdirs/m4288/users/trhille/compass/compass/landice/tests/greenland/greenland_only_outline_45km_buffer_latlon_singlepart.geojson"
+  },
+  "en4": {
+    "version": "EN.4.2.2",
+    "bias_correction": "unknown",
+    "file_glob": "**/*.nc",
+    "profile_start_year": 2002,
+    "profile_end_year": 2012,
+    "latitude_min": 55.0,
+    "latitude_max": 90.0,
+    "max_mesh_distance_km": 300.0
+  },
+  "calibration": {
+    "gamma0_m_per_yr": 14500.0,
+    "start_year": 2007,
+    "end_year": 2015,
+    "regional_melt_targets_m_per_yr": {
+      "central_east": 20.0,
+      "central_west": 20.0,
+      "north_east": 20.0,
+      "north": 20.0,
+      "north_west": 20.0,
+      "south_east": 20.0,
+      "south_west": 20.0
+    },
+    "flotation_tolerance_m": 1.0,
+    "minimum_ice_thickness_m": 0.0
+  },
+  "ocean_vertical_grid": {
+    "number_of_levels": 10,
+    "surface_m": 0.0,
+    "bottom_m": -1000.0
+  },
+  "source_max_depth_m": 1000.0,
+  "forcing_2d_variable": "ismip6_2dThermalForcing",
+  "physical_constants": {
+    "rho_ice": 910.0,
+    "rho_seawater": 1028.0,
+    "cp_seawater": 3974.0,
+    "latent_heat_ice": 335000.0
+  },
+  "freezing_point": {
+    "a_degC_per_salinity": -0.0575,
+    "b_degC": 0.0901,
+    "c_degC_per_m": 0.000761
+  },
+  "overwrite": false
+}
