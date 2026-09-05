@@ -1263,10 +1263,16 @@ def write_output(
                 f"Writing {len(times)} monthly records to {temporary} with "
                 "xarray (NETCDF3_64BIT, float32)"
             )
+            # Use the netCDF4 engine rather than scipy: scipy's classic/CDF-2
+            # writer produces a header that the netCDF-C library (ncdump, MALI)
+            # cannot read when a dataset mixes a record (unlimited-Time)
+            # variable with any scalar (0-D) variable such as
+            # ``ismip6shelfMelt_gamma0``. The netCDF4 engine writes a
+            # conformant CDF-2 file and still streams record-by-record.
             with dask.config.set(scheduler="single-threaded"):
                 target.to_netcdf(
                     temporary,
-                    engine="scipy",
+                    engine="netcdf4",
                     format="NETCDF3_64BIT",
                     unlimited_dims=["Time"],
                     encoding=encoding,
