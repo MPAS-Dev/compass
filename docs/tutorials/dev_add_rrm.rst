@@ -174,7 +174,7 @@ Next, we need to add this mesh to the list of known meshes:
 
     ...
 
-        def __init__(self, test_group, mesh_name, remap_topography):
+        def __init__(self, test_group, mesh_name, high_res_topography):
 
         ...
 
@@ -222,7 +222,7 @@ group:
 
             for mesh_name in ['YAM10to60', 'YAMwISC10to60']:
                 mesh_test = Mesh(test_group=self, mesh_name=mesh_name,
-                                 remap_topography=True)
+                                 high_res_topography=True)
                 self.add_test_case(mesh_test)
 
             # A test case for making E3SM support files from an existing mesh
@@ -1163,7 +1163,7 @@ new mesh:
 
             for mesh_name in ['YAM10to60', 'YAMwISC10to60']:
                 mesh_test = Mesh(test_group=self, mesh_name=mesh_name,
-                                 remap_topography=True)
+                                 high_res_topography=True)
                 self.add_test_case(mesh_test)
 
                 init_test = Init(test_group=self, mesh=mesh_test,
@@ -1435,7 +1435,7 @@ group:
 
             for mesh_name in ['YAM10to60', 'YAMwISC10to60']:
                 mesh_test = Mesh(test_group=self, mesh_name=mesh_name,
-                                 remap_topography=True)
+                                 high_res_topography=True)
                 self.add_test_case(mesh_test)
 
                 init_test = Init(test_group=self, mesh=mesh_test,
