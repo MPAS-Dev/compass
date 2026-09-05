@@ -1330,7 +1330,12 @@ def write_output(
 
             target = xr.Dataset(
                 data_vars={
-                    "xtime": source["xtime"],
+                    "xtime": xr.DataArray(
+                        np.asarray(
+                            [value.ljust(64) for value in times], dtype="S"
+                        ),
+                        dims=("Time",),
+                    ),
                     "ismip6shelfMelt_zOcean": xr.DataArray(
                         cfg.ocean_levels_m.astype(np.float32),
                         dims=("nISMIP6OceanLayers",),
@@ -1373,6 +1378,7 @@ def write_output(
                 ]
             )
             encoding = {
+                "xtime": {"char_dim_name": "StrLen"},
                 "ismip6shelfMelt_zOcean": {
                     "dtype": "float32", "_FillValue": None
                 },
