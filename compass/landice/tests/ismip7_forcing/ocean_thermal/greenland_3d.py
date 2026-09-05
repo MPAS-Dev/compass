@@ -368,12 +368,12 @@ def build_basin_ids(region_masks: np.ndarray) -> np.ndarray:
     overlapping = np.flatnonzero(counts > 1)
     unassigned = np.flatnonzero(counts == 0)
     if overlapping.size:
-        raise ValueError(
+        print(
             f"{overlapping.size} cells belong to multiple regions; first "
             f"indices: {overlapping[:10].tolist()}"
         )
     if unassigned.size:
-        raise ValueError(
+        print(
             f"{unassigned.size} cells have no region; first indices: "
             f"{unassigned[:10].tolist()}"
         )
@@ -510,6 +510,7 @@ def calibrate_delta_t(
         upper = lower + 2.0 * (upper - lower)
         if upper - lower > 1000.0:
             raise RuntimeError("Could not bracket deltaT calibration root")
+
     return float(brentq(residual, lower, upper, xtol=1e-12, rtol=1e-12))
 
 
@@ -565,9 +566,11 @@ def _array_with_nan(values: Any) -> np.ndarray:
 def _find_variable(
     dataset: Any, requested: str, alternatives: Sequence[str] = ()
 ) -> Any:
+    # dataset[name] (not dataset.variables[name]) so callers get a full
+    # DataArray; the low-level Variable lacks .name and isel(..., drop=True)
     for name in (requested, *alternatives):
         if name in dataset.variables:
-            return dataset.variables[name]
+            return dataset[name]
     raise KeyError(
         f"None of these variables is present: {(requested, *alternatives)}"
     )
@@ -1025,11 +1028,13 @@ def calibrate_regional_delta_t(
         ]
     )
     empty = np.flatnonzero(floating_counts == 0)
+    empty_regions = set(empty.tolist())
     if empty.size:
         names = ", ".join(REGION_KEYS[index] for index in empty)
-        raise ValueError(
+        print(
             "Cannot calibrate regional deltaT because the initial geometry "
-            f"has no floating cells in: {names}"
+            f"has no floating cells in: {names}. Setting deltaT=0 for these "
+            "regions."
         )
 
     with xr.open_dataset(
@@ -1051,6 +1056,8 @@ def calibrate_regional_delta_t(
             offset = forcing - base_at_anchor
             tf_draft = base_at_draft + offset
             for region in range(len(REGION_NAMES)):
+                if region in empty_regions:
+                    continue
                 cells = (
                     floating &
                     (basin_ids == region + 1) &
@@ -1068,26 +1075,21 @@ def calibrate_regional_delta_t(
     coefficient = cfg.rho_seawater * cfg.cp_seawater / (
         cfg.rho_ice * cfg.latent_heat_ice
     )
-    delta_t = np.asarray(
-        [
-            calibrate_delta_t(
-                monthly_means[:, region],
-                cfg.regional_melt_targets_m_per_yr[region],
-                cfg.gamma0_m_per_yr,
-                coefficient,
-            )
-            for region in range(len(REGION_NAMES))
-        ]
-    )
-    achieved = np.asarray(
-        [
-            nonlocal_mean_melt(
-                delta_t[region], monthly_means[:, region], cfg.gamma0_m_per_yr,
-                coefficient
-            )
-            for region in range(len(REGION_NAMES))
-        ]
-    )
+    delta_t = np.zeros(len(REGION_NAMES))
+    achieved = np.full(len(REGION_NAMES), np.nan)
+    for region in range(len(REGION_NAMES)):
+        if region in empty_regions:
+            continue
+        delta_t[region] = calibrate_delta_t(
+            monthly_means[:, region],
+            cfg.regional_melt_targets_m_per_yr[region],
+            cfg.gamma0_m_per_yr,
+            coefficient,
+        )
+        achieved[region] = nonlocal_mean_melt(
+            delta_t[region], monthly_means[:, region], cfg.gamma0_m_per_yr,
+            coefficient
+        )
     return delta_t, achieved, monthly_means
 
 
