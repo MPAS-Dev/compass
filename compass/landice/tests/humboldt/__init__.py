@@ -25,50 +25,58 @@ class Humboldt(TestGroup):
                 DecompositionTest(test_group=self,
                                   velo_solver=velo_solver,
                                   calving_law='none',
-                                  mesh_type=mesh_type))
+                                  mesh_type=mesh_type,
+                                  advection_type='fo'))
             self.add_test_case(
                 RestartTest(test_group=self,
                             velo_solver=velo_solver,
                             calving_law='none',
-                            mesh_type=mesh_type))
+                            mesh_type=mesh_type,
+                            advection_type='fo'))
 
         # Set up 'full physics' tests using the 3km mesh
         mesh_type = '3km'
         for velo_solver in ['FO', 'none']:
-            self.add_test_case(
-                DecompositionTest(test_group=self,
-                                  velo_solver=velo_solver,
-                                  calving_law='von_Mises_stress',
-                                  mesh_type=mesh_type,
-                                  damage='threshold',
-                                  face_melt=True))
+            for advection_type in ['fo', 'fct']:
+                self.add_test_case(
+                    DecompositionTest(test_group=self,
+                                      velo_solver=velo_solver,
+                                      calving_law='von_Mises_stress',
+                                      mesh_type=mesh_type,
+                                      advection_type=advection_type,
+                                      damage='threshold',
+                                      face_melt=True))
 
-            self.add_test_case(
-                RestartTest(test_group=self,
-                            velo_solver=velo_solver,
-                            calving_law='von_Mises_stress',
-                            mesh_type=mesh_type,
-                            damage='threshold',
-                            face_melt=True))
+                self.add_test_case(
+                    RestartTest(test_group=self,
+                                velo_solver=velo_solver,
+                                calving_law='von_Mises_stress',
+                                mesh_type=mesh_type,
+                                advection_type=advection_type,
+                                damage='threshold',
+                                face_melt=True))
 
         for velo_solver in ['FO']:
-            self.add_test_case(
-                DecompositionTest(test_group=self,
-                                  velo_solver=velo_solver,
-                                  calving_law='von_Mises_stress',
-                                  mesh_type=mesh_type,
-                                  damage='threshold',
-                                  face_melt=True,
-                                  depth_integrated=True))
+            for advection_type in ['fo', 'fct']:
+                self.add_test_case(
+                    DecompositionTest(test_group=self,
+                                      velo_solver=velo_solver,
+                                      calving_law='von_Mises_stress',
+                                      mesh_type=mesh_type,
+                                      advection_type=advection_type,
+                                      damage='threshold',
+                                      face_melt=True,
+                                      depth_integrated=True))
 
-            self.add_test_case(
-                RestartTest(test_group=self,
-                            velo_solver=velo_solver,
-                            calving_law='von_Mises_stress',
-                            mesh_type=mesh_type,
-                            damage='threshold',
-                            face_melt=True,
-                            depth_integrated=True))
+                self.add_test_case(
+                    RestartTest(test_group=self,
+                                velo_solver=velo_solver,
+                                calving_law='von_Mises_stress',
+                                mesh_type=mesh_type,
+                                advection_type=advection_type,
+                                damage='threshold',
+                                face_melt=True,
+                                depth_integrated=True))
 
         # Create decomp and restart tests for all calving laws.
         # Note that FO velo solver is NOT BFB across decompositions
@@ -86,13 +94,15 @@ class Humboldt(TestGroup):
                     DecompositionTest(test_group=self,
                                       velo_solver=velo_solver,
                                       calving_law=calving_law,
-                                      mesh_type=mesh_type))
+                                      mesh_type=mesh_type,
+                                      advection_type='fo'))
 
                 self.add_test_case(
                     RestartTest(test_group=self,
                                 velo_solver=velo_solver,
                                 calving_law=calving_law,
-                                mesh_type=mesh_type))
+                                mesh_type=mesh_type,
+                                advection_type='fo'))
 
         # Add hydro tests
         mesh_type = '3km'
@@ -101,6 +111,7 @@ class Humboldt(TestGroup):
                               velo_solver='none',
                               calving_law='none',
                               mesh_type=mesh_type,
+                              advection_type='fo',
                               damage=None,
                               face_melt=False,
                               hydro=True))
@@ -110,6 +121,7 @@ class Humboldt(TestGroup):
                         velo_solver='none',
                         calving_law='none',
                         mesh_type=mesh_type,
+                        advection_type='fo',
                         damage=None,
                         face_melt=False,
                         hydro=True))
