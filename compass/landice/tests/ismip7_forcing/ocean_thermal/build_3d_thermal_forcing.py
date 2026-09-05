@@ -80,6 +80,15 @@ class BuildGreenland3dThermalForcing(Step):
             f"{mali_mesh_name}_3dThermalForcing_{source}_{scenario}_"
             f"{start_year}-{end_year}.nc")
 
+        # DeltaT/gamma0/basin are calibrated once against OCX and held fixed
+        # for every ESM (see Config.calibrate_delta_t), so they always live
+        # under the OCX output directory regardless of which scenario this
+        # step is currently processing.
+        melt_params_dir = os.path.join(output_base_path, "OCX",
+                                       "ocean_thermal_forcing")
+        melt_params_file = os.path.join(
+            melt_params_dir, f"{mali_mesh_name}_meltParams_OCX.nc")
+
         json_path = config.get("ismip7_ocean_thermal_3d", "config_file")
         if json_path == "NotAvailable":
             raise ValueError(
@@ -91,8 +100,10 @@ class BuildGreenland3dThermalForcing(Step):
             "mesh_file": Path(os.path.join(base_path_mali, mali_mesh_file)),
             "forcing_2d_file": Path(forcing_2d),
             "output_file": Path(output_file),
+            "melt_params_file": Path(melt_params_file),
             "diagnostics_directory": Path(
                 os.path.join(self.work_dir, "diagnostics_3d")),
+            "scenario": scenario,
         }
         cfg = greenland_3d.Config.from_json(Path(json_path),
                                             overrides=overrides)

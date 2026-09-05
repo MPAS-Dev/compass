@@ -91,7 +91,9 @@ class Config:
     en4_directory: Path
     en4_source_region_geojson: Path
     output_file: Path
+    melt_params_file: Path
     diagnostics_directory: Path
+    scenario: str
     ocean_levels_m: np.ndarray
     source_max_depth_m: float
     profile_start_year: int
@@ -118,15 +120,27 @@ class Config:
     forcing_variable: str
     overwrite: bool
 
+    @property
+    def calibrate_delta_t(self) -> bool:
+        """Whether this run should (re)calibrate the regional deltaT.
+
+        DeltaT is calibrated once against the OCX reanalysis and held fixed
+        for every ESM scenario, so calibration only runs when
+        ``scenario == "OCX"``; other scenarios reuse the deltaT/gamma0/basin
+        stored in ``melt_params_file``.
+        """
+        return self.scenario.strip().upper() == "OCX"
+
     @classmethod
     def from_json(cls, path: Path, overrides: dict | None = None) -> "Config":
         """Build a Config from JSON, optionally injecting compass paths.
 
         ``overrides`` may supply ``mesh_file``, ``forcing_2d_file``,
-        ``output_file``, and ``diagnostics_directory`` (as ``Path`` objects).
-        When supplied, they take precedence over the corresponding JSON
-        ``files`` entries, which then become optional. The region-mask, EN4,
-        and GeoJSON paths always come from the JSON.
+        ``output_file``, ``melt_params_file``, ``diagnostics_directory``, and
+        ``scenario``. When supplied, they take precedence over the
+        corresponding JSON ``files``/``scenario`` entries, which then become
+        optional. The region-mask, EN4, and GeoJSON paths always come from
+        the JSON.
         """
         overrides = overrides or {}
         with path.open("r", encoding="utf-8") as handle:
@@ -196,9 +210,13 @@ class Config:
                 _required(files, "en4_source_region_geojson"), base
             ),
             output_file=resolved("output_file", "output"),
+            melt_params_file=resolved("melt_params_file", "melt_params"),
             diagnostics_directory=resolved(
                 "diagnostics_directory", "diagnostics",
                 required=False, default="diagnostics"
+            ),
+            scenario=str(
+                overrides.get("scenario") or raw.get("scenario", "OCX")
             ),
             ocean_levels_m=levels,
             source_max_depth_m=float(raw.get("source_max_depth_m", 1000.0)),
@@ -267,6 +285,12 @@ class Config:
                 "only if the discovered files contain at most one analysis "
                 "per month.",
                 stacklevel=2,
+            )
+        if not self.calibrate_delta_t and not self.melt_params_file.exists():
+            raise FileNotFoundError(
+                "melt_params_file must already exist when scenario is not "
+                f"OCX: {self.melt_params_file}. Build it first with an OCX "
+                "(scenario = OCX) run on this mesh."
             )
 
 
@@ -1093,6 +1117,137 @@ def calibrate_regional_delta_t(
     return delta_t, achieved, monthly_means
 
 
+def write_melt_params(
+    cfg: Config,
+    basin_ids: np.ndarray,
+    regional_delta_t: np.ndarray,
+    logger,
+) -> None:
+    """Write the calibrated deltaT/gamma0/basin fields.
+
+    Kept in a file separate from the time-varying 3-D thermal forcing so
+    every ESM scenario can reuse the same OCX-calibrated values unchanged
+    (see ``Config.calibrate_delta_t``).
+    """
+    xr = require_xarray()
+    output = cfg.melt_params_file
+    output.parent.mkdir(parents=True, exist_ok=True)
+    if output.exists() and not cfg.overwrite:
+        raise FileExistsError(
+            f"Melt-parameters output exists and overwrite=false: {output}"
+        )
+    temporary = output.with_name(output.name + ".partial")
+    if temporary.exists():
+        raise FileExistsError(
+            f"Partial melt-parameters output already exists: {temporary}. "
+            "Remove or rename it after inspecting it."
+        )
+    delta_t_by_cell = regional_delta_t[basin_ids - 1]
+    target = xr.Dataset(
+        data_vars={
+            "ismip6shelfMelt_basin": xr.DataArray(
+                basin_ids.astype(np.int32),
+                dims=("nCells",),
+                attrs={
+                    "description": "One-based basin number for regional "
+                    "ISMIP6 shelf-melt forcing"
+                },
+            ),
+            "ismip6shelfMelt_gamma0": xr.DataArray(
+                np.float32(cfg.gamma0_m_per_yr),
+                attrs={
+                    "units": "m yr^-1",
+                    "description": "Uniform gamma0 for nonlocal Jourdain "
+                    "et al. (2020) shelf melt",
+                },
+            ),
+            "ismip6shelfMelt_deltaT": xr.DataArray(
+                delta_t_by_cell.astype(np.float32),
+                dims=("nCells",),
+                attrs={
+                    "units": "K",
+                    "description": "Regionally calibrated, cellwise "
+                    "temperature-bias correction, calibrated once against "
+                    "OCX and held fixed for every ESM",
+                },
+            ),
+        },
+        attrs={
+            "title": "ISMIP6 shelf-melt parameters (deltaT, gamma0, basin) "
+            "for Greenland, calibrated against OCX",
+            "region_names": " | ".join(REGION_NAMES),
+            "regional_deltaT_K": ", ".join(
+                f"{value:.8g}" for value in regional_delta_t
+            ),
+            "deltaT_calibration_period": f"{cfg.calibration_start_year}-"
+            f"{cfg.calibration_end_year}",
+            "history": datetime.now(timezone.utc).strftime(
+                "%Y-%m-%dT%H:%M:%SZ"
+            ) + ": " + " ".join(sys.argv),
+        },
+    )
+    encoding = {
+        "ismip6shelfMelt_basin": {"dtype": "int32", "_FillValue": None},
+        "ismip6shelfMelt_gamma0": {"dtype": "float32", "_FillValue": None},
+        "ismip6shelfMelt_deltaT": {"dtype": "float32", "_FillValue": None},
+    }
+    try:
+        logger.info(f"Writing calibrated melt parameters to {temporary}")
+        target.to_netcdf(
+            temporary, engine="netcdf4", format="NETCDF3_64BIT",
+            encoding=encoding,
+        )
+        target.close()
+        os.replace(temporary, output)
+    except Exception:
+        logger.warning(
+            f"Melt-parameters output was not finalized; partial file, if "
+            f"any, is at {temporary}"
+        )
+        raise
+
+
+def read_melt_params(
+    cfg: Config,
+    basin_ids: np.ndarray,
+    logger,
+) -> np.ndarray:
+    """Load the OCX-calibrated per-region deltaT for reuse by other ESMs.
+
+    Validates that the stored basin assignment and gamma0 match the current
+    mesh/config, since deltaT is only meaningful alongside the exact basin
+    layout and gamma0 it was calibrated with.
+    """
+    xr = require_xarray()
+    path = cfg.melt_params_file
+    with xr.open_dataset(
+        path, decode_times=False, mask_and_scale=False
+    ) as ds:
+        stored_basin = ds["ismip6shelfMelt_basin"].values
+        if stored_basin.shape != basin_ids.shape or not np.array_equal(
+            stored_basin, basin_ids
+        ):
+            raise ValueError(
+                f"Basin assignment in {path} does not match the current "
+                "mesh; rebuild it with an OCX (scenario = OCX) run on this "
+                "mesh before reuse."
+            )
+        gamma0 = float(ds["ismip6shelfMelt_gamma0"].values)
+        if not math.isclose(gamma0, cfg.gamma0_m_per_yr, rel_tol=1e-6):
+            raise ValueError(
+                f"gamma0 in {path} ({gamma0} m/yr) does not match the "
+                f"configured gamma0_m_per_yr ({cfg.gamma0_m_per_yr} m/yr)"
+            )
+        delta_t_by_cell = ds["ismip6shelfMelt_deltaT"].values.astype(float)
+    regional_delta_t = np.zeros(len(REGION_NAMES))
+    for region in range(len(REGION_NAMES)):
+        cells = basin_ids == region + 1
+        if np.any(cells):
+            regional_delta_t[region] = delta_t_by_cell[cells][0]
+    logger.info(f"Loaded calibrated melt parameters from {path}")
+    return regional_delta_t
+
+
 def write_output(
     cfg: Config,
     mesh: MeshData,
@@ -1126,7 +1281,6 @@ def write_output(
         anchor
     )
     base_by_cell = profiles.output_thermal_forcing_degC[basin_ids - 1, :]
-    delta_t_by_cell = regional_delta_t[basin_ids - 1]
 
     try:
         with xr.open_dataset(
@@ -1177,31 +1331,6 @@ def write_output(
             target = xr.Dataset(
                 data_vars={
                     "xtime": source["xtime"],
-                    "ismip6shelfMelt_basin": xr.DataArray(
-                        basin_ids.astype(np.int32),
-                        dims=("nCells",),
-                        attrs={
-                            "description": "One-based basin number for "
-                            "regional ISMIP6 shelf-melt forcing"
-                        },
-                    ),
-                    "ismip6shelfMelt_gamma0": xr.DataArray(
-                        np.float32(cfg.gamma0_m_per_yr),
-                        attrs={
-                            "units": "m yr^-1",
-                            "description": "Uniform gamma0 for nonlocal "
-                            "Jourdain et al. (2020) shelf melt",
-                        },
-                    ),
-                    "ismip6shelfMelt_deltaT": xr.DataArray(
-                        delta_t_by_cell.astype(np.float32),
-                        dims=("nCells",),
-                        attrs={
-                            "units": "K",
-                            "description": "Regionally calibrated, cellwise "
-                            "temperature-bias correction",
-                        },
-                    ),
                     "ismip6shelfMelt_zOcean": xr.DataArray(
                         cfg.ocean_levels_m.astype(np.float32),
                         dims=("nISMIP6OceanLayers",),
@@ -1213,6 +1342,7 @@ def write_output(
                     "title": "Regional three-dimensional Greenland ocean "
                     "thermal forcing for MALI",
                     "source_2d_forcing": str(cfg.forcing_2d_file),
+                    "melt_params_file": str(cfg.melt_params_file),
                     "source_en4_version": cfg.en4_version,
                     "source_en4_bias_correction": cfg.en4_bias_correction,
                     "source_en4_region_geojson": str(
@@ -1243,15 +1373,6 @@ def write_output(
                 ]
             )
             encoding = {
-                "ismip6shelfMelt_basin": {
-                    "dtype": "int32", "_FillValue": None
-                },
-                "ismip6shelfMelt_gamma0": {
-                    "dtype": "float32", "_FillValue": None
-                },
-                "ismip6shelfMelt_deltaT": {
-                    "dtype": "float32", "_FillValue": None
-                },
                 "ismip6shelfMelt_zOcean": {
                     "dtype": "float32", "_FillValue": None
                 },
@@ -1264,11 +1385,11 @@ def write_output(
                 "xarray (NETCDF3_64BIT, float32)"
             )
             # Use the netCDF4 engine rather than scipy: scipy's classic/CDF-2
-            # writer produces a header that the netCDF-C library (ncdump, MALI)
-            # cannot read when a dataset mixes a record (unlimited-Time)
-            # variable with any scalar (0-D) variable such as
-            # ``ismip6shelfMelt_gamma0``. The netCDF4 engine writes a
-            # conformant CDF-2 file and still streams record-by-record.
+            # writer can produce a header that the netCDF-C library (ncdump,
+            # MALI) cannot read when a dataset mixes a record (unlimited-Time)
+            # variable with a scalar (0-D) variable. The netCDF4 engine
+            # writes a conformant CDF-2 file and still streams record-by-
+            # record.
             with dask.config.set(scheduler="single-threaded"):
                 target.to_netcdf(
                     temporary,
@@ -1293,8 +1414,8 @@ def write_diagnostics(
     basin_ids: np.ndarray,
     profiles: RegionalProfiles,
     regional_delta_t: np.ndarray,
-    achieved_melt: np.ndarray,
-    calibration_monthly_tf: np.ndarray,
+    achieved_melt: np.ndarray | None,
+    calibration_monthly_tf: np.ndarray | None,
 ) -> None:
     import matplotlib
 
@@ -1396,43 +1517,47 @@ def write_diagnostics(
         for region in range(len(REGION_NAMES))
     ]
 
-    calibration_summary = {
-        "gamma0_m_per_yr": cfg.gamma0_m_per_yr,
-        "calibration_period": [
-            cfg.calibration_start_year,
-            cfg.calibration_end_year,
-        ],
-        "profile_period": [cfg.profile_start_year, cfg.profile_end_year],
-        "regions": [
-            {
-                "id": region + 1,
-                "key": REGION_KEYS[region],
-                "name": REGION_NAMES[region],
-                "target_melt_m_per_yr": float(
-                    cfg.regional_melt_targets_m_per_yr[region]
-                ),
-                "achieved_melt_m_per_yr": float(achieved_melt[region]),
-                "deltaT_K": float(regional_delta_t[region]),
-                "mean_calibration_TF_degC": float(
-                    np.mean(calibration_monthly_tf[:, region])
-                ),
-                "minimum_calibration_TF_degC": float(
-                    np.min(calibration_monthly_tf[:, region])
-                ),
-                "maximum_calibration_TF_degC": float(
-                    np.max(calibration_monthly_tf[:, region])
-                ),
-                "floating_cell_count": floating_counts[region],
-                "floating_area_km2": floating_areas_km2[region],
-            }
-            for region in range(len(REGION_NAMES))
-        ],
-    }
-    with (directory / "deltaT_calibration.json").open(
-        "w", encoding="utf-8"
-    ) as handle:
-        json.dump(calibration_summary, handle, indent=2)
-        handle.write("\n")
+    # Only meaningful when this run actually calibrated deltaT (scenario ==
+    # OCX); other scenarios reuse deltaT from an existing melt_params_file
+    # and have no achieved-melt/calibration-TF statistics to report.
+    if achieved_melt is not None and calibration_monthly_tf is not None:
+        calibration_summary = {
+            "gamma0_m_per_yr": cfg.gamma0_m_per_yr,
+            "calibration_period": [
+                cfg.calibration_start_year,
+                cfg.calibration_end_year,
+            ],
+            "profile_period": [cfg.profile_start_year, cfg.profile_end_year],
+            "regions": [
+                {
+                    "id": region + 1,
+                    "key": REGION_KEYS[region],
+                    "name": REGION_NAMES[region],
+                    "target_melt_m_per_yr": float(
+                        cfg.regional_melt_targets_m_per_yr[region]
+                    ),
+                    "achieved_melt_m_per_yr": float(achieved_melt[region]),
+                    "deltaT_K": float(regional_delta_t[region]),
+                    "mean_calibration_TF_degC": float(
+                        np.mean(calibration_monthly_tf[:, region])
+                    ),
+                    "minimum_calibration_TF_degC": float(
+                        np.min(calibration_monthly_tf[:, region])
+                    ),
+                    "maximum_calibration_TF_degC": float(
+                        np.max(calibration_monthly_tf[:, region])
+                    ),
+                    "floating_cell_count": floating_counts[region],
+                    "floating_area_km2": floating_areas_km2[region],
+                }
+                for region in range(len(REGION_NAMES))
+            ],
+        }
+        with (directory / "deltaT_calibration.json").open(
+            "w", encoding="utf-8"
+        ) as handle:
+            json.dump(calibration_summary, handle, indent=2)
+            handle.write("\n")
 
     colors = plt.get_cmap("tab10")(np.arange(len(REGION_NAMES)))
     fig, ax = plt.subplots(figsize=(8, 8))
@@ -1611,10 +1736,15 @@ def write_diagnostics(
 def print_summary(
     cfg: Config,
     regional_delta_t: np.ndarray,
-    achieved_melt: np.ndarray,
+    achieved_melt: np.ndarray | None,
     logger,
 ) -> None:
     logger.info("Regional deltaT calibration")
+    if achieved_melt is None:
+        logger.info("region          deltaT_K")
+        for region, key in enumerate(REGION_KEYS):
+            logger.info(f"{key:15s} {regional_delta_t[region]:9.5f}")
+        return
     logger.info("region          target_m/yr  achieved_m/yr  deltaT_K")
     for region, key in enumerate(REGION_KEYS):
         logger.info(
@@ -1626,9 +1756,20 @@ def print_summary(
 def run(cfg: Config, logger, prepare_only: bool = False) -> None:
     mesh, basin_ids = load_mesh_and_basins(cfg)
     profiles = build_regional_profiles(cfg, mesh, basin_ids, logger)
-    delta_t, achieved, calibration_monthly_tf = calibrate_regional_delta_t(
-        cfg, mesh, basin_ids, profiles
-    )
+    if cfg.calibrate_delta_t:
+        delta_t, achieved, calibration_monthly_tf = (
+            calibrate_regional_delta_t(cfg, mesh, basin_ids, profiles)
+        )
+        write_melt_params(cfg, basin_ids, delta_t, logger)
+        logger.info(f"Created {cfg.melt_params_file}")
+    else:
+        logger.info(
+            f"scenario={cfg.scenario!r} is not OCX; reusing calibrated "
+            f"deltaT/gamma0 from {cfg.melt_params_file} instead of "
+            "recalibrating"
+        )
+        delta_t = read_melt_params(cfg, basin_ids, logger)
+        achieved, calibration_monthly_tf = None, None
     print_summary(cfg, delta_t, achieved, logger)
     write_diagnostics(
         cfg, mesh, basin_ids, profiles, delta_t, achieved,
