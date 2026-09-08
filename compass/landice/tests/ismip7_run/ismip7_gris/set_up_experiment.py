@@ -1,5 +1,6 @@
 import glob
 import os
+import re
 import sys
 
 from compass.job import write_job_script
@@ -75,6 +76,11 @@ class SetUpExperiment(Step):
         resource_location = 'compass.landice.tests.ismip7_run.ismip7_gris'
 
         use_vM_calving = (calving_method == 'von_mises')
+
+        # Thermal-forcing stream defaults; the 3D chunked case overrides them
+        # below to address the ..._<YYYY>.nc series with a $Y template.
+        tf_reference_time = '2000-01-01_00:00:00'
+        tf_filename_interval = 'none'
 
         # --- Determine forcing file paths ---
         if scenario == 'ocx':
@@ -213,14 +219,39 @@ class SetUpExperiment(Step):
             else:
                 tf_pattern = '*2dThermalForcing_*.nc'
             tf_search = os.path.join(ocean_dir, tf_pattern)
-            tf_list = glob.glob(tf_search)
-            if len(tf_list) == 1:
+            tf_list = sorted(glob.glob(tf_search))
+            if len(tf_list) == 0:
+                sys.exit(f"ERROR: Expected at least 1 TF file at "
+                         f"{tf_search}, found 0")
+
+            if use_3d_thermal_forcing:
+                # 3D TF is written one file per N-year block, named by the
+                # block start year (..._<YYYY>.nc). Symlink the whole series
+                # and address it with a $Y filename_template plus a
+                # filename_interval so MALI advances across chunk files.
+                for tf_path in tf_list:
+                    tf_base = os.path.split(tf_path)[-1]
+                    os.symlink(tf_path,
+                               os.path.join(self.work_dir, tf_base))
+                start_years = sorted(
+                    int(re.search(r'_(\d{4})\.nc$',
+                                  os.path.split(f)[-1]).group(1))
+                    for f in tf_list)
+                tf_first_year = start_years[0]
+                tf_reference_time = f"{tf_first_year:04d}-01-01_00:00:00"
+                sample = os.path.split(tf_list[0])[-1]
+                tf_fname = re.sub(r'_\d{4}\.nc$', '_$Y.nc', sample)
+                if len(start_years) > 1:
+                    interval_years = start_years[1] - start_years[0]
+                    tf_filename_interval = \
+                        f"{interval_years:04d}-00-00_00:00:00"
+            else:
+                if len(tf_list) != 1:
+                    sys.exit(f"ERROR: Expected 1 TF file at {tf_search}, "
+                             f"found {len(tf_list)}")
                 tf_fname = os.path.split(tf_list[0])[-1]
                 os.symlink(tf_list[0],
                            os.path.join(self.work_dir, tf_fname))
-            else:
-                sys.exit(f"ERROR: Expected 1 TF file at {tf_search}, "
-                         f"found {len(tf_list)}")
 
         # --- Set up streams ---
         if scenario == 'ctrl':
@@ -230,9 +261,10 @@ class SetUpExperiment(Step):
         else:
             forcing_interval_monthly = '0000-01-00_00:00:00'
             forcing_interval_annual = '0001-00-00_00:00:00'
-            forcing_interval_TF = (forcing_interval_annual
-                                   if use_3d_thermal_forcing
-                                   else forcing_interval_monthly)
+            # GrIS thermal forcing (2D and 3D) is monthly. The annual
+            # cadence only applies to Antarctica, whose ISMIP7 3D forcing is
+            # provided annually.
+            forcing_interval_TF = forcing_interval_monthly
 
         stream_replacements = {
             'input_file_init_cond': init_cond_fname if is_historical
@@ -250,6 +282,8 @@ class SetUpExperiment(Step):
             'forcing_interval_monthly': forcing_interval_monthly,
             'forcing_interval_annual': forcing_interval_annual,
             'forcing_interval_TF': forcing_interval_TF,
+            'tf_reference_time': tf_reference_time,
+            'tf_filename_interval': tf_filename_interval,
             'use_3d_thermal_forcing': use_3d_thermal_forcing,
         }
 
