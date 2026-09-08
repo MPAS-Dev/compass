@@ -66,8 +66,9 @@
 <stream name="ismip7_TF"
         type="input"
         filename_template="{{ input_file_TF_forcing }}"
+        filename_interval="{{ tf_filename_interval }}"
         input_interval="{{ forcing_interval_TF }}"
-        reference_time="2000-01-01_00:00:00"
+        reference_time="{{ tf_reference_time }}"
         runtime_format="single_file">
 {% if use_3d_thermal_forcing %}
         <var name="ismip6shelfMelt_3dThermalForcing"/>

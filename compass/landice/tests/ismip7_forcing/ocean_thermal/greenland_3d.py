@@ -119,6 +119,7 @@ class Config:
     freezing_c: float
     forcing_variable: str
     overwrite: bool
+    output_years_per_file: int
 
     @property
     def calibrate_delta_t(self) -> bool:
@@ -136,11 +137,11 @@ class Config:
         """Build a Config from JSON, optionally injecting compass paths.
 
         ``overrides`` may supply ``mesh_file``, ``forcing_2d_file``,
-        ``output_file``, ``melt_params_file``, ``diagnostics_directory``, and
-        ``scenario``. When supplied, they take precedence over the
-        corresponding JSON ``files``/``scenario`` entries, which then become
-        optional. The region-mask, EN4, and GeoJSON paths always come from
-        the JSON.
+        ``output_file``, ``melt_params_file``, ``diagnostics_directory``,
+        ``scenario``, and ``output_years_per_file``. When supplied, they take
+        precedence over the corresponding JSON ``files``/top-level entries,
+        which then become optional. The region-mask, EN4, and GeoJSON paths
+        always come from the JSON.
         """
         overrides = overrides or {}
         with path.open("r", encoding="utf-8") as handle:
@@ -251,6 +252,10 @@ class Config:
                 raw.get("forcing_2d_variable", "ismip6_2dThermalForcing")
             ),
             overwrite=bool(raw.get("overwrite", False)),
+            output_years_per_file=int(
+                overrides.get("output_years_per_file") or
+                raw.get("output_years_per_file", 10)
+            ),
         )
         cfg.validate()
         return cfg
@@ -279,6 +284,8 @@ class Config:
             raise ValueError("source_max_depth_m must be positive")
         if self.gamma0_m_per_yr <= 0.0:
             raise ValueError("gamma0_m_per_yr must be positive")
+        if self.output_years_per_file < 1:
+            raise ValueError("output_years_per_file must be at least 1")
         if self.en4_bias_correction == "unknown":
             warnings.warn(
                 "EN4 bias correction is unknown. Processing will continue "
@@ -1248,6 +1255,146 @@ def read_melt_params(
     return regional_delta_t
 
 
+def year_chunks(
+    years: np.ndarray, years_per_file: int
+) -> "list[tuple[np.ndarray, int, int]]":
+    """Group record indices into consecutive blocks of whole years.
+
+    Blocks are aligned to the first year so their boundaries match a MALI
+    ``filename_interval`` anchored at ``first_year``. Returns
+    ``(record_indices, block_start_year, block_last_year)`` tuples.
+    """
+    years = np.asarray(years)
+    first_year = int(years.min())
+    block_id = (years - first_year) // years_per_file
+    chunks = []
+    for block in np.unique(block_id):
+        indices = np.flatnonzero(block_id == block)
+        start_year = first_year + int(block) * years_per_file
+        chunks.append((indices, start_year, int(years[indices].max())))
+    return chunks
+
+
+def chunk_output_path(output_file: Path, start_year: int) -> Path:
+    """Name a per-chunk file by its block start year (MALI ``$Y`` template).
+
+    Any trailing ``_YYYY-YYYY`` range in ``output_file`` is replaced with the
+    single start year so the run side can address the whole series with one
+    ``filename_template`` plus a ``filename_interval``.
+    """
+    stem = re.sub(r"_\d{4}-\d{4}$", "", output_file.stem)
+    name = f"{stem}_{start_year:04d}{output_file.suffix}"
+    return output_file.with_name(name)
+
+
+def _write_forcing_chunk(
+    cfg: Config,
+    forcing_3d: Any,
+    chunk_times: "list[str]",
+    regional_delta_t: np.ndarray,
+    start_year: int,
+    last_year: int,
+    output_path: Path,
+    logger,
+    dask,
+) -> None:
+    xr = require_xarray()
+    if output_path.exists() and not cfg.overwrite:
+        raise FileExistsError(
+            f"Output exists and overwrite=false: {output_path}"
+        )
+    temporary = output_path.with_name(output_path.name + ".partial")
+    if temporary.exists():
+        raise FileExistsError(
+            f"Partial output already exists: {temporary}. Remove or rename "
+            "it after inspecting it."
+        )
+    target = xr.Dataset(
+        data_vars={
+            "xtime": xr.DataArray(
+                np.asarray(
+                    [value.ljust(64) for value in chunk_times], dtype="S"
+                ),
+                dims=("Time",),
+            ),
+            "ismip6shelfMelt_zOcean": xr.DataArray(
+                cfg.ocean_levels_m.astype(np.float32),
+                dims=("nISMIP6OceanLayers",),
+                attrs={"units": "m", "positive": "up"},
+            ),
+            "ismip6shelfMelt_3dThermalForcing": forcing_3d,
+        },
+        attrs={
+            "title": "Regional three-dimensional Greenland ocean thermal "
+            "forcing for MALI",
+            "source_2d_forcing": str(cfg.forcing_2d_file),
+            "melt_params_file": str(cfg.melt_params_file),
+            "source_en4_version": cfg.en4_version,
+            "source_en4_bias_correction": cfg.en4_bias_correction,
+            "source_en4_region_geojson": str(
+                cfg.en4_source_region_geojson
+            ),
+            "en4_profile_period": f"{cfg.profile_start_year}-"
+            f"{cfg.profile_end_year}",
+            "deltaT_calibration_period": f"{cfg.calibration_start_year}"
+            f"-{cfg.calibration_end_year}",
+            "forcing_period": f"{start_year}-{last_year}",
+            "source_ocean_max_depth_m": cfg.source_max_depth_m,
+            "region_names": " | ".join(REGION_NAMES),
+            "regional_deltaT_K": ", ".join(
+                f"{value:.8g}" for value in regional_delta_t
+            ),
+            "history": datetime.now(timezone.utc).strftime(
+                "%Y-%m-%dT%H:%M:%SZ"
+            ) + ": " + " ".join(sys.argv),
+        },
+    )
+    # Dimension coordinates are implementation details, not MALI input
+    # fields. Drop them while retaining the named dimensions.
+    target = target.drop_vars(
+        [
+            name
+            for name in ("nCells", "nISMIP6OceanLayers")
+            if name in target.coords
+        ]
+    )
+    encoding = {
+        "xtime": {"char_dim_name": "StrLen"},
+        "ismip6shelfMelt_zOcean": {"dtype": "float32", "_FillValue": None},
+        "ismip6shelfMelt_3dThermalForcing": {
+            "dtype": "float32", "_FillValue": None
+        },
+    }
+    try:
+        logger.info(
+            f"Writing {len(chunk_times)} monthly records "
+            f"({start_year}-{last_year}) to {temporary} with xarray "
+            "(NETCDF3_64BIT, float32)"
+        )
+        # Use the netCDF4 engine rather than scipy: scipy's classic/CDF-2
+        # writer can produce a header that the netCDF-C library (ncdump,
+        # MALI) cannot read when a dataset mixes a record (unlimited-Time)
+        # variable with a scalar (0-D) variable. The netCDF4 engine writes a
+        # conformant CDF-2 file and still streams record-by-record.
+        with dask.config.set(scheduler="single-threaded"):
+            target.to_netcdf(
+                temporary,
+                engine="netcdf4",
+                format="NETCDF3_64BIT",
+                unlimited_dims=["Time"],
+                encoding=encoding,
+            )
+        target.close()
+        os.replace(temporary, output_path)
+        logger.info(f"Created {output_path}")
+    except Exception:
+        logger.warning(
+            f"Output was not finalized; partial file, if any, is at "
+            f"{temporary}"
+        )
+        raise
+
+
 def write_output(
     cfg: Config,
     mesh: MeshData,
@@ -1264,16 +1411,7 @@ def write_output(
             "Dask is required to construct and stream the multi-gigabyte "
             "xarray output"
         ) from exc
-    output = cfg.output_file
-    output.parent.mkdir(parents=True, exist_ok=True)
-    if output.exists() and not cfg.overwrite:
-        raise FileExistsError(f"Output exists and overwrite=false: {output}")
-    temporary = output.with_name(output.name + ".partial")
-    if temporary.exists():
-        raise FileExistsError(
-            f"Partial output already exists: {temporary}. Remove or rename it "
-            f"after inspecting it."
-        )
+    cfg.output_file.parent.mkdir(parents=True, exist_ok=True)
 
     anchor = np.clip(mesh.bed, -cfg.source_max_depth_m, 0.0)
     base_at_anchor = profiles_at_cell_depths(
@@ -1282,136 +1420,70 @@ def write_output(
     )
     base_by_cell = profiles.output_thermal_forcing_degC[basin_ids - 1, :]
 
-    try:
-        with xr.open_dataset(
-            cfg.forcing_2d_file,
-            decode_times=False,
-            mask_and_scale=True,
-            concat_characters=False,
-            chunks={"Time": 1},
-        ) as source:
-            forcing_var = validate_forcing_schema(source, cfg, mesh.bed.size)
-            times = forcing_times(source)
-            # Fail before initiating a multi-gigabyte write if any source value
-            # is absent. This reduction stays lazy until compute() and does not
-            # load the full forcing array into memory.
-            invalid_count = int(
-                (~np.isfinite(forcing_var)).sum().compute().item()
-            )
-            if invalid_count:
-                raise ValueError(
-                    f"2-D forcing contains {invalid_count} invalid values; "
-                    "explicit missing-value handling is required before "
-                    "building MALI forcing"
-                )
-
-            cell_coord = np.arange(mesh.bed.size, dtype=np.int32)
-            layer_coord = np.arange(cfg.ocean_levels_m.size, dtype=np.int32)
-            base_cells = xr.DataArray(
-                base_by_cell.astype(np.float32),
-                dims=("nCells", "nISMIP6OceanLayers"),
-                coords={
-                    "nCells": cell_coord,
-                    "nISMIP6OceanLayers": layer_coord,
-                },
-            )
-            anchor_cells = xr.DataArray(
-                base_at_anchor.astype(np.float32),
-                dims=("nCells",),
-                coords={"nCells": cell_coord},
-            )
-            forcing_3d = (
-                base_cells + (forcing_var.astype(np.float32) - anchor_cells)
-            ).transpose("Time", "nCells", "nISMIP6OceanLayers").assign_attrs(
-                units="C",
-                long_name="3D thermal forcing for nonlocal ISMIP6 ice-shelf "
-                "melt method",
-            )
-
-            target = xr.Dataset(
-                data_vars={
-                    "xtime": xr.DataArray(
-                        np.asarray(
-                            [value.ljust(64) for value in times], dtype="S"
-                        ),
-                        dims=("Time",),
-                    ),
-                    "ismip6shelfMelt_zOcean": xr.DataArray(
-                        cfg.ocean_levels_m.astype(np.float32),
-                        dims=("nISMIP6OceanLayers",),
-                        attrs={"units": "m", "positive": "up"},
-                    ),
-                    "ismip6shelfMelt_3dThermalForcing": forcing_3d,
-                },
-                attrs={
-                    "title": "Regional three-dimensional Greenland ocean "
-                    "thermal forcing for MALI",
-                    "source_2d_forcing": str(cfg.forcing_2d_file),
-                    "melt_params_file": str(cfg.melt_params_file),
-                    "source_en4_version": cfg.en4_version,
-                    "source_en4_bias_correction": cfg.en4_bias_correction,
-                    "source_en4_region_geojson": str(
-                        cfg.en4_source_region_geojson
-                    ),
-                    "en4_profile_period": f"{cfg.profile_start_year}-"
-                    f"{cfg.profile_end_year}",
-                    "deltaT_calibration_period":
-                        f"{cfg.calibration_start_year}"
-                        f"-{cfg.calibration_end_year}",
-                    "source_ocean_max_depth_m": cfg.source_max_depth_m,
-                    "region_names": " | ".join(REGION_NAMES),
-                    "regional_deltaT_K": ", ".join(
-                        f"{value:.8g}" for value in regional_delta_t
-                    ),
-                    "history": datetime.now(timezone.utc).strftime(
-                        "%Y-%m-%dT%H:%M:%SZ"
-                    ) + ": " + " ".join(sys.argv),
-                },
-            )
-            # Dimension coordinates are implementation details, not MALI input
-            # fields. Drop them while retaining the named dimensions.
-            target = target.drop_vars(
-                [
-                    name
-                    for name in ("nCells", "nISMIP6OceanLayers")
-                    if name in target.coords
-                ]
-            )
-            encoding = {
-                "xtime": {"char_dim_name": "StrLen"},
-                "ismip6shelfMelt_zOcean": {
-                    "dtype": "float32", "_FillValue": None
-                },
-                "ismip6shelfMelt_3dThermalForcing": {
-                    "dtype": "float32", "_FillValue": None
-                },
-            }
-            logger.info(
-                f"Writing {len(times)} monthly records to {temporary} with "
-                "xarray (NETCDF3_64BIT, float32)"
-            )
-            # Use the netCDF4 engine rather than scipy: scipy's classic/CDF-2
-            # writer can produce a header that the netCDF-C library (ncdump,
-            # MALI) cannot read when a dataset mixes a record (unlimited-Time)
-            # variable with a scalar (0-D) variable. The netCDF4 engine
-            # writes a conformant CDF-2 file and still streams record-by-
-            # record.
-            with dask.config.set(scheduler="single-threaded"):
-                target.to_netcdf(
-                    temporary,
-                    engine="netcdf4",
-                    format="NETCDF3_64BIT",
-                    unlimited_dims=["Time"],
-                    encoding=encoding,
-                )
-            target.close()
-        os.replace(temporary, output)
-    except Exception:
-        logger.warning(
-            f"Output was not finalized; partial file, if any, is at "
-            f"{temporary}"
+    with xr.open_dataset(
+        cfg.forcing_2d_file,
+        decode_times=False,
+        mask_and_scale=True,
+        concat_characters=False,
+        chunks={"Time": 1},
+    ) as source:
+        forcing_var = validate_forcing_schema(source, cfg, mesh.bed.size)
+        times = forcing_times(source)
+        years = np.asarray([year_from_xtime(value) for value in times])
+        # Fail before initiating a multi-gigabyte write if any source value
+        # is absent. This reduction stays lazy until compute() and does not
+        # load the full forcing array into memory.
+        invalid_count = int(
+            (~np.isfinite(forcing_var)).sum().compute().item()
         )
-        raise
+        if invalid_count:
+            raise ValueError(
+                f"2-D forcing contains {invalid_count} invalid values; "
+                "explicit missing-value handling is required before "
+                "building MALI forcing"
+            )
+
+        cell_coord = np.arange(mesh.bed.size, dtype=np.int32)
+        layer_coord = np.arange(cfg.ocean_levels_m.size, dtype=np.int32)
+        base_cells = xr.DataArray(
+            base_by_cell.astype(np.float32),
+            dims=("nCells", "nISMIP6OceanLayers"),
+            coords={
+                "nCells": cell_coord,
+                "nISMIP6OceanLayers": layer_coord,
+            },
+        )
+        anchor_cells = xr.DataArray(
+            base_at_anchor.astype(np.float32),
+            dims=("nCells",),
+            coords={"nCells": cell_coord},
+        )
+        forcing_3d = (
+            base_cells + (forcing_var.astype(np.float32) - anchor_cells)
+        ).transpose("Time", "nCells", "nISMIP6OceanLayers").assign_attrs(
+            units="C",
+            long_name="3D thermal forcing for nonlocal ISMIP6 ice-shelf "
+            "melt method",
+        )
+
+        chunks = year_chunks(years, cfg.output_years_per_file)
+        logger.info(
+            f"Writing {len(times)} monthly records to {len(chunks)} file(s) "
+            f"of up to {cfg.output_years_per_file} year(s) each"
+        )
+        for indices, start_year, last_year in chunks:
+            output_path = chunk_output_path(cfg.output_file, start_year)
+            _write_forcing_chunk(
+                cfg,
+                forcing_3d.isel(Time=indices),
+                [times[int(index)] for index in indices],
+                regional_delta_t,
+                start_year,
+                last_year,
+                output_path,
+                logger,
+                dask,
+            )
 
 
 def write_diagnostics(
@@ -1783,7 +1855,6 @@ def run(cfg: Config, logger, prepare_only: bool = False) -> None:
     )
     if not prepare_only:
         write_output(cfg, mesh, basin_ids, profiles, delta_t, logger)
-        logger.info(f"Created {cfg.output_file}")
     else:
         logger.info(
             "Preparation-only run complete; the multi-gigabyte forcing file "
