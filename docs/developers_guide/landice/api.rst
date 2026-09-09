@@ -447,7 +447,11 @@ ismip7_calibration
    ais.calibrate.Calibrate
    ais.calibrate.Calibrate.run
    ais.fit_delta_t.FitDeltaT
+   ais.fit_delta_t.FitDeltaT.setup
    ais.fit_delta_t.FitDeltaT.run
+   ais.make_graph.MakeGraph
+   ais.make_graph.MakeGraph.setup
+   ais.make_graph.MakeGraph.run
    ais.melt_model.basin_mean_tf
    ais.melt_model.initial_draft
    ais.melt_model.integrate_by_basin

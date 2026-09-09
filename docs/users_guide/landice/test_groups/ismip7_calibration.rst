@@ -84,8 +84,9 @@ Supply them in a user config file:
     base_path_mali = /path/to/inputdata/glc/mpasli/mpas.ais4to20km
     mali_mesh_file = ais_4to20km.20250625.nc
     mali_mesh_name = ais_4to20km
+    # optional; set to None if no ISMIP6-era region mask exists on this
+    # mesh, which skips the basin cross-check
     region_mask_file = ais_4to20km_region_mask.20230105.nc
-    graph_file_prefix = mpasli.graph.info.240507.part.
 
 Then set up and run, for example:
 

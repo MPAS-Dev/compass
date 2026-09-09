@@ -2,6 +2,7 @@ from compass.landice.tests.ismip7_calibration import datasets
 from compass.landice.tests.ismip7_calibration.ais.aggregate import Aggregate
 from compass.landice.tests.ismip7_calibration.ais.calibrate import Calibrate
 from compass.landice.tests.ismip7_calibration.ais.fit_delta_t import FitDeltaT
+from compass.landice.tests.ismip7_calibration.ais.make_graph import MakeGraph
 from compass.landice.tests.ismip7_calibration.ais.remap_forcing import (
     RemapForcing,
 )
@@ -32,6 +33,10 @@ class Ais(TestCase):
     Antarctic MALI mesh, following the ISMIP7 protocol.
 
     The steps, in dependency order:
+
+    ``make_graph``
+        The graph partition the melt diagnostics run on, built once from the
+        mesh rather than required as a pre-built file alongside it.
 
     ``remap_masks``
         ISMIP7 basins, buttressing bins, the floating mask and the
@@ -96,8 +101,7 @@ class Ais(TestCase):
         """
         config = self.config
         check_options(config, ['base_path_ismip7', 'base_path_mali',
-                               'mali_mesh_file', 'mali_mesh_name',
-                               'graph_file_prefix'])
+                               'mali_mesh_file', 'mali_mesh_name'])
 
         section = config['ismip7_calibration']
         base_path = section.get('base_path_ismip7')
@@ -106,6 +110,7 @@ class Ais(TestCase):
         self.melt_forms = melt_forms(config)
         self.states = datasets.ocean_states(base_path, subset=subset)
 
+        self.add_step(MakeGraph(test_case=self))
         self.add_step(RemapMasks(test_case=self))
         self.add_step(RemapForcing(test_case=self))
 

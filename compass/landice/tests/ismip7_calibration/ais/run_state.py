@@ -88,7 +88,6 @@ class RunState(Step):
         self.min_tasks = self.ntasks
         base_path_mali = section.get('base_path_mali')
         mali_mesh_file = section.get('mali_mesh_file')
-        graph_file_prefix = section.get('graph_file_prefix')
         timestep = section.get('timestep')
 
         _check_namelist_options(config, self.melt_form)
@@ -108,8 +107,7 @@ class RunState(Step):
         # called graph.info alone is silently not found
         self.add_input_file(
             filename=f'graph.info.part.{self.ntasks}',
-            target=os.path.join(base_path_mali,
-                                f'{graph_file_prefix}{self.ntasks}'))
+            target=f'../make_graph/graph.info.part.{self.ntasks}')
 
         resource_location = 'compass.landice.tests.ismip7_calibration.ais'
 

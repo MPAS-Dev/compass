@@ -125,6 +125,12 @@ ais
 ``landice/ismip7_calibration/ais`` is the calibration itself, on an Antarctic
 MALI mesh.
 
+``make_graph``
+    Builds the graph partition file the melt diagnostics run on, once, from
+    the mesh.  Doing it here means the test group works on any MALI mesh
+    rather than only on meshes that already have a partition file
+    distributed alongside them.
+
 ``remap_masks``
     Remaps the ISMIP7 IMBIE2 basins, buttressing (BFRN) bins, floating mask
     and PIG/Dotson regions onto the MALI mesh, nearest-neighbour throughout
