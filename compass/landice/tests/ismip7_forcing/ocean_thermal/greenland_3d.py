@@ -25,6 +25,8 @@ import json
 import math
 import os
 import re
+import shutil
+import subprocess
 import sys
 import warnings
 from dataclasses import dataclass
@@ -1290,6 +1292,25 @@ def chunk_output_path(output_file: Path, start_year: int) -> Path:
     return output_file.with_name(name)
 
 
+def _convert_to_cdf2(hdf5_path: Path, cdf2_path: Path, logger) -> None:
+    """Convert an HDF5 (NETCDF4) file to CDF-2 (64-bit offset) with nccopy.
+
+    MALI/pnetcdf reads classic formats only. Writing HDF5 then converting is
+    much faster than writing CDF-2 directly for large record variables, and
+    nccopy preserves the unlimited Time dimension MALI expects.
+    """
+    nccopy = shutil.which("nccopy")
+    if nccopy is None:
+        raise RuntimeError(
+            "nccopy is required to convert the 3-D forcing to CDF-2 but was "
+            "not found on PATH."
+        )
+    logger.info(f"Converting {hdf5_path.name} to CDF-2 (64-bit offset)")
+    subprocess.run(
+        [nccopy, "-k", "nc6", str(hdf5_path), str(cdf2_path)], check=True
+    )
+
+
 def _write_forcing_chunk(
     cfg: Config,
     forcing_3d: Any,
@@ -1314,6 +1335,7 @@ def _write_forcing_chunk(
             f"Partial output already exists: {temporary}. Remove or rename "
             "it after inspecting it."
         )
+    hdf5_temporary = output_path.with_name(output_path.name + ".h5.partial")
     target = xr.Dataset(
         data_vars={
             "xtime": xr.DataArray(
@@ -1373,31 +1395,34 @@ def _write_forcing_chunk(
     try:
         logger.info(
             f"Writing {len(chunk_times)} monthly records "
-            f"({start_year}-{last_year}) to {temporary} with xarray "
-            "(NETCDF3_64BIT, float32)"
+            f"({start_year}-{last_year}) to {output_path.name}"
         )
-        # Use the netCDF4 engine rather than scipy: scipy's classic/CDF-2
-        # writer can produce a header that the netCDF-C library (ncdump,
-        # MALI) cannot read when a dataset mixes a record (unlimited-Time)
-        # variable with a scalar (0-D) variable. The netCDF4 engine writes a
-        # conformant CDF-2 file and still streams record-by-record.
+        # Writing NETCDF3_64BIT directly with an unlimited Time dimension and
+        # multiple record variables is several times slower because the
+        # classic writer interleaves each record and writes with a stride.
+        # Write HDF5 first (each variable stored contiguously, much faster),
+        # then convert to the CDF-2 format MALI/pnetcdf requires with nccopy.
         with dask.config.set(scheduler="single-threaded"):
             target.to_netcdf(
-                temporary,
+                hdf5_temporary,
                 engine="netcdf4",
-                format="NETCDF3_64BIT",
+                format="NETCDF4",
                 unlimited_dims=["Time"],
                 encoding=encoding,
             )
         target.close()
+        _convert_to_cdf2(hdf5_temporary, temporary, logger)
         os.replace(temporary, output_path)
         logger.info(f"Created {output_path}")
     except Exception:
         logger.warning(
-            f"Output was not finalized; partial file, if any, is at "
-            f"{temporary}"
+            f"Output was not finalized; partial files, if any, are at "
+            f"{hdf5_temporary} and {temporary}"
         )
         raise
+    finally:
+        if hdf5_temporary.exists():
+            hdf5_temporary.unlink()
 
 
 def write_output(
