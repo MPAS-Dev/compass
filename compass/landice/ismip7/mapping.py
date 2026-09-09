@@ -80,8 +80,13 @@ def build_mapping_file(config, logger, ismip7_grid_file,
 
     # create a MALI mesh scrip file
     logger.info("Creating SCRIP file for MALI mesh...")
+    # copy the contents but not the mode bits: the copy has lat/lon fields
+    # written into it below, and a mesh distributed read-only would
+    # otherwise produce a read-only copy
     mali_mesh_copy = f"{mali_mesh_file}_copy"
-    shutil.copy(mali_mesh_file, mali_mesh_copy)
+    if os.path.exists(mali_mesh_copy):
+        os.remove(mali_mesh_copy)
+    shutil.copyfile(mali_mesh_file, mali_mesh_copy)
 
     args = ["set_lat_lon_fields_in_planar_grid",
             "--file", mali_mesh_copy,

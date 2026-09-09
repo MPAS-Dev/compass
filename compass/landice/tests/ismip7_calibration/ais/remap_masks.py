@@ -19,6 +19,12 @@ REGION_CODES = {'none': 0, 'pig': 1, 'dotson': 2}
 #: below this level of agreement, the basin numbering is probably mismatched
 MIN_BASIN_AGREEMENT = 80.0
 
+#: the ISMIP7 (0-based) basin Pine Island and Dotson both drain into
+EASTERN_AMUNDSEN_BASIN = 9
+
+#: the fraction of PIG and Dotson cells that must land in that basin
+MIN_SHELF_BASIN_AGREEMENT = 90.0
+
 
 class RemapMasks(Step):
     """
@@ -117,8 +123,13 @@ class RemapMasks(Step):
             'note': 'a reference value only; melt is proportional to gamma0 '
                     'and the calibration scales this away'}
 
+        _check_shelves_are_in_their_basin(ds_out, logger)
+
         if region_mask_file != 'None':
             _cross_check_basins(ds_out, region_mask_file, logger)
+        else:
+            logger.info('No region mask supplied, so the cross-check against '
+                        'the ISMIP6-era regions is skipped.')
 
         ds_out.attrs['source'] = (
             f'ISMIP7 masks from {base_path} remapped onto {mali_mesh_file}')
@@ -266,6 +277,46 @@ def _to_integer_masks(ds_remapped):
         'convention': ', '.join(f'{value} = {name}'
                                 for name, value in REGION_CODES.items())}
     return ds
+
+
+def _check_shelves_are_in_their_basin(ds_masks, logger):
+    """
+    Check that Pine Island and Dotson land in the basin the protocol says.
+
+    This is the cheap half of the basin-numbering check, and unlike
+    :py:func:`_cross_check_basins` it needs no extra input file, so it runs
+    on any mesh.  The protocol refers to the Eastern Amundsen as basin 9 and
+    Ronne-Filchner as basin 14, both 0-based.  If the two numbering
+    conventions were confused anywhere between the ISMIP7 mask and this
+    file, the ice shelves would land in the wrong basin.
+
+    Raises
+    ------
+    ValueError
+        If too few PIG and Dotson cells fall in the Eastern Amundsen
+    """
+    basin = ds_masks['ismip7BasinNumber'].values
+    region = ds_masks['ismip7ShelfRegion'].values
+    shelves = region > REGION_CODES['none']
+    if not shelves.any():
+        raise ValueError(
+            'No cells were assigned to Pine Island or Dotson, so term J4 '
+            'would have nothing to aggregate over.  Check that the ISMIP7 '
+            'shelf mask covers this mesh.')
+
+    in_basin = basin[shelves] == EASTERN_AMUNDSEN_BASIN
+    percent = 100.0 * in_basin.mean()
+    logger.info(f'PIG and Dotson cells in ISMIP7 basin '
+                f'{EASTERN_AMUNDSEN_BASIN} (Eastern Amundsen): '
+                f'{percent:.1f}% of {int(shelves.sum())}')
+
+    if percent < MIN_SHELF_BASIN_AGREEMENT:
+        raise ValueError(
+            f'Only {percent:.1f}% of the Pine Island and Dotson cells fall '
+            f'in ISMIP7 basin {EASTERN_AMUNDSEN_BASIN}, the Eastern '
+            f'Amundsen, which the protocol says they drain into.  The basin '
+            f'numbering is probably off: ISMIP7 is 0-based and MALI is '
+            f'1-based, so MALI basin 10 is ISMIP7 basin 9.')
 
 
 def _cross_check_basins(ds_masks, region_mask_file, logger):
