@@ -97,10 +97,18 @@ Then set up and run, for example:
     cd $WORKDIR/landice/ismip7_calibration/replication
     sbatch job_script.sh
 
+Setting up needs nothing but the config file above; every part of the
+calibration is a step of the test case, so ``compass run`` from the test case
+directory does the whole thing in order, and the job script ``compass setup``
+writes runs exactly that.
+
 The ``ais`` test case creates one step per ocean state and melt form -- 56
-with the default settings -- each a short MALI run.  They can be run together
-with ``compass run`` from the test case directory, or individually from each
-step directory.
+with the default settings -- plus two more for the linearity check.  Each is a
+short MALI run, but compass runs steps one after another, so the ensemble
+takes a few hours of wall clock.  The runs do not depend on each other, so if
+that matters, run ``compass run`` from each step directory in separate jobs
+instead, and then run the ``verify_melt``, ``aggregate``, ``calibrate``,
+``fit_delta_t`` and ``report`` steps in that order.
 
 Config options
 --------------
