@@ -54,11 +54,15 @@ def test_parameter_grid_matches_the_published_k_values():
 
 
 def test_parameter_grid_for_the_nonlocal_form():
-    """gamma0 has its own grid, in m/yr."""
+    """
+    gamma0 has its own grid, in m/yr.  The maximum has to stay well above
+    where the distribution ends, or the objective's draws pile up against
+    it and the upper percentiles become a property of the grid.
+    """
     values = parameter_values(_config(), 'ismip6')
 
     assert values[0] == pytest.approx(250.0)
-    assert values[-1] == pytest.approx(30000.0)
+    assert values[-1] == pytest.approx(50000.0)
 
 
 def test_parameter_values_rejects_an_unknown_form():
