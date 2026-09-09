@@ -61,6 +61,27 @@ REGION_KEYS = (
 EN4_BIAS_CORRECTIONS = {"g10", "l09", "c13", "c14", "unknown"}
 DATE_RE = re.compile(r"(?<!\d)(\d{4})(\d{2})(?!\d)")
 
+MONTH_ABBR = (
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+)
+
+
+def season_index(month: int, seasons_per_year: int) -> int:
+    """Zero-based season for a 1-based calendar month.
+
+    Months are partitioned into ``seasons_per_year`` equal blocks, e.g. with
+    four seasons: Jan-Mar=0, Apr-Jun=1, Jul-Sep=2, Oct-Dec=3.
+    """
+    return (month - 1) // (12 // seasons_per_year)
+
+
+def season_label(season: int, seasons_per_year: int) -> str:
+    months_per_season = 12 // seasons_per_year
+    start = season * months_per_season
+    end = start + months_per_season - 1
+    return f"{MONTH_ABBR[start]}-{MONTH_ABBR[end]}"
+
 
 def require_xarray():
     """Import xarray late so mathematical unit tests need no NetCDF stack."""
@@ -122,6 +143,7 @@ class Config:
     forcing_variable: str
     overwrite: bool
     output_years_per_file: int
+    seasons_per_year: int
 
     @property
     def calibrate_delta_t(self) -> bool:
@@ -258,6 +280,10 @@ class Config:
                 overrides.get("output_years_per_file") or
                 raw.get("output_years_per_file", 10)
             ),
+            seasons_per_year=int(
+                overrides.get("seasons_per_year") or
+                raw.get("seasons_per_year", 4)
+            ),
         )
         cfg.validate()
         return cfg
@@ -288,6 +314,11 @@ class Config:
             raise ValueError("gamma0_m_per_yr must be positive")
         if self.output_years_per_file < 1:
             raise ValueError("output_years_per_file must be at least 1")
+        if self.seasons_per_year < 1 or 12 % self.seasons_per_year != 0:
+            raise ValueError(
+                "seasons_per_year must be a positive divisor of 12 "
+                "(1, 2, 3, 4, 6, or 12)"
+            )
         if self.en4_bias_correction == "unknown":
             warnings.warn(
                 "EN4 bias correction is unknown. Processing will continue "
@@ -325,6 +356,13 @@ class RegionalProfiles:
     freezing_temperature_degC: np.ndarray
     thermal_forcing_degC: np.ndarray
     output_thermal_forcing_degC: np.ndarray
+    seasons_per_year: int
+    season_labels: tuple
+    season_of_month: np.ndarray
+    seasonal_temperature_degC: np.ndarray
+    seasonal_salinity: np.ndarray
+    seasonal_thermal_forcing_degC: np.ndarray
+    seasonal_output_thermal_forcing_degC: np.ndarray
     valid_gridpoint_counts: np.ndarray
     temperature_observation_influence: np.ndarray
     salinity_observation_influence: np.ndarray
@@ -967,6 +1005,57 @@ def build_regional_profiles(
         ]
     )
 
+    # Seasonally-varying vertical structure: group the monthly profiles into
+    # seasons_per_year equal calendar blocks and average within each block, so
+    # strong upper-ocean seasonality is preserved rather than smeared into one
+    # annual mean.
+    n_seasons = cfg.seasons_per_year
+    n_source = source_z.size
+    season_of_month = np.array(
+        [season_index(int(date[5:7]), n_seasons) for date in dates]
+    )
+    seasonal_temp = np.full(
+        (n_seasons, len(REGION_NAMES), n_source), np.nan
+    )
+    seasonal_sal = np.full_like(seasonal_temp, np.nan)
+    seasonal_tf = np.full_like(seasonal_temp, np.nan)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=RuntimeWarning)
+        for season in range(n_seasons):
+            members = np.flatnonzero(season_of_month == season)
+            if members.size == 0:
+                raise ValueError(
+                    f"No EN4 months fall in season "
+                    f"{season_label(season, n_seasons)}; cannot build a "
+                    "seasonal profile"
+                )
+            seasonal_temp[season] = np.nanmean(
+                month_temp_array[members], axis=0
+            )
+            seasonal_sal[season] = np.nanmean(
+                month_sal_array[members], axis=0
+            )
+            seasonal_tf[season] = np.nanmean(
+                month_tf_array[members], axis=0
+            )
+    seasonal_output_tf = np.stack(
+        [
+            np.vstack(
+                [
+                    interpolate_profile(
+                        source_z, seasonal_tf[season, region],
+                        cfg.ocean_levels_m
+                    )
+                    for region in range(len(REGION_NAMES))
+                ]
+            )
+            for season in range(n_seasons)
+        ]
+    )
+    season_labels = tuple(
+        season_label(season, n_seasons) for season in range(n_seasons)
+    )
+
     return RegionalProfiles(
         source_z_m=source_z,
         output_z_m=cfg.ocean_levels_m,
@@ -979,6 +1068,13 @@ def build_regional_profiles(
         freezing_temperature_degC=mean_freeze,
         thermal_forcing_degC=mean_tf,
         output_thermal_forcing_degC=output_tf,
+        seasons_per_year=n_seasons,
+        season_labels=season_labels,
+        season_of_month=season_of_month,
+        seasonal_temperature_degC=seasonal_temp,
+        seasonal_salinity=seasonal_sal,
+        seasonal_thermal_forcing_degC=seasonal_tf,
+        seasonal_output_thermal_forcing_degC=seasonal_output_tf,
         valid_gridpoint_counts=np.asarray(monthly_counts),
         temperature_observation_influence=np.asarray(monthly_temp_influence),
         salinity_observation_influence=np.asarray(monthly_sal_influence),
@@ -999,6 +1095,15 @@ def year_from_xtime(value: str) -> int:
     match = re.match(r"\s*(\d{4})", value)
     if match is None:
         raise ValueError(f"Could not parse year from xtime value {value!r}")
+    return int(match.group(1))
+
+
+def month_from_xtime(value: str) -> int:
+    match = re.match(r"\s*\d{4}-(\d{2})", value)
+    if match is None:
+        raise ValueError(
+            f"Could not parse month from xtime value {value!r}"
+        )
     return int(match.group(1))
 
 
@@ -1045,13 +1150,25 @@ def calibrate_regional_delta_t(
         cfg.minimum_ice_thickness_m,
     )
     anchor = np.clip(mesh.bed, -cfg.source_max_depth_m, 0.0)
-    base_at_anchor = profiles_at_cell_depths(
-        profiles.output_thermal_forcing_degC, cfg.ocean_levels_m, basin_ids,
-        anchor
+    # Seasonal base profiles at the effective seafloor (anchor) and the ice
+    # draft; the offset uses whichever season each calibration month is in.
+    seasonal_out = profiles.seasonal_output_thermal_forcing_degC
+    n_seasons = seasonal_out.shape[0]
+    base_at_anchor_seasonal = np.stack(
+        [
+            profiles_at_cell_depths(
+                seasonal_out[season], cfg.ocean_levels_m, basin_ids, anchor
+            )
+            for season in range(n_seasons)
+        ]
     )
-    base_at_draft = profiles_at_cell_depths(
-        profiles.output_thermal_forcing_degC, cfg.ocean_levels_m, basin_ids,
-        draft
+    base_at_draft_seasonal = np.stack(
+        [
+            profiles_at_cell_depths(
+                seasonal_out[season], cfg.ocean_levels_m, basin_ids, draft
+            )
+            for season in range(n_seasons)
+        ]
     )
 
     floating_counts = np.asarray(
@@ -1086,8 +1203,11 @@ def calibrate_regional_delta_t(
             forcing = _array_with_nan(
                 forcing_var.isel(Time=int(time_index)).values
             )
-            offset = forcing - base_at_anchor
-            tf_draft = base_at_draft + offset
+            season = season_index(
+                month_from_xtime(times[time_index]), n_seasons
+            )
+            offset = forcing - base_at_anchor_seasonal[season]
+            tf_draft = base_at_draft_seasonal[season] + offset
             for region in range(len(REGION_NAMES)):
                 if region in empty_regions:
                     continue
@@ -1355,6 +1475,7 @@ def _write_forcing_chunk(
             "title": "Regional three-dimensional Greenland ocean thermal "
             "forcing for MALI",
             "source_2d_forcing": str(cfg.forcing_2d_file),
+            "seasonal_vertical_structure": f"{cfg.seasons_per_year} seasons",
             "melt_params_file": str(cfg.melt_params_file),
             "source_en4_version": cfg.en4_version,
             "source_en4_bias_correction": cfg.en4_bias_correction,
@@ -1436,6 +1557,7 @@ def write_output(
     xr = require_xarray()
     try:
         import dask
+        import dask.array as darray
     except ImportError as exc:  # pragma: no cover - environment dependent
         raise RuntimeError(
             "Dask is required to construct and stream the multi-gigabyte "
@@ -1444,11 +1566,24 @@ def write_output(
     cfg.output_file.parent.mkdir(parents=True, exist_ok=True)
 
     anchor = np.clip(mesh.bed, -cfg.source_max_depth_m, 0.0)
-    base_at_anchor = profiles_at_cell_depths(
-        profiles.output_thermal_forcing_degC, cfg.ocean_levels_m, basin_ids,
-        anchor
+    # Per-season vertical structure of the column relative to the anchor. The
+    # 2-D forcing sets the value at the anchor each month, so this delta plus
+    # the 2-D forcing reconstructs the full column; the season used varies
+    # with each output month.
+    seasonal_out = profiles.seasonal_output_thermal_forcing_degC
+    n_seasons = seasonal_out.shape[0]
+    base_by_cell_seasonal = seasonal_out[:, basin_ids - 1, :]
+    base_at_anchor_seasonal = np.stack(
+        [
+            profiles_at_cell_depths(
+                seasonal_out[season], cfg.ocean_levels_m, basin_ids, anchor
+            )
+            for season in range(n_seasons)
+        ]
     )
-    base_by_cell = profiles.output_thermal_forcing_degC[basin_ids - 1, :]
+    delta_seasonal = (
+        base_by_cell_seasonal - base_at_anchor_seasonal[:, :, None]
+    ).astype(np.float32)
 
     with xr.open_dataset(
         cfg.forcing_2d_file,
@@ -1460,6 +1595,9 @@ def write_output(
         forcing_var = validate_forcing_schema(source, cfg, mesh.bed.size)
         times = forcing_times(source)
         years = np.asarray([year_from_xtime(value) for value in times])
+        season_of_time = np.asarray(
+            [season_index(month_from_xtime(t), n_seasons) for t in times]
+        )
         # Fail before initiating a multi-gigabyte write if any source value
         # is absent. This reduction stays lazy until compute() and does not
         # load the full forcing array into memory.
@@ -1473,23 +1611,20 @@ def write_output(
                 "building MALI forcing"
             )
 
-        cell_coord = np.arange(mesh.bed.size, dtype=np.int32)
-        layer_coord = np.arange(cfg.ocean_levels_m.size, dtype=np.int32)
-        base_cells = xr.DataArray(
-            base_by_cell.astype(np.float32),
-            dims=("nCells", "nISMIP6OceanLayers"),
-            coords={
-                "nCells": cell_coord,
-                "nISMIP6OceanLayers": layer_coord,
-            },
+        delta_by_season = xr.DataArray(
+            darray.from_array(
+                delta_seasonal,
+                chunks=(1, mesh.bed.size, cfg.ocean_levels_m.size),
+            ),
+            dims=("season", "nCells", "nISMIP6OceanLayers"),
         )
-        anchor_cells = xr.DataArray(
-            base_at_anchor.astype(np.float32),
-            dims=("nCells",),
-            coords={"nCells": cell_coord},
+        # Gather each month's seasonal column shape; stays lazy so the write
+        # streams record by record.
+        delta_by_time = delta_by_season.isel(
+            season=xr.DataArray(season_of_time, dims="Time")
         )
         forcing_3d = (
-            base_cells + (forcing_var.astype(np.float32) - anchor_cells)
+            forcing_var.astype(np.float32) + delta_by_time
         ).transpose("Time", "nCells", "nISMIP6OceanLayers").assign_attrs(
             units="C",
             long_name="3D thermal forcing for nonlocal ISMIP6 ice-shelf "
@@ -1539,6 +1674,7 @@ def write_diagnostics(
         writer = csv.writer(handle)
         writer.writerow(
             [
+                "season",
                 "region_id",
                 "region_key",
                 "region_name",
@@ -1549,22 +1685,39 @@ def write_diagnostics(
                 "thermal_forcing_degC",
             ]
         )
-        for region in range(len(REGION_NAMES)):
-            for level, z in enumerate(profiles.source_z_m):
-                writer.writerow(
-                    [
-                        region + 1,
-                        REGION_KEYS[region],
-                        REGION_NAMES[region],
-                        float(z),
-                        float(profiles.temperature_degC[region, level]),
-                        float(profiles.salinity[region, level]),
-                        float(
-                            profiles.freezing_temperature_degC[region, level]
-                        ),
-                        float(profiles.thermal_forcing_degC[region, level]),
-                    ]
-                )
+        for season in range(profiles.seasons_per_year):
+            season_freeze = freezing_temperature(
+                profiles.seasonal_salinity[season],
+                profiles.source_z_m[None, :],
+                cfg.freezing_a, cfg.freezing_b, cfg.freezing_c,
+            )
+            for region in range(len(REGION_NAMES)):
+                for level, z in enumerate(profiles.source_z_m):
+                    writer.writerow(
+                        [
+                            profiles.season_labels[season],
+                            region + 1,
+                            REGION_KEYS[region],
+                            REGION_NAMES[region],
+                            float(z),
+                            float(
+                                profiles.seasonal_temperature_degC[
+                                    season, region, level
+                                ]
+                            ),
+                            float(
+                                profiles.seasonal_salinity[
+                                    season, region, level
+                                ]
+                            ),
+                            float(season_freeze[region, level]),
+                            float(
+                                profiles.seasonal_thermal_forcing_degC[
+                                    season, region, level
+                                ]
+                            ),
+                        ]
+                    )
 
     with (directory / "en4_coverage.csv").open(
         "w", newline="", encoding="utf-8"
@@ -1712,14 +1865,18 @@ def write_diagnostics(
             .isel(Time=time_index)
             .values
         )
+    rep_season = season_index(
+        month_from_xtime(times[time_index]), profiles.seasons_per_year
+    )
+    seasonal_out = profiles.seasonal_output_thermal_forcing_degC[rep_season]
     anchor = np.clip(mesh.bed, -cfg.source_max_depth_m, 0.0)
     base_at_anchor = profiles_at_cell_depths(
-        profiles.output_thermal_forcing_degC,
+        seasonal_out,
         cfg.ocean_levels_m,
         basin_ids,
         anchor,
     )
-    base_by_cell = profiles.output_thermal_forcing_degC[basin_ids - 1]
+    base_by_cell = seasonal_out[basin_ids - 1]
     offset = forcing_2d - base_at_anchor
     forcing_3d = base_by_cell + offset[:, None]
     reconstructed_anchor = base_at_anchor + offset
@@ -1732,6 +1889,7 @@ def write_diagnostics(
         json.dump(
             {
                 "representative_time": times[time_index],
+                "representative_season": profiles.season_labels[rep_season],
                 "maximum_absolute_anchor_error_degC": max_anchor_error,
                 "effective_anchor_depth_range_m": [
                     float(np.nanmin(anchor)),
@@ -1774,7 +1932,10 @@ def write_diagnostics(
         ax.set_xlabel("Longitude")
         ax.set_ylabel("Latitude")
         fig.colorbar(scatter, ax=ax, label="Thermal forcing (°C)")
-    fig.suptitle(f"Translated 3-D forcing: {times[time_index]}")
+    fig.suptitle(
+        f"Translated 3-D forcing: {times[time_index]} "
+        f"(season {profiles.season_labels[rep_season]})"
+    )
     fig.tight_layout()
     fig.savefig(
         directory / "thermal_forcing_at_representative_ocean_levels.png",
@@ -1782,50 +1943,67 @@ def write_diagnostics(
     )
     plt.close(fig)
 
+    season_colors = plt.get_cmap("turbo")(
+        np.linspace(0.05, 0.95, profiles.seasons_per_year)
+    )
     for region in range(len(REGION_NAMES)):
         fig, axes = plt.subplots(1, 2, figsize=(10, 7), sharey=True)
-        for monthly in profiles.monthly_temperature_degC[:, region, :]:
+        # Faint monthly profiles, colored by season, behind the seasonal
+        # means so the seasonality that motivates the seasonal structure is
+        # visible.
+        for entry, monthly in enumerate(
+            profiles.monthly_temperature_degC[:, region, :]
+        ):
             axes[0].plot(
-                monthly, profiles.source_z_m, color="tab:blue", alpha=0.08,
-                linewidth=0.5
+                monthly, profiles.source_z_m,
+                color=season_colors[profiles.season_of_month[entry]],
+                alpha=0.06, linewidth=0.5
             )
-        axes[0].plot(
-            profiles.temperature_degC[region],
-            profiles.source_z_m,
-            color="black",
-            linewidth=2,
-            label="Monthly mean climatology",
-        )
-        selected_temp = interpolate_profile(
-            profiles.source_z_m, profiles.temperature_degC[region],
-            profiles.output_z_m
-        )
-        axes[0].scatter(
-            selected_temp, profiles.output_z_m, color="black", marker="*",
-            zorder=3, label="MALI levels"
-        )
+        for season in range(profiles.seasons_per_year):
+            axes[0].plot(
+                profiles.seasonal_temperature_degC[season, region],
+                profiles.source_z_m,
+                color=season_colors[season],
+                linewidth=2,
+                label=profiles.season_labels[season],
+            )
+            selected_temp = interpolate_profile(
+                profiles.source_z_m,
+                profiles.seasonal_temperature_degC[season, region],
+                profiles.output_z_m,
+            )
+            axes[0].scatter(
+                selected_temp, profiles.output_z_m,
+                color=season_colors[season], marker="*", zorder=3,
+            )
         axes[0].set_xlabel("Potential temperature (°C)")
         axes[0].set_ylabel("Elevation (m)")
-        axes[0].legend(loc="best", fontsize=8)
+        axes[0].legend(loc="best", fontsize=8, title="season / MALI levels")
 
-        for monthly in profiles.monthly_thermal_forcing_degC[:, region, :]:
+        for entry, monthly in enumerate(
+            profiles.monthly_thermal_forcing_degC[:, region, :]
+        ):
             axes[1].plot(
-                monthly, profiles.source_z_m, color="tab:red", alpha=0.08,
-                linewidth=0.5
+                monthly, profiles.source_z_m,
+                color=season_colors[profiles.season_of_month[entry]],
+                alpha=0.06, linewidth=0.5
             )
-        axes[1].plot(
-            profiles.thermal_forcing_degC[region],
-            profiles.source_z_m,
-            color="black",
-            linewidth=2,
-        )
-        axes[1].scatter(
-            profiles.output_thermal_forcing_degC[region],
-            profiles.output_z_m,
-            color="black",
-            marker="*",
-            zorder=3,
-        )
+        for season in range(profiles.seasons_per_year):
+            axes[1].plot(
+                profiles.seasonal_thermal_forcing_degC[season, region],
+                profiles.source_z_m,
+                color=season_colors[season],
+                linewidth=2,
+            )
+            axes[1].scatter(
+                profiles.seasonal_output_thermal_forcing_degC[
+                    season, region
+                ],
+                profiles.output_z_m,
+                color=season_colors[season],
+                marker="*",
+                zorder=3,
+            )
         axes[1].set_xlabel("Thermal forcing (°C)")
         for ax in axes:
             ax.grid(alpha=0.3)
