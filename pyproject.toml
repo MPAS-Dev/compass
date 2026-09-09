@@ -95,6 +95,12 @@ warn_redundant_casts = true
 warn_unused_configs = true
 
 [tool.isort]
+# a verbatim copy of the upstream ISMIP7 parameter-selection toolbox; it must
+# not be modified, so its imports are not sorted.  See PROVENANCE.md alongside
+# it.
+extend_skip = [
+    "compass/landice/tests/ismip7_calibration/toolbox/parameter_selection_toolbox.py",
+]
 multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 0
