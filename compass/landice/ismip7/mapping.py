@@ -54,9 +54,7 @@ def build_mapping_file(config, logger, ismip7_grid_file,
 
     # Determine projection from parameter or config
     if projection is None:
-        from compass.landice.tests.ismip7_forcing.ice_sheet_params import (
-            get_params,
-        )
+        from compass.landice.ismip7.ice_sheet_params import get_params
         projection = get_params(config)['projection']
 
     ismip7_projection = projection

@@ -18,6 +18,20 @@ Utilities
 
    calculate_decomp_core_pair
 
+ISMIP7 framework
+^^^^^^^^^^^^^^^^
+
+.. currentmodule:: compass.landice.ismip7
+
+.. autosummary::
+   :toctree: generated/
+
+   ice_sheet_params.get_params
+   mapping.build_mapping_file
+   remap.extrapolate_source
+   remap.open_rename_and_trim
+   remap.add_xtime_and_write
+
 Test Groups
 ^^^^^^^^^^^
 
@@ -383,9 +397,6 @@ ismip7_forcing
 
    Ismip7Forcing
    configure.configure
-   ice_sheet_params.get_params
-   create_mapfile.build_mapping_file
-   remap_utils.extrapolate_source
 
    atmosphere.Atmosphere
    atmosphere.Atmosphere.configure
@@ -413,8 +424,6 @@ ismip7_forcing
 
    fracture.Fracture
    fracture.Fracture.configure
-   fracture.remap_utils.open_rename_and_trim
-   fracture.remap_utils.add_xtime_and_write
    fracture.process_excess_melt.ProcessExcessMelt
    fracture.process_excess_melt.ProcessExcessMelt.setup
    fracture.process_excess_melt.ProcessExcessMelt.run
