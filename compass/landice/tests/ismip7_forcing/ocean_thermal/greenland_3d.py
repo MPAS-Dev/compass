@@ -1823,8 +1823,11 @@ def write_diagnostics(
     colors = plt.get_cmap("tab10")(np.arange(len(REGION_NAMES)))
     fig, ax = plt.subplots(figsize=(8, 8))
     mesh_stride = max(1, mesh.lat_deg.size // 100_000)
+    # mapped_lons is wrapped to [-180, 180]; put the mesh on the same
+    # convention so the two overlay instead of landing on opposite sides.
+    mesh_lon_plot = (mesh.lon_deg + 180.0) % 360.0 - 180.0
     ax.scatter(
-        mesh.lon_deg[::mesh_stride],
+        mesh_lon_plot[::mesh_stride],
         mesh.lat_deg[::mesh_stride],
         c=colors[basin_ids[::mesh_stride] - 1],
         s=0.15,
@@ -1912,6 +1915,7 @@ def write_diagnostics(
         nrows, ncols, figsize=(7 * ncols, 6 * nrows), squeeze=False
     )
     plot_stride = max(1, mesh.lat_deg.size // 150_000)
+    mesh_lon_plot = (mesh.lon_deg + 180.0) % 360.0 - 180.0
     color_limits = np.nanpercentile(forcing_3d[::plot_stride], [2.0, 98.0])
     for plot_index, ax in enumerate(axes.ravel()):
         if plot_index >= plotted_levels.size:
@@ -1919,7 +1923,7 @@ def write_diagnostics(
             continue
         level = int(plotted_levels[plot_index])
         scatter = ax.scatter(
-            mesh.lon_deg[::plot_stride],
+            mesh_lon_plot[::plot_stride],
             mesh.lat_deg[::plot_stride],
             c=forcing_3d[::plot_stride, level],
             s=0.5,
