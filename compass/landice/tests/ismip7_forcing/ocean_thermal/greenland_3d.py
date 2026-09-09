@@ -1861,9 +1861,78 @@ def print_summary(
         )
 
 
+# A near-floor TF gradient above this magnitude means clamping the anchor to
+# source_max_depth_m biases a sloped column rather than a flat one.
+_BOTTOM_GRADIENT_THRESHOLD_C_PER_M = 5.0e-4
+
+
+def warn_if_seafloor_below_max_depth(
+    cfg: Config,
+    mesh: MeshData,
+    basin_ids: np.ndarray,
+    profiles: RegionalProfiles,
+    logger,
+) -> None:
+    """Warn when marine ice sits below the clamped anchor depth.
+
+    Where the seafloor is deeper than ``source_max_depth_m`` the anchor is
+    clamped, so TF_3d matches TF_2d at ``source_max_depth_m`` rather than the
+    true seafloor. If the regional profile still has a vertical gradient at
+    that depth, the per-cell offset (and thus the whole column) is biased.
+    """
+    max_depth = cfg.source_max_depth_m
+    marine_ice = (
+        (mesh.thickness > cfg.minimum_ice_thickness_m) & (mesh.bed < 0.0)
+    )
+    deep = marine_ice & (mesh.bed < -max_depth)
+    n_deep = int(np.count_nonzero(deep))
+    if n_deep == 0:
+        return
+    marine_area = float(np.sum(mesh.area[marine_ice]))
+    deep_area = float(np.sum(mesh.area[deep]))
+    fraction = deep_area / marine_area if marine_area > 0.0 else 0.0
+    deepest = float(-np.min(mesh.bed[deep]))
+
+    # Near-floor gradient (degC/m) from the deepest two output levels tells
+    # us which affected regions still slope (biased) versus are flat (benign).
+    z = cfg.ocean_levels_m
+    tf = profiles.output_thermal_forcing_degC
+    dz = z[-1] - z[-2]
+    gradients = (tf[:, -1] - tf[:, -2]) / dz
+    sloped_regions = sorted({
+        REGION_KEYS[int(region) - 1]
+        for region in np.unique(basin_ids[deep])
+        if abs(gradients[int(region) - 1]) >=
+        _BOTTOM_GRADIENT_THRESHOLD_C_PER_M
+    })
+
+    message = (
+        f"{n_deep} marine ice cells ({100.0 * fraction:.1f}% of marine-ice "
+        f"area; deepest {deepest:.0f} m) have seafloor below "
+        f"source_max_depth_m={max_depth:g} m, so their anchor is clamped to "
+        f"{max_depth:g} m and TF_3d matches TF_2d there rather than at the "
+        "true seafloor."
+    )
+    if sloped_regions:
+        message += (
+            " The regional profile still slopes at that depth in: "
+            f"{', '.join(sloped_regions)}; the clamp biases the whole "
+            "reconstructed column for those cells. Consider increasing "
+            "ocean_vertical_grid.bottom_m and source_max_depth_m together to "
+            "cover the deepest seafloor."
+        )
+    else:
+        message += (
+            " The regional profile is effectively flat at that depth, so the "
+            "clamp is benign here."
+        )
+    logger.warning(message)
+
+
 def run(cfg: Config, logger, prepare_only: bool = False) -> None:
     mesh, basin_ids = load_mesh_and_basins(cfg)
     profiles = build_regional_profiles(cfg, mesh, basin_ids, logger)
+    warn_if_seafloor_below_max_depth(cfg, mesh, basin_ids, profiles, logger)
     if cfg.calibrate_delta_t:
         delta_t, achieved, calibration_monthly_tf = (
             calibrate_regional_delta_t(cfg, mesh, basin_ids, profiles)
