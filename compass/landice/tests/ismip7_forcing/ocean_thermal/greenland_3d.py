@@ -1140,9 +1140,11 @@ def write_melt_params(
     output = cfg.melt_params_file
     output.parent.mkdir(parents=True, exist_ok=True)
     if output.exists() and not cfg.overwrite:
-        raise FileExistsError(
-            f"Melt-parameters output exists and overwrite=false: {output}"
+        logger.info(
+            f"Melt-parameters file already exists; skipping (set "
+            f"overwrite=true to regenerate): {output}"
         )
+        return
     temporary = output.with_name(output.name + ".partial")
     if temporary.exists():
         raise FileExistsError(
@@ -1206,6 +1208,7 @@ def write_melt_params(
         )
         target.close()
         os.replace(temporary, output)
+        logger.info(f"Created {output}")
     except Exception:
         logger.warning(
             f"Melt-parameters output was not finalized; partial file, if "
@@ -1300,9 +1303,11 @@ def _write_forcing_chunk(
 ) -> None:
     xr = require_xarray()
     if output_path.exists() and not cfg.overwrite:
-        raise FileExistsError(
-            f"Output exists and overwrite=false: {output_path}"
+        logger.info(
+            f"Forcing chunk already exists; skipping (set overwrite=true to "
+            f"regenerate): {output_path}"
         )
+        return
     temporary = output_path.with_name(output_path.name + ".partial")
     if temporary.exists():
         raise FileExistsError(
@@ -1839,7 +1844,6 @@ def run(cfg: Config, logger, prepare_only: bool = False) -> None:
             calibrate_regional_delta_t(cfg, mesh, basin_ids, profiles)
         )
         write_melt_params(cfg, basin_ids, delta_t, logger)
-        logger.info(f"Created {cfg.melt_params_file}")
     else:
         logger.info(
             f"scenario={cfg.scenario!r} is not OCX; reusing calibrated "
