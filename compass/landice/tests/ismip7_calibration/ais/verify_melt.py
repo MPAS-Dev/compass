@@ -159,19 +159,17 @@ def _check_interpolation(fields, logger):
         bed = bed.values
 
     floating = fields['floating'].values
-    expected = melt_model.interpolate_to_draft(tf_3d, z_ocean, draft, bed)
+    expected = melt_model.interpolate_to_draft(tf_3d, z_ocean, draft, bed,
+                                               freezing_correction=True)
     actual = fields['tf_draft'].values
 
-    # MALI applies a freezing-point depth correction below the deepest layer
-    # centre that the reference here does not, so those cells are excluded
-    deepest = z_ocean[-1]
-    interior = floating & (draft > deepest)
-    difference = np.abs(actual[interior] - expected[interior])
+    # all four of MALI's code paths are covered, so nothing is excluded
+    difference = np.abs(actual[floating] - expected[floating])
     largest = float(np.nanmax(difference)) if difference.size else 0.0
 
     logger.info('')
     logger.info('Vertical interpolation of thermal forcing:')
-    logger.info(f'  cells compared                {int(interior.sum())}')
+    logger.info(f'  cells compared                {int(floating.sum())}')
     logger.info(f'  max |difference|              {largest:.3e} K')
     return largest
 

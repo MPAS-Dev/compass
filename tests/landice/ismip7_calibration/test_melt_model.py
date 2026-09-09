@@ -12,6 +12,7 @@ import pytest
 import xarray as xr
 
 from compass.landice.tests.ismip7_calibration.ais.melt_model import (
+    FREEZING_TEMP_DEPTH_DEPENDENCE,
     basin_mean_tf,
     initial_draft,
     integrate_by_basin,
@@ -92,6 +93,60 @@ def test_interpolation_handles_many_cells_independently():
 
     assert result[0] == pytest.approx(1.0)
     assert result[1] == pytest.approx(3.0)
+
+
+def test_freezing_correction_applies_below_the_deepest_centre():
+    """
+    MALI corrects the thermal forcing for the depth dependence of the
+    freezing point where it extrapolates downward from the deepest layer.
+    """
+    draft = -300.0
+    result = interpolate_to_draft(_field([1.0, 2.0, 3.0]), Z_OCEAN,
+                                  np.array([draft]), np.array([-500.0]),
+                                  freezing_correction=True)
+
+    expected = 3.0 - (Z_OCEAN[-1] - draft) * FREEZING_TEMP_DEPTH_DEPENDENCE
+    assert result[0] == pytest.approx(expected)
+
+
+def test_freezing_correction_applies_below_the_bed():
+    """
+    The same correction applies in the other downward-extrapolating branch,
+    where the layer below the draft is beneath the bed.  Omitting it here
+    was a real bug the verification step caught.
+    """
+    draft = -60.0
+    result = interpolate_to_draft(_field([1.0, 2.0, 3.0]), Z_OCEAN,
+                                  np.array([draft]), np.array([-80.0]),
+                                  freezing_correction=True)
+
+    expected = 1.0 - (Z_OCEAN[0] - draft) * FREEZING_TEMP_DEPTH_DEPENDENCE
+    assert result[0] == pytest.approx(expected)
+
+
+def test_freezing_correction_does_not_apply_when_interpolating():
+    """
+    Between two layer centres there is no extrapolation, so the correction
+    must not be applied.
+    """
+    plain = interpolate_to_draft(_field([1.0, 2.0, 3.0]), Z_OCEAN,
+                                 np.array([-60.0]), np.array([-500.0]))
+    corrected = interpolate_to_draft(_field([1.0, 2.0, 3.0]), Z_OCEAN,
+                                     np.array([-60.0]), np.array([-500.0]),
+                                     freezing_correction=True)
+
+    assert plain[0] == pytest.approx(corrected[0])
+
+
+def test_freezing_correction_does_not_apply_above_the_shallowest_centre():
+    """The draft is above the layer, so there is nothing to correct."""
+    plain = interpolate_to_draft(_field([1.0, 2.0, 3.0]), Z_OCEAN,
+                                 np.array([-10.0]), np.array([-500.0]))
+    corrected = interpolate_to_draft(_field([1.0, 2.0, 3.0]), Z_OCEAN,
+                                     np.array([-10.0]), np.array([-500.0]),
+                                     freezing_correction=True)
+
+    assert plain[0] == pytest.approx(corrected[0])
 
 
 def test_basin_mean_is_area_weighted():

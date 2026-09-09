@@ -6,6 +6,7 @@ import numpy as np
 import xarray as xr
 from mpas_tools.io import write_netcdf
 
+from compass.landice.tests.ismip7_calibration.ais import melt_model
 from compass.landice.tests.ismip7_calibration.terms import (
     average_by_group,
     integrate_by_group,
@@ -14,14 +15,6 @@ from compass.step import Step
 
 #: cell dimension of an MPAS mesh
 CELL_DIMS = ('nCells',)
-
-#: seconds in a year, matching MALI's ``scyr`` and its noleap calendar.
-#: The protocol's reference implementation uses a 365.2422-day year instead,
-#: a 0.066% difference; each implementation must use its own.
-SECONDS_PER_YEAR = 31536000.0
-
-#: bit of ``cellMask`` marking floating ice
-FLOATING_MASK_BIT = 4
 
 
 class Aggregate(Step):
@@ -140,17 +133,16 @@ def _melt_from_run(filename, reference):
     """
     Read one melt field, in kg m-2 yr-1 per unit parameter.
 
-    MALI writes ``floatingBasalMassBal`` in kg m-2 s-1, negative for melting,
-    so the sign is flipped and the rate converted to a year.  Dividing by the
-    reference parameter the run used gives melt at a unit parameter, which is
-    exact because melt is proportional to the parameter.
+    Dividing by the reference parameter the run used gives melt at a unit
+    parameter, which is exact because melt is proportional to the parameter.
+
+    The contributing cells are the ones MALI actually computed melt for --
+    floating *and* connected to the open ocean.  Including the rest would
+    not change an integral, since their melt is zero, but it would dilute
+    the area-weighted basin means that J3 is built from.
     """
-    with xr.open_dataset(filename) as ds:
-        bmb = ds['floatingBasalMassBal'].isel(Time=0)
-        cell_mask = ds['cellMask'].isel(Time=0)
-        melt = -bmb * SECONDS_PER_YEAR / reference
-        floating = (cell_mask & FLOATING_MASK_BIT) > 0
-        return melt.compute(), floating.compute()
+    fields = melt_model.read_run(filename)
+    return fields['melt'] / reference, fields['floating']
 
 
 def _aggregate_form(states, melt_form, reference, static, logger):
@@ -228,9 +220,7 @@ def _report_shelf_area(static, logger):
     modelled_file = None
     for name in ('melt_ismip7_climatology.nc', 'melt_ismip6_climatology.nc'):
         try:
-            with xr.open_dataset(name) as ds:
-                modelled = ((ds['cellMask'].isel(Time=0) &
-                             FLOATING_MASK_BIT) > 0).compute()
+            modelled = melt_model.read_run(name)['floating']
             modelled_file = name
             break
         except FileNotFoundError:

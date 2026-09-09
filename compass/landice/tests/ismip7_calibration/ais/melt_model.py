@@ -26,6 +26,10 @@ FLOATING_MASK_BIT = 4
 #: seconds in a year, matching MALI's ``scyr`` and its noleap calendar
 SECONDS_PER_YEAR = 31536000.0
 
+#: rate of change of the freezing temperature of seawater with depth,
+#: K m-1, matching MALI's ``oceanFreezingTempDepthDependence``
+FREEZING_TEMP_DEPTH_DEPENDENCE = -7.53e-4
+
 
 def read_run(filename):
     """
@@ -48,10 +52,16 @@ def read_run(filename):
     with xr.open_dataset(filename) as ds:
         bmb = ds['floatingBasalMassBal'].isel(Time=0)
         cell_mask = ds['cellMask'].isel(Time=0)
+        connected = ds['connectedOceanMask'].isel(Time=0)
+        # MALI computes melt only where the ice is floating *and* the cell
+        # is connected to the open ocean; elsewhere it leaves TFdraft and
+        # the melt at zero, so those cells must be excluded from any
+        # comparison against an independent implementation
         fields = dict(
             melt=(-bmb * SECONDS_PER_YEAR).compute(),
             tf_draft=ds['ismip6shelfMelt_TFdraft'].isel(Time=0).compute(),
-            floating=((cell_mask & FLOATING_MASK_BIT) > 0).compute(),
+            floating=(((cell_mask & FLOATING_MASK_BIT) > 0) &
+                      (connected == 1)).compute(),
             basin=ds['ismip6shelfMelt_basin'].compute(),
             delta_t=ds['ismip6shelfMelt_deltaT'].compute(),
             area=ds['areaCell'].compute())
@@ -219,7 +229,8 @@ def integrate_by_basin(melt, area, floating, basin):
     return weighted.groupby(basin.rename('basin')).sum() / 1.0e12
 
 
-def interpolate_to_draft(field_3d, z_ocean, draft, bed):
+def interpolate_to_draft(field_3d, z_ocean, draft, bed,
+                         freezing_correction=False):
     """
     Interpolate a 3-D ocean field to the ice draft.
 
@@ -228,10 +239,6 @@ def interpolate_to_draft(field_3d, z_ocean, draft, bed):
     implementation.  The four cases match MALI's: above the shallowest layer
     centre, below the deepest, where the layer below the draft is beneath
     the bed, and linear interpolation between layer centres.
-
-    The freezing-point depth correction MALI applies below the deepest
-    centre is *not* applied here, so this should only be used for fields
-    where MALI does not apply it, or compared only over the interior cells.
 
     Parameters
     ----------
@@ -247,6 +254,14 @@ def interpolate_to_draft(field_3d, z_ocean, draft, bed):
     bed : numpy.ndarray
         Bed topography per cell
 
+    freezing_correction : bool, optional
+        Whether to apply the depth dependence of the freezing temperature
+        when the draft is below the layer centre being used.  MALI applies
+        it to the thermal forcing in the two branches that extrapolate
+        downward -- below the deepest layer centre, and where the layer
+        below the draft is beneath the bed -- so pass True when comparing
+        against ``ismip6shelfMelt_TFdraft``.
+
     Returns
     -------
     at_draft : numpy.ndarray
@@ -255,18 +270,31 @@ def interpolate_to_draft(field_3d, z_ocean, draft, bed):
     n_cells = field_3d.shape[0]
     at_draft = np.full(n_cells, np.nan)
     n_layers = len(z_ocean)
+    rate = FREEZING_TEMP_DEPTH_DEPENDENCE if freezing_correction else 0.0
 
     for index in range(n_cells):
         # ksup is the deepest layer centre still at or above the draft
         above = np.nonzero(z_ocean >= draft[index])[0]
         ksup = above[-1] if above.size > 0 else -1
         if ksup < 0:
+            # above the shallowest centre: take the shallowest layer, with
+            # no correction, since the draft is above it
             at_draft[index] = field_3d[index, 0]
         elif ksup == n_layers - 1:
-            at_draft[index] = field_3d[index, n_layers - 1]
+            # below the deepest centre: take the deepest layer, corrected
+            # for the freezing point at the draft
+            at_draft[index] = (
+                field_3d[index, n_layers - 1] -
+                (z_ocean[n_layers - 1] - draft[index]) * rate)
         elif z_ocean[ksup + 1] < bed[index]:
-            at_draft[index] = field_3d[index, ksup]
+            # the layer below the draft is beneath the bed, so there is no
+            # water there to interpolate into; take the layer above,
+            # corrected for the freezing point at the draft
+            at_draft[index] = (
+                field_3d[index, ksup] -
+                (z_ocean[ksup] - draft[index]) * rate)
         else:
+            # between layer centres, interpolate linearly in depth
             span = z_ocean[ksup] - z_ocean[ksup + 1]
             w_deep = (z_ocean[ksup] - draft[index]) / span
             w_shallow = (draft[index] - z_ocean[ksup + 1]) / span
