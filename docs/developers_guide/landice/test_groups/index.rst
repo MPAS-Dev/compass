@@ -20,6 +20,7 @@ Test groups
    hydro_radial
    ismip6_forcing
    ismip6_run
+   ismip7_calibration
    ismip7_forcing
    ismip7_run
    isunnguata_sermia

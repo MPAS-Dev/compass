@@ -387,6 +387,89 @@ ismip6_run
    ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.setup
    ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.run
 
+ismip7_calibration
+~~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.ismip7_calibration
+
+.. autosummary::
+   :toctree: generated/
+
+   Ismip7Calibration
+   configure.check_options
+   configure.melt_forms
+   configure.objective_options
+   configure.parameter_name
+   configure.parameter_values
+   configure.weighting
+   datasets.climatology_files
+   datasets.load_targets
+   datasets.mask_files
+   datasets.missing_files
+   datasets.ocean_states
+   objective.build_toolbox_terms
+   objective.run_optimisation
+   objective.scale_to_ensemble
+   quadratic.angle_from_sin_slope
+   quadratic.draft_slope
+   quadratic.local_quadratic_melt
+   quadratic.mean_slope
+   quadratic.nonlocal_quadratic_melt
+   quadratic.u_factor
+   terms.average_by_group
+   terms.calculate_term1
+   terms.calculate_term2
+   terms.calculate_term3
+   terms.calculate_term4
+   terms.integrate_by_group
+   terms.stack_cells
+   terms.uniform_area
+   toolbox.check_integrity
+   toolbox.file_sha256
+   toolbox.toolbox_path
+
+   replication.Replication
+   replication.Replication.configure
+   replication.Replication.validate
+   replication.replicate.Replicate
+   replication.replicate.Replicate.setup
+   replication.replicate.Replicate.run
+   replication.replicate.check_published
+
+   ais.Ais
+   ais.Ais.configure
+   ais.Ais.validate
+   ais.aggregate.Aggregate
+   ais.aggregate.Aggregate.setup
+   ais.aggregate.Aggregate.run
+   ais.aggregate.unit_aggregates
+   ais.aggregate.basin_coordinate
+   ais.calibrate.Calibrate
+   ais.calibrate.Calibrate.run
+   ais.fit_delta_t.FitDeltaT
+   ais.fit_delta_t.FitDeltaT.run
+   ais.melt_model.basin_mean_tf
+   ais.melt_model.initial_draft
+   ais.melt_model.integrate_by_basin
+   ais.melt_model.interpolate_to_draft
+   ais.melt_model.melt_from_tf
+   ais.melt_model.read_run
+   ais.remap_forcing.RemapForcing
+   ais.remap_forcing.RemapForcing.setup
+   ais.remap_forcing.RemapForcing.run
+   ais.remap_masks.RemapMasks
+   ais.remap_masks.RemapMasks.setup
+   ais.remap_masks.RemapMasks.run
+   ais.report.Report
+   ais.report.Report.run
+   ais.run_state.RunState
+   ais.run_state.RunState.setup
+   ais.run_state.RunState.runtime_setup
+   ais.run_state.RunState.run
+   ais.verify_melt.VerifyMelt
+   ais.verify_melt.VerifyMelt.setup
+   ais.verify_melt.VerifyMelt.run
+
 ismip7_forcing
 ~~~~~~~~~~~~~~
 
