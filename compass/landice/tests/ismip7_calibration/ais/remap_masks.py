@@ -7,14 +7,11 @@ import os
 import numpy as np
 import xarray as xr
 from mpas_tools.io import write_netcdf
-from pyremap import Remapper
+from mpas_tools.logging import check_call
 
+from compass.landice.ismip7.mapping import build_mapping_file
 from compass.landice.tests.ismip7_calibration import datasets
 from compass.step import Step
-
-#: EPSG:3031, the ISMIP Antarctic polar stereographic projection
-ISMIP_PROJ_STR = ('+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +k=1 '
-                  '+x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs')
 
 #: codes written to ``ismip7ShelfRegion``
 REGION_CODES = {'none': 0, 'pig': 1, 'dotson': 2}
@@ -102,10 +99,23 @@ class RemapMasks(Step):
         src_grid_file = datasets.mask_files(base_path)['basins']
 
         ds_remapped = _remap_to_mali(
-            ds_masks, src_grid_file, mali_mesh_file, mali_mesh_name,
+            config, ds_masks, src_grid_file, mali_mesh_file, mali_mesh_name,
             method, ntasks, logger)
 
         ds_out = _to_integer_masks(ds_remapped)
+
+        # The ISMIP6 non-local form reads gamma0 from this same input
+        # stream, and its Registry default is zero, which would silently
+        # zero the melt field.  The ensemble runs at a reference value that
+        # the aggregation divides out again.
+        reference_gamma0 = config.getfloat('ismip7_calibration_melt',
+                                           'reference_gamma0')
+        ds_out['ismip6shelfMelt_gamma0'] = reference_gamma0
+        ds_out['ismip6shelfMelt_gamma0'].attrs = {
+            'long_name': 'gamma0 for the ISMIP6 ice-shelf melting method',
+            'units': 'm yr^-1',
+            'note': 'a reference value only; melt is proportional to gamma0 '
+                    'and the calibration scales this away'}
 
         if region_mask_file != 'None':
             _cross_check_basins(ds_out, region_mask_file, logger)
@@ -145,27 +155,50 @@ def _load_ismip7_masks(base_path):
     return ds
 
 
-def _remap_to_mali(ds_masks, src_grid_file, mali_mesh_file, mali_mesh_name,
-                   method, ntasks, logger):
-    """Remap the ISMIP7 masks onto the MALI mesh with pyremap."""
-    src_mesh_name = f'ismip{datasets.ISMIP_RESOLUTION_KM}km'
-    mapping_file = f'map_{src_mesh_name}_to_{mali_mesh_name}_{method}.nc'
+def _remap_to_mali(config, ds_masks, src_grid_file, mali_mesh_file,
+                   mali_mesh_name, method, ntasks, logger):
+    """
+    Remap the ISMIP7 masks onto the MALI mesh.
 
-    remapper = Remapper(ntasks=ntasks, map_filename=mapping_file,
-                        method=method)
-    remapper.src_from_proj(src_grid_file, src_mesh_name,
-                           proj_str=ISMIP_PROJ_STR)
-    remapper.dst_from_mpas(mali_mesh_file, mali_mesh_name)
+    This goes through the shared
+    :py:func:`compass.landice.ismip7.mapping.build_mapping_file` and
+    ``ncremap``, the same route ``ismip7_forcing`` uses, rather than through
+    pyremap's ``Remapper``.  pyremap invokes ``mpirun`` directly, which
+    conflicts with the Slurm allocation on machines where compass launches
+    with ``srun``; ``build_mapping_file`` uses the configured
+    ``parallel_executable`` instead.
+    """
+    res = datasets.ISMIP_RESOLUTION_KM
+    mapping_file = f'map_ismip{res}km_to_{mali_mesh_name}_{method}.nc'
+    source_file = 'ismip7_masks_source.nc'
+    remapped_file = 'ismip7_masks_remapped.nc'
 
-    # build_map() is what creates the source and destination descriptors, so
-    # it has to be called even when the mapping file already exists; skipping
-    # it leaves remap_numpy() with descriptors of None.  Weight generation
-    # for nearest neighbour is cheap, so simply rebuild.
+    # the masks are assembled in memory, so write them back onto the ISMIP
+    # grid for ncremap; the source grid file supplies the x/y coordinates
+    # that the SCRIP description needs
+    with xr.open_dataset(src_grid_file) as ds_grid:
+        ds_source = ds_masks.assign_coords(x=ds_grid['x'], y=ds_grid['y'])
+    write_netcdf(ds_source, source_file)
+
     logger.info(f'Building mapping file {mapping_file}')
-    remapper.build_map(logger=logger)
+    build_mapping_file(config, logger, source_file, mapping_file,
+                       mali_mesh_file=mali_mesh_file, method_remap=method,
+                       projection='ais-bedmap2', ntasks=ntasks)
 
     logger.info('Remapping the masks onto the MALI mesh')
-    return remapper.remap_numpy(ds_masks)
+    variables = ','.join(sorted(ds_masks.data_vars))
+    check_call(['ncremap', '-i', source_file, '-o', remapped_file,
+                '-m', mapping_file, '-v', variables], logger=logger)
+
+    ds_remapped = xr.load_dataset(remapped_file)
+    if 'ncol' in ds_remapped.dims:
+        ds_remapped = ds_remapped.rename({'ncol': 'nCells'})
+
+    for path in (source_file, remapped_file):
+        if os.path.exists(path):
+            os.remove(path)
+
+    return ds_remapped
 
 
 def _to_integer_masks(ds_remapped):

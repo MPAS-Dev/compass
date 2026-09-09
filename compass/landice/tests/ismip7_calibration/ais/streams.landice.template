@@ -1,0 +1,56 @@
+<streams>
+
+<immutable_stream name="basicmesh"
+                  filename_template="not-to-be-used.nc"
+                  type="none"/>
+
+<immutable_stream name="input"
+                  filename_template="{{ mesh_file }}"
+                  input_interval="initial_only"
+                  type="input"/>
+
+<immutable_stream name="restart"
+                  filename_template="rst.$Y-$M-$D.nc"
+                  input_interval="initial_only"
+                  output_interval="none"
+                  type="input;output"/>
+
+<stream name="ismip7_masks"
+        type="input"
+        filename_template="{{ masks_file }}"
+        input_interval="initial_only"
+        runtime_format="single_file">
+    <var name="ismip6shelfMelt_basin"/>
+    <var name="ismip6shelfMelt_deltaT"/>
+    <var name="ismip6shelfMelt_gamma0"/>
+</stream>
+
+<stream name="ismip7_ocean_forcing"
+        type="input"
+        filename_template="{{ forcing_file }}"
+        input_interval="initial_only"
+        runtime_format="single_file">
+    <var name="ismip6shelfMelt_3dThermalForcing"/>
+    <var name="ismip6shelfMelt_zOcean"/>
+</stream>
+
+<stream name="melt_diagnostic"
+        type="output"
+        filename_template="output_melt.nc"
+        output_interval="{{ output_interval }}"
+        clobber_mode="overwrite"
+        precision="double"
+        runtime_format="single_file">
+    <var name="xtime"/>
+    <var name="floatingBasalMassBal"/>
+    <var name="ismip6shelfMelt_TFdraft"/>
+    <var name="ismip6shelfMelt_basin"/>
+    <var name="ismip6shelfMelt_deltaT"/>
+    <var name="cellMask"/>
+    <var name="thickness"/>
+    <var name="lowerSurface"/>
+    <var name="bedTopography"/>
+    <var name="areaCell"/>
+</stream>
+
+</streams>

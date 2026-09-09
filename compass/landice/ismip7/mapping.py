@@ -7,7 +7,7 @@ from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
 def build_mapping_file(config, logger, ismip7_grid_file,
                        mapping_file, mali_mesh_file=None,
-                       method_remap=None, projection=None):
+                       method_remap=None, projection=None, ntasks=None):
     """
     Build a mapping file for regridding from an ISMIP7 polar
     stereographic grid to the MALI unstructured mesh.
@@ -35,6 +35,11 @@ def build_mapping_file(config, logger, ismip7_grid_file,
     projection : str, optional
         Projection flag for SCRIP generation (e.g., 'ais-bedmap2',
         'gis-bamber'). If not provided, reads from ice_sheet_params.
+
+    ntasks : int, optional
+        Number of MPI tasks to use for ESMF_RegridWeightGen. If not
+        provided, reads ``esmf_ntasks`` from the ``[ismip7]`` config
+        section.
     """
 
     if os.path.exists(mapping_file):
@@ -89,12 +94,12 @@ def build_mapping_file(config, logger, ismip7_grid_file,
     # create a mapping file using ESMF_RegridWeightGen
     logger.info(f"Creating mapping file with method: {method_remap}")
 
-    section = config["ismip7"]
-    cores = section.getint("esmf_ntasks")
+    if ntasks is None:
+        ntasks = config.getint("ismip7", "esmf_ntasks")
 
     parallel_executable = config.get("parallel", "parallel_executable")
     args = parallel_executable.split(" ")
-    args.extend(["-n", f"{cores}",
+    args.extend(["-n", f"{ntasks}",
                  "ESMF_RegridWeightGen",
                  "-s", source_grid_scripfile,
                  "-d", mali_scripfile,

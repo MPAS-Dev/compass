@@ -226,6 +226,76 @@ def local_quadratic_melt(
     return melt_m_per_s * seconds_per_year * rho_ice
 
 
+def angle_from_sin_slope(sin_slope):
+    """
+    The slope angle corresponding to a sine, in radians.
+
+    MALI's ``config_ismip7_melt_sin_slope`` is a *sine*, while
+    :py:func:`local_quadratic_melt` takes an *angle*, so a call that mixes
+    the two silently rescales the melt.  This converts between them.
+
+    Parameters
+    ----------
+    sin_slope : float
+        The sine of the ice-draft slope angle
+
+    Returns
+    -------
+    slope : float
+        The slope angle, in radians
+    """
+    return float(np.arcsin(sin_slope))
+
+
+def nonlocal_quadratic_melt(gamma0, thermal_forcing, thermal_forcing_mean,
+                            constants=None, delta_t=0.0):
+    """
+    Melt rate from the ISMIP6 non-local quadratic, in kg m-2 yr-1.
+
+    This is the parameterization MALI selects with
+    ``config_basal_mass_bal_float = 'ismip6'``.  With a constant salinity it
+    is algebraically identical to the Burgard *semi-local* form of protocol
+    Eq. (2): only the decomposition of the constant differs, so every
+    ``gamma0`` has an exactly equivalent ``K``.  That is why the semi-local
+    form is calibrated through this path rather than as a separate melt
+    module.
+
+    Parameters
+    ----------
+    gamma0 : float or xarray.DataArray
+        The calibration parameter, in m yr-1
+
+    thermal_forcing : xarray.DataArray
+        Local thermal forcing at the ice draft, in K
+
+    thermal_forcing_mean : xarray.DataArray
+        Area-weighted mean thermal forcing over the basin each cell belongs
+        to, in K
+
+    constants : Constants, optional
+        The physical constants to use; defaults to :py:data:`MALI`
+
+    delta_t : float or xarray.DataArray, optional
+        Basin-wide thermal-forcing correction, K.  Protocol Sect. 4.2.1
+        applies it wherever the thermal forcing appears, so it is added to
+        both the local forcing and the basin mean.
+
+    Returns
+    -------
+    melt : xarray.DataArray
+        Melt rate in kg m-2 yr-1, positive for melting
+    """
+    if constants is None:
+        constants = MALI
+    thermal_forcing = thermal_forcing + delta_t
+    thermal_forcing_mean = thermal_forcing_mean + delta_t
+
+    cste = (constants.rho_ocean * constants.c_o /
+            (constants.rho_ice * constants.latent_heat))**2
+    return (gamma0 * cste * constants.rho_ice_flux *
+            thermal_forcing * abs(thermal_forcing_mean))
+
+
 def draft_slope(draft, dx, dy, x_dim='x', y_dim='y'):
     """
     Ice-draft slope angle on a structured grid, in radians.

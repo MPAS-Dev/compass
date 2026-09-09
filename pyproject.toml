@@ -86,6 +86,12 @@ compass = [
 [tool.setuptools.dynamic]
 version = { attr = "compass.version.__version__" }
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# unit tests only: they must run in seconds with no input datasets, no MPAS
+# build and no network access, because CI has none of those
+addopts = "--strict-markers"
+
 [tool.mypy]
 python_version = "3.14"
 check_untyped_defs = true

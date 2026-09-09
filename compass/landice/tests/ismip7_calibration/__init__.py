@@ -1,3 +1,4 @@
+from compass.landice.tests.ismip7_calibration.ais import Ais
 from compass.landice.tests.ismip7_calibration.replication import Replication
 from compass.testgroup import TestGroup
 
@@ -26,3 +27,4 @@ class Ismip7Calibration(TestGroup):
         super().__init__(mpas_core=mpas_core, name='ismip7_calibration')
 
         self.add_test_case(Replication(test_group=self))
+        self.add_test_case(Ais(test_group=self))
