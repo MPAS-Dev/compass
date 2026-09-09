@@ -17,6 +17,7 @@ from compass.landice.tests.ismip7_calibration.ais.melt_model import (
     initial_draft,
     integrate_by_basin,
     interpolate_to_draft,
+    read_run,
 )
 from compass.landice.tests.ismip7_calibration.quadratic import MALI
 
@@ -244,3 +245,87 @@ def test_initial_draft_handles_a_time_dimension(tmp_path):
     draft = initial_draft(str(path))
 
     assert draft.dims == ('nCells',)
+
+
+def _write_run(tmp_path, thickness, bed, connected, name='output_melt.nc'):
+    """A minimal melt-diagnostic output and its mesh file."""
+    mesh = tmp_path / 'mesh.nc'
+    ds_mesh = xr.Dataset()
+    ds_mesh['thickness'] = (('Time', 'nCells'), np.array([thickness]))
+    ds_mesh['bedTopography'] = (('Time', 'nCells'), np.array([bed]))
+    ds_mesh.to_netcdf(mesh)
+    ds_mesh.close()
+
+    n_cells = len(thickness)
+    run = tmp_path / name
+    ds = xr.Dataset()
+    ds['floatingBasalMassBal'] = (('Time', 'nCells'),
+                                  np.zeros((1, n_cells)))
+    ds['ismip6shelfMelt_TFdraft'] = (('Time', 'nCells'),
+                                     np.zeros((1, n_cells)))
+    ds['connectedOceanMask'] = (('Time', 'nCells'),
+                                np.array([connected], dtype=np.int32))
+    ds['ismip6shelfMelt_basin'] = ('nCells',
+                                   np.ones(n_cells, dtype=np.int32))
+    ds['ismip6shelfMelt_deltaT'] = ('nCells', np.zeros(n_cells))
+    ds['areaCell'] = ('nCells', np.ones(n_cells))
+    ds.to_netcdf(run)
+    ds.close()
+    return str(run), str(mesh)
+
+
+def test_contributing_cells_come_from_the_initial_geometry(tmp_path):
+    """
+    Melt is computed on the geometry at the *start* of the timestep, so a
+    cell with no ice then must not contribute, however the post-step output
+    looks.  Over one step some ice-free cells pick up a trace of ice, and
+    counting them would dilute the area-weighted basin means.
+    """
+    run, mesh = _write_run(tmp_path,
+                           thickness=[0.0, 1000.0],
+                           bed=[-500.0, -2000.0],
+                           connected=[1, 1])
+
+    fields = read_run(run, mesh)
+
+    assert not bool(fields['floating'][0])
+    assert bool(fields['floating'][1])
+
+
+def test_grounded_ice_does_not_contribute(tmp_path):
+    """Thick ice on a shallow bed is grounded, so it has no shelf melt."""
+    run, mesh = _write_run(tmp_path,
+                           thickness=[1000.0],
+                           bed=[-100.0],
+                           connected=[1])
+
+    fields = read_run(run, mesh)
+
+    assert not bool(fields['floating'][0])
+
+
+def test_cells_cut_off_from_the_ocean_do_not_contribute(tmp_path):
+    """
+    MALI computes melt only where the cell is connected to the open ocean,
+    leaving the melt at zero elsewhere.
+    """
+    run, mesh = _write_run(tmp_path,
+                           thickness=[1000.0],
+                           bed=[-2000.0],
+                           connected=[0])
+
+    fields = read_run(run, mesh)
+
+    assert not bool(fields['floating'][0])
+
+
+def test_ice_exactly_at_flotation_counts_as_floating(tmp_path):
+    """MALI treats ice exactly at flotation as floating."""
+    thickness = 1000.0
+    bed = -MALI.rho_ice / MALI.rho_ocean * thickness
+    run, mesh = _write_run(tmp_path, thickness=[thickness], bed=[bed],
+                           connected=[1])
+
+    fields = read_run(run, mesh)
+
+    assert bool(fields['floating'][0])

@@ -141,7 +141,7 @@ def _melt_from_run(filename, reference):
     not change an integral, since their melt is zero, but it would dilute
     the area-weighted basin means that J3 is built from.
     """
-    fields = melt_model.read_run(filename)
+    fields = melt_model.read_run(filename, 'mesh.nc')
     return fields['melt'] / reference, fields['floating']
 
 
@@ -220,7 +220,7 @@ def _report_shelf_area(static, logger):
     modelled_file = None
     for name in ('melt_ismip7_climatology.nc', 'melt_ismip6_climatology.nc'):
         try:
-            modelled = melt_model.read_run(name)['floating']
+            modelled = melt_model.read_run(name, 'mesh.nc')['floating']
             modelled_file = name
             break
         except FileNotFoundError:

@@ -196,7 +196,12 @@ def _unit_melt(state, static):
     tf_draft = tf.sel(z=draft, method='nearest').where(floating)
     so_draft = so.sel(z=draft, method='nearest').where(floating)
 
-    return local_quadratic_melt(1.0, tf_draft, so_draft, static['slope'])
+    melt = local_quadratic_melt(1.0, tf_draft, so_draft, static['slope'])
+    # the observational files carry a scalar Time coordinate that differs
+    # between years, which would collide when the per-year aggregates are
+    # concatenated; nothing downstream uses any non-dimension coordinate
+    return melt.drop_vars([name for name in melt.coords
+                           if name not in melt.dims], errors='ignore')
 
 
 def _build_unit_terms(base_path, static, logger):

@@ -110,7 +110,8 @@ class VerifyMelt(Step):
         reference = {'ismip7': section.getfloat('reference_k'),
                      'ismip6': section.getfloat('reference_gamma0')}
 
-        fields = melt_model.read_run('output_melt.nc')
+        fields = melt_model.read_run('output_melt.nc',
+                                     'mesh.nc')
         results = {}
 
         results['melt'] = _check_melt_expression(
@@ -214,7 +215,8 @@ def _check_linearity(fields, scales, logger):
 
     totals = {1.0: total(fields['melt'])}
     for scale in scales:
-        other = melt_model.read_run(f'linearity_{scale:g}.nc')
+        other = melt_model.read_run(f'linearity_{scale:g}.nc',
+                                    'mesh.nc')
         totals[scale] = total(other['melt'])
 
     per_unit = {scale: value / scale for scale, value in totals.items()}

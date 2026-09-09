@@ -79,6 +79,16 @@ class FitDeltaT(Step):
                 target=f'../calibrate/calibration_{melt_form}.nc')
             self.add_output_file(filename=f'melt_params_{melt_form}.nc')
 
+    def setup(self):
+        """
+        Set up this step of the test case
+        """
+        section = self.config['ismip7_calibration']
+        self.add_input_file(
+            filename='mesh.nc',
+            target=(f'{section.get("base_path_mali")}/'
+                    f'{section.get("mali_mesh_file")}'))
+
     def run(self):
         """
         Run this step of the test case
@@ -108,7 +118,8 @@ class FitDeltaT(Step):
             logger.info(f'Fitting dT_b for the {melt_form} form at the '
                         f'median {name} = {parameter:.5e}')
 
-            fields = melt_model.read_run(f'melt_{melt_form}.nc')
+            fields = melt_model.read_run(f'melt_{melt_form}.nc',
+                                         'mesh.nc')
             result = _fit(melt_form, parameter, fields, ds_masks, observed,
                           delta_t_grid, config, logger)
             _write_params(result, ds_masks, melt_form, parameter, name,

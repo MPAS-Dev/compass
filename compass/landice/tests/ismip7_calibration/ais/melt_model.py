@@ -31,7 +31,7 @@ SECONDS_PER_YEAR = 31536000.0
 FREEZING_TEMP_DEPTH_DEPENDENCE = -7.53e-4
 
 
-def read_run(filename):
+def read_run(filename, mesh_file):
     """
     Read the fields a melt diagnostic run writes.
 
@@ -42,30 +42,58 @@ def read_run(filename):
         :py:class:`~compass.landice.tests.ismip7_calibration.ais.run_state.RunState`
         step
 
+    mesh_file : str
+        The MALI mesh file the run started from, used for the geometry the
+        melt was computed from
+
     Returns
     -------
     fields : dict
         ``melt`` (kg m-2 yr-1, positive for melting), ``tf_draft``,
         ``floating``, ``basin`` (MALI's 1-based numbering), ``delta_t`` and
         ``area``
+
+    Notes
+    -----
+    **The contributing cells come from the initial geometry, not from the
+    output.**  MALI computes melt where the ice is floating *and* the cell
+    is connected to the open ocean, evaluated on the geometry at the start
+    of the timestep.  The ``cellMask`` in the output is *post*-step, and
+    over a single step some cells with no ice at the start end up with a
+    trace of it, so the output mask marks thousands of cells as floating
+    that MALI never computed melt for.  Their melt is zero, which does not
+    change an integral, but it would dilute the area-weighted basin means
+    that J3 is built from -- and it would make any comparison against an
+    independent implementation disagree on cells MALI never calculated.
     """  # noqa: E501
+    thickness, bed = _initial_geometry(mesh_file)
+    ice = thickness > 0.0
+    # MALI counts ice exactly at flotation as floating
+    floating = ice & (MALI.rho_ice / MALI.rho_ocean * thickness <= -bed)
+
     with xr.open_dataset(filename) as ds:
         bmb = ds['floatingBasalMassBal'].isel(Time=0)
-        cell_mask = ds['cellMask'].isel(Time=0)
-        connected = ds['connectedOceanMask'].isel(Time=0)
-        # MALI computes melt only where the ice is floating *and* the cell
-        # is connected to the open ocean; elsewhere it leaves TFdraft and
-        # the melt at zero, so those cells must be excluded from any
-        # comparison against an independent implementation
+        connected = ds['connectedOceanMask'].isel(Time=0) == 1
         fields = dict(
             melt=(-bmb * SECONDS_PER_YEAR).compute(),
             tf_draft=ds['ismip6shelfMelt_TFdraft'].isel(Time=0).compute(),
-            floating=(((cell_mask & FLOATING_MASK_BIT) > 0) &
-                      (connected == 1)).compute(),
+            floating=(floating & connected).compute(),
             basin=ds['ismip6shelfMelt_basin'].compute(),
             delta_t=ds['ismip6shelfMelt_deltaT'].compute(),
             area=ds['areaCell'].compute())
     return fields
+
+
+def _initial_geometry(mesh_file):
+    """Ice thickness and bed topography at the start of the timestep."""
+    with xr.open_dataset(mesh_file) as ds:
+        thickness = ds['thickness']
+        bed = ds['bedTopography']
+        if 'Time' in thickness.dims:
+            thickness = thickness.isel(Time=0)
+        if 'Time' in bed.dims:
+            bed = bed.isel(Time=0)
+        return thickness.compute(), bed.compute()
 
 
 def initial_draft(mesh_file, constants=None):
@@ -94,15 +122,7 @@ def initial_draft(mesh_file, constants=None):
     """  # noqa: E501
     if constants is None:
         constants = MALI
-    with xr.open_dataset(mesh_file) as ds:
-        thickness = ds['thickness']
-        bed = ds['bedTopography']
-        if 'Time' in thickness.dims:
-            thickness = thickness.isel(Time=0)
-        if 'Time' in bed.dims:
-            bed = bed.isel(Time=0)
-        thickness = thickness.compute()
-        bed = bed.compute()
+    thickness, bed = _initial_geometry(mesh_file)
 
     floating_draft = -constants.rho_ice / constants.rho_ocean * thickness
     # where the ice is grounded the draft is the bed
