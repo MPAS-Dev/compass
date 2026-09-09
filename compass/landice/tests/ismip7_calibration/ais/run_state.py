@@ -49,7 +49,8 @@ class RunState(Step):
         non-local quadratic
     """
 
-    def __init__(self, test_case, state_name, melt_form, subdir):
+    def __init__(self, test_case, state_name, melt_form, subdir,
+                 parameter_scale=1.0):
         """
         Create the step
 
@@ -66,10 +67,15 @@ class RunState(Step):
 
         subdir : str
             Subdirectory for this step
+
+        parameter_scale : float, optional
+            Multiple of the reference melt parameter to run at.  Only the
+            linearity check uses anything other than 1.
         """
         self.state_name = state_name
         self.melt_form = melt_form
-        name = f'{melt_form}_{state_name}'
+        self.parameter_scale = parameter_scale
+        name = os.path.basename(subdir)
         super().__init__(test_case=test_case, name=name, subdir=subdir)
 
     def setup(self):
@@ -113,7 +119,8 @@ class RunState(Step):
         options = {'config_basal_mass_bal_float': f"'{self.melt_form}'",
                    'config_dt': f"'{timestep}'",
                    'config_run_duration': f"'{timestep}'"}
-        options.update(_melt_namelist_options(config, self.melt_form))
+        options.update(_melt_namelist_options(config, self.melt_form,
+                                              self.parameter_scale))
         self.add_namelist_options(options=options,
                                   out_name='namelist.landice')
 
@@ -155,14 +162,15 @@ class RunState(Step):
         run_model(self, partition_graph=False)
 
 
-def _melt_namelist_options(config, melt_form):
+def _melt_namelist_options(config, melt_form, parameter_scale=1.0):
     """The namelist options specific to one melt form."""
     section = config['ismip7_calibration_melt']
     if melt_form == 'ismip7':
         # the run is done at a reference parameter value; melt is exactly
         # proportional to it, so the ensemble is formed by scaling afterwards
+        melt_k = section.getfloat('reference_k') * parameter_scale
         return {
-            'config_ismip7_melt_K': repr(section.getfloat('reference_k')),
+            'config_ismip7_melt_K': repr(melt_k),
             'config_ismip7_melt_sin_slope':
                 repr(section.getfloat('sin_slope')),
             'config_ismip7_melt_coriolis':

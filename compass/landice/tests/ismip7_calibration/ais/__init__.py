@@ -19,6 +19,12 @@ from compass.validate import compare_variables
 #: the ocean state the verification and the dT_b fit use
 REFERENCE_STATE = 'climatology'
 
+#: multiples of the reference melt parameter used to measure the linearity
+#: that the one-run-per-ocean-state ensemble relies on.  Only the 'ismip7'
+#: form is scaled: its parameter is a namelist option, while the ISMIP6
+#: gamma0 is read from an input file.
+LINEARITY_SCALES = (0.5, 2.0)
+
 
 class Ais(TestCase):
     """
@@ -110,9 +116,21 @@ class Ais(TestCase):
                     melt_form=melt_form,
                     subdir=f'{melt_form}_{state.name}'))
 
-        self.add_step(VerifyMelt(test_case=self,
-                                 melt_form=self.melt_forms[0],
-                                 state_name=REFERENCE_STATE))
+        # extra runs of one ocean state at other melt parameters, so that the
+        # linearity the ensemble design relies on is measured in MALI rather
+        # than argued from the code
+        verify_form = self.melt_forms[0]
+        scales = LINEARITY_SCALES if verify_form == 'ismip7' else ()
+        for scale in scales:
+            self.add_step(RunState(
+                test_case=self, state_name=REFERENCE_STATE,
+                melt_form=verify_form,
+                subdir=f'{verify_form}_{REFERENCE_STATE}_x{scale:g}',
+                parameter_scale=scale))
+
+        self.add_step(VerifyMelt(test_case=self, melt_form=verify_form,
+                                 state_name=REFERENCE_STATE,
+                                 linearity_scales=scales))
         self.add_step(Aggregate(test_case=self, melt_forms=self.melt_forms,
                                 states=self.states))
         self.add_step(Calibrate(test_case=self, melt_forms=self.melt_forms))

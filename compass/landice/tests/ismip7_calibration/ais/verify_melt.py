@@ -51,7 +51,8 @@ class VerifyMelt(Step):
         The ocean state used for the check
     """
 
-    def __init__(self, test_case, melt_form, state_name):
+    def __init__(self, test_case, melt_form, state_name,
+                 linearity_scales=()):
         """
         Create the step
 
@@ -65,10 +66,21 @@ class VerifyMelt(Step):
 
         state_name : str
             The ocean state to verify against
+
+        linearity_scales : sequence of float, optional
+            Multiples of the reference melt parameter that extra MALI runs
+            were done at, for the linearity check
         """
         super().__init__(test_case=test_case, name='verify_melt')
         self.melt_form = melt_form
         self.state_name = state_name
+        self.linearity_scales = tuple(linearity_scales)
+
+        for scale in self.linearity_scales:
+            self.add_input_file(
+                filename=f'linearity_{scale:g}.nc',
+                target=f'../{melt_form}_{state_name}_x{scale:g}/'
+                       f'output_melt.nc')
 
         self.add_input_file(
             filename='output_melt.nc',
@@ -106,8 +118,7 @@ class VerifyMelt(Step):
             logger)
         results['interpolation'] = _check_interpolation(fields, logger)
         results['linearity'] = _check_linearity(
-            self.melt_form, reference[self.melt_form], fields, config,
-            logger)
+            fields, self.linearity_scales, logger)
 
         ds = xr.Dataset({name: float(value)
                          for name, value in results.items()})
@@ -174,31 +185,48 @@ def _check_interpolation(fields, logger):
     return largest
 
 
-def _check_linearity(melt_form, parameter, fields, config, logger):
+def _check_linearity(fields, scales, logger):
     """
-    Check that melt is exactly proportional to the melt parameter.
+    Check that MALI's melt is exactly proportional to the melt parameter.
 
-    This is measured rather than assumed, because it is what licenses one
-    MALI run per ocean state instead of one per (state, parameter) pair --
-    28 runs rather than about 1300.
+    This is measured with real MALI runs rather than argued, because it is
+    what licenses one run per ocean state instead of one per (state,
+    parameter) pair -- 28 runs rather than about 1300.
+
+    Each extra run is the same ocean state at a different multiple of the
+    reference melt parameter.  Dividing each total by its multiple must give
+    the same number every time.
     """
-    factors = (0.5, 1.0, 2.0)
-    totals = []
-    for factor in factors:
-        melt = melt_model.melt_from_tf(melt_form, parameter * factor,
-                                       fields, config)
-        total = float((melt * fields['area']).where(
-            fields['floating']).sum()) / 1.0e12
-        totals.append(total)
+    if not scales:
+        logger.info('')
+        logger.info('Linearity in the melt parameter: no scaled runs were '
+                    'set up, so this is not measured.  The melt parameter '
+                    'enters the melt expression only as a multiplicative '
+                    'coefficient, so linearity follows from the code, but '
+                    'measuring it is better.')
+        return 0.0
 
-    per_unit = [total / factor for total, factor in zip(totals, factors)]
-    spread = (max(per_unit) - min(per_unit)) / abs(per_unit[1])
+    area = fields['area']
+    floating = fields['floating']
+
+    def total(melt):
+        return float((melt * area).where(floating).sum()) / 1.0e12
+
+    totals = {1.0: total(fields['melt'])}
+    for scale in scales:
+        other = melt_model.read_run(f'linearity_{scale:g}.nc')
+        totals[scale] = total(other['melt'])
+
+    per_unit = {scale: value / scale for scale, value in totals.items()}
+    values = list(per_unit.values())
+    spread = (max(values) - min(values)) / abs(per_unit[1.0])
 
     logger.info('')
-    logger.info(f'Linearity in the melt parameter, {melt_form}:')
-    for factor, total in zip(factors, totals):
-        logger.info(f'  {factor:4.1f} x reference          '
-                    f'{total:12.4f} Gt/yr')
+    logger.info('Linearity in the melt parameter, measured in MALI:')
+    logger.info(f'  {"scale":>8s} {"total melt":>14s} {"total / scale":>16s}')
+    for scale in sorted(totals):
+        logger.info(f'  {scale:8.2f} {totals[scale]:14.4f} '
+                    f'{per_unit[scale]:16.6f}')
     logger.info(f'  max relative deviation        {spread:.3e}')
     logger.info('')
     return spread

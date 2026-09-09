@@ -163,18 +163,37 @@ MALI mesh.
     ensemble follows by scaling a single run.  That is what makes this 28 runs
     per melt form rather than about 1300.  Do not "improve" this away.
 
+``<melt_form>_<ocean_state>_x<scale>``
+    Two extra runs of the reference ocean state at other multiples of the
+    melt parameter, so that the linearity the ensemble design relies on is
+    measured in MALI rather than argued from the code.  Only the ``ismip7``
+    form is scaled this way: its parameter is a namelist option, while the
+    ISMIP6 ``gamma0`` is read from an input file.
+
 ``verify_melt``
     Checks MALI's melt against the Python reference evaluated on MALI's *own*
     ``TFdraft``, which isolates the melt expression from the vertical
     interpolation; checks that interpolation against an independent
-    implementation written from the protocol; and measures the linearity the
-    ensemble design relies on.
+    implementation written from the protocol, over all four of MALI's code
+    paths; and measures the linearity in the melt parameter from the scaled
+    runs above.
+
+    The comparison is restricted to the cells MALI itself computes melt for
+    -- floating *and* connected to the open ocean.  MALI leaves ``TFdraft``
+    and the melt at zero elsewhere, so including those cells would compare
+    against values MALI never calculated.
 
     The draft is reconstructed from the mesh file, never taken from the run
     output.  Melt thins the ice over the single timestep, so the output
     ``lowerSurface`` and ``thickness`` are *post*-step while ``TFdraft`` was
     computed *pre*-step; pairing them is inconsistent by up to a metre of
     draft.
+
+    MALI applies the depth dependence of the freezing temperature to the
+    thermal forcing in the two branches that extrapolate downward -- below
+    the deepest layer centre, and where the layer below the draft is beneath
+    the bed.  The Python reference must do the same, or the two disagree by
+    several kelvin over thousands of cells.
 
 ``aggregate``
     Aggregates melt to basins, buttressing bins and shelf regions.  All
@@ -183,6 +202,11 @@ MALI mesh.
     ice-shelf area against the observed ISMIP7 extent, since J1, J2 and J4
     are integrals and any shelf-area mismatch enters the calibrated parameter
     directly.
+
+    The contributing cells are the ones MALI computed melt for, as in
+    ``verify_melt``.  Including the rest would not change an integral, since
+    their melt is zero, but it would dilute the area-weighted basin means
+    that J3 is built from.
 
 ``calibrate``
     Runs the 100,000-sample parameter selection per melt form.  The objective
