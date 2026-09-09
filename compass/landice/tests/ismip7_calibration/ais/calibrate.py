@@ -22,6 +22,10 @@ from compass.landice.tests.ismip7_calibration.objective import (
 )
 from compass.step import Step
 
+#: above this fraction of draws sitting on the largest parameter in the grid,
+#: the grid has clipped the distribution badly enough to matter
+MAX_AT_UPPER_BOUND = 0.005
+
 
 class Calibrate(Step):
     """
@@ -101,6 +105,35 @@ class Calibrate(Step):
             _write(result, values, melt_form, name,
                    f'calibration_{melt_form}.nc')
             _report(result, melt_form, name, logger)
+            _check_grid_brackets_the_distribution(result, values, melt_form,
+                                                  name, logger)
+
+
+def _check_grid_brackets_the_distribution(result, values, melt_form, name,
+                                          logger):
+    """
+    Check that the parameter grid is wide enough to hold the distribution.
+
+    A draw that chose the largest parameter on the grid wanted a larger one
+    and could not have it.  Enough of those and the distribution piles up
+    against the end of the grid, and its upper percentiles say more about
+    where the grid stops than about the objective.
+
+    Raises
+    ------
+    ValueError
+        If too many draws sit on the largest parameter in the grid
+    """
+    fraction = result['at_upper_bound']
+    logger.info(f'  draws at the top of the {name} grid '
+                f'({values[-1]:.4g}): {100.0 * fraction:.3f}%')
+    if fraction > MAX_AT_UPPER_BOUND:
+        raise ValueError(
+            f'{100.0 * fraction:.2f}% of the draws chose the largest '
+            f'{name} on the grid, {values[-1]:.4g}, so the {melt_form} '
+            f'distribution is clipped and its upper percentiles are not '
+            f'meaningful.  Raise the maximum of the {name} grid in the '
+            f'[ismip7_calibration_melt] config section.')
 
 
 def _write(result, values, melt_form, name, filename):

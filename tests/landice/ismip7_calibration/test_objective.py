@@ -194,3 +194,51 @@ def test_scaling_by_zero_gives_zero_melt():
     scaled = scale_to_ensemble(unit, np.array([0.0, 1.0]))
 
     assert float(scaled.isel(p1=0, p2=0)[0]) == pytest.approx(0.0)
+
+
+def _fake_toolbox_result(monkeypatch, minimisers):
+    """Make calculate_objective_function return chosen minimisers."""
+    from compass.landice.tests.ismip7_calibration import objective
+
+    def fake(*args, **kwargs):
+        return np.asarray(minimisers, dtype=float), None
+
+    monkeypatch.setattr(objective.toolbox, 'calculate_objective_function',
+                        fake)
+
+
+def _placeholder_terms():
+    """The keys run_optimisation passes through to the toolbox."""
+    return {f'{term}_{suffix}': None
+            for term in ('t1', 't2', 't3', 't4')
+            for suffix in ('model', 'obs_mean', 'obs_sigma', 'weights')}
+
+
+def test_no_draws_at_the_top_of_a_wide_enough_grid(monkeypatch):
+    """A distribution well inside the grid is not clipped."""
+    values = np.array([1.0, 2.0, 3.0, 4.0])
+    _fake_toolbox_result(monkeypatch, [1.0, 2.0, 2.0, 3.0])
+
+    from compass.landice.tests.ismip7_calibration.objective import (
+        run_optimisation,
+    )
+    result = run_optimisation(_placeholder_terms(), values, sample_size=4)
+
+    assert result['at_upper_bound'] == pytest.approx(0.0)
+
+
+def test_draws_on_the_largest_parameter_are_counted(monkeypatch):
+    """
+    A draw that picked the largest parameter wanted a larger one, so the
+    grid has clipped it.  Counting them is what makes the clipping visible
+    instead of silent.
+    """
+    values = np.array([1.0, 2.0, 3.0, 4.0])
+    _fake_toolbox_result(monkeypatch, [1.0, 4.0, 4.0, 2.0])
+
+    from compass.landice.tests.ismip7_calibration.objective import (
+        run_optimisation,
+    )
+    result = run_optimisation(_placeholder_terms(), values, sample_size=4)
+
+    assert result['at_upper_bound'] == pytest.approx(0.5)

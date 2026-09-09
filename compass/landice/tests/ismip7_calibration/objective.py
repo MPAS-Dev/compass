@@ -184,7 +184,9 @@ def run_optimisation(terms, param_values, resolution=8000.0,
     Returns
     -------
     result : dict
-        ``p5``, ``median``, ``p95``, ``mode`` and the raw ``min_p1``
+        ``p5``, ``median``, ``p95``, ``mode``, the raw ``min_p1``, and
+        ``at_upper_bound``, the fraction of draws that chose the largest
+        parameter on the grid
     """
     if seed is not None:
         np.random.seed(seed)
@@ -207,8 +209,13 @@ def run_optimisation(terms, param_values, resolution=8000.0,
     edges = np.append(values[0] - 0.5 * step, values + 1.0e-7 * step)
     counts, _ = np.histogram(min_p1, bins=edges)
 
+    # a draw that chose the largest parameter on the grid wanted a larger
+    # one and could not have it, so the grid has clipped the distribution
+    at_upper_bound = float(np.mean(min_p1 >= values[-1] * (1.0 - 1.0e-9)))
+
     return dict(min_p1=min_p1,
                 p5=float(np.percentile(min_p1, 5)),
                 median=float(np.median(min_p1)),
                 p95=float(np.percentile(min_p1, 95)),
-                mode=float(values[int(np.argmax(counts))]))
+                mode=float(values[int(np.argmax(counts))]),
+                at_upper_bound=at_upper_bound)
