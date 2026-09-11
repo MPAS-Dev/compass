@@ -9,26 +9,27 @@
     interactive_sealevel = .true.   ! Sea level interacts with solid Earth
     include_elastic = .true.        ! Include elastic deformation
     correct_compression = .true.    ! Account for compression effects
-    correct_distortion = .false.    ! Account for distortion (false for stability)
-    method          = 3             ! 3: LV-ELVA (most realistic)
+    correct_distortion = .false.     ! Account for distortion
+    method          = 3             ! 3: LV-ELVA
     dt_diagnostics  = 10.           ! [yr] Diagnostics timestep
-    pad             = 0.            ! [km] No padding needed
+    pad             = 512.          ! [km] Padding to the isostasy domain
 
     ! ========================================================================
     ! Rheology
     ! ========================================================================
-    mantle = "uniform"              ! Uniform mantle viscosity
-    lithosphere = "uniform"         ! Uniform lithospheric thickness
-    layering    = "equalized"       ! Equalized layering
-    lumping     = "freqdomain"      ! Frequency domain lumping
+    mantle = "rheology_file"              ! Uniform mantle viscosity
+    lithosphere = "rheology_file"         ! Uniform lithospheric thickness
+    layering    = "parallel"        ! Available options: equalized, parallel, folded
+    lumping     = "min"      !
     viscosity_scaling_method = "none"
     viscosity_scaling = 1.0         ! Only used if method = "scale"
 
     ! ========================================================================
-    ! Rheology Parameters (Antarctic values)
+    ! Rheology Parameters (Antarctic values) only rheo_smoothing_radius is
+    ! relevant when mantle = "rheology_file"
     ! ========================================================================
-    nl          = 2                 ! Number of viscous layers
-    zl = 120.0, 600.0               ! [km] Layer depths
+    nl          = 1                 ! Number of viscous layers
+    zl = 88.0                       ! [km] Layer depths
     viscosities = 0.5e21, 2.0e21    ! [Pa s] Layer viscosities
     ref_viscosity = 1.0e21          ! [Pa s] Reference viscosity
     tau = 3000.0                    ! [yr] Relaxation time
@@ -55,12 +56,12 @@
     ! ========================================================================
     restart = "None"                ! Restart file (not used)
     mask_file = "None"              ! Mask file (MALI provides)
-    rheology_file = "None"          ! Rheology file
+    rheology_file = "{{ rheology_file }}"          ! Rheology file
 
     ! ========================================================================
     ! Time Stepping
     ! ========================================================================
-    dt_method = "tsit54"            ! Adaptive time stepping
+    dt_method = "bs32"            ! Adaptive time stepping
     dt_init = 1.0                   ! [yr] Initial timestep
     dt_min = 1e-10                  ! [yr] Minimum timestep
     dt_max = 10.0                   ! [yr] Maximum timestep
