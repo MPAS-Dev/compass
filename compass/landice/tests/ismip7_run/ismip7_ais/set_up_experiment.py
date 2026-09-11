@@ -403,17 +403,24 @@ class SetUpExperiment(Step):
                 'config_FASTISOSTASY_to_MALI_weights_file':
                     "'mapfile_fastiso_to_mali.nc'",
                 'config_fastisostasy_parameter_file':
-                    "'fastisostasy.nml'"
+                    "'namelist.fastisostasy'"
             }
             self.add_namelist_options(options=options,
                                       out_name='namelist.landice')
 
-            # Copy FastIsostasy namelist file
-            self.add_input_file(
-                filename='fastisostasy.nml',
-                target='namelist.fastisostasy.template',
-                package=resource_location,
-                copy=True)
+            fastiso_earth_structure_path = section.get(
+                'fastiso_earth_structure_path')
+            fastiso_earth_structure_filename = section.get(
+                'fastiso_earth_structure_filename')
+
+            template = Template(resources.read_text(
+                resource_location, 'namelist.fastisostasy.template'))
+            text = template.render(
+                rheology_file=fastiso_earth_structure_filename)
+
+            file_fi_nl = os.path.join(self.work_dir, 'namelist.fastisostasy')
+            with open(file_fi_nl, 'w') as handle:
+                handle.write(text)
 
             # Symlink mapping files
             map_dir = os.path.join('..', 'fastiso_mapping_files')
@@ -421,6 +428,13 @@ class SetUpExperiment(Step):
                              'mapfile_fastiso_to_mali.nc'):
                 os.symlink(os.path.join(map_dir, map_file),
                            os.path.join(self.work_dir, map_file))
+
+            # Symlink Earth structure file
+            earth_dir = os.path.join(fastiso_earth_structure_path,
+                                     fastiso_earth_structure_filename)
+            os.symlink(earth_dir,
+                       os.path.join(self.work_dir,
+                                    fastiso_earth_structure_filename))
 
         # --- Symlink restart for projections/ctrl ---
         if not is_historical:
