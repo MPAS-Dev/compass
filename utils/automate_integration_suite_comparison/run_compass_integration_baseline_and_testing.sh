@@ -19,7 +19,8 @@
 #        - source the generated load script
 #        - clone MALI-Dev from MALI_REMOTE_BASELINE @ MALI_REF_BASELINE
 #        - compile MALI (mpas-albany-landice)
-#        - `compass suite -c landice -t full_integration -w <suite-baseline> -s`
+#        - `compass suite -c landice -t full_integration -p <MALI-baseline path> \
+#              -w <suite-baseline> -s`
 #   2. Submit the compass-generated suite job script for BASELINE via sbatch.
 #   3. TESTING prep (synchronous, on the login node):
 #        - reuse the BASELINE compass checkout if COMPASS_REMOTE_TESTING/
@@ -27,8 +28,8 @@
 #          separate compass copy for testing
 #        - clone/build a *separate* MALI-Dev copy from MALI_REMOTE_TESTING @
 #          MALI_REF_TESTING
-#        - `compass suite -c landice -t full_integration -b <suite-baseline> \
-#              -w <suite-testing> -s`
+#        - `compass suite -c landice -t full_integration -p <MALI-testing path> \
+#              -b <suite-baseline> -w <suite-testing> -s`
 #   4. Submit the compass-generated suite job script for TESTING via sbatch
 #      with `--dependency=afterok:<baseline_run_jobid>` so it automatically
 #      waits for the baseline run to finish successfully before starting --
@@ -243,19 +244,19 @@ compile_mali() {
     )
 }
 
-# setup_suite <compass_dir> <work_dir> <baseline_dir_or_empty>
+# setup_suite <compass_dir> <work_dir> <mali_path> <baseline_dir_or_empty>
 # Returns (echoes) the path to the compass-generated suite job script.
 setup_suite() {
-    local compass_dir="$1" work_dir="$2" baseline_dir="$3"
+    local compass_dir="$1" work_dir="$2" mali_path="$3" baseline_dir="$4"
     mkdir -p "${work_dir}"
 
-    log "Setting up ${SUITE_CORE}/${SUITE_NAME} suite in ${work_dir}"
+    log "Setting up ${SUITE_CORE}/${SUITE_NAME} suite in ${work_dir} (MALI path: ${mali_path})"
     (
         cd "${compass_dir}"
         if [[ -n "${baseline_dir}" ]]; then
-            compass suite -c "${SUITE_CORE}" -t "${SUITE_NAME}" -b "${baseline_dir}" -w "${work_dir}" -s 1>&2
+            compass suite -c "${SUITE_CORE}" -t "${SUITE_NAME}" -p "${mali_path}" -b "${baseline_dir}" -w "${work_dir}" -s 1>&2
         else
-            compass suite -c "${SUITE_CORE}" -t "${SUITE_NAME}" -w "${work_dir}" -s 1>&2
+            compass suite -c "${SUITE_CORE}" -t "${SUITE_NAME}" -p "${mali_path}" -w "${work_dir}" -s 1>&2
         fi
     )
 
@@ -342,7 +343,8 @@ log "=== BASELINE: compile MALI ==="
 compile_mali "${BASELINE_MALI_DIR}" "${FORCE_BASELINE}"
 
 log "=== BASELINE: compass suite setup ==="
-BASELINE_JOB_SCRIPT=$(setup_suite "${BASELINE_COMPASS_DIR}" "${BASELINE_WORK_DIR}" "")
+BASELINE_JOB_SCRIPT=$(setup_suite "${BASELINE_COMPASS_DIR}" "${BASELINE_WORK_DIR}" \
+    "${BASELINE_MALI_DIR}/components/mpas-albany-landice" "")
 
 log "=== BASELINE: submit suite run job ==="
 BASELINE_RUN_JOBID=$(patch_and_submit "${BASELINE_JOB_SCRIPT}" "")
@@ -383,7 +385,8 @@ log "=== TESTING: compile MALI ==="
 compile_mali "${TESTING_MALI_DIR}" "${FORCE_TESTING}"
 
 log "=== TESTING: compass suite setup (baseline=${BASELINE_WORK_DIR}) ==="
-TESTING_JOB_SCRIPT=$(setup_suite "${TESTING_COMPASS_DIR}" "${TESTING_WORK_DIR}" "${BASELINE_WORK_DIR}")
+TESTING_JOB_SCRIPT=$(setup_suite "${TESTING_COMPASS_DIR}" "${TESTING_WORK_DIR}" \
+    "${TESTING_MALI_DIR}/components/mpas-albany-landice" "${BASELINE_WORK_DIR}")
 
 log "=== TESTING: submit suite run job (depends on baseline run ${BASELINE_RUN_JOBID}) ==="
 TESTING_RUN_JOBID=$(patch_and_submit "${TESTING_JOB_SCRIPT}" "${BASELINE_RUN_JOBID}")
