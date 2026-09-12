@@ -158,7 +158,7 @@ TESTING_MALI_DIR="${ROOT_WORK_DIR}/MALI-testing"
 BASELINE_WORK_DIR="${ROOT_WORK_DIR}/suite-baseline"
 TESTING_WORK_DIR="${ROOT_WORK_DIR}/suite-testing"
 
-log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"; }
+log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >&2; }
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -214,7 +214,7 @@ deploy_compass_env() {
     log "Running deploy.py in ${compass_dir} (machine=${MACHINE} compiler=${COMPILER} mpi=${MPI})"
     (
         cd "${compass_dir}"
-        ./deploy.py --with-albany --compiler "${COMPILER}" --mpi "${MPI}" --machine "${MACHINE}"
+        ./deploy.py --with-albany --compiler "${COMPILER}" --mpi "${MPI}" --machine "${MACHINE}" 1>&2
     )
 
     existing=$(find "${compass_dir}" -maxdepth 1 -name "load_compass_${MACHINE}_${COMPILER}_${MPI}.sh" 2>/dev/null | head -n1 || true)
@@ -253,9 +253,9 @@ setup_suite() {
     (
         cd "${compass_dir}"
         if [[ -n "${baseline_dir}" ]]; then
-            compass suite -c "${SUITE_CORE}" -t "${SUITE_NAME}" -b "${baseline_dir}" -w "${work_dir}" -s
+            compass suite -c "${SUITE_CORE}" -t "${SUITE_NAME}" -b "${baseline_dir}" -w "${work_dir}" -s 1>&2
         else
-            compass suite -c "${SUITE_CORE}" -t "${SUITE_NAME}" -w "${work_dir}" -s
+            compass suite -c "${SUITE_CORE}" -t "${SUITE_NAME}" -w "${work_dir}" -s 1>&2
         fi
     )
 
