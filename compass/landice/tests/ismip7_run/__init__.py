@@ -1,9 +1,9 @@
 from compass.landice.tests.ismip7_run.ismip7_ais import Ismip7Ais
-from compass.landice.tests.ismip7_run.ismip7_ais.decomposition_test import (
-    DecompositionTest,
+from compass.landice.tests.ismip7_run.ismip7_ais.ais_decomposition_test import (  # noqa: E501
+    AisDecompositionTest,
 )
-from compass.landice.tests.ismip7_run.ismip7_ais.restart_test import (
-    RestartTest,
+from compass.landice.tests.ismip7_run.ismip7_ais.ais_restart_test import (
+    AisRestartTest,
 )
 from compass.landice.tests.ismip7_run.ismip7_gris import Ismip7Gris
 from compass.testgroup import TestGroup
@@ -27,5 +27,5 @@ class Ismip7Run(TestGroup):
         # Short, automated decomposition and restart tests for the AIS
         # configuration. These do not affect the ismip7_ais test case
         # above, which is used for setting up full production runs.
-        self.add_test_case(DecompositionTest(test_group=self))
-        self.add_test_case(RestartTest(test_group=self))
+        self.add_test_case(AisDecompositionTest(test_group=self))
+        self.add_test_case(AisRestartTest(test_group=self))

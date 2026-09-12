@@ -4,7 +4,7 @@ from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 
-class DecompositionTest(TestCase):
+class AisDecompositionTest(TestCase):
     """
     A test case for performing two short MALI runs of the ISMIP7 AIS
     configuration with different decompositions. The larger
@@ -34,7 +34,7 @@ class DecompositionTest(TestCase):
         test_group : compass.landice.tests.ismip7_run.Ismip7Run
             The test group that this test case belongs to
         """
-        name = 'decomposition_test'
+        name = 'ais_decomposition_test'
         super().__init__(test_group=test_group, name=name, subdir=name)
         self.proc_list = None
         self.run_dirs = None

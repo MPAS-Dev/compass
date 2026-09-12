@@ -4,7 +4,7 @@ from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 
-class RestartTest(TestCase):
+class AisRestartTest(TestCase):
     """
     A test case for performing two short MALI runs of the ISMIP7 AIS
     configuration: one full run and one run broken into two segments
@@ -27,7 +27,7 @@ class RestartTest(TestCase):
         test_group : compass.landice.tests.ismip7_run.Ismip7Run
             The test group that this test case belongs to
         """
-        name = 'restart_test'
+        name = 'ais_restart_test'
         super().__init__(test_group=test_group, name=name, subdir=name)
         self.target_ntasks = 128
 
