@@ -72,6 +72,15 @@ SUITE_NAME="full_integration"
 COMPASS_REMOTE_BASELINE="git@github.com:MPAS-Dev/compass.git"
 COMPASS_REF_BASELINE="main"
 
+# If set, use this already-cloned (and optionally already-deployed) compass
+# directory for baseline instead of managing a clone under ROOT_WORK_DIR.
+# git clone/checkout is never performed on this directory (your working tree
+# is left untouched); COMPASS_REMOTE_BASELINE/COMPASS_REF_BASELINE above are
+# ignored when this is set. deploy.py is still run here if no matching
+# load_compass_<machine>_<compiler>_<mpi>.sh is found (i.e. env not yet
+# deployed), otherwise it is skipped.
+EXISTING_COMPASS_DIR_BASELINE=""
+
 # Leave both of these blank to reuse the baseline compass checkout for testing
 # (recommended when you are only testing a MALI change). Set both to test a
 # different compass remote/ref as well (a separate compass-testing/ checkout
@@ -79,12 +88,18 @@ COMPASS_REF_BASELINE="main"
 COMPASS_REMOTE_TESTING=""
 COMPASS_REF_TESTING=""
 
+# Same as EXISTING_COMPASS_DIR_BASELINE, but for testing. Only relevant when a
+# separate testing compass checkout is in use (i.e. COMPASS_REMOTE_TESTING or
+# COMPASS_REF_TESTING is set above); ignored when testing reuses the baseline
+# compass checkout.
+EXISTING_COMPASS_DIR_TESTING=""
+
 # --- MALI-Dev source ----------------------------------------------------------
 MALI_REMOTE_BASELINE="git@github.com:MALI-Dev/E3SM.git"
 MALI_REF_BASELINE="develop"
 
 MALI_REMOTE_TESTING="git@github.com:MALI-Dev/E3SM.git"
-MALI_REF_TESTING="develop"
+MALI_REF_TESTING="matthewhoffman/mali/spatial-damage-threshold"
 
 # =============================================================================
 # End of CONFIG. You should not need to edit anything below this line.
@@ -126,9 +141,18 @@ fi
 mkdir -p "${ROOT_WORK_DIR}"
 ROOT_WORK_DIR="$(cd "${ROOT_WORK_DIR}" && pwd)"
 
-# Hardcoded organizational structure under ROOT_WORK_DIR.
-BASELINE_COMPASS_DIR="${ROOT_WORK_DIR}/compass-baseline"
-TESTING_COMPASS_DIR="${ROOT_WORK_DIR}/compass-testing"
+# Hardcoded organizational structure under ROOT_WORK_DIR (unless an
+# EXISTING_COMPASS_DIR_* override is given above).
+if [[ -n "${EXISTING_COMPASS_DIR_BASELINE}" ]]; then
+    BASELINE_COMPASS_DIR="${EXISTING_COMPASS_DIR_BASELINE}"
+else
+    BASELINE_COMPASS_DIR="${ROOT_WORK_DIR}/compass-baseline"
+fi
+if [[ -n "${EXISTING_COMPASS_DIR_TESTING}" ]]; then
+    TESTING_COMPASS_DIR="${EXISTING_COMPASS_DIR_TESTING}"
+else
+    TESTING_COMPASS_DIR="${ROOT_WORK_DIR}/compass-testing"
+fi
 BASELINE_MALI_DIR="${ROOT_WORK_DIR}/MALI-baseline"
 TESTING_MALI_DIR="${ROOT_WORK_DIR}/MALI-testing"
 BASELINE_WORK_DIR="${ROOT_WORK_DIR}/suite-baseline"
@@ -172,6 +196,12 @@ clone_or_checkout() {
 # deploy_compass_env <compass_dir> <force> -> echoes path to load script on success
 deploy_compass_env() {
     local compass_dir="$1" force="$2"
+
+    if [[ ! -f "${compass_dir}/deploy.py" ]]; then
+        log "ERROR: ${compass_dir} does not look like a compass checkout (no deploy.py found)"
+        exit 1
+    fi
+
     local existing
     existing=$(find "${compass_dir}" -maxdepth 1 -name "load_compass_${MACHINE}_${COMPILER}_${MPI}.sh" 2>/dev/null | head -n1 || true)
 
@@ -271,11 +301,19 @@ patch_and_submit() {
 # BASELINE
 # ---------------------------------------------------------------------------
 log "=== BASELINE: compass checkout ==="
-clone_or_checkout "${BASELINE_COMPASS_DIR}" "${COMPASS_REMOTE_BASELINE}" \
-    "${COMPASS_REF_BASELINE}" "${FORCE_BASELINE}"
+if [[ -n "${EXISTING_COMPASS_DIR_BASELINE}" ]]; then
+    log "Using existing compass checkout at ${BASELINE_COMPASS_DIR} (no clone/checkout performed)"
+else
+    clone_or_checkout "${BASELINE_COMPASS_DIR}" "${COMPASS_REMOTE_BASELINE}" \
+        "${COMPASS_REF_BASELINE}" "${FORCE_BASELINE}"
+fi
 
 log "=== BASELINE: deploy compass env ==="
-BASELINE_LOAD_SCRIPT=$(deploy_compass_env "${BASELINE_COMPASS_DIR}" "${FORCE_BASELINE}")
+if [[ -n "${EXISTING_COMPASS_DIR_BASELINE}" ]]; then
+    BASELINE_LOAD_SCRIPT=$(deploy_compass_env "${BASELINE_COMPASS_DIR}" "false")
+else
+    BASELINE_LOAD_SCRIPT=$(deploy_compass_env "${BASELINE_COMPASS_DIR}" "${FORCE_BASELINE}")
+fi
 log "Sourcing ${BASELINE_LOAD_SCRIPT}"
 # shellcheck disable=SC1090
 source "${BASELINE_LOAD_SCRIPT}"
@@ -304,11 +342,19 @@ if [[ "${SAME_COMPASS}" == "true" ]]; then
     log "=== TESTING: reusing baseline compass checkout (${TESTING_COMPASS_DIR}) ==="
 else
     log "=== TESTING: separate compass checkout (remote=${COMPASS_REMOTE_TESTING} ref=${COMPASS_REF_TESTING}) ==="
-    clone_or_checkout "${TESTING_COMPASS_DIR}" "${COMPASS_REMOTE_TESTING}" \
-        "${COMPASS_REF_TESTING}" "${FORCE_TESTING}"
+    if [[ -n "${EXISTING_COMPASS_DIR_TESTING}" ]]; then
+        log "Using existing compass checkout at ${TESTING_COMPASS_DIR} (no clone/checkout performed)"
+    else
+        clone_or_checkout "${TESTING_COMPASS_DIR}" "${COMPASS_REMOTE_TESTING}" \
+            "${COMPASS_REF_TESTING}" "${FORCE_TESTING}"
+    fi
 
     log "=== TESTING: deploy compass env ==="
-    TESTING_LOAD_SCRIPT=$(deploy_compass_env "${TESTING_COMPASS_DIR}" "${FORCE_TESTING}")
+    if [[ -n "${EXISTING_COMPASS_DIR_TESTING}" ]]; then
+        TESTING_LOAD_SCRIPT=$(deploy_compass_env "${TESTING_COMPASS_DIR}" "false")
+    else
+        TESTING_LOAD_SCRIPT=$(deploy_compass_env "${TESTING_COMPASS_DIR}" "${FORCE_TESTING}")
+    fi
     log "Sourcing ${TESTING_LOAD_SCRIPT}"
     # shellcheck disable=SC1090
     source "${TESTING_LOAD_SCRIPT}"
