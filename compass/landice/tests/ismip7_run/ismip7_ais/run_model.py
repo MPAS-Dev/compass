@@ -7,8 +7,8 @@ from compass.landice.tests.ismip7_run.ismip7_ais.stage_experiment import (
 from compass.model import make_graph_file, run_model
 from compass.step import Step
 
-# The package that contains this module, used to locate the streams
-# override template below
+# The package that contains this module, used to locate the namelist
+# and streams overlay files below
 RESOURCE_LOCATION = 'compass.landice.tests.ismip7_run.ismip7_ais'
 
 # A short, historical-like "test" experiment used only by the
@@ -106,28 +106,25 @@ class RunModel(Step):
             configure_experiment_namelist_and_streams(
                 self, exp_info, filenames, out_name=suffix)
 
-            # shorten the output/timeaveraging intervals so the tests
-            # produce daily output despite their short duration, and add
-            # a few extra variables useful for validating decomposition
-            # and restart consistency
-            self.add_namelist_options(
-                options={'config_timeaveraging_interval':
-                         "'0000-00-01_00:00:00'"},
-                out_name=f'namelist.{suffix}')
-            output_clobber_mode = 'truncate' if index == 0 else 'overwrite'
-            self.add_streams_file(
-                RESOURCE_LOCATION, 'streams.override.template',
-                out_name=f'streams.{suffix}',
-                template_replacements={
-                    'output_clobber_mode': output_clobber_mode})
-
+            # Overlay namelist/streams changes specific to these short
+            # tests: shorten the output/restart/timeaveraging intervals
+            # so the tests produce daily output despite their short
+            # duration, add a few extra variables useful for validating
+            # decomposition and restart consistency, and, for the
+            # second segment of a restart run, pick up from the restart
+            # file written partway through the first segment.
             if len(self.suffixes) > 1 and index == 1:
-                # the second segment of a restart run picks up from the
-                # restart file written partway through the first segment
-                self.add_namelist_options(
-                    options={'config_do_restart': '.true.',
-                             'config_start_time': "'file'"},
-                    out_name=f'namelist.{suffix}')
+                namelist_overlay = 'namelist.short_test.restart'
+                streams_overlay = 'streams.short_test.restart'
+            else:
+                namelist_overlay = 'namelist.short_test'
+                streams_overlay = 'streams.short_test'
+            self.add_namelist_file(
+                RESOURCE_LOCATION, namelist_overlay,
+                out_name=f'namelist.{suffix}')
+            self.add_streams_file(
+                RESOURCE_LOCATION, streams_overlay,
+                out_name=f'streams.{suffix}')
 
         self.add_input_file(
             filename='albany_input.yaml',
