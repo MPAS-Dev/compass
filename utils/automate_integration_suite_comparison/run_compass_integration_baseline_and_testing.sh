@@ -293,8 +293,13 @@ patch_and_submit() {
         log "Submitting ${job_script}"
     fi
 
-    local jobid
-    jobid=$(sbatch --parsable "${dep_args[@]}" "${job_script}")
+    # compass suite job scripts assume they are submitted from the directory
+    # they were written into (the suite work dir), so cd there before calling
+    # sbatch rather than submitting from wherever this script happens to run.
+    local job_dir job_base jobid
+    job_dir=$(dirname "${job_script}")
+    job_base=$(basename "${job_script}")
+    jobid=$(cd "${job_dir}" && sbatch --parsable "${dep_args[@]}" "${job_base}")
     echo "${jobid}"
 }
 
