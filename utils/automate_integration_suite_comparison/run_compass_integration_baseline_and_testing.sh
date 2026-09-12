@@ -297,6 +297,23 @@ patch_and_submit() {
     echo "${jobid}"
 }
 
+# source_load_script <path>
+#
+# Sources a compass-generated load script with our strict `set -euo pipefail`
+# temporarily relaxed, since these scripts (and the pixi/conda activation
+# hooks they chain into) are third-party and not written against nounset/
+# errexit conventions (e.g. they may reference variables that are only
+# conditionally set).
+source_load_script() {
+    local script="$1"
+    set +u +e
+    # shellcheck disable=SC1090
+    source "${script}"
+    local rc=$?
+    set -u -e
+    return "${rc}"
+}
+
 # ---------------------------------------------------------------------------
 # BASELINE
 # ---------------------------------------------------------------------------
@@ -315,8 +332,7 @@ else
     BASELINE_LOAD_SCRIPT=$(deploy_compass_env "${BASELINE_COMPASS_DIR}" "${FORCE_BASELINE}")
 fi
 log "Sourcing ${BASELINE_LOAD_SCRIPT}"
-# shellcheck disable=SC1090
-source "${BASELINE_LOAD_SCRIPT}"
+source_load_script "${BASELINE_LOAD_SCRIPT}"
 
 log "=== BASELINE: MALI-Dev checkout ==="
 clone_or_checkout "${BASELINE_MALI_DIR}" "${MALI_REMOTE_BASELINE}" \
@@ -356,8 +372,7 @@ else
         TESTING_LOAD_SCRIPT=$(deploy_compass_env "${TESTING_COMPASS_DIR}" "${FORCE_TESTING}")
     fi
     log "Sourcing ${TESTING_LOAD_SCRIPT}"
-    # shellcheck disable=SC1090
-    source "${TESTING_LOAD_SCRIPT}"
+    source_load_script "${TESTING_LOAD_SCRIPT}"
 fi
 
 log "=== TESTING: MALI-Dev checkout ==="
