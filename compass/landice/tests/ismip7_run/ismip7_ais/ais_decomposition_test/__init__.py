@@ -78,9 +78,9 @@ class AisDecompositionTest(TestCase):
         variables = ['thickness', 'surfaceSpeed', 'calvingVelocity',
                      'calvingThickness', 'floatingBasalMassBal']
 
-        l1_norm = 1.0e-8
-        l2_norm = 1.0e-9
-        linf_norm = 1.0e-9
+        l1_norm = 0.0
+        l2_norm = 0.0
+        linf_norm = 0.0
         compare_variables(
             test_case=self, variables=variables,
             filename1=f'{run_dir1}/output/output_2d_2000.nc',
