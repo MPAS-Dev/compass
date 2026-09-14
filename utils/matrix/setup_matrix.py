@@ -19,7 +19,7 @@ except ImportError:
 from shared import check_call, get_logger
 
 # build targets from
-# https://mpas-dev.github.io/compass/latest/developers_guide/machines/index.html#supported-machines
+# https://mpas-dev.github.io/compass/main/developers_guide/machines/index.html#supported-machines
 all_build_targets = {
     'anvil': {
         ('intel', 'impi'): 'intel-mpi',

@@ -11,7 +11,7 @@ Checklist
 * [ ] User's Guide has been updated
 * [ ] Developer's Guide has been updated
 * [ ] API documentation in the Developer's Guide (`api.rst`) has any new or modified class, method and/or functions listed
-* [ ] Documentation has been [built locally](https://mpas-dev.github.io/compass/latest/developers_guide/building_docs.html) and changes look as expected
+* [ ] Documentation has been [built locally](https://mpas-dev.github.io/compass/main/developers_guide/building_docs.html) and changes look as expected
 * [ ] The `E3SM-Project` submodule has been updated with relevant E3SM changes
 * [ ] The `MALI-Dev` submodule has been updated with relevant MALI changes
 * [ ] Document (in a comment titled `Testing` in this PR) any testing that was used to verify the changes

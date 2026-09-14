@@ -10,7 +10,7 @@ to set up and configure a test case.
 
 The latest compass documentation can be found here:
 
-[http://mpas-dev.github.io/compass/latest/](http://mpas-dev.github.io/compass/latest/)
+[http://mpas-dev.github.io/compass/main/](http://mpas-dev.github.io/compass/main/)
 
 Documentation on the [legacy version of COMPASS](https://github.com/MPAS-Dev/compass/tree/legacy)
 can be found here:
