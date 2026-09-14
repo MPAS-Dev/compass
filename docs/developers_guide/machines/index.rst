@@ -22,7 +22,7 @@ that matches the machine, compiler and MPI library you want to use, e.g.:
 
 .. code-block:: bash
 
-    source load_compass_anvil_intel_impi.sh
+    source load_compass_chrysalis_intel_openmpi.sh
 
 After loading this environment, you can set up test cases or test suites, and
 a link ``load_compass_env.sh`` will be included in each suite or test case
@@ -41,14 +41,6 @@ tests and the MPAS model.
 +--------------+------------+-----------+-------------------+
 | Machine      | Compiler   | MPI lib.  |  MPAS make target |
 +==============+============+===========+===================+
-| anvil        | intel      | impi      | intel-mpi         |
-|              |            +-----------+-------------------+
-|              |            | openmpi   | ifort             |
-|              +------------+-----------+-------------------+
-|              | gnu        | openmpi   | gfortran          |
-|              |            +-----------+-------------------+
-|              |            | mvapich   | gfortran          |
-+--------------+------------+-----------+-------------------+
 | chicoma-cpu  | gnu        | mpich     | gnu-cray          |
 +--------------+------------+-----------+-------------------+
 | chrysalis    | intel      | openmpi   | ifort             |
@@ -59,13 +51,14 @@ tests and the MPAS model.
 +--------------+------------+-----------+-------------------+
 | pm-cpu       | gnu        | mpich     | gnu-cray          |
 +--------------+------------+-----------+-------------------+
+| pm-gpu       | gnugpu     | mpich     | gnu-cray          |
++--------------+------------+-----------+-------------------+
 
 Below are specifics for each supported machine
 
 .. toctree::
    :titlesonly:
 
-   anvil
    chicoma
    chrysalis
    compy
@@ -126,8 +119,7 @@ The first step in adding a new supported machine is to add a config file in
 ``compass/machines``.  The config file needs to describe the parallel
 environment and some paths where shared Spack environments will be installed
 and shared data will be downloaded.  The easiest place to start is one of the
-examples provided (machines ``morpheus`` and ``eligos`` for now, but more
-will be added soon.)
+existing config files there, or the example below.
 
 .. code-block:: cfg
 
@@ -144,27 +136,12 @@ will be added soon.)
     cores_per_node = 8
 
 
-    # Config options related to spack environments
-    [spack]
-
-    # whether to load modules from the spack yaml file before loading the spack
-    # environment
-    modules_before = False
-
-    # whether to load modules from the spack yaml file after loading the spack
-    # environment
-    modules_after = False
-
-
     # The paths section describes paths that are used within the ocean core test
     # cases.
     [paths]
 
     # A shared root directory where MPAS standalone data can be found
     database_root = /home/xylar/data/mpas/mpas_standalonedata
-
-    # the path where deployed compass environments are located
-    compass_envs = /home/xylar/data/mpas/compass_envs
 
 
     # Options related to deploying compass environments on supported
@@ -173,6 +150,9 @@ will be added soon.)
 
     # the compiler set to use for system libraries and MPAS builds
     compiler = gnu
+
+    # the compiler to use to build software (e.g. ESMF and MOAB) with spack
+    software_compiler = gnu
 
     # the system MPI library to use for gnu compiler
     mpi_gnu = openmpi
@@ -188,8 +168,8 @@ will be added soon.)
     # Options related to machine discovery
     [discovery]
 
-    # a substring used to identify this machine from its hostname
-    hostname_contains = morpheus
+    # a regular expression used to identify this machine from its hostname
+    hostname_re = ^morpheus
 
 
 The ``[parallel]`` section should describe the type of parallel queuing
@@ -198,23 +178,9 @@ of cores per node and the command for running an MPI executable (typically
 ``srun`` for Slurm and ``mpirun`` for a "single node" machine like a laptop or
 workstation.
 
-The ``[spack]`` section has some config options to do with loading system
-modules before or after loading a Spack environment.  On a "single node"
-machine, you typically don't have modules so both ``modules_before`` and
-``modules_after`` can be set to ``False``.  On a high-performance computing
-(HPC) machine, you may find it is safest to load modules after the Spack
-environment to ensure that certain paths and environment variables are set the
-way the modules have them, rather than the way that Spack would have them.
-The recommended starting point would be ``modules_before = False`` and
-``modules_after = True``, but could be adjusted as needed if the right shared
-libraries aren't being found when you try to build an MPAS component.
-
-In the ``[paths]`` section, you will first give a path where you would like
-to store shared data files used in compass test cases in ``database_root``.
-Compass will create this directory if it doesn't exist.  Then, you can specify
-``compass_envs`` as a path where shared deployment environments will be
-installed for compass releases.  If developers always create their own local
-environments, this path will never be used.
+In the ``[paths]`` section, you will give a path where you would like to
+store shared data files used in compass test cases in ``database_root``.
+Compass will create this directory if it doesn't exist.
 
 In ``[deploy]``, you will specify config options used in setting up deployment
 and Spack environments for developers.  The ``compiler`` is the default
@@ -223,19 +189,21 @@ compiler to use for your system.  You must supply a corresponding
 that specifies the default MPI library for that compiler.  If you only support
 one compiler and MPI library, that's pretty simple: ``compiler`` is the name
 of the compiler (e.g. ``intel`` or ``gnu``) and ``mpi_<compiler>`` is the
-MPI library (e.g. ``compiler_gnu = mpich`` or ``compiler_intel = openmpi``).
+MPI library (e.g. ``mpi_gnu = mpich`` or ``mpi_intel = openmpi``).
+The ``software_compiler`` is the compiler used to build the shared Spack
+software environment (ESMF, MOAB and CMake); it defaults to ``compiler``.
 The ``spack`` option specifies a path where Spack environment will be created.
 The option ``use_e3sm_hdf5_netcdf = False`` indicates that you will not use
 the E3SM default modules for HDF5 and NetCDF libraries (which are not available
 for machines installed in the way described here).
 
-Finally, ``[discovery]`` allows you to add a ``hostname_contains`` that is used
-to automatically identify your machine based on its hostname.  If your machine
-has multiple login nodes with different hostnames, hopefully, a string common
-to all login nodes can be used here.  If your machine has a unique hostname,
-simply give that.  This option saves developers from having to specify
-``--machine <machine>`` each time they deploy compass environments or set up
-test cases.
+Finally, ``[discovery]`` allows you to add a ``hostname_re``, a regular
+expression that is used to automatically identify your machine based on its
+hostname.  If your machine has multiple login nodes with different hostnames,
+hopefully, a pattern common to all login nodes can be used here.  If your
+machine has a unique hostname, simply give that.  This option saves
+developers from having to specify ``--machine <machine>`` each time they
+deploy compass environments or set up test cases.
 
 
 Describing a Spack Environment

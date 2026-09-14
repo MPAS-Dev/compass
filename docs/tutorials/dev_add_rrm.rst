@@ -35,7 +35,7 @@ needs.
 .. code-block:: bash
 
   # this one will take a while the first time
-  ./deploy.py --prefix $HOME/compass_yam
+  ./deploy.py --pixi-path $HOME/compass_yam
 
 If all goes well, you will have one or more generated load scripts called
 ``load_*.sh`` in the root of the repository.  For example, on Chrysalis, you
@@ -308,11 +308,14 @@ file:
 
     $ tail -f compass.o*
 
-    Loading conda environment
-    Done.
-
-    Loading Spack environment...
-    Done.
+    verifying deployed compass version...
+      Verified version 2.0.0-alpha.3.
+    loading compute pixi env...
+       pixi env loaded.
+    activating spack env...
+       spack env activated.
+    loading compass environment variables...
+       compass environment variables loaded.
 
     ocean/global_ocean/YAM10to60/mesh
       * step: base_mesh
@@ -329,11 +332,14 @@ If things don't go well, you might see something like:
 
 .. code-block::
 
-    Loading conda environment
-    Done.
-
-    Loading Spack environment...
-    Done.
+    verifying deployed compass version...
+      Verified version 2.0.0-alpha.3.
+    loading compute pixi env...
+       pixi env loaded.
+    activating spack env...
+       spack env activated.
+    loading compass environment variables...
+       compass environment variables loaded.
 
     ocean/global_ocean/YAM10to60/mesh
       * step: base_mesh
@@ -1222,11 +1228,14 @@ You should see something a lot like this:
 
 .. code-block::
 
-    Loading conda environment
-    Done.
-
-    Loading Spack environment...
-    Done.
+    verifying deployed compass version...
+      Verified version 2.0.0-alpha.3.
+    loading compute pixi env...
+       pixi env loaded.
+    activating spack env...
+       spack env activated.
+    loading compass environment variables...
+       compass environment variables loaded.
 
     ocean/global_ocean/YAM10to60/WOA23/init
       * step: initial_state
@@ -1496,11 +1505,14 @@ This time, the output should look like:
 
 .. code-block::
 
-    Loading conda environment
-    Done.
-
-    Loading Spack environment...
-    Done.
+    verifying deployed compass version...
+      Verified version 2.0.0-alpha.3.
+    loading compute pixi env...
+       pixi env loaded.
+    activating spack env...
+       spack env activated.
+    loading compass environment variables...
+       compass environment variables loaded.
 
     ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment
       * step: damped_adjustment_1

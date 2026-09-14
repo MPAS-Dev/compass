@@ -11,11 +11,10 @@ help of a config file similar to `example.cfg`.
 Instructions
 ------------
 
-1. Configure the compass environment and create load scripts with the desiredof
-   compiler and mpi library, e.g.:
+1. Deploy the compass environment and create a load script with the desired
+   compiler and MPI library, e.g.:
    ```shell
-   ./conda/configure_compass_env.py --env_name compass_e3sm_update \
-       --compiler intel --mpi openmpi --conda ~/miniforge3/
+   ./deploy.py --compiler intel --mpi openmpi
    ```
 
 2. Copy `example.cfg` to the base of the branch:

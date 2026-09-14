@@ -1,3 +1,5 @@
+.. _dev_machine_perlmutter:
+
 Perlmutter
 ==========
 
@@ -19,3 +21,20 @@ Then, you can build the MPAS model with
 .. code-block:: bash
 
     make [DEBUG=true] gnu-cray
+
+pm-gpu, gnugpu
+--------------
+
+Perlmutter's GPU nodes are supported for MALI with the GPU-enabled Albany
+library.  Deploy with ``--machine pm-gpu`` and ``--with-albany``, then
+source a load script similar to:
+
+.. code-block:: bash
+
+    source load_compass_pm-gpu_gnugpu_mpich.sh
+
+Then, you can build MALI with
+
+.. code-block:: bash
+
+    make [DEBUG=true] ALBANY=true gnu-cray

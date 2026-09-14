@@ -327,7 +327,7 @@ The branch_ensemble config options are read from the selected template file
 Steps for setting up and running an ensemble
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. With a compass conda environment set up, run, e.g.,
+1. With a compass environment set up, run, e.g.,
    ``compass setup -t landice/ensemble_generator/spinup_ensemble -w WORK_DIR_PATH -f TEMPLATE.cfg``
    where ``WORK_DIR_PATH`` is a location that can store the whole
    ensemble (typically a scratch drive) and ``TEMPLATE.cfg`` is the

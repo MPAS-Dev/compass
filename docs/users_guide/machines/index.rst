@@ -25,17 +25,19 @@ The config options typically defined for a machine are:
     # A shared root directory where MPAS standalone data can be found
     database_root = /lcrc/group/e3sm/public_html/mpas_standalonedata
 
-    # the path to the base conda environment where compass environments have
-    # been created
+    # the path where shared compass environments are deployed
     compass_envs = /lcrc/soft/climate/compass/chrysalis/base
 
 
-    # Options related to deploying a compass conda environment on supported
+    # Options related to deploying compass environments on supported
     # machines
     [deploy]
 
     # the compiler set to use for system libraries and MPAS builds
     compiler = intel
+
+    # the compiler to use to build software (e.g. ESMF and MOAB) with spack
+    software_compiler = intel
 
     # the system MPI library to use for intel compiler
     mpi_intel = openmpi
@@ -53,13 +55,13 @@ The config options typically defined for a machine are:
 The ``paths`` section provides local paths to the root of the "databases"
 (local caches) of data files for each MPAS core.  These are generally in a
 shared location for the project to save space.  Similarly, ``compass_envs``
-is a location where shared conda environments will be created for ``compass``
+is a location where shared environments can be deployed for ``compass``
 releases for users to share.
 
-The ``deploy`` section is used to help ``compass`` create development and
-release conda environments and activation scripts.  It says which compiler set
-is the default, which MPI library is the default for each supported compiler,
-and where libraries built with system MPI will be placed.
+The ``deploy`` section is used by ``./deploy.py`` to create pixi and Spack
+environments and load scripts.  It says which compiler set is the default,
+which MPI library is the default for each supported compiler, and where
+libraries built with system MPI will be placed.
 
 Some config options come from a package, `mache <https://github.com/E3SM-Project/mache/>`_
 that is a dependency of ``compass``.  ``mache`` is designed to detect and
@@ -117,22 +119,22 @@ Here are some basic commands:
 Supported Machines
 ------------------
 
-On each supported machine, users will be able to source a script to activate
-the appropriate compass environment and compilers.  Most machines support 2
-compilers, each with one or more variants of MPI and the required NetCDF,
-pNetCDF and SCORPIO libraries.  These scripts will first load the conda
-environment for ``compass``, then it will load modules and set environment
-variables that will allow you to build and run the MPAS model.
+On each supported machine, ``./deploy.py`` generates a load script for each
+compiler and MPI library you deploy, as described in :ref:`dev_quick_start`.
+Most machines support 2 compilers, each with one or more variants of MPI and
+the required NetCDF, pNetCDF and SCORPIO libraries.  Sourcing a load script
+first activates the pixi environment for ``compass``, then loads modules and
+sets environment variables that will allow you to build and run the MPAS
+model.
 
 A table with the full list of supported machines, compilers, MPI variants,
 and MPAS-model build commands is found in :ref:`dev_supported_machines` in
-the Developer's Guide.  In the links below, we list only the commands needed
-to use the default MPI variant for each compiler on each machine.
+the Developer's Guide.  The links below give the config options for each
+machine.
 
 .. toctree::
    :titlesonly:
 
-   anvil
    chicoma
    chrysalis
    compy
@@ -174,51 +176,18 @@ The paths for the MPAS core "databases" can be any emtpy path to begin with.
 If the path doesn't exist, ``compass`` will create it.
 
 If you're not working on an HPC machine, you will probably not have multiple
-nodes or :ref:`slurm`.  You will probably install
-`MPICH <https://www.mpich.org/>`_ or `OpenMPI <https://www.open-mpi.org/>`_,
-probably via a
-`conda environment <https://docs.conda.io/projects/conda/en/latest/index.html>`_.
-In this case, the ``parallel_executable`` is ``mpirun``.
+nodes or :ref:`slurm`.  You will probably use
+`MPICH <https://www.mpich.org/>`_ or `OpenMPI <https://www.open-mpi.org/>`_
+from the deployed pixi environment.  In this case, the ``parallel_executable``
+is ``mpirun``.
 
-To install the ``compass`` package into a conda environment, you will first
-need to install `Miniforge3 <https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3>`_
-(if it is not already installed).  Then, you will run one of the following
-three commands, depending on how you would like to handle MPI support in the
-conda packages.
+To deploy ``compass`` on an unknown machine, run ``./deploy.py --no-spack``
+from the root of a clone of the repository, as described in
+:ref:`dev_other_machines`.  You will then need to build the MPAS component
+with the compilers and libraries from the pixi environment.
 
-MPICH
------
-
-To create a conda environment called "compass" with MPI from the ``mpich``
-package, run:
-
-.. code-block:: bash
-
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.14 "compass=*=mpi_mpich*"
-
-This is the recommended default for single-node Linux and OSX machines.
-
-OpenMPI
--------
-
-To create a conda environment called "compass" with MPI from the ``openmpi``
-package, run:
-
-.. code-block:: bash
-
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.14 "compass=*=mpi_openmpi*"
-
-No MPI from conda-forge
------------------------
-
-To create a conda environment called "compass" without any MPI package from
-conda-forge, run:
-
-.. code-block:: bash
-
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.14 "compass=*=nompi*"
-
-This would be the starting point for working with ``compass`` on an unknown
-HPC machine.  From there, you would also need to load modules and set
+On an unknown HPC machine, you would also need to load modules and set
 environment variables so that MPAS components can be built with system NetCDF,
-pNetCDF and SCORPIO. This will likely require working with an MPAS developer.
+pNetCDF and SCORPIO.  This will likely require working with an MPAS developer
+to add the machine to ``compass`` and ``mache``, see
+:ref:`dev_add_supported_machine`.
