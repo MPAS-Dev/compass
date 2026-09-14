@@ -8,46 +8,35 @@ suggested solutions.
 
 .. _dev_troubleshooting_conda_solver:
 
-Solver errors when configuring deployment environment
------------------------------------------------------
+Solver errors when deploying
+----------------------------
 
-When setting up :ref:`dev_conda_env`, by calling:
+When setting up :ref:`dev_conda_env` by calling:
 
 .. code-block:: bash
 
     ./deploy.py ...
 
-you may run into an error like:
+you may run into an error from ``pixi`` saying that it could not solve for
+the requested combination of packages.  Details of the error vary, but the
+message usually names the packages whose version requirements conflict.  The
+full output from deployment is in ``deploy_tmp/logs/``.
 
-.. code-block:: none
-
-    Encountered problem while solving:
-      - nothing provides geos 3.5.* needed by cartopy-0.14.3-np110py27_4
-
-    ...
-
-    subprocess.CalledProcessError: ...
-
-Details of the error may vary but the message indicates in some way that there
-was a problem solving for the requested combination of packages.  This likely
-indicates that you have an existing compass development environment
-that can't be updated to be compatible with the new set of development
-packages given in:
-
-.. code-block:: none
-
-    deploy_tmp/build*/spec-file*.txt
-
-The solution should be to recreate the environment rather than trying to
-update it:
+If the error occurs while updating an existing deployment, the solution is
+usually to recreate the environment rather than trying to update it:
 
 .. code-block:: bash
 
     ./deploy.py --recreate ...
 
-The ``--recreate`` flag will first delete the existing deployment artifacts
-before creating them again with the new set of packages required for
+The ``--recreate`` flag will first delete the existing pixi environment
+before creating it again with the new set of packages required for
 developing with the requested compiler and MPI type.
+
+If the error also occurs with ``--recreate``, the dependencies in
+``deploy/pixi.toml.j2`` and the pins in ``deploy/pins.cfg`` are likely
+incompatible with one another, which is a problem with the branch rather than
+with your environment.
 
 .. _dev_troubleshooting_proxy:
 

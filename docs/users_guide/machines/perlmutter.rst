@@ -44,11 +44,10 @@ Archive:
 Perlmutter-CPU
 --------------
 
-**There has not yet been a release with Perlmutter-CPU, so the following applies
-to the release of compass v1.2.0, when it happens.**
-
 Perlmutter's CPU and GPU nodes have different configuration options and
-compilers.  We only support Perlmutter-CPU at this time.
+compilers.  Compass supports both: ``pm-cpu`` for MPAS-Ocean and MALI, and
+``pm-gpu`` for MALI with the GPU-enabled Albany library.  The config options
+for ``pm-gpu`` are in ``compass/machines/pm-gpu.cfg``.
 
 config options
 ~~~~~~~~~~~~~~
@@ -66,17 +65,19 @@ cases or a test suite:
     # A shared root directory where MPAS standalone data can be found
     database_root = /global/cfs/cdirs/e3sm/mpas_standalonedata
 
-    # the path to the base conda environment where compass environments have
-    # been created
+    # the path where shared compass environments are deployed
     compass_envs = /global/common/software/e3sm/compass/pm-cpu/base
 
 
-    # Options related to deploying a compass conda environment on supported
+    # Options related to deploying compass environments on supported
     # machines
     [deploy]
 
     # the compiler set to use for system libraries and MPAS builds
     compiler = gnu
+
+    # the compiler to use to build software (e.g. ESMF and MOAB) with spack
+    software_compiler = gnu
 
     # the system MPI library to use for gnu compiler
     mpi_gnu = mpich
@@ -129,14 +130,6 @@ Additionally, some relevant config options come from the
     # Config options related to spack environments
     [spack]
 
-    # whether to load modules from the spack yaml file before loading the spack
-    # environment
-    modules_before = False
-
-    # whether to load modules from the spack yaml file after loading the spack
-    # environment
-    modules_after = False
-
     # whether the machine uses cray compilers
     cray_compilers = True
 
@@ -162,21 +155,12 @@ as follows:
     # threads per core with hyperthreading
     threads_per_core = 2
 
-Gnu on Perlmutter-CPU
-~~~~~~~~~~~~~~~~~~~~~
+Loading and running compass on Perlmutter
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To load the compass environment and modules, and set appropriate environment
-variables:
-
-.. code-block:: bash
-
-    source /global/cfs/cdirs/e3sm/software/compass/pm-cpu/load_latest_compass_gnu_mpich.sh
-
-To build the MPAS model with
-
-.. code-block:: bash
-
-    make [DEBUG=true] [OPENMP=true] [ALBANY=true] gnu-cray
+Follow the Developer's Guide at :ref:`dev_machine_perlmutter` to deploy
+``compass`` and build MPAS components.  There are currently no shared
+``compass`` environments for users on Perlmutter.
 
 
 Jupyter notebook on remote data

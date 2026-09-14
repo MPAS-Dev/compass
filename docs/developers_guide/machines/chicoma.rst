@@ -1,3 +1,5 @@
+.. _dev_machine_chicoma:
+
 Chicoma
 =======
 

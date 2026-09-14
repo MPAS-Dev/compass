@@ -130,7 +130,7 @@ others) that will be used for submitting the jobs for each ensemble member
 Steps for setting up and running experiments
 --------------------------------------------
 
-1. With a compass conda environment set up, run, e.g.,
+1. With a compass environment set up, run, e.g.,
    ``compass setup -t landice/ismip6_run/ismip6_ais_proj2300 -w WORK_DIR_PATH -f USER.cfg``
    where ``WORK_DIR_PATH`` is a location that can store the whole
    ensemble (typically a scratch drive) and ``USER.cfg`` is the

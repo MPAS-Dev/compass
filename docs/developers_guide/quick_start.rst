@@ -64,7 +64,7 @@ If you are on one of the :ref:`dev_supported_machines`, run:
 
     ./deploy.py [--machine <machine>] [--compiler <compiler> ...] \
         [--mpi <mpi> ...] [--deploy-spack] [--no-spack] \
-        [--prefix <prefix>] [--recreate] [--with-albany]
+        [--pixi-path <path>] [--recreate] [--with-albany]
 
 If you are on a login node, machine detection typically works automatically.
 You can pass ``--machine <machine>`` explicitly if needed.
@@ -118,8 +118,9 @@ Useful flags
 ``--machine``
     Set the machine explicitly instead of relying on automatic detection
 
-``--prefix``
-    Choose the deployment prefix for the pixi environment
+``--pixi-path``
+    Choose the directory for the pixi environment (``pixi-env`` in the
+    repository root by default).  ``--prefix`` is a deprecated alias.
 
 ``--compiler``, ``--mpi``
     Select compiler/MPI combinations, primarily for Spack deployment
@@ -153,19 +154,17 @@ scripts:
 
     source ./load_*.sh
 
-This activates the deployment environment, loads machine modules when
-appropriate, and sets environment variables needed by ``compass`` and MPAS
-components.
+On supported machines, the scripts are named
+``load_compass_<machine>_<compiler>_<mpi>.sh``, one for each compiler and MPI
+combination you deployed.  Sourcing a load script checks that the ``compass``
+package in the pixi environment is the version the script was generated for,
+activates the pixi environment, loads machine modules and Spack environments
+when appropriate, and sets environment variables needed by ``compass`` and
+MPAS components.
 
 When you are working inside a suite or test-case work directory, source
 ``load_compass_env.sh`` instead.  This is a symlink to the load script you
 used while setting up the work directory.
-
-When a generated load script is sourced from the root of the compass
-repository, it reinstalls the version of ``compass`` from that location into
-the active deployment environment.  This is what lets one deployment prefix be
-shared across several branches or worktrees, as long as you re-source the load
-script in the repo you want to work from.
 
 The active load script path is exported in ``COMPASS_LOAD_SCRIPT``.  Compass
 still accepts ``LOAD_COMPASS_ENV`` as a legacy fallback while the migration is
@@ -179,97 +178,61 @@ MPI combination as the load script you plan to use.
 Switching between different compass environments
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Many developers are switching between different ``compass`` branches.
-We have 2 main workflows for doing this: checking out different branches
-in the same directory (with ``git checkout``) or creating new directories for
-each branch (with ``git worktree``).  Either way, you need to be careful that
-the version of the ``compass`` package that is installed in the environment
-you are using is the one you want.  But how to handle it
-differs slightly between these workflows.
+``./deploy.py`` installs the ``compass`` package in editable mode from the
+directory where you run it.  Changes you make to existing files, and files you
+add or remove, are picked up without redeploying or re-sourcing the load
+script.  The pixi environment and load scripts do have to be updated when the
+``compass`` version or its dependencies change.
 
-If you are developing or using multiple ``compass`` branches in the same
-directory (switching between them using ``git checkout``), you will need
-to make sure you update your environment after changing branches.  If
-dependencies are unchanged, you can usually just re-source a load script in
-the branch root:
+Many developers switch between ``compass`` branches, either by checking out
+different branches in the same directory (with ``git checkout``) or by
+creating a directory for each branch (with ``git worktree``).
 
-``source ./load_*.sh``
+If you switch branches in the same directory, the editable install follows the
+checkout, so there is nothing to do as long as the ``compass`` version and
+dependencies are the same.  If the version has changed, the load script
+refuses to activate the environment with an error like:
 
-Similarly, if you are developing or using multiple ``compass`` branches
-but you use a different directory for each
-(creating the directories with ``git worktree``),
-you will need to make sure the version of the ``compass`` package
-in your active environment is the one you want.
-If your branches use the same ``compass`` version (so the dependencies
-are the same), you can use the same deployment prefix for all of them.  You
-will tell the environment which branch to use by running
-``source ./load_*.sh``
-from the *root of the directory (worktree) you want to work with* before
-proceeding.
+.. code-block:: none
 
-In both of these workflows, you can modify the ``compass`` code and the
-environment will notice the changes as you make them.  However, if you have
-added or removed any files during your development, you need to source the
-load script again:
-``source ./load_*.sh``
-in the root of the repo or worktree so that the added or removed files will be
-accounted for in the environment.
+    $ source load_compass_chrysalis_gnu_openmpi.sh
+    verifying deployed compass version...
+    ERROR: version mismatch for compass.
+      Deployed: 2.0.0-alpha.2
+      Runtime:  2.0.0-alpha.3
 
-If you know that ``compass`` has different dependencies
-in a branch or worktree you are working on compared to a previous branch
-you have worked with (or if you aren't sure), it is safest to not just reinstall
-the ``compass`` package but also to check the dependencies by re-running
-``./deploy.py`` with the same arguments as above.
-This will also reinstall the ``compass`` package from the current directory.
-The activation script includes a check to see if the version of compass used
-to produce the load script is the same as the version of compass in the
-current branch.  If the two don't match, an error like the following results
-and the environment is not activated:
+Rerun ``./deploy.py`` to update the environment and load scripts.  If you know
+or suspect that the dependencies have changed, rerun ``./deploy.py`` even if
+the version has not.
 
-.. code-block::
+If you use a directory for each branch, the simplest approach is to run
+``./deploy.py`` in each worktree.  By default, each worktree gets its own
+``pixi-env`` directory and load scripts, so the worktrees are independent of
+one another.
 
-    $ source load_compass_test_morpheus_gnu_openmpi.sh
-    This load script is for a different version of compass:
-    __version__ = '1.2.0-alpha.6'
+You can instead share one pixi environment between worktrees with
+``./deploy.py --pixi-path <path>`` as long as the branches have the same
+dependencies.  In that case, the ``compass`` package in the shared environment
+points to whichever worktree you ran ``./deploy.py`` from most recently, and
+sourcing a load script from another worktree does not change that.  To switch
+worktrees, either rerun ``./deploy.py --pixi-path <path>`` from the worktree
+you want to use or, with the environment activated, run:
 
-    Your code is version:
-    __version__ = '1.2.0-alpha.7'
+.. code-block:: bash
 
-    You need to run ./deploy.py to update your environment and load script.
+    python -m pip install --no-deps --no-build-isolation -e .
 
-If you need more than one environment (e.g. because you are testing multiple
-branches at the same time), use different deployment prefixes with
-``./deploy.py --prefix <path>``.
+from the root of that worktree.  The ``pip`` command is much faster than
+``./deploy.py`` but skips the check that the dependencies are up to date.
 
 .. note::
 
-    If you switch branches and *do not* remember to recreate the environment
-    (``./deploy.py``) or at least source the activation script
-    (``load_*.sh``), you are likely to end up with an incorrect and possibly
-    unusable ``compass`` package in your environment.
-
-    In general, if one wishes to switch between environments created for
-    different compass branches or applications, the best practice is to end
-    the current terminal session and start a new session with a clean
-    environment before executing the other compass load script.  Similarly,
-    if you want to run a job script that itself sources the load script,
-    it's best to start a new terminal without having sourced a load script at
-    all.
-
-.. note::
-
-    With the environment activated, you can switch branches and update
-    just the ``compass`` package with:
-
-    .. code-block:: bash
-
-        python -m pip install --no-deps --no-build-isolation -e .
-
-    The activation script will do this automatically when you source it in the
-    root directory of your compass branch.  The activation script will also
-    check if the current compass version matches the one used to create the
-    activation script, thus catching situations where the dependencies are out
-    of date and ``./deploy.py`` needs to be rerun.
+    If you wish to switch between environments created for different compass
+    branches or applications, the best practice is to end the current terminal
+    session and start a new session with a clean environment before sourcing
+    the other compass load script.  Similarly, if you want to run a job script
+    that itself sources the load script, it's best to start a new terminal
+    without having sourced a load script at all.
 
 Troubleshooting
 ~~~~~~~~~~~~~~~
@@ -306,38 +269,9 @@ To update only the bootstrap environment used internally by deployment, run:
 
     ./deploy.py --bootstrap-only
 
-Each time you want to work with compass, source the generated load script:
-
-.. code-block:: bash
-
-    source ./load_*.sh
-
-This will load the appropriate deployment environment for ``compass``.  It
-will also set an environment variable ``COMPASS_LOAD_SCRIPT`` that points to
-the activation script.  ``compass`` uses this to make a symlink to the
-activation script called ``load_compass_env.sh`` in the work directory.
-
-If you switch to another branch, you will need to rerun:
-
-.. code-block:: bash
-
-    ./deploy.py
-
-to make sure dependencies are up to date and the ``compass`` package points to
-the current directory.
-
-.. note::
-
-    With the environment activated, you can switch branches and update
-    just the ``compass`` package with:
-
-    .. code-block:: bash
-
-        python -m pip install --no-deps --no-build-isolation -e .
-
-    This will be substantially faster than rerunning ``./deploy.py ...`` but
-    at the risk that dependencies are not up to date.  Since dependencies
-    change fairly rarely, this will usually be safe.
+As above, source a generated load script each time you want to work with
+compass.  The load script sets ``COMPASS_LOAD_SCRIPT``, which ``compass`` uses
+to make the ``load_compass_env.sh`` symlink in each work directory.
 
 
 .. _dev_build_mpas:

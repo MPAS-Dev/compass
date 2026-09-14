@@ -19,17 +19,19 @@ suite:
     # A shared root directory where MPAS standalone data can be found
     database_root = /compyfs/mpas_standalonedata
 
-    # the path to the base conda environment where compass environments have
-    # been created
+    # the path where shared compass environments are deployed
     compass_envs = /share/apps/E3SM/conda_envs/compass/base
 
 
-    # Options related to deploying a compass conda environment on supported
+    # Options related to deploying compass environments on supported
     # machines
     [deploy]
 
     # the compiler set to use for system libraries and MPAS builds
     compiler = intel
+
+    # the compiler to use to build software (e.g. ESMF and MOAB) with spack
+    software_compiler = intel
 
     # the system MPI library to use for intel compiler
     mpi_intel = impi
@@ -73,18 +75,9 @@ Additionally, some relevant config options come from the
     qos = regular
 
 
-Intel on CompyMcNodeFace
-------------------------
+Loading and running compass on CompyMcNodeFace
+----------------------------------------------
 
-To load the compass environment and modules, and set appropriate environment
-variables:
-
-.. code-block:: bash
-
-    source source /share/apps/E3SM/conda_envs/compass/load_latest_compass_intel_impi.sh
-
-To build the MPAS model with
-
-.. code-block:: bash
-
-    make [DEBUG=true] [OPENMP=true] intel-mpi
+Follow the Developer's Guide at :ref:`dev_machine_compy` to deploy
+``compass`` and build MPAS components.  There are currently no shared
+``compass`` environments for users on CompyMcNodeFace.
