@@ -63,12 +63,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../framework.html">Framework</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Machines</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#supported-machines">Supported Machines</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="anvil.html">Anvil</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chicoma.html">Chicoma</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chrysalis.html">Chrysalis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compy.html">CompyMcNodeFace</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Perlmutter</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pm-cpu-gnu">pm-cpu, gnu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pm-gpu-gnugpu">pm-gpu, gnugpu</a></li>
 </ul>
 </li>
 </ul>
@@ -126,7 +126,7 @@
            <div itemprop="articleBody">
              
   <section id="perlmutter">
-<h1>Perlmutter<a class="headerlink" href="#perlmutter" title="Link to this heading"></a></h1>
+<span id="dev-machine-perlmutter"></span><h1>Perlmutter<a class="headerlink" href="#perlmutter" title="Link to this heading"></a></h1>
 <p>For most machine-specific details (including config options and how to
 enable hyperthreading), see the User’s Guide under <a class="reference internal" href="../../users_guide/machines/perlmutter.html#machine-perlmutter"><span class="std std-ref">Perlmutter</span></a>.</p>
 <section id="pm-cpu-gnu">
@@ -138,6 +138,19 @@ script similar to:</p>
 </div>
 <p>Then, you can build the MPAS model with</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span>gnu-cray
+</pre></div>
+</div>
+</section>
+<section id="pm-gpu-gnugpu">
+<h2>pm-gpu, gnugpu<a class="headerlink" href="#pm-gpu-gnugpu" title="Link to this heading"></a></h2>
+<p>Perlmutter’s GPU nodes are supported for MALI with the GPU-enabled Albany
+library.  Deploy with <code class="docutils literal notranslate"><span class="pre">--machine</span> <span class="pre">pm-gpu</span></code> and <code class="docutils literal notranslate"><span class="pre">--with-albany</span></code>, then
+source a load script similar to:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>load_compass_pm-gpu_gnugpu_mpich.sh
+</pre></div>
+</div>
+<p>Then, you can build MALI with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span><span class="nv">ALBANY</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>gnu-cray
 </pre></div>
 </div>
 </section>

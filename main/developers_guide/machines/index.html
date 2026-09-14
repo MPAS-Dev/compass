@@ -19,7 +19,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Anvil" href="anvil.html" />
+    <link rel="next" title="Chicoma" href="chicoma.html" />
     <link rel="prev" title="Framework" href="../framework.html" /> 
 </head>
 
@@ -63,7 +63,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../framework.html">Framework</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Machines</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#supported-machines">Supported Machines</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="anvil.html">Anvil</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chicoma.html">Chicoma</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chrysalis.html">Chrysalis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compy.html">CompyMcNodeFace</a></li>
@@ -140,7 +139,7 @@ cases are configured in a way that is appropriate for your machine.</p>
 <p>If you follow the procedure in <a class="reference internal" href="../quick_start.html#dev-conda-env"><span class="std std-ref">compass pixi and Spack environments, compilers and system modules</span></a>, you will have one or more
 generated load scripts in the root of your compass branch.  Source the one
 that matches the machine, compiler and MPI library you want to use, e.g.:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>load_compass_anvil_intel_impi.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>load_compass_chrysalis_intel_openmpi.sh
 </pre></div>
 </div>
 <p>After loading this environment, you can set up test cases or test suites, and
@@ -164,21 +163,6 @@ supported for those configurations with <code class="docutils literal notranslat
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td rowspan="4"><p>anvil</p></td>
-<td rowspan="2"><p>intel</p></td>
-<td><p>impi</p></td>
-<td><p>intel-mpi</p></td>
-</tr>
-<tr class="row-odd"><td><p>openmpi</p></td>
-<td><p>ifort</p></td>
-</tr>
-<tr class="row-even"><td rowspan="2"><p>gnu</p></td>
-<td><p>openmpi</p></td>
-<td><p>gfortran</p></td>
-</tr>
-<tr class="row-odd"><td><p>mvapich</p></td>
-<td><p>gfortran</p></td>
-</tr>
 <tr class="row-even"><td><p>chicoma-cpu</p></td>
 <td><p>gnu</p></td>
 <td><p>mpich</p></td>
@@ -203,12 +187,16 @@ supported for those configurations with <code class="docutils literal notranslat
 <td><p>mpich</p></td>
 <td><p>gnu-cray</p></td>
 </tr>
+<tr class="row-odd"><td><p>pm-gpu</p></td>
+<td><p>gnugpu</p></td>
+<td><p>mpich</p></td>
+<td><p>gnu-cray</p></td>
+</tr>
 </tbody>
 </table>
 <p>Below are specifics for each supported machine</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="anvil.html">Anvil</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chicoma.html">Chicoma</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chrysalis.html">Chrysalis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compy.html">CompyMcNodeFace</a></li>
@@ -253,8 +241,7 @@ environment and environment variables.</p>
 <code class="docutils literal notranslate"><span class="pre">compass/machines</span></code>.  The config file needs to describe the parallel
 environment and some paths where shared Spack environments will be installed
 and shared data will be downloaded.  The easiest place to start is one of the
-examples provided (machines <code class="docutils literal notranslate"><span class="pre">morpheus</span></code> and <code class="docutils literal notranslate"><span class="pre">eligos</span></code> for now, but more
-will be added soon.)</p>
+existing config files there, or the example below.</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The parallel section describes options related to running jobs in parallel</span>
 <span class="k">[parallel]</span>
 
@@ -268,27 +255,12 @@ will be added soon.)</p>
 <span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span>
 
 
-<span class="c1"># Config options related to spack environments</span>
-<span class="k">[spack]</span>
-
-<span class="c1"># whether to load modules from the spack yaml file before loading the spack</span>
-<span class="c1"># environment</span>
-<span class="na">modules_before</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
-
-<span class="c1"># whether to load modules from the spack yaml file after loading the spack</span>
-<span class="c1"># environment</span>
-<span class="na">modules_after</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
-
-
 <span class="c1"># The paths section describes paths that are used within the ocean core test</span>
 <span class="c1"># cases.</span>
 <span class="k">[paths]</span>
 
 <span class="c1"># A shared root directory where MPAS standalone data can be found</span>
 <span class="na">database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata</span>
-
-<span class="c1"># the path where deployed compass environments are located</span>
-<span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/compass_envs</span>
 
 
 <span class="c1"># Options related to deploying compass environments on supported</span>
@@ -297,6 +269,9 @@ will be added soon.)</p>
 
 <span class="c1"># the compiler set to use for system libraries and MPAS builds</span>
 <span class="na">compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">gnu</span>
+
+<span class="c1"># the compiler to use to build software (e.g. ESMF and MOAB) with spack</span>
+<span class="na">software_compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">gnu</span>
 
 <span class="c1"># the system MPI library to use for gnu compiler</span>
 <span class="na">mpi_gnu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">openmpi</span>
@@ -312,8 +287,8 @@ will be added soon.)</p>
 <span class="c1"># Options related to machine discovery</span>
 <span class="k">[discovery]</span>
 
-<span class="c1"># a substring used to identify this machine from its hostname</span>
-<span class="na">hostname_contains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">morpheus</span>
+<span class="c1"># a regular expression used to identify this machine from its hostname</span>
+<span class="na">hostname_re</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">^morpheus</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">[parallel]</span></code> section should describe the type of parallel queuing
@@ -321,22 +296,9 @@ system (currently only <code class="docutils literal notranslate"><span class="p
 of cores per node and the command for running an MPI executable (typically
 <code class="docutils literal notranslate"><span class="pre">srun</span></code> for Slurm and <code class="docutils literal notranslate"><span class="pre">mpirun</span></code> for a “single node” machine like a laptop or
 workstation.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">[spack]</span></code> section has some config options to do with loading system
-modules before or after loading a Spack environment.  On a “single node”
-machine, you typically don’t have modules so both <code class="docutils literal notranslate"><span class="pre">modules_before</span></code> and
-<code class="docutils literal notranslate"><span class="pre">modules_after</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.  On a high-performance computing
-(HPC) machine, you may find it is safest to load modules after the Spack
-environment to ensure that certain paths and environment variables are set the
-way the modules have them, rather than the way that Spack would have them.
-The recommended starting point would be <code class="docutils literal notranslate"><span class="pre">modules_before</span> <span class="pre">=</span> <span class="pre">False</span></code> and
-<code class="docutils literal notranslate"><span class="pre">modules_after</span> <span class="pre">=</span> <span class="pre">True</span></code>, but could be adjusted as needed if the right shared
-libraries aren’t being found when you try to build an MPAS component.</p>
-<p>In the <code class="docutils literal notranslate"><span class="pre">[paths]</span></code> section, you will first give a path where you would like
-to store shared data files used in compass test cases in <code class="docutils literal notranslate"><span class="pre">database_root</span></code>.
-Compass will create this directory if it doesn’t exist.  Then, you can specify
-<code class="docutils literal notranslate"><span class="pre">compass_envs</span></code> as a path where shared deployment environments will be
-installed for compass releases.  If developers always create their own local
-environments, this path will never be used.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">[paths]</span></code> section, you will give a path where you would like to
+store shared data files used in compass test cases in <code class="docutils literal notranslate"><span class="pre">database_root</span></code>.
+Compass will create this directory if it doesn’t exist.</p>
 <p>In <code class="docutils literal notranslate"><span class="pre">[deploy]</span></code>, you will specify config options used in setting up deployment
 and Spack environments for developers.  The <code class="docutils literal notranslate"><span class="pre">compiler</span></code> is the default
 compiler to use for your system.  You must supply a corresponding
@@ -344,18 +306,20 @@ compiler to use for your system.  You must supply a corresponding
 that specifies the default MPI library for that compiler.  If you only support
 one compiler and MPI library, that’s pretty simple: <code class="docutils literal notranslate"><span class="pre">compiler</span></code> is the name
 of the compiler (e.g. <code class="docutils literal notranslate"><span class="pre">intel</span></code> or <code class="docutils literal notranslate"><span class="pre">gnu</span></code>) and <code class="docutils literal notranslate"><span class="pre">mpi_&lt;compiler&gt;</span></code> is the
-MPI library (e.g. <code class="docutils literal notranslate"><span class="pre">compiler_gnu</span> <span class="pre">=</span> <span class="pre">mpich</span></code> or <code class="docutils literal notranslate"><span class="pre">compiler_intel</span> <span class="pre">=</span> <span class="pre">openmpi</span></code>).
+MPI library (e.g. <code class="docutils literal notranslate"><span class="pre">mpi_gnu</span> <span class="pre">=</span> <span class="pre">mpich</span></code> or <code class="docutils literal notranslate"><span class="pre">mpi_intel</span> <span class="pre">=</span> <span class="pre">openmpi</span></code>).
+The <code class="docutils literal notranslate"><span class="pre">software_compiler</span></code> is the compiler used to build the shared Spack
+software environment (ESMF, MOAB and CMake); it defaults to <code class="docutils literal notranslate"><span class="pre">compiler</span></code>.
 The <code class="docutils literal notranslate"><span class="pre">spack</span></code> option specifies a path where Spack environment will be created.
 The option <code class="docutils literal notranslate"><span class="pre">use_e3sm_hdf5_netcdf</span> <span class="pre">=</span> <span class="pre">False</span></code> indicates that you will not use
 the E3SM default modules for HDF5 and NetCDF libraries (which are not available
 for machines installed in the way described here).</p>
-<p>Finally, <code class="docutils literal notranslate"><span class="pre">[discovery]</span></code> allows you to add a <code class="docutils literal notranslate"><span class="pre">hostname_contains</span></code> that is used
-to automatically identify your machine based on its hostname.  If your machine
-has multiple login nodes with different hostnames, hopefully, a string common
-to all login nodes can be used here.  If your machine has a unique hostname,
-simply give that.  This option saves developers from having to specify
-<code class="docutils literal notranslate"><span class="pre">--machine</span> <span class="pre">&lt;machine&gt;</span></code> each time they deploy compass environments or set up
-test cases.</p>
+<p>Finally, <code class="docutils literal notranslate"><span class="pre">[discovery]</span></code> allows you to add a <code class="docutils literal notranslate"><span class="pre">hostname_re</span></code>, a regular
+expression that is used to automatically identify your machine based on its
+hostname.  If your machine has multiple login nodes with different hostnames,
+hopefully, a pattern common to all login nodes can be used here.  If your
+machine has a unique hostname, simply give that.  This option saves
+developers from having to specify <code class="docutils literal notranslate"><span class="pre">--machine</span> <span class="pre">&lt;machine&gt;</span></code> each time they
+deploy compass environments or set up test cases.</p>
 </section>
 <section id="describing-a-spack-environment">
 <h3>Describing a Spack Environment<a class="headerlink" href="#describing-a-spack-environment" title="Link to this heading"></a></h3>
@@ -423,7 +387,7 @@ into the compass main repo to add your supported machine.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../framework.html" class="btn btn-neutral float-left" title="Framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="anvil.html" class="btn btn-neutral float-right" title="Anvil" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chicoma.html" class="btn btn-neutral float-right" title="Chicoma" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

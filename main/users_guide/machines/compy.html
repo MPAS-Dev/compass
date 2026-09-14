@@ -54,21 +54,17 @@
 <li class="toctree-l2"><a class="reference internal" href="index.html#config-options">config options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#slurm-job-queueing">Slurm job queueing</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#supported-machines">Supported Machines</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="anvil.html">Anvil</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chicoma.html">Chicoma</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chrysalis.html">Chrysalis</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">CompyMcNodeFace</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#intel-on-compymcnodeface">Intel on CompyMcNodeFace</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#loading-and-running-compass-on-compymcnodeface">Loading and running compass on CompyMcNodeFace</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="perlmutter.html">Perlmutter</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#other-machines">Other Machines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id4">MPICH</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id5">OpenMPI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#no-mpi-from-conda-forge">No MPI from conda-forge</a></li>
 </ul>
 </li>
 </ul>
@@ -144,17 +140,19 @@ suite:</p>
 <span class="c1"># A shared root directory where MPAS standalone data can be found</span>
 <span class="na">database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/compyfs/mpas_standalonedata</span>
 
-<span class="c1"># the path to the base conda environment where compass environments have</span>
-<span class="c1"># been created</span>
+<span class="c1"># the path where shared compass environments are deployed</span>
 <span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/share/apps/E3SM/conda_envs/compass/base</span>
 
 
-<span class="c1"># Options related to deploying a compass conda environment on supported</span>
+<span class="c1"># Options related to deploying compass environments on supported</span>
 <span class="c1"># machines</span>
 <span class="k">[deploy]</span>
 
 <span class="c1"># the compiler set to use for system libraries and MPAS builds</span>
 <span class="na">compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">intel</span>
+
+<span class="c1"># the compiler to use to build software (e.g. ESMF and MOAB) with spack</span>
+<span class="na">software_compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">intel</span>
 
 <span class="c1"># the system MPI library to use for intel compiler</span>
 <span class="na">mpi_intel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">impi</span>
@@ -197,17 +195,11 @@ suite:</p>
 </pre></div>
 </div>
 </section>
-<section id="intel-on-compymcnodeface">
-<h2>Intel on CompyMcNodeFace<a class="headerlink" href="#intel-on-compymcnodeface" title="Link to this heading"></a></h2>
-<p>To load the compass environment and modules, and set appropriate environment
-variables:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span><span class="nb">source</span><span class="w"> </span>/share/apps/E3SM/conda_envs/compass/load_latest_compass_intel_impi.sh
-</pre></div>
-</div>
-<p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span>intel-mpi
-</pre></div>
-</div>
+<section id="loading-and-running-compass-on-compymcnodeface">
+<h2>Loading and running compass on CompyMcNodeFace<a class="headerlink" href="#loading-and-running-compass-on-compymcnodeface" title="Link to this heading"></a></h2>
+<p>Follow the Developer’s Guide at <a class="reference internal" href="../../developers_guide/machines/compy.html#dev-machine-compy"><span class="std std-ref">CompyMcNodeFace</span></a> to deploy
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> and build MPAS components.  There are currently no shared
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> environments for users on CompyMcNodeFace.</p>
 </section>
 </section>
 

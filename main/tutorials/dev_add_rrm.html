@@ -145,7 +145,7 @@ you are working on a supported machine and using the default compilers and MPI
 libraries, but consult the documentation to make an environment to suit your
 needs.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># this one will take a while the first time</span>
-./deploy.py<span class="w"> </span>--prefix<span class="w"> </span><span class="nv">$HOME</span>/compass_yam
+./deploy.py<span class="w"> </span>--pixi-path<span class="w"> </span><span class="nv">$HOME</span>/compass_yam
 </pre></div>
 </div>
 <p>If all goes well, you will have one or more generated load scripts called
@@ -373,11 +373,14 @@ compass<span class="w"> </span>run<span class="w"> </span>custom
 file:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ tail -f compass.o*
 
-Loading conda environment
-Done.
-
-Loading Spack environment...
-Done.
+verifying deployed compass version...
+  Verified version 2.0.0-alpha.3.
+loading compute pixi env...
+   pixi env loaded.
+activating spack env...
+   spack env activated.
+loading compass environment variables...
+   compass environment variables loaded.
 
 ocean/global_ocean/YAM10to60/mesh
   * step: base_mesh
@@ -392,11 +395,14 @@ PASS: All passed successfully!
 </pre></div>
 </div>
 <p>If things don’t go well, you might see something like:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Loading</span> <span class="n">conda</span> <span class="n">environment</span>
-<span class="n">Done</span><span class="o">.</span>
-
-<span class="n">Loading</span> <span class="n">Spack</span> <span class="n">environment</span><span class="o">...</span>
-<span class="n">Done</span><span class="o">.</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">verifying</span> <span class="n">deployed</span> <span class="n">compass</span> <span class="n">version</span><span class="o">...</span>
+  <span class="n">Verified</span> <span class="n">version</span> <span class="mf">2.0.0</span><span class="o">-</span><span class="n">alpha</span><span class="mf">.3</span><span class="o">.</span>
+<span class="n">loading</span> <span class="n">compute</span> <span class="n">pixi</span> <span class="n">env</span><span class="o">...</span>
+   <span class="n">pixi</span> <span class="n">env</span> <span class="n">loaded</span><span class="o">.</span>
+<span class="n">activating</span> <span class="n">spack</span> <span class="n">env</span><span class="o">...</span>
+   <span class="n">spack</span> <span class="n">env</span> <span class="n">activated</span><span class="o">.</span>
+<span class="n">loading</span> <span class="n">compass</span> <span class="n">environment</span> <span class="n">variables</span><span class="o">...</span>
+   <span class="n">compass</span> <span class="n">environment</span> <span class="n">variables</span> <span class="n">loaded</span><span class="o">.</span>
 
 <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAM10to60</span><span class="o">/</span><span class="n">mesh</span>
   <span class="o">*</span> <span class="n">step</span><span class="p">:</span> <span class="n">base_mesh</span>
@@ -1139,11 +1145,14 @@ tail<span class="w"> </span>-f<span class="w"> </span>compass.o*
 </pre></div>
 </div>
 <p>You should see something a lot like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Loading conda environment
-Done.
-
-Loading Spack environment...
-Done.
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>verifying deployed compass version...
+  Verified version 2.0.0-alpha.3.
+loading compute pixi env...
+   pixi env loaded.
+activating spack env...
+   spack env activated.
+loading compass environment variables...
+   compass environment variables loaded.
 
 ocean/global_ocean/YAM10to60/WOA23/init
   * step: initial_state
@@ -1384,11 +1393,14 @@ tail<span class="w"> </span>-f<span class="w"> </span>compass.o*
 </pre></div>
 </div>
 <p>This time, the output should look like:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Loading</span> <span class="n">conda</span> <span class="n">environment</span>
-<span class="n">Done</span><span class="o">.</span>
-
-<span class="n">Loading</span> <span class="n">Spack</span> <span class="n">environment</span><span class="o">...</span>
-<span class="n">Done</span><span class="o">.</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">verifying</span> <span class="n">deployed</span> <span class="n">compass</span> <span class="n">version</span><span class="o">...</span>
+  <span class="n">Verified</span> <span class="n">version</span> <span class="mf">2.0.0</span><span class="o">-</span><span class="n">alpha</span><span class="mf">.3</span><span class="o">.</span>
+<span class="n">loading</span> <span class="n">compute</span> <span class="n">pixi</span> <span class="n">env</span><span class="o">...</span>
+   <span class="n">pixi</span> <span class="n">env</span> <span class="n">loaded</span><span class="o">.</span>
+<span class="n">activating</span> <span class="n">spack</span> <span class="n">env</span><span class="o">...</span>
+   <span class="n">spack</span> <span class="n">env</span> <span class="n">activated</span><span class="o">.</span>
+<span class="n">loading</span> <span class="n">compass</span> <span class="n">environment</span> <span class="n">variables</span><span class="o">...</span>
+   <span class="n">compass</span> <span class="n">environment</span> <span class="n">variables</span> <span class="n">loaded</span><span class="o">.</span>
 
 <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAM10to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">dynamic_adjustment</span>
   <span class="o">*</span> <span class="n">step</span><span class="p">:</span> <span class="n">damped_adjustment_1</span>

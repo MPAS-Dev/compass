@@ -54,7 +54,6 @@
 <li class="toctree-l2"><a class="reference internal" href="index.html#config-options">config options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#slurm-job-queueing">Slurm job queueing</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#supported-machines">Supported Machines</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="anvil.html">Anvil</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chicoma.html">Chicoma</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chrysalis.html">Chrysalis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compy.html">CompyMcNodeFace</a></li>
@@ -66,9 +65,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#other-machines">Other Machines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id4">MPICH</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id5">OpenMPI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#no-mpi-from-conda-forge">No MPI from conda-forge</a></li>
 </ul>
 </li>
 </ul>
@@ -162,10 +158,10 @@ salloc<span class="w"> </span>--partition<span class="o">=</span>debug<span clas
 </ul>
 <section id="perlmutter-cpu">
 <h2>Perlmutter-CPU<a class="headerlink" href="#perlmutter-cpu" title="Link to this heading"></a></h2>
-<p><strong>There has not yet been a release with Perlmutter-CPU, so the following applies
-to the release of compass v1.2.0, when it happens.</strong></p>
 <p>Perlmutter’s CPU and GPU nodes have different configuration options and
-compilers.  We only support Perlmutter-CPU at this time.</p>
+compilers.  Compass supports both: <code class="docutils literal notranslate"><span class="pre">pm-cpu</span></code> for MPAS-Ocean and MALI, and
+<code class="docutils literal notranslate"><span class="pre">pm-gpu</span></code> for MALI with the GPU-enabled Albany library.  The config options
+for <code class="docutils literal notranslate"><span class="pre">pm-gpu</span></code> are in <code class="docutils literal notranslate"><span class="pre">compass/machines/pm-gpu.cfg</span></code>.</p>
 <section id="config-options">
 <h3>config options<a class="headerlink" href="#config-options" title="Link to this heading"></a></h3>
 <p>Here are the default
@@ -178,17 +174,19 @@ cases or a test suite:</p>
 <span class="c1"># A shared root directory where MPAS standalone data can be found</span>
 <span class="na">database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata</span>
 
-<span class="c1"># the path to the base conda environment where compass environments have</span>
-<span class="c1"># been created</span>
+<span class="c1"># the path where shared compass environments are deployed</span>
 <span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/common/software/e3sm/compass/pm-cpu/base</span>
 
 
-<span class="c1"># Options related to deploying a compass conda environment on supported</span>
+<span class="c1"># Options related to deploying compass environments on supported</span>
 <span class="c1"># machines</span>
 <span class="k">[deploy]</span>
 
 <span class="c1"># the compiler set to use for system libraries and MPAS builds</span>
 <span class="na">compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">gnu</span>
+
+<span class="c1"># the compiler to use to build software (e.g. ESMF and MOAB) with spack</span>
+<span class="na">software_compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">gnu</span>
 
 <span class="c1"># the system MPI library to use for gnu compiler</span>
 <span class="na">mpi_gnu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpich</span>
@@ -239,14 +237,6 @@ cases or a test suite:</p>
 <span class="c1"># Config options related to spack environments</span>
 <span class="k">[spack]</span>
 
-<span class="c1"># whether to load modules from the spack yaml file before loading the spack</span>
-<span class="c1"># environment</span>
-<span class="na">modules_before</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
-
-<span class="c1"># whether to load modules from the spack yaml file after loading the spack</span>
-<span class="c1"># environment</span>
-<span class="na">modules_after</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
-
 <span class="c1"># whether the machine uses cray compilers</span>
 <span class="na">cray_compilers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 </pre></div>
@@ -272,17 +262,11 @@ as follows:</p>
 </pre></div>
 </div>
 </section>
-<section id="gnu-on-perlmutter-cpu">
-<h3>Gnu on Perlmutter-CPU<a class="headerlink" href="#gnu-on-perlmutter-cpu" title="Link to this heading"></a></h3>
-<p>To load the compass environment and modules, and set appropriate environment
-variables:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/global/cfs/cdirs/e3sm/software/compass/pm-cpu/load_latest_compass_gnu_mpich.sh
-</pre></div>
-</div>
-<p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="nv">ALBANY</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span>gnu-cray
-</pre></div>
-</div>
+<section id="loading-and-running-compass-on-perlmutter">
+<h3>Loading and running compass on Perlmutter<a class="headerlink" href="#loading-and-running-compass-on-perlmutter" title="Link to this heading"></a></h3>
+<p>Follow the Developer’s Guide at <a class="reference internal" href="../../developers_guide/machines/perlmutter.html#dev-machine-perlmutter"><span class="std std-ref">Perlmutter</span></a> to deploy
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> and build MPAS components.  There are currently no shared
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> environments for users on Perlmutter.</p>
 </section>
 </section>
 <section id="jupyter-notebook-on-remote-data">

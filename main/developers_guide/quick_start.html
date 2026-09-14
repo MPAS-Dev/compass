@@ -173,7 +173,7 @@ pass it explicitly with <code class="docutils literal notranslate"><span class="
 <p>If you are on one of the <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a>, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./deploy.py<span class="w"> </span><span class="o">[</span>--machine<span class="w"> </span>&lt;machine&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--compiler<span class="w"> </span>&lt;compiler&gt;<span class="w"> </span>...<span class="o">]</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="o">[</span>--mpi<span class="w"> </span>&lt;mpi&gt;<span class="w"> </span>...<span class="o">]</span><span class="w"> </span><span class="o">[</span>--deploy-spack<span class="o">]</span><span class="w"> </span><span class="o">[</span>--no-spack<span class="o">]</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span><span class="o">[</span>--prefix<span class="w"> </span>&lt;prefix&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--recreate<span class="o">]</span><span class="w"> </span><span class="o">[</span>--with-albany<span class="o">]</span>
+<span class="w">    </span><span class="o">[</span>--pixi-path<span class="w"> </span>&lt;path&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--recreate<span class="o">]</span><span class="w"> </span><span class="o">[</span>--with-albany<span class="o">]</span>
 </pre></div>
 </div>
 <p>If you are on a login node, machine detection typically works automatically.
@@ -219,7 +219,8 @@ supporting binaries</p></li>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">--machine</span></code></dt><dd><p>Set the machine explicitly instead of relying on automatic detection</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--prefix</span></code></dt><dd><p>Choose the deployment prefix for the pixi environment</p>
+<dt><code class="docutils literal notranslate"><span class="pre">--pixi-path</span></code></dt><dd><p>Choose the directory for the pixi environment (<code class="docutils literal notranslate"><span class="pre">pixi-env</span></code> in the
+repository root by default).  <code class="docutils literal notranslate"><span class="pre">--prefix</span></code> is a deprecated alias.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">--compiler</span></code>, <code class="docutils literal notranslate"><span class="pre">--mpi</span></code></dt><dd><p>Select compiler/MPI combinations, primarily for Spack deployment</p>
 </dd>
@@ -245,17 +246,16 @@ scripts:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>./load_*.sh
 </pre></div>
 </div>
-<p>This activates the deployment environment, loads machine modules when
-appropriate, and sets environment variables needed by <code class="docutils literal notranslate"><span class="pre">compass</span></code> and MPAS
-components.</p>
+<p>On supported machines, the scripts are named
+<code class="docutils literal notranslate"><span class="pre">load_compass_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh</span></code>, one for each compiler and MPI
+combination you deployed.  Sourcing a load script checks that the <code class="docutils literal notranslate"><span class="pre">compass</span></code>
+package in the pixi environment is the version the script was generated for,
+activates the pixi environment, loads machine modules and Spack environments
+when appropriate, and sets environment variables needed by <code class="docutils literal notranslate"><span class="pre">compass</span></code> and
+MPAS components.</p>
 <p>When you are working inside a suite or test-case work directory, source
 <code class="docutils literal notranslate"><span class="pre">load_compass_env.sh</span></code> instead.  This is a symlink to the load script you
 used while setting up the work directory.</p>
-<p>When a generated load script is sourced from the root of the compass
-repository, it reinstalls the version of <code class="docutils literal notranslate"><span class="pre">compass</span></code> from that location into
-the active deployment environment.  This is what lets one deployment prefix be
-shared across several branches or worktrees, as long as you re-source the load
-script in the repo you want to work from.</p>
 <p>The active load script path is exported in <code class="docutils literal notranslate"><span class="pre">COMPASS_LOAD_SCRIPT</span></code>.  Compass
 still accepts <code class="docutils literal notranslate"><span class="pre">LOAD_COMPASS_ENV</span></code> as a legacy fallback while the migration is
 in progress.</p>
@@ -266,86 +266,52 @@ MPI combination as the load script you plan to use.</p>
 </section>
 <section id="switching-between-different-compass-environments">
 <h3>Switching between different compass environments<a class="headerlink" href="#switching-between-different-compass-environments" title="Link to this heading"></a></h3>
-<p>Many developers are switching between different <code class="docutils literal notranslate"><span class="pre">compass</span></code> branches.
-We have 2 main workflows for doing this: checking out different branches
-in the same directory (with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span></code>) or creating new directories for
-each branch (with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">worktree</span></code>).  Either way, you need to be careful that
-the version of the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package that is installed in the environment
-you are using is the one you want.  But how to handle it
-differs slightly between these workflows.</p>
-<p>If you are developing or using multiple <code class="docutils literal notranslate"><span class="pre">compass</span></code> branches in the same
-directory (switching between them using <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span></code>), you will need
-to make sure you update your environment after changing branches.  If
-dependencies are unchanged, you can usually just re-source a load script in
-the branch root:</p>
-<p><code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">./load_*.sh</span></code></p>
-<p>Similarly, if you are developing or using multiple <code class="docutils literal notranslate"><span class="pre">compass</span></code> branches
-but you use a different directory for each
-(creating the directories with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">worktree</span></code>),
-you will need to make sure the version of the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package
-in your active environment is the one you want.
-If your branches use the same <code class="docutils literal notranslate"><span class="pre">compass</span></code> version (so the dependencies
-are the same), you can use the same deployment prefix for all of them.  You
-will tell the environment which branch to use by running
-<code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">./load_*.sh</span></code>
-from the <em>root of the directory (worktree) you want to work with</em> before
-proceeding.</p>
-<p>In both of these workflows, you can modify the <code class="docutils literal notranslate"><span class="pre">compass</span></code> code and the
-environment will notice the changes as you make them.  However, if you have
-added or removed any files during your development, you need to source the
-load script again:
-<code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">./load_*.sh</span></code>
-in the root of the repo or worktree so that the added or removed files will be
-accounted for in the environment.</p>
-<p>If you know that <code class="docutils literal notranslate"><span class="pre">compass</span></code> has different dependencies
-in a branch or worktree you are working on compared to a previous branch
-you have worked with (or if you aren’t sure), it is safest to not just reinstall
-the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package but also to check the dependencies by re-running
-<code class="docutils literal notranslate"><span class="pre">./deploy.py</span></code> with the same arguments as above.
-This will also reinstall the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package from the current directory.
-The activation script includes a check to see if the version of compass used
-to produce the load script is the same as the version of compass in the
-current branch.  If the two don’t match, an error like the following results
-and the environment is not activated:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ source load_compass_test_morpheus_gnu_openmpi.sh
-This load script is for a different version of compass:
-__version__ = '1.2.0-alpha.6'
-
-Your code is version:
-__version__ = '1.2.0-alpha.7'
-
-You need to run ./deploy.py to update your environment and load script.
+<p><code class="docutils literal notranslate"><span class="pre">./deploy.py</span></code> installs the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package in editable mode from the
+directory where you run it.  Changes you make to existing files, and files you
+add or remove, are picked up without redeploying or re-sourcing the load
+script.  The pixi environment and load scripts do have to be updated when the
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> version or its dependencies change.</p>
+<p>Many developers switch between <code class="docutils literal notranslate"><span class="pre">compass</span></code> branches, either by checking out
+different branches in the same directory (with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span></code>) or by
+creating a directory for each branch (with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">worktree</span></code>).</p>
+<p>If you switch branches in the same directory, the editable install follows the
+checkout, so there is nothing to do as long as the <code class="docutils literal notranslate"><span class="pre">compass</span></code> version and
+dependencies are the same.  If the version has changed, the load script
+refuses to activate the environment with an error like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ source load_compass_chrysalis_gnu_openmpi.sh
+verifying deployed compass version...
+ERROR: version mismatch for compass.
+  Deployed: 2.0.0-alpha.2
+  Runtime:  2.0.0-alpha.3
 </pre></div>
 </div>
-<p>If you need more than one environment (e.g. because you are testing multiple
-branches at the same time), use different deployment prefixes with
-<code class="docutils literal notranslate"><span class="pre">./deploy.py</span> <span class="pre">--prefix</span> <span class="pre">&lt;path&gt;</span></code>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If you switch branches and <em>do not</em> remember to recreate the environment
-(<code class="docutils literal notranslate"><span class="pre">./deploy.py</span></code>) or at least source the activation script
-(<code class="docutils literal notranslate"><span class="pre">load_*.sh</span></code>), you are likely to end up with an incorrect and possibly
-unusable <code class="docutils literal notranslate"><span class="pre">compass</span></code> package in your environment.</p>
-<p>In general, if one wishes to switch between environments created for
-different compass branches or applications, the best practice is to end
-the current terminal session and start a new session with a clean
-environment before executing the other compass load script.  Similarly,
-if you want to run a job script that itself sources the load script,
-it’s best to start a new terminal without having sourced a load script at
-all.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>With the environment activated, you can switch branches and update
-just the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package with:</p>
+<p>Rerun <code class="docutils literal notranslate"><span class="pre">./deploy.py</span></code> to update the environment and load scripts.  If you know
+or suspect that the dependencies have changed, rerun <code class="docutils literal notranslate"><span class="pre">./deploy.py</span></code> even if
+the version has not.</p>
+<p>If you use a directory for each branch, the simplest approach is to run
+<code class="docutils literal notranslate"><span class="pre">./deploy.py</span></code> in each worktree.  By default, each worktree gets its own
+<code class="docutils literal notranslate"><span class="pre">pixi-env</span></code> directory and load scripts, so the worktrees are independent of
+one another.</p>
+<p>You can instead share one pixi environment between worktrees with
+<code class="docutils literal notranslate"><span class="pre">./deploy.py</span> <span class="pre">--pixi-path</span> <span class="pre">&lt;path&gt;</span></code> as long as the branches have the same
+dependencies.  In that case, the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package in the shared environment
+points to whichever worktree you ran <code class="docutils literal notranslate"><span class="pre">./deploy.py</span></code> from most recently, and
+sourcing a load script from another worktree does not change that.  To switch
+worktrees, either rerun <code class="docutils literal notranslate"><span class="pre">./deploy.py</span> <span class="pre">--pixi-path</span> <span class="pre">&lt;path&gt;</span></code> from the worktree
+you want to use or, with the environment activated, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
-<p>The activation script will do this automatically when you source it in the
-root directory of your compass branch.  The activation script will also
-check if the current compass version matches the one used to create the
-activation script, thus catching situations where the dependencies are out
-of date and <code class="docutils literal notranslate"><span class="pre">./deploy.py</span></code> needs to be rerun.</p>
+<p>from the root of that worktree.  The <code class="docutils literal notranslate"><span class="pre">pip</span></code> command is much faster than
+<code class="docutils literal notranslate"><span class="pre">./deploy.py</span></code> but skips the check that the dependencies are up to date.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you wish to switch between environments created for different compass
+branches or applications, the best practice is to end the current terminal
+session and start a new session with a clean environment before sourcing
+the other compass load script.  Similarly, if you want to run a job script
+that itself sources the load script, it’s best to start a new terminal
+without having sourced a load script at all.</p>
 </div>
 </section>
 <section id="troubleshooting">
@@ -373,31 +339,9 @@ Compass will try to reuse any required pre-existing Spack environments.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./deploy.py<span class="w"> </span>--bootstrap-only
 </pre></div>
 </div>
-<p>Each time you want to work with compass, source the generated load script:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>./load_*.sh
-</pre></div>
-</div>
-<p>This will load the appropriate deployment environment for <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  It
-will also set an environment variable <code class="docutils literal notranslate"><span class="pre">COMPASS_LOAD_SCRIPT</span></code> that points to
-the activation script.  <code class="docutils literal notranslate"><span class="pre">compass</span></code> uses this to make a symlink to the
-activation script called <code class="docutils literal notranslate"><span class="pre">load_compass_env.sh</span></code> in the work directory.</p>
-<p>If you switch to another branch, you will need to rerun:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./deploy.py
-</pre></div>
-</div>
-<p>to make sure dependencies are up to date and the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package points to
-the current directory.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>With the environment activated, you can switch branches and update
-just the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
-</pre></div>
-</div>
-<p>This will be substantially faster than rerunning <code class="docutils literal notranslate"><span class="pre">./deploy.py</span> <span class="pre">...</span></code> but
-at the risk that dependencies are not up to date.  Since dependencies
-change fairly rarely, this will usually be safe.</p>
-</div>
+<p>As above, source a generated load script each time you want to work with
+compass.  The load script sets <code class="docutils literal notranslate"><span class="pre">COMPASS_LOAD_SCRIPT</span></code>, which <code class="docutils literal notranslate"><span class="pre">compass</span></code> uses
+to make the <code class="docutils literal notranslate"><span class="pre">load_compass_env.sh</span></code> symlink in each work directory.</p>
 </section>
 <section id="building-mpas-components">
 <span id="dev-build-mpas"></span><h2>Building MPAS components<a class="headerlink" href="#building-mpas-components" title="Link to this heading"></a></h2>

@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Chrysalis" href="chrysalis.html" />
-    <link rel="prev" title="Anvil" href="anvil.html" /> 
+    <link rel="prev" title="Machines" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -54,7 +54,6 @@
 <li class="toctree-l2"><a class="reference internal" href="index.html#config-options">config options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#slurm-job-queueing">Slurm job queueing</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#supported-machines">Supported Machines</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="anvil.html">Anvil</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Chicoma</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#chicoma-cpu">Chicoma-CPU</a></li>
 </ul>
@@ -65,9 +64,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#other-machines">Other Machines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id4">MPICH</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id5">OpenMPI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#no-mpi-from-conda-forge">No MPI from conda-forge</a></li>
 </ul>
 </li>
 </ul>
@@ -179,8 +175,6 @@
 <p>Use <code class="docutils literal notranslate"><span class="pre">--account=ACCOUNT_NAME</span></code> to change to a particular account.</p>
 <section id="chicoma-cpu">
 <h2>Chicoma-CPU<a class="headerlink" href="#chicoma-cpu" title="Link to this heading"></a></h2>
-<p><strong>There has not yet been a release with Chicoma-CPU, so the following applies
-to the release of compass v1.2.0, when it happens.</strong></p>
 <p>Chicoma’s CPU and GPU nodes have different configuration options and compilers.
 We only support Chicoma-CPU at this time.</p>
 <section id="config-options">
@@ -194,17 +188,19 @@ when setting up test cases or a test suite:</p>
 <span class="c1"># A shared root directory where MPAS standalone data can be found</span>
 <span class="na">database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/regionalclimate/COMMON_MPAS/mpas_standalonedata/</span>
 
-<span class="c1"># the path to the base conda environment where compass environments have</span>
-<span class="c1"># been created</span>
+<span class="c1"># the path where shared compass environments are deployed</span>
 <span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/climate/SHARED_CLIMATE/compass/chicoma-cpu/base</span>
 
 
-<span class="c1"># Options related to deploying a compass conda environment on supported</span>
+<span class="c1"># Options related to deploying compass environments on supported</span>
 <span class="c1"># machines</span>
 <span class="k">[deploy]</span>
 
 <span class="c1"># the compiler set to use for system libraries and MPAS builds</span>
 <span class="na">compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">gnu</span>
+
+<span class="c1"># the compiler to use to build software (e.g. ESMF and MOAB) with spack</span>
+<span class="na">software_compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">gnu</span>
 
 <span class="c1"># the system MPI library to use for gnu compiler</span>
 <span class="na">mpi_gnu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpich</span>
@@ -263,18 +259,6 @@ when setting up test cases or a test suite:</p>
 
 <span class="c1"># quality of service (default is the first)</span>
 <span class="na">qos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">standard, debug</span>
-
-
-<span class="c1"># Config options related to spack environments</span>
-<span class="k">[spack]</span>
-
-<span class="c1"># whether to load modules from the spack yaml file before loading the spack</span>
-<span class="c1"># environment</span>
-<span class="na">modules_before</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
-
-<span class="c1"># whether to load modules from the spack yaml file after loading the spack</span>
-<span class="c1"># environment</span>
-<span class="na">modules_after</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
 </pre></div>
 </div>
 </section>
@@ -298,17 +282,11 @@ as follows:</p>
 </pre></div>
 </div>
 </section>
-<section id="gnu-on-chicoma-cpu">
-<h3>Gnu on Chicoma-CPU<a class="headerlink" href="#gnu-on-chicoma-cpu" title="Link to this heading"></a></h3>
-<p>To load the compass environment and modules, and set appropriate environment
-variables:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/usr/projects/climate/SHARED_CLIMATE/compass/chicoma-cpu/load_latest_compass_gnu_mpich.sh
-</pre></div>
-</div>
-<p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="nv">ALBANY</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span>gnu-cray
-</pre></div>
-</div>
+<section id="loading-and-running-compass-on-chicoma">
+<h3>Loading and running compass on Chicoma<a class="headerlink" href="#loading-and-running-compass-on-chicoma" title="Link to this heading"></a></h3>
+<p>Follow the Developer’s Guide at <a class="reference internal" href="../../developers_guide/machines/chicoma.html#dev-machine-chicoma"><span class="std std-ref">Chicoma</span></a> to deploy
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> and build MPAS components.  There are currently no shared
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> environments for users on Chicoma.</p>
 </section>
 </section>
 </section>
@@ -317,7 +295,7 @@ variables:</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="anvil.html" class="btn btn-neutral float-left" title="Anvil" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Machines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="chrysalis.html" class="btn btn-neutral float-right" title="Chrysalis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
