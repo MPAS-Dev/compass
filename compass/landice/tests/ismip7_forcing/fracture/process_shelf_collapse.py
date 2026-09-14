@@ -127,8 +127,8 @@ class ProcessShelfCollapse(Step):
             os.remove(remapped_file)
 
         # Place output in the appropriate directory
-        output_path = os.path.join(output_base_path, "shelf_collapse",
-                                   f"{model}_{scenario}")
+        output_path = os.path.join(output_base_path, f"{model}_{scenario}",
+                                   "shelf_collapse")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 

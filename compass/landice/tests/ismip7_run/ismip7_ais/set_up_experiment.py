@@ -63,6 +63,9 @@ class SetUpExperiment(Step):
         reference_surface_path = section.get('reference_surface_path')
         reference_surface_fname = os.path.split(reference_surface_path)[-1]
         calving_method = section.get('calving_method')
+        fracture_basepath = section.get('fracture_basepath')
+        calving_fracture_toughness = section.get(
+            'calving_fracture_toughness')
         sea_level_model = section.getboolean('sea_level_model')
 
         exp_info = self.exp_info
@@ -229,6 +232,26 @@ class SetUpExperiment(Step):
                 sys.exit(f"ERROR: Expected 1 TF file at {tf_search}, "
                          f"found {len(tf_list)}: {tf_list}")
 
+        # --- Find shelf collapse (calving) mask from ismip7_forcing
+        # fracture Path C, if provided ---
+        useCalvingMask = False
+        if (fracture_basepath != 'NotAvailable' and
+                scenario not in ('ctrl', 'ocx')):
+            mask_search = os.path.join(
+                fracture_basepath, f"{model}_{scenario}", 'shelf_collapse',
+                '*ice_shelf_collapse_mask_*.nc')
+            mask_list = glob.glob(mask_search)
+            if len(mask_list) == 1:
+                mask_fname = os.path.split(mask_list[0])[-1]
+                os.symlink(mask_list[0],
+                           os.path.join(self.work_dir, mask_fname))
+                useCalvingMask = True
+            elif len(mask_list) > 1:
+                sys.exit(f"ERROR: Expected at most 1 shelf collapse mask "
+                         f"file at {mask_search}, found {len(mask_list)}: "
+                         f"{mask_list}")
+            # else: no mask for this experiment; leave mask calving off
+
         # --- Set up streams ---
         # Determine forcing interval
         if scenario == 'ctrl':
@@ -265,6 +288,14 @@ class SetUpExperiment(Step):
             'streams.landice.template',
             out_name='streams.landice',
             template_replacements=stream_replacements)
+
+        if useCalvingMask:
+            mask_stream_replacements = {
+                'input_file_calving_mask_forcing_name': mask_fname}
+            self.add_streams_file(
+                resource_location, 'streams.mask_calving',
+                out_name='streams.landice',
+                template_replacements=mask_stream_replacements)
 
         # --- Set up namelist ---
         self.add_namelist_file(
@@ -306,6 +337,20 @@ class SetUpExperiment(Step):
                 resource_location, 'streams.vM_params',
                 out_name='streams.landice',
                 template_replacements=vM_stream_replacements)
+
+        # Mask calving options (ismip7_forcing fracture Path C), gated by
+        # hydrofracture vulnerability (MALI PR #187)
+        if useCalvingMask:
+            options = {
+                'config_calving': "'none'",
+                'config_apply_calving_mask': ".true.",
+                'config_restore_calving_front': ".false.",
+                'config_require_extensional_stresses_for_mask_calving':
+                ".true.",
+                'config_calving_fracture_toughness':
+                f'{calving_fracture_toughness}'}
+            self.add_namelist_options(options=options,
+                                      out_name='namelist.landice')
 
         # Sea-level model options
         if sea_level_model:
