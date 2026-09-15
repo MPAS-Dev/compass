@@ -75,15 +75,17 @@ The ``setup`` method sets up the experiment directory by:
    and restart frequency.
 5. Adding calving-specific streams (face melting, von Mises params) if
    configured.
-6. If ``fracture_basepath`` is set and a matching Path C
-   ``ice_shelf_collapse_mask_*.nc`` file is found for the experiment's
-   ``{model}_{scenario}`` (from :ref:`landice_ismip7_forcing_fracture`),
-   symlinking it in, adding the ``streams.mask_calving`` stream, and
-   setting ``config_calving``, ``config_apply_calving_mask``,
-   ``config_restore_calving_front``,
+6. If ``use_hydrofracture_forcing`` is true and the experiment's scenario
+   is not ``historical``, ``ctrl``, or ``ocx``, looking for a single Path C
+   ``ice_shelf_collapse_mask_*.nc`` file under
+   ``{forcing_basepath}/{model}_{scenario}/shelf_collapse/`` (from
+   :ref:`landice_ismip7_forcing_fracture`). If found, it is symlinked in,
+   the ``streams.mask_calving`` stream is added, and ``config_calving``,
+   ``config_apply_calving_mask``, ``config_restore_calving_front``,
    ``config_require_extensional_stresses_for_mask_calving``, and
-   ``config_calving_fracture_toughness`` accordingly. This is skipped for
-   ``ctrl`` and ``ocx`` experiments and when no mask file is found.
+   ``config_calving_fracture_toughness`` are set accordingly. If not
+   found, setup fails with an error, since the mask is required whenever
+   ``use_hydrofracture_forcing`` is true for that scenario.
 7. Creating a restart symlink for projection experiments pointing to
    the corresponding ESM's historical restart
    (``../historical_{model}/rst.2015-01-01.nc``).

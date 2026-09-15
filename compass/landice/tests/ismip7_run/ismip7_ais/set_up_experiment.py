@@ -63,7 +63,8 @@ class SetUpExperiment(Step):
         reference_surface_path = section.get('reference_surface_path')
         reference_surface_fname = os.path.split(reference_surface_path)[-1]
         calving_method = section.get('calving_method')
-        fracture_basepath = section.get('fracture_basepath')
+        use_hydrofracture_forcing = section.getboolean(
+            'use_hydrofracture_forcing')
         calving_fracture_toughness = section.get(
             'calving_fracture_toughness')
         sea_level_model = section.getboolean('sea_level_model')
@@ -233,24 +234,25 @@ class SetUpExperiment(Step):
                          f"found {len(tf_list)}: {tf_list}")
 
         # --- Find shelf collapse (calving) mask from ismip7_forcing
-        # fracture Path C, if provided ---
+        # fracture Path C, if requested ---
+        # historical, ctrl, and ocx experiments never use hydrofracture
+        # forcing, regardless of use_hydrofracture_forcing.
         useCalvingMask = False
-        if (fracture_basepath != 'NotAvailable' and
-                scenario not in ('ctrl', 'ocx')):
-            mask_search = os.path.join(
-                fracture_basepath, f"{model}_{scenario}", 'shelf_collapse',
-                '*ice_shelf_collapse_mask_*.nc')
+        if (use_hydrofracture_forcing and
+                scenario not in ('historical', 'ctrl', 'ocx')):
+            mask_search = os.path.join(forcing_dir, 'shelf_collapse',
+                                       '*ice_shelf_collapse_mask_*.nc')
             mask_list = glob.glob(mask_search)
             if len(mask_list) == 1:
                 mask_fname = os.path.split(mask_list[0])[-1]
                 os.symlink(mask_list[0],
                            os.path.join(self.work_dir, mask_fname))
                 useCalvingMask = True
-            elif len(mask_list) > 1:
-                sys.exit(f"ERROR: Expected at most 1 shelf collapse mask "
-                         f"file at {mask_search}, found {len(mask_list)}: "
-                         f"{mask_list}")
-            # else: no mask for this experiment; leave mask calving off
+            else:
+                sys.exit(
+                    f"ERROR: use_hydrofracture_forcing is True but did not "
+                    f"find exactly 1 shelf collapse mask file at "
+                    f"{mask_search}: {mask_list}")
 
         # --- Set up streams ---
         # Determine forcing interval
