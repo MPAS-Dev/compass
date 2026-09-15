@@ -34,7 +34,11 @@ The test group includes two test cases.
 * ``ais`` is the calibration itself on an Antarctic MALI mesh: it remaps the
   ISMIP7 masks and forcing, runs one single-timestep MALI melt diagnostic per
   ocean state, aggregates the melt, selects the parameter and fits the
-  per-basin thermal-forcing correction ``dT_b``.
+  per-basin thermal-forcing correction ``dT_b``.  Its deliverable is three
+  MALI parameter files per melt form, ``fit_delta_t/melt_params_<form>_p05.nc``,
+  ``_p50.nc`` and ``_p95.nc``, each carrying the basins, the fitted ``dT_b``
+  and the calibrated parameter at that percentile.  A projection points its
+  parameter input stream at the one it wants.
 
 Two melt forms can be calibrated, and by default both are:
 

@@ -5,6 +5,7 @@ A single-timestep MALI melt diagnostic for one ocean state and melt form.
 import os
 
 import xarray as xr
+from mpas_tools.io import write_netcdf
 
 from compass.model import run_model
 from compass.step import Step
@@ -14,11 +15,15 @@ from compass.step import Step
 #: without an explicit check a MALI build without the ISMIP7 melt method
 #: would silently drop these and produce a plausible but wrong calibration.
 REQUIRED_OPTIONS = {
-    'ismip7': ['config_ismip7_melt_K', 'config_ismip7_melt_sin_slope',
-               'config_ismip7_melt_coriolis', 'config_ismip7_melt_salinity',
+    'ismip7': ['config_ismip7_melt_sin_slope', 'config_ismip7_melt_coriolis',
+               'config_ismip7_melt_salinity',
                'config_ismip7_melt_salinity_source'],
     'ismip6': ['config_basal_mass_bal_float'],
 }
+
+#: the input-stream variable each melt form reads its parameter from
+PARAMETER_VARIABLE = {'ismip7': 'ismip7shelfMelt_K',
+                      'ismip6': 'ismip6shelfMelt_gamma0'}
 
 
 class RunState(Step):
@@ -127,8 +132,15 @@ class RunState(Step):
             out_name='streams.landice',
             template_replacements={'mesh_file': 'mesh.nc',
                                    'masks_file': 'masks.nc',
+                                   'parameter_file': 'melt_parameter.nc',
+                                   'parameter_variable':
+                                       PARAMETER_VARIABLE[self.melt_form],
                                    'forcing_file': 'forcing.nc',
                                    'output_interval': timestep})
+
+        _write_parameter_file(config, self.melt_form, self.parameter_scale,
+                              os.path.join(self.work_dir,
+                                           'melt_parameter.nc'))
 
         self.add_model_as_input()
         self.add_output_file(filename='output_melt.nc')
@@ -164,11 +176,7 @@ def _melt_namelist_options(config, melt_form, parameter_scale=1.0):
     """The namelist options specific to one melt form."""
     section = config['ismip7_calibration_melt']
     if melt_form == 'ismip7':
-        # the run is done at a reference parameter value; melt is exactly
-        # proportional to it, so the ensemble is formed by scaling afterwards
-        melt_k = section.getfloat('reference_k') * parameter_scale
         return {
-            'config_ismip7_melt_K': repr(melt_k),
             'config_ismip7_melt_sin_slope':
                 repr(section.getfloat('sin_slope')),
             'config_ismip7_melt_coriolis':
@@ -176,9 +184,50 @@ def _melt_namelist_options(config, melt_form, parameter_scale=1.0):
             'config_ismip7_melt_salinity_source': "'constant'",
             'config_ismip7_melt_salinity':
                 repr(section.getfloat('salinity'))}
-    # the ISMIP6 non-local form reads gamma0 from its input stream, so the
-    # reference value is written into the masks file rather than set here
     return {}
+
+
+def reference_parameter(config, melt_form):
+    """
+    The reference value of a melt form's parameter, from config.
+
+    Parameters
+    ----------
+    config : compass.config.CompassConfigParser
+        Configuration options for the test case
+
+    melt_form : {'ismip7', 'ismip6'}
+        The melt form
+
+    Returns
+    -------
+    value : float
+        ``reference_k`` or ``reference_gamma0``
+    """
+    section = config['ismip7_calibration_melt']
+    if melt_form == 'ismip7':
+        return section.getfloat('reference_k')
+    return section.getfloat('reference_gamma0')
+
+
+def _write_parameter_file(config, melt_form, parameter_scale, filename):
+    """
+    Write the file MALI reads the melt parameter from.
+
+    Both melt forms read their parameter from an input stream -- gamma0 for
+    the ISMIP6 method, K for the ISMIP7 one -- so that a single parameter
+    file carries a complete calibration.  The ensemble runs at a reference
+    value that the aggregation divides out again; the linearity check runs
+    at multiples of it.
+    """
+    value = reference_parameter(config, melt_form) * parameter_scale
+    ds = xr.Dataset()
+    ds[PARAMETER_VARIABLE[melt_form]] = value
+    ds.attrs['note'] = (
+        f'{PARAMETER_VARIABLE[melt_form]} at {parameter_scale:g} times the '
+        f'reference value; melt is proportional to it and the calibration '
+        f'scales this away')
+    write_netcdf(ds, filename)
 
 
 def _check_namelist_options(config, melt_form):

@@ -1,14 +1,20 @@
 from compass.landice.tests.ismip7_calibration import datasets
 from compass.landice.tests.ismip7_calibration.ais.aggregate import Aggregate
 from compass.landice.tests.ismip7_calibration.ais.calibrate import Calibrate
-from compass.landice.tests.ismip7_calibration.ais.fit_delta_t import FitDeltaT
+from compass.landice.tests.ismip7_calibration.ais.fit_delta_t import (
+    PERCENTILES,
+    FitDeltaT,
+)
 from compass.landice.tests.ismip7_calibration.ais.make_graph import MakeGraph
 from compass.landice.tests.ismip7_calibration.ais.remap_forcing import (
     RemapForcing,
 )
 from compass.landice.tests.ismip7_calibration.ais.remap_masks import RemapMasks
 from compass.landice.tests.ismip7_calibration.ais.report import Report
-from compass.landice.tests.ismip7_calibration.ais.run_state import RunState
+from compass.landice.tests.ismip7_calibration.ais.run_state import (
+    PARAMETER_VARIABLE,
+    RunState,
+)
 from compass.landice.tests.ismip7_calibration.ais.verify_melt import VerifyMelt
 from compass.landice.tests.ismip7_calibration.configure import (
     check_options,
@@ -67,7 +73,8 @@ class Ais(TestCase):
 
     ``fit_delta_t``
         The per-basin correction dT_b, fitted **after** parameter selection
-        per protocol Sect. 4.2.1 option 2.
+        per protocol Sect. 4.2.1 option 2, at each of the 5th, 50th and 95th
+        percentiles, giving a complete MALI parameter file for each.
 
     ``report``
         Plots and a summary table.
@@ -156,3 +163,18 @@ class Ais(TestCase):
             test_case=self,
             variables=['modelled_shelf_area', 'observed_shelf_area'],
             filename1='aggregate/shelf_area.nc')
+
+        if self.config.getboolean('ismip7_calibration_delta_t',
+                                  'fit_delta_t'):
+            for melt_form in self.melt_forms:
+                compare_variables(
+                    test_case=self,
+                    variables=['parameter', 'delta_t', 'modelled_after'],
+                    filename1=f'fit_delta_t/delta_t_{melt_form}.nc')
+                for _, suffix in PERCENTILES:
+                    compare_variables(
+                        test_case=self,
+                        variables=['ismip6shelfMelt_deltaT',
+                                   PARAMETER_VARIABLE[melt_form]],
+                        filename1=f'fit_delta_t/melt_params_{melt_form}_'
+                                  f'{suffix}.nc')

@@ -110,19 +110,6 @@ class RemapMasks(Step):
 
         ds_out = _to_integer_masks(ds_remapped)
 
-        # The ISMIP6 non-local form reads gamma0 from this same input
-        # stream, and its Registry default is zero, which would silently
-        # zero the melt field.  The ensemble runs at a reference value that
-        # the aggregation divides out again.
-        reference_gamma0 = config.getfloat('ismip7_calibration_melt',
-                                           'reference_gamma0')
-        ds_out['ismip6shelfMelt_gamma0'] = reference_gamma0
-        ds_out['ismip6shelfMelt_gamma0'].attrs = {
-            'long_name': 'gamma0 for the ISMIP6 ice-shelf melting method',
-            'units': 'm yr^-1',
-            'note': 'a reference value only; melt is proportional to gamma0 '
-                    'and the calibration scales this away'}
-
         _check_shelves_are_in_their_basin(ds_out, logger)
 
         if region_mask_file != 'None':

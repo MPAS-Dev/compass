@@ -169,6 +169,13 @@ MALI mesh.
     ensemble follows by scaling a single run.  That is what makes this 28 runs
     per melt form rather than about 1300.  Do not "improve" this away.
 
+    Both melt forms read their parameter from an input stream --
+    ``ismip6shelfMelt_gamma0`` for the ISMIP6 method and ``ismip7shelfMelt_K``
+    for the ISMIP7 one -- rather than from the namelist, so that a single
+    parameter file carries a complete calibration.  Each run writes a small
+    ``melt_parameter.nc`` holding the reference value, which the aggregation
+    divides out again.
+
 ``<melt_form>_<ocean_state>_x<scale>``
     Two extra runs of the reference ocean state at other multiples of the
     melt parameter, so that the linearity the ensemble design relies on is
@@ -223,7 +230,14 @@ MALI mesh.
 ``fit_delta_t``
     Fits the per-basin thermal-forcing correction ``dT_b`` **after** parameter
     selection, following protocol Sect. 4.2.1 option 2, as the published
-    quadratic worked example does.  Fitting it first would leave the parameter
+    quadratic worked example does.  ``dT_b`` depends on the melt parameter,
+    so it is fitted separately at the 5th, 50th and 95th percentiles, and a
+    complete MALI parameter file -- ``ismip6shelfMelt_basin``,
+    ``ismip6shelfMelt_deltaT`` and the parameter itself, ``ismip7shelfMelt_K``
+    or ``ismip6shelfMelt_gamma0`` -- is written for each as
+    ``melt_params_<form>_p05.nc``, ``_p50.nc`` and ``_p95.nc``.  These are
+    the deliverable: a projection at a given percentile points its
+    parameter stream at the matching file.  Fitting it first would leave the parameter
     bounds unconstrained where present-day melt is compared with observations,
     which is the drawback Sect. 4.2.1 names.  The toolbox's own
     ``optimise_deltaT`` cannot be used because it sums over structured-grid
@@ -279,6 +293,7 @@ submodule does not yet have it, point compass at another build with
 
 Compass only *warns* when a namelist option is missing from the model's
 defaults, so a build without the ISMIP7 melt method would silently drop
-``config_ismip7_melt_K`` and produce a plausible but wrong calibration.  The
+``config_ismip7_melt_sin_slope`` and produce a plausible but wrong
+calibration.  The
 ``run_state`` step therefore checks the default namelist at setup and fails
 with a clear message instead.
