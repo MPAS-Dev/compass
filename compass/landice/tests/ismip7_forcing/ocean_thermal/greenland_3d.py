@@ -131,6 +131,7 @@ class Config:
     en4_latitude_max: float
     gamma0_m_per_yr: float
     regional_melt_targets_m_per_yr: np.ndarray
+    calibrate_deltaT: bool
     rho_ice: float
     rho_seawater: float
     cp_seawater: float
@@ -146,13 +147,13 @@ class Config:
     seasons_per_year: int
 
     @property
-    def calibrate_delta_t(self) -> bool:
-        """Whether this run should (re)calibrate the regional deltaT.
+    def should_calibrate(self) -> bool:
+        """Whether this run should calibrate (gamma0 and optionally deltaT).
 
-        DeltaT is calibrated once against the OCX reanalysis and held fixed
-        for every ESM scenario, so calibration only runs when
-        ``scenario == "OCX"``; other scenarios reuse the deltaT/gamma0/basin
-        stored in ``melt_params_file``.
+        Calibration (both gamma0 and deltaT) happens once against the OCX
+        reanalysis and is held fixed for every ESM scenario, so calibration
+        only runs when ``scenario == "OCX"``; other scenarios reuse the
+        calibrated deltaT/gamma0/basin stored in ``melt_params_file``.
         """
         return self.scenario.strip().upper() == "OCX"
 
@@ -207,16 +208,28 @@ class Config:
                 raise ValueError(
                     f"Missing regional melt targets for: {', '.join(missing)}"
                 )
+            # Allow None/null values in the dict; convert to NaN
             targets = np.asarray(
-                [targets_raw[key] for key in REGION_KEYS], dtype=float
+                [
+                    (np.nan if targets_raw[key] is None
+                     else float(targets_raw[key]))
+                    for key in REGION_KEYS
+                ],
+                dtype=float
             )
         elif np.isscalar(targets_raw):
             targets = np.full(len(REGION_NAMES), float(targets_raw))
         else:
             targets = np.asarray(targets_raw, dtype=float)
-        if targets.shape != (len(REGION_NAMES),) or np.any(targets < 0.0):
+        if targets.shape != (len(REGION_NAMES),):
             raise ValueError(
-                "Regional melt targets must be seven nonnegative values"
+                "Regional melt targets must be seven values (or None to skip)"
+            )
+        # Check that non-NaN values are nonnegative
+        finite_targets = targets[np.isfinite(targets)]
+        if finite_targets.size > 0 and np.any(finite_targets < 0.0):
+            raise ValueError(
+                "Regional melt targets must be nonnegative (or None to skip)"
             )
 
         bias = str(en4.get("bias_correction", "unknown")).lower()
@@ -259,6 +272,7 @@ class Config:
             en4_latitude_max=float(en4.get("latitude_max", 90.0)),
             gamma0_m_per_yr=float(calibration.get("gamma0_m_per_yr", 14500.0)),
             regional_melt_targets_m_per_yr=targets,
+            calibrate_deltaT=bool(calibration.get("calibrate_deltaT", False)),
             rho_ice=float(physical.get("rho_ice", 910.0)),
             rho_seawater=float(physical.get("rho_seawater", 1028.0)),
             cp_seawater=float(physical.get("cp_seawater", 3974.0)),
@@ -326,7 +340,7 @@ class Config:
                 "per month.",
                 stacklevel=2,
             )
-        if not self.calibrate_delta_t and not self.melt_params_file.exists():
+        if not self.should_calibrate and not self.melt_params_file.exists():
             raise FileNotFoundError(
                 "melt_params_file must already exist when scenario is not "
                 f"OCX: {self.melt_params_file}. Build it first with an OCX "
@@ -550,6 +564,84 @@ def nonlocal_mean_melt(
         gamma0_m_per_yr * coefficient**2 *
         np.mean(corrected * np.abs(corrected))
     )
+
+
+def calibrate_gamma0(
+    regional_monthly_tf: np.ndarray,
+    regional_targets_m_per_yr: np.ndarray,
+    coefficient: float,
+) -> float:
+    """Calibrate a single global gamma0 using regions with finite targets.
+
+    All deltaT values are held at zero during gamma0 calibration. The
+    objective is the mean squared error across all regions with non-NaN
+    targets.
+
+    Parameters
+    ----------
+    regional_monthly_tf : np.ndarray
+        Shape (n_months, n_regions). Monthly mean thermal forcing for each
+        region.
+    regional_targets_m_per_yr : np.ndarray
+        Shape (n_regions,). Target melt rate for each region. NaN values
+        indicate regions to exclude from calibration.
+    coefficient : float
+        Physical coefficient: rho_sw * c_p / (rho_ice * L)
+
+    Returns
+    -------
+    float
+        Calibrated gamma0 in m/yr
+    """
+    regional_monthly_tf = np.asarray(regional_monthly_tf, dtype=float)
+    regional_targets = np.asarray(regional_targets_m_per_yr, dtype=float)
+
+    # Identify regions with finite (non-NaN) targets
+    active_regions = np.isfinite(regional_targets)
+    if not np.any(active_regions):
+        raise ValueError(
+            "At least one region must have a finite target melt rate for "
+            "gamma0 calibration"
+        )
+
+    active_tf = regional_monthly_tf[:, active_regions]
+    active_targets = regional_targets[active_regions]
+
+    # Check that all monthly values are finite for active regions
+    if not np.all(np.isfinite(active_tf)):
+        raise ValueError(
+            "Some active calibration regions have non-finite monthly "
+            "thermal forcing values"
+        )
+
+    def residual(gamma0: float) -> float:
+        """Mean squared error across active regions."""
+        errors = []
+        for region_idx in range(active_tf.shape[1]):
+            monthly_tf = active_tf[:, region_idx]
+            target = active_targets[region_idx]
+            # deltaT = 0 for gamma0 calibration
+            achieved = nonlocal_mean_melt(0.0, monthly_tf, gamma0, coefficient)
+            errors.append(achieved - target)
+        return float(np.mean(np.array(errors) ** 2))
+
+    # Use scipy.optimize.minimize_scalar to find gamma0
+    from scipy.optimize import minimize_scalar
+
+    # Reasonable bounds: gamma0 typically in range [1000, 50000] m/yr
+    result = minimize_scalar(
+        residual,
+        bounds=(100.0, 100000.0),
+        method='bounded',
+        options={'xatol': 1e-3}
+    )
+
+    if not result.success:
+        raise RuntimeError(
+            f"Gamma0 calibration failed: {result.message}"
+        )
+
+    return float(result.x)
 
 
 def calibrate_delta_t(
@@ -1134,12 +1226,22 @@ def validate_forcing_schema(dataset: Any, cfg: Config, n_cells: int) -> Any:
     return variable
 
 
-def calibrate_regional_delta_t(
+def compute_regional_monthly_means(
     cfg: Config,
     mesh: MeshData,
     basin_ids: np.ndarray,
     profiles: RegionalProfiles,
-) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, set[int]]:
+    """Compute monthly mean thermal forcing at ice draft for each region.
+
+    Returns
+    -------
+    monthly_means : np.ndarray
+        Shape (n_months, n_regions). Monthly area-weighted mean thermal
+        forcing at the ice draft for each region.
+    empty_regions : set[int]
+        Zero-based indices of regions with no floating ice.
+    """
     xr = require_xarray()
     floating, draft = floating_mask_and_draft(
         mesh.bed,
@@ -1182,9 +1284,9 @@ def calibrate_regional_delta_t(
     if empty.size:
         names = ", ".join(REGION_KEYS[index] for index in empty)
         print(
-            "Cannot calibrate regional deltaT because the initial geometry "
-            f"has no floating cells in: {names}. Setting deltaT=0 for these "
-            "regions."
+            f"Initial geometry has no floating cells in: {names}. "
+            "These regions will be excluded from calibration and assigned "
+            "deltaT=0."
         )
 
     with xr.open_dataset(
@@ -1225,30 +1327,104 @@ def calibrate_regional_delta_t(
                     tf_draft[cells], weights=mesh.area[cells]
                 )
 
+    return monthly_means, empty_regions
+
+
+def calibrate_parameters(
+    cfg: Config,
+    mesh: MeshData,
+    basin_ids: np.ndarray,
+    profiles: RegionalProfiles,
+) -> tuple[float, np.ndarray, np.ndarray, np.ndarray]:
+    """Two-stage calibration: gamma0 first, then optionally deltaT.
+
+    Stage 1: Calibrate global gamma0 with all deltaT=0, using only regions
+    with finite (non-NaN) target melt rates.
+
+    Stage 2 (if cfg.calibrate_deltaT is True): Calibrate deltaT per region
+    for all seven regions, with gamma0 held fixed from stage 1.
+
+    Returns
+    -------
+    gamma0 : float
+        Calibrated gamma0 in m/yr
+    delta_t : np.ndarray
+        Shape (n_regions,). Calibrated deltaT for each region (zero if
+        deltaT calibration is disabled or the region has no floating ice).
+    achieved : np.ndarray
+        Shape (n_regions,). Achieved melt rate for each region in m/yr.
+        Computed for all regions regardless of calibration participation.
+    monthly_means : np.ndarray
+        Shape (n_months, n_regions). Monthly thermal forcing means used for
+        calibration.
+    """
+    monthly_means, empty_regions = compute_regional_monthly_means(
+        cfg, mesh, basin_ids, profiles
+    )
+
     coefficient = cfg.rho_seawater * cfg.cp_seawater / (
         cfg.rho_ice * cfg.latent_heat_ice
     )
+
+    # Stage 1: Calibrate gamma0 with deltaT=0 using only non-NaN targets
+    print("\n=== Stage 1: Calibrating global gamma0 (with deltaT=0) ===")
+    gamma0 = calibrate_gamma0(
+        monthly_means, cfg.regional_melt_targets_m_per_yr, coefficient
+    )
+    print(f"Calibrated gamma0 = {gamma0:.1f} m/yr")
+
+    # Stage 2: Optionally calibrate deltaT per region with fixed gamma0
     delta_t = np.zeros(len(REGION_NAMES))
+    if cfg.calibrate_deltaT:
+        print(
+            "\n=== Stage 2: Calibrating regional deltaT "
+            "(with fixed gamma0) ==="
+        )
+        for region in range(len(REGION_NAMES)):
+            if region in empty_regions:
+                print(
+                    f"  {REGION_KEYS[region]}: no floating ice, deltaT=0"
+                )
+                continue
+            # Only calibrate deltaT for regions with finite targets
+            target = cfg.regional_melt_targets_m_per_yr[region]
+            if not np.isfinite(target):
+                print(
+                    f"  {REGION_KEYS[region]}: no target specified, deltaT=0"
+                )
+                continue
+            delta_t[region] = calibrate_delta_t(
+                monthly_means[:, region],
+                target,
+                gamma0,
+                coefficient,
+            )
+            print(
+                f"  {REGION_KEYS[region]}: target={target:.1f} m/yr, "
+                f"deltaT={delta_t[region]:.3f} °C"
+            )
+    else:
+        print(
+            "\n=== DeltaT calibration disabled (calibrate_deltaT=false) ==="
+        )
+        print("All deltaT values set to 0")
+
+    # Compute achieved melt rates for all regions
     achieved = np.full(len(REGION_NAMES), np.nan)
     for region in range(len(REGION_NAMES)):
         if region in empty_regions:
             continue
-        delta_t[region] = calibrate_delta_t(
-            monthly_means[:, region],
-            cfg.regional_melt_targets_m_per_yr[region],
-            cfg.gamma0_m_per_yr,
-            coefficient,
-        )
         achieved[region] = nonlocal_mean_melt(
-            delta_t[region], monthly_means[:, region], cfg.gamma0_m_per_yr,
-            coefficient
+            delta_t[region], monthly_means[:, region], gamma0, coefficient
         )
-    return delta_t, achieved, monthly_means
+
+    return gamma0, delta_t, achieved, monthly_means
 
 
 def write_melt_params(
     cfg: Config,
     basin_ids: np.ndarray,
+    gamma0: float,
     regional_delta_t: np.ndarray,
     logger,
 ) -> None:
@@ -1256,7 +1432,7 @@ def write_melt_params(
 
     Kept in a file separate from the time-varying 3-D thermal forcing so
     every ESM scenario can reuse the same OCX-calibrated values unchanged
-    (see ``Config.calibrate_delta_t``).
+    (see ``Config.should_calibrate``).
     """
     xr = require_xarray()
     output = cfg.melt_params_file
@@ -1285,10 +1461,10 @@ def write_melt_params(
                 },
             ),
             "ismip6shelfMelt_gamma0": xr.DataArray(
-                np.float32(cfg.gamma0_m_per_yr),
+                np.float32(gamma0),
                 attrs={
                     "units": "m yr^-1",
-                    "description": "Uniform gamma0 for nonlocal Jourdain "
+                    "description": "Calibrated gamma0 for nonlocal Jourdain "
                     "et al. (2020) shelf melt",
                 },
             ),
@@ -1343,12 +1519,19 @@ def read_melt_params(
     cfg: Config,
     basin_ids: np.ndarray,
     logger,
-) -> np.ndarray:
-    """Load the OCX-calibrated per-region deltaT for reuse by other ESMs.
+) -> tuple[float, np.ndarray]:
+    """Load the OCX-calibrated gamma0 and per-region deltaT for reuse by ESMs.
 
-    Validates that the stored basin assignment and gamma0 match the current
-    mesh/config, since deltaT is only meaningful alongside the exact basin
-    layout and gamma0 it was calibrated with.
+    Validates that the stored basin assignment matches the current mesh,
+    since deltaT is only meaningful alongside the exact basin layout it was
+    calibrated with.
+
+    Returns
+    -------
+    gamma0 : float
+        Calibrated gamma0 in m/yr
+    regional_delta_t : np.ndarray
+        Shape (n_regions,). Calibrated deltaT for each region in K
     """
     xr = require_xarray()
     path = cfg.melt_params_file
@@ -1365,19 +1548,17 @@ def read_melt_params(
                 "mesh before reuse."
             )
         gamma0 = float(ds["ismip6shelfMelt_gamma0"].values)
-        if not math.isclose(gamma0, cfg.gamma0_m_per_yr, rel_tol=1e-6):
-            raise ValueError(
-                f"gamma0 in {path} ({gamma0} m/yr) does not match the "
-                f"configured gamma0_m_per_yr ({cfg.gamma0_m_per_yr} m/yr)"
-            )
         delta_t_by_cell = ds["ismip6shelfMelt_deltaT"].values.astype(float)
     regional_delta_t = np.zeros(len(REGION_NAMES))
     for region in range(len(REGION_NAMES)):
         cells = basin_ids == region + 1
         if np.any(cells):
             regional_delta_t[region] = delta_t_by_cell[cells][0]
-    logger.info(f"Loaded calibrated melt parameters from {path}")
-    return regional_delta_t
+    logger.info(
+        f"Loaded calibrated melt parameters from {path}: "
+        f"gamma0={gamma0:.1f} m/yr"
+    )
+    return gamma0, regional_delta_t
 
 
 def year_chunks(
@@ -1656,6 +1837,7 @@ def write_diagnostics(
     mesh: MeshData,
     basin_ids: np.ndarray,
     profiles: RegionalProfiles,
+    gamma0: float,
     regional_delta_t: np.ndarray,
     achieved_melt: np.ndarray | None,
     calibration_monthly_tf: np.ndarray | None,
@@ -2025,22 +2207,42 @@ def write_diagnostics(
 
 def print_summary(
     cfg: Config,
+    gamma0: float,
     regional_delta_t: np.ndarray,
     achieved_melt: np.ndarray | None,
     logger,
 ) -> None:
-    logger.info("Regional deltaT calibration")
+    logger.info("\n" + "=" * 70)
+    logger.info("CALIBRATION SUMMARY")
+    logger.info("=" * 70)
+    logger.info(f"Calibrated gamma0: {gamma0:.1f} m/yr")
     if achieved_melt is None:
+        # ESM scenario: just show loaded parameters
+        logger.info("\nLoaded regional deltaT from OCX calibration:")
         logger.info("region          deltaT_K")
         for region, key in enumerate(REGION_KEYS):
             logger.info(f"{key:15s} {regional_delta_t[region]:9.5f}")
         return
+    # OCX scenario: show targets and achieved melt rates for all regions
+    status = 'enabled' if cfg.calibrate_deltaT else 'disabled'
+    logger.info(f"\nDeltaT calibration: {status}")
+    logger.info("\nRegional melt rates:")
     logger.info("region          target_m/yr  achieved_m/yr  deltaT_K")
     for region, key in enumerate(REGION_KEYS):
-        logger.info(
-            f"{key:15s} {cfg.regional_melt_targets_m_per_yr[region]:11.5f} "
-            f"{achieved_melt[region]:14.5f} {regional_delta_t[region]:9.5f}"
+        target = cfg.regional_melt_targets_m_per_yr[region]
+        target_str = (
+            f"{target:11.5f}" if np.isfinite(target) else "      (none)"
         )
+        achieved_str = (
+            f"{achieved_melt[region]:14.5f}"
+            if np.isfinite(achieved_melt[region])
+            else "          (none)"
+        )
+        logger.info(
+            f"{key:15s} {target_str} {achieved_str} "
+            f"{regional_delta_t[region]:9.5f}"
+        )
+    logger.info("=" * 70 + "\n")
 
 
 # A near-floor TF gradient above this magnitude means clamping the anchor to
@@ -2115,22 +2317,24 @@ def run(cfg: Config, logger, prepare_only: bool = False) -> None:
     mesh, basin_ids = load_mesh_and_basins(cfg)
     profiles = build_regional_profiles(cfg, mesh, basin_ids, logger)
     warn_if_seafloor_below_max_depth(cfg, mesh, basin_ids, profiles, logger)
-    if cfg.calibrate_delta_t:
-        delta_t, achieved, calibration_monthly_tf = (
-            calibrate_regional_delta_t(cfg, mesh, basin_ids, profiles)
+    if cfg.should_calibrate:
+        # OCX scenario: calibrate gamma0 and optionally deltaT
+        gamma0, delta_t, achieved, calibration_monthly_tf = (
+            calibrate_parameters(cfg, mesh, basin_ids, profiles)
         )
-        write_melt_params(cfg, basin_ids, delta_t, logger)
+        write_melt_params(cfg, basin_ids, gamma0, delta_t, logger)
     else:
+        # ESM scenario: reuse OCX-calibrated gamma0 and deltaT
         logger.info(
             f"scenario={cfg.scenario!r} is not OCX; reusing calibrated "
-            f"deltaT/gamma0 from {cfg.melt_params_file} instead of "
+            f"gamma0/deltaT from {cfg.melt_params_file} instead of "
             "recalibrating"
         )
-        delta_t = read_melt_params(cfg, basin_ids, logger)
+        gamma0, delta_t = read_melt_params(cfg, basin_ids, logger)
         achieved, calibration_monthly_tf = None, None
-    print_summary(cfg, delta_t, achieved, logger)
+    print_summary(cfg, gamma0, delta_t, achieved, logger)
     write_diagnostics(
-        cfg, mesh, basin_ids, profiles, delta_t, achieved,
+        cfg, mesh, basin_ids, profiles, gamma0, delta_t, achieved,
         calibration_monthly_tf
     )
     if not prepare_only:
