@@ -355,6 +355,45 @@ ismip6_forcing
    shelf_collapse.process_shelf_collapse.ProcessShelfCollapse.remap_ismip6_shelf_mask_to_mali_vars
    shelf_collapse.process_shelf_collapse.ProcessShelfCollapse.rename_ismip6_shelf_mask_to_mali_vars
 
+ismip6_GrIS_forcing
+~~~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.ismip6_GrIS_forcing
+
+.. autosummary::
+   :toctree: generated/
+
+   Ismip6GrISForcing
+
+   forcing_gen.ForcingGen
+   forcing_gen.ForcingGen.configure
+   forcing_gen.ForcingGen.find_forcing_files
+
+   create_mapping_files.CreateMappingFiles
+   create_mapping_files.CreateMappingFiles.setup
+   create_mapping_files.CreateMappingFiles.run
+   create_mapping_files.CreateMappingFiles.make_scrip_and_weights_files
+
+   ref_smb_climatology.SMBRefClimatology
+   ref_smb_climatology.SMBRefClimatology.setup
+   ref_smb_climatology.SMBRefClimatology.run
+
+   process_forcing.ProcessForcing
+   process_forcing.ProcessForcing.run
+   process_forcing.ProcessForcing.process_variables
+   process_forcing.ProcessForcing.process_variable
+
+   file_finders.ISMIP6FileFinder
+   file_finders.ISMIP6FileFinder.get_filename
+   file_finders.ISMIP6FileFinder.check_file_exists
+   file_finders.oceanFileFinder
+   file_finders.oceanFileFinder.get_filename
+   file_finders.atmosphereFileFinder
+   file_finders.atmosphereFileFinder.get_filename
+
+   utilities.add_xtime
+   utilities.remap_variables
+
 ismip6_run
 ~~~~~~~~~~
 

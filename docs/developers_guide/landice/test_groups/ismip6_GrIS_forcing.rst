@@ -1,0 +1,189 @@
+.. _dev_landice_ismip6_GrIS_forcing:
+
+ismip6_GrIS_forcing
+===================
+
+The ``ismip6_GrIS_forcing`` test group
+(:py:class:`compass.landice.tests.ismip6_GrIS_forcing.Ismip6GrISForcing`)
+processes (i.e., remaps and renames) atmospheric and ocean forcing data for
+ISMIP6 Greenland Ice Sheet (GrIS) projection simulations with MALI. The test
+group includes a single test case, ``forcing_gen``
+(:py:class:`compass.landice.tests.ismip6_GrIS_forcing.forcing_gen.ForcingGen`),
+which consists of three steps.
+
+Upon initialization, the test group reads and validates the ``experiments.yml``
+file bundled with the package. This YAML file defines the supported experiments
+(``ctrl``, ``hist``, ``Exp05``–``Exp08``) and stores them as the
+``experiments`` dictionary attribute on the test group. The subset of
+experiments to process is determined at configure time from the
+``ISMIP6_GrIS_Forcing`` config section.
+
+The shared config options are described in
+:ref:`landice_ismip6_GrIS_forcing` in the User's Guide.
+
+.. _dev_landice_ismip6_GrIS_forcing_framework:
+
+framework
+---------
+
+file_finders
+~~~~~~~~~~~~
+
+The :py:mod:`compass.landice.tests.ismip6_GrIS_forcing.file_finders` module
+provides classes for locating ISMIP6 GrIS forcing files within the archive
+directory structure. The base class
+:py:class:`compass.landice.tests.ismip6_GrIS_forcing.file_finders.ISMIP6FileFinder`
+provides shared file-existence checking via the ``check_file_exists`` method.
+Two subclasses are provided:
+
+- :py:class:`compass.landice.tests.ismip6_GrIS_forcing.file_finders.oceanFileFinder`
+  navigates ``Ocean_Forcing/Melt_Implementation/{version}/`` to locate ocean
+  thermal forcing (``thermal_forcing``) and basin runoff (``basin_runoff``)
+  files. Ocean forcing files span the full period and are stored as a single
+  file per variable, GCM, and scenario.
+
+- :py:class:`compass.landice.tests.ismip6_GrIS_forcing.file_finders.atmosphereFileFinder`
+  navigates ``Atmosphere_Forcing/aSMB_observed/{version}/`` to locate yearly
+  atmospheric forcing files, which are then concatenated along the time
+  dimension into a single file spanning the requested period.
+
+utilities
+~~~~~~~~~
+
+The :py:mod:`compass.landice.tests.ismip6_GrIS_forcing.utilities` module
+provides two helper functions used across multiple steps:
+
+- :py:func:`compass.landice.tests.ismip6_GrIS_forcing.utilities.add_xtime`
+  converts a dataset's cftime/datetime ``time`` coordinate to the 64-byte MPAS
+  ``xtime`` string format required by MALI.
+
+- :py:func:`compass.landice.tests.ismip6_GrIS_forcing.utilities.remap_variables`
+  calls ``ncremap`` with a pre-computed weights file to remap variables from
+  the source grid to the MALI mesh.
+
+.. _dev_landice_ismip6_GrIS_forcing_test_case:
+
+Test case
+---------
+
+.. _dev_landice_ismip6_GrIS_forcing_gen:
+
+forcing_gen
+~~~~~~~~~~~
+
+The :py:class:`compass.landice.tests.ismip6_GrIS_forcing.forcing_gen.ForcingGen`
+test case stores the filenames for SCRIP grid descriptor files
+(``mali_mesh_scrip``, ``racmo_gis_scrip``, ``ismip6_gis_scrip``) and mapping
+weight files (``racmo_2_mali_weights``, ``ismip6_2_mali_weights``) as
+attributes. It also stores the path to the SMB reference climatology
+(``smb_ref_climatology``) so it is accessible to all steps. These attributes
+are initialized as bare filenames and are updated to full paths during the
+``setup`` method of ``CreateMappingFiles``.
+
+In ``configure``, the test case reads the requested experiment names from the
+``ISMIP6_GrIS_Forcing`` config section, builds the ``experiments`` subset
+dictionary from the full ``experiments.yml`` dictionary, and initializes the
+:py:class:`~compass.landice.tests.ismip6_GrIS_forcing.file_finders.oceanFileFinder`
+and
+:py:class:`~compass.landice.tests.ismip6_GrIS_forcing.file_finders.atmosphereFileFinder`
+instances based on the ``archive_fp`` config option.
+
+The ``find_forcing_files`` method on the test case dispatches file-location
+requests to the appropriate file finder based on the variable name.
+
+.. _dev_landice_ismip6_GrIS_forcing_create_mapping_files:
+
+create_mapping_files
+^^^^^^^^^^^^^^^^^^^^
+
+The
+:py:class:`compass.landice.tests.ismip6_GrIS_forcing.create_mapping_files.CreateMappingFiles`
+step parses the config file during ``setup`` to validate input file paths and
+registers the SCRIP and weight files as output files. During ``run``, it:
+
+1. Calls :py:func:`mpas_tools.scrip.from_mpas.scrip_from_mpas` to produce a
+   SCRIP file describing the MALI mesh.
+2. Uses :py:class:`pyremap.descriptor.ProjectionGridDescriptor` to build SCRIP
+   files for the RACMO and ISMIP6 GrIS source grids, both of which are on the
+   EPSG:3413 (WGS84 / NSIDC Sea Ice Polar Stereographic North) projection.
+3. Calls ``ESMF_RegridWeightGen`` (via ``srun``) with the ``bilinear`` method
+   to generate weight files for RACMO to MALI and ISMIP6 GrIS to MALI.
+
+The helper method ``make_scrip_and_weights_files`` encapsulates steps 2–3 for
+each source grid. Log files generated by ``ESMF_RegridWeightGen`` are
+organized into dedicated subdirectories to keep the work directory tidy.
+
+To locate an ISMIP6 forcing file needed to describe the source grid, the
+private ``_find_ismip6_forcing_files`` method selects the first projection
+experiment from the YAML-defined experiments and calls ``find_forcing_files``
+on the test case.
+
+.. _dev_landice_ismip6_GrIS_forcing_smb_ref_climatology:
+
+smb_ref_climatology
+^^^^^^^^^^^^^^^^^^^
+
+The
+:py:class:`compass.landice.tests.ismip6_GrIS_forcing.ref_smb_climatology.SMBRefClimatology`
+step reads the RACMO SMB file path from config during ``setup``, registers it
+as an input file, and registers the output climatology file path on the test
+case as ``smb_ref_climatology``.
+
+During ``run``, it calls
+:py:func:`~compass.landice.tests.ismip6_GrIS_forcing.utilities.remap_variables`
+to remap the RACMO monthly ``SMB_rec`` field onto the MALI mesh, then computes
+the time mean over the requested climatology period. The result is:
+
+- converted from the RACMO units to MALI units
+  (kg m\ :sup:`-2` s\ :sup:`-1`),
+- renamed (``SMB_rec`` to ``sfcMassBal``, ``ncol`` to ``nCells``), and
+- written to ``racmo_climatology_{start}--{end}.nc`` via
+  :py:func:`mpas_tools.io.write_netcdf`.
+
+.. _dev_landice_ismip6_GrIS_forcing_process_forcing:
+
+process_forcing
+^^^^^^^^^^^^^^^
+
+The
+:py:class:`compass.landice.tests.ismip6_GrIS_forcing.process_forcing.ProcessForcing`
+step iterates over the experiments dictionary. For each experiment, it calls
+``process_variables`` separately for the atmosphere variables (``aSMB``,
+``dSMBdz``, ``aST``, ``dSTdz``) and ocean variables (``thermal_forcing``,
+``basin_runoff``), then writes each group to a single merged output file via
+:py:func:`mpas_tools.io.write_netcdf`.
+
+The ``process_variable`` method performs the following for each variable:
+
+1. Locates the source file via ``find_forcing_files`` on the test case.
+2. Calls :py:func:`~compass.landice.tests.ismip6_GrIS_forcing.utilities.remap_variables`
+   to remap the variable to the MALI grid.
+3. Subsets the remapped dataset to the requested time range (including one year
+   prior to ``start``, since forcing data is provided in July).
+4. Adds the ``xtime`` coordinate via
+   :py:func:`~compass.landice.tests.ismip6_GrIS_forcing.utilities.add_xtime`,
+   and renames dimensions and variables to MALI/MPAS conventions
+   (``ncol`` to ``nCells``, ``time`` to ``Time``, plus the variable name
+   per ``renaming_dict``).
+5. For ``sfcMassBal``: adds the RACMO reference climatology
+   (``smb_ref_climatology``) to the ISMIP6 anomaly.
+6. For ``surfaceAirTemperature``: adds the MALI mesh surface air temperature
+   baseline (read from the MALI mesh file) to the ISMIP6 anomaly.
+7. For ocean variables (``ismip6_2dThermalForcing``, ``ismip6Runoff``): fills
+   NaN values with zero.
+8. For the ``ctrl`` experiment: time-averages the result over the reference
+   climatology period.
+
+The module-level ``renaming_dict`` maps ISMIP6 variable names to the
+corresponding MALI variable names:
+
+.. code-block:: python
+
+    renaming_dict = {
+        "thermal_forcing": "ismip6_2dThermalForcing",
+        "basin_runoff":    "ismip6Runoff",
+        "aSMB":            "sfcMassBal",
+        "dSMBdz":          "sfcMassBal_lapseRate",
+        "aST":             "surfaceAirTemperature",
+        "dSTdz":           "surfaceAirTemperature_lapseRate",
+    }
