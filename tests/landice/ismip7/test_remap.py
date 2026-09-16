@@ -4,6 +4,7 @@ Tests for the shared ISMIP7 remapping helpers.
 
 import logging
 
+import netCDF4
 import numpy as np
 import xarray as xr
 
@@ -101,21 +102,55 @@ def test_extrapolate_accepts_several_variables(tmp_path):
 def test_extrapolate_handles_non_cf_time(tmp_path):
     """
     The fracture forcing carries units="year", which xarray cannot decode.
-
-    Those callers pass decode_times=False; the default stays True so that
-    the ocean and atmosphere callers keep their previous behaviour.
+    The helper never decodes times, so no caller has to know.
     """
     values = np.array([[[1.0, np.nan]]])
     source = tmp_path / 'source.nc'
     output = tmp_path / 'output.nc'
     _write_source(source, values, time_units='year')
 
-    extrapolate_source(str(source), str(output), 'field', _logger(),
-                       decode_times=False)
+    extrapolate_source(str(source), str(output), 'field', _logger())
 
     with xr.open_dataset(output, decode_times=False) as ds:
         assert np.isfinite(ds['field'].values).all()
         assert ds['time'].attrs['units'] == 'year'
+
+
+def test_a_fully_missing_slab_keeps_a_fill_value(tmp_path):
+    """
+    A slab with no valid cell at all cannot be extrapolated.  It must keep
+    a fill value rather than be written as bare NaN, so that ncremap treats
+    it as missing instead of smearing it into neighbouring cells.
+    """
+    values = np.array([[[1.0, 2.0]], [[np.nan, np.nan]]])
+    source = tmp_path / 'source.nc'
+    output = tmp_path / 'output.nc'
+    _write_source(source, values)
+
+    extrapolate_source(str(source), str(output), 'field', _logger())
+
+    with netCDF4.Dataset(output) as ds:
+        variable = ds.variables['field']
+        assert '_FillValue' in variable.ncattrs()
+        assert variable[1].mask.all()
+        assert not variable[0].mask.any()
+
+
+def test_the_intermediate_file_is_cdf5(tmp_path):
+    """
+    The extrapolated file is written as CDF-5 so that ncremap can open even
+    the largest 3-D fields, which the HDF5 chunk-size limits of NETCDF4
+    would otherwise prevent.
+    """
+    values = np.arange(4.0).reshape(1, 2, 2)
+    source = tmp_path / 'source.nc'
+    output = tmp_path / 'output.nc'
+    _write_source(source, values)
+
+    extrapolate_source(str(source), str(output), 'field', _logger())
+
+    with netCDF4.Dataset(output) as ds:
+        assert ds.data_model == 'NETCDF3_64BIT_DATA'
 
 
 def test_extrapolate_is_a_no_op_without_gaps(tmp_path):
