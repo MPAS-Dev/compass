@@ -616,10 +616,13 @@ def build_cell_width(self, section_name, gridded_dataset,
     gridded_dataset : str
         name of NetCDF file used to define cell spacing
 
-    flood_fill_start : list of ints
-        ``i`` and ``j`` indices used to define starting location for flood
-        fill. Most cases will use ``[None, None]``, which will just start the
-        flood fill in the center of the gridded dataset.
+    flood_fill_start : list of ints or str
+        ``i`` and ``j`` indices used to define starting location for the
+        bed-topography flood fill. Most cases will use ``[None, None]``, which
+        skips the flood fill. Pass ``'auto'`` to seed the flood fill from the
+        deepest ice-free, below-sea-level cell (open ocean), which is the
+        appropriate choice for marine ice sheets and is independent of the
+        gridded dataset's resolution.
 
     Returns
     -------
@@ -658,6 +661,19 @@ def build_cell_width(self, section_name, gridded_dataset,
     vy = f.variables['vy'][0, :, :]
 
     f.close()
+
+    # Seed the bed flood fill from open ocean (deepest ice-free, below-sea-
+    # level cell) when requested, so it lands in the ocean regardless of grid
+    # resolution rather than on ice-covered cells that get masked out.
+    if isinstance(flood_fill_start, str) and flood_fill_start == 'auto':
+        ocean = np.logical_and(thk == 0.0, topg < 0.0)
+        if not ocean.any():
+            raise ValueError(
+                "flood_fill_start='auto' requires at least one ice-free, "
+                'below-sea-level (ocean) cell in the gridded dataset, but '
+                'none were found.')
+        flood_fill_start = list(np.unravel_index(
+            np.argmin(np.where(ocean, topg, np.inf)), topg.shape))
 
     # Get bounds defined by user, or use bounds from the gridded dataset.
     bnds = get_mesh_config_bounding_box(
