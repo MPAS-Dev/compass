@@ -72,16 +72,10 @@ salinity, so comparison with it is approximate at about that level.
 Usage
 -----
 
-The test group needs the ISMIP7 AIS datasets, a MALI mesh with its graph
-partition file, and a MALI build that supports the ISMIP7 melt method.
-Supply them in a user config file:
+The test group needs the ISMIP7 AIS datasets and a MALI mesh.  Supply them
+in a user config file:
 
 .. code-block:: cfg
-
-    [paths]
-    # only needed if the compass MALI-Dev submodule does not yet have the
-    # ISMIP7 melt method
-    mpas_model = /path/to/E3SM/components/mpas-albany-landice
 
     [ismip7_calibration]
     base_path_ismip7 = /path/to/ISMIP7/data/AIS

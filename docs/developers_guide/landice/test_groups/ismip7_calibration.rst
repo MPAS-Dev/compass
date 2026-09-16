@@ -283,8 +283,9 @@ using a MALI build with the ISMIP7 melt method
 ----------------------------------------------
 
 The ``ismip7`` melt form needs a MALI build that has
-``config_basal_mass_bal_float = 'ismip7'``.  If the compass ``MALI-Dev``
-submodule does not yet have it, point compass at another build with
+``config_basal_mass_bal_float = 'ismip7'``, which the compass ``MALI-Dev``
+submodule has had since MALI-Dev/E3SM#191.  An older build can still be
+pointed at with
 
 .. code-block:: cfg
 
