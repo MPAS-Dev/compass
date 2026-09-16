@@ -116,7 +116,13 @@ Always requires ``min_spac``, ``max_spac``, ``cull_distance``, ``use_speed``,
 function is enabled: ``high_log_speed``, ``low_log_speed`` (``use_speed = True``);
 ``high_dist``, ``low_dist`` (``use_dist_to_edge`` or ``use_dist_to_grounding_line = True``);
 ``high_dist_bed``, ``low_dist_bed``, ``high_bed``, ``low_bed`` (``use_bed = True``);
-``high_dist_coast``, ``low_dist_coast`` (``use_dist_to_coast = True``).
+``high_dist_coast``, ``low_dist_coast`` (``use_dist_to_coast = True``). The optional
+``min_spac_geojson`` sets ``min_spac`` everywhere the bed is below sea level within a
+lon/lat geojson hull.
+
+:py:func:`compass.landice.mesh.geojson_to_grid_mask()` builds a boolean mask on the
+gridded points for the area inside a lon/lat geojson hull, used by
+:py:func:`compass.landice.mesh.set_cell_width()`.
 
 :py:func:`compass.landice.mesh.get_dist_to_edge_and_gl()` calculates distance from
 each point to ice edge, grounding line, and coast, returning a three-element tuple
