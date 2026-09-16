@@ -1,15 +1,8 @@
-from compass.landice.mesh import (
-    build_cell_width,
-    build_mali_mesh,
-    get_mesh_config_bounding_box,
-    get_optional_interp_datasets,
-    run_optional_interpolation,
-)
+from compass.landice import mesh as landice_mesh
 from compass.model import make_graph_file
-from compass.step import Step
 
 
-class Mesh(Step):
+class Mesh(landice_mesh.LandiceMeshStep):
     """
     A step for creating a mesh and initial condition for humboldt test cases
 
@@ -30,8 +23,7 @@ class Mesh(Step):
         mesh_type : str
             The resolution or mesh type of the test case
         """
-        super().__init__(test_case=test_case, name='mesh', cpus_per_task=128,
-                         min_cpus_per_task=1)
+        super().__init__(test_case=test_case, name='mesh')
 
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename='Humboldt.nc')
@@ -59,16 +51,16 @@ class Mesh(Step):
         section = config[section_name]
         mesh_name = 'Humboldt.nc'
         src_proj = section.get('src_proj')
-        bedmachine_dataset, measures_dataset = get_optional_interp_datasets(
-            section, logger)
+        bedmachine_dataset, measures_dataset = \
+            landice_mesh.get_optional_interp_datasets(section, logger)
 
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodMask = \
-            build_cell_width(
+            landice_mesh.build_cell_width(
                 self, section_name=section_name,
                 gridded_dataset='greenland_2km_2024_01_29.epsg3413.nc')
 
-        build_mali_mesh(
+        landice_mesh.build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=mesh_name, section_name=section_name,
             gridded_dataset='humboldt_1km_2024_01_29.epsg3413.icesheetonly.nc',
@@ -81,9 +73,10 @@ class Mesh(Step):
         interpolate_data = section.getboolean(
             'interpolate_data', fallback=False)
         if interpolate_data:
-            run_optional_interpolation(
+            landice_mesh.run_optional_interpolation(
                 self, mesh_name, src_proj, parallel_executable, nProcs,
-                subset_bounds=get_mesh_config_bounding_box(section),
+                subset_bounds=landice_mesh.get_mesh_config_bounding_box(
+                    section),
                 bedmachine_dataset=bedmachine_dataset,
                 measures_dataset=measures_dataset)
 

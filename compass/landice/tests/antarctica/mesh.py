@@ -2,20 +2,11 @@ import netCDF4
 import xarray as xr
 from mpas_tools.logging import check_call
 
-from compass.landice.mesh import (
-    add_bedmachine_thk_to_ais_gridded_data,
-    build_cell_width,
-    build_mali_mesh,
-    get_optional_interp_datasets,
-    make_region_masks,
-    preprocess_ais_data,
-    run_optional_interpolation,
-)
+from compass.landice import mesh as landice_mesh
 from compass.model import make_graph_file
-from compass.step import Step
 
 
-class Mesh(Step):
+class Mesh(landice_mesh.LandiceMeshStep):
     """
     A step for creating a mesh and initial condition for Antarctica test cases
 
@@ -35,8 +26,7 @@ class Mesh(Step):
             The test case this step belongs to
 
         """
-        super().__init__(test_case=test_case, name='mesh', cpus_per_task=128,
-                         min_cpus_per_task=1)
+        super().__init__(test_case=test_case, name='mesh')
 
         self.mesh_filename = 'Antarctica.nc'
         self.add_output_file(filename='graph.info')
@@ -64,8 +54,8 @@ class Mesh(Step):
         parallel_executable = config.get('parallel', 'parallel_executable')
         nProcs = section_ais.get('nProcs')
         src_proj = section_ais.get("src_proj")
-        bedmachine_dataset, measures_dataset = get_optional_interp_datasets(
-            section_ais, logger)
+        bedmachine_dataset, measures_dataset = \
+            landice_mesh.get_optional_interp_datasets(section_ais, logger)
 
         section_name = 'mesh'
 
@@ -74,7 +64,7 @@ class Mesh(Step):
 
         if bedmachine_dataset is not None:
             bm_updated_gridded_dataset = (
-                add_bedmachine_thk_to_ais_gridded_data(
+                landice_mesh.add_bedmachine_thk_to_ais_gridded_data(
                     self,
                     source_gridded_dataset,
                     bedmachine_dataset))
@@ -86,13 +76,13 @@ class Mesh(Step):
         ds.close()
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
-            build_cell_width(
+            landice_mesh.build_cell_width(
                 self, section_name=section_name,
                 gridded_dataset=bm_updated_gridded_dataset,
                 flood_fill_start=[nx // 2, ny // 2])
 
         # Now build the base mesh and perform the standard interpolation
-        build_mali_mesh(
+        landice_mesh.build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
             gridded_dataset=bm_updated_gridded_dataset,
@@ -115,7 +105,7 @@ class Mesh(Step):
         # Preprocess the gridded AIS source datasets to work
         # with the rest of the workflow
         logger.info('calling preprocess_ais_data')
-        preprocessed_gridded_dataset = preprocess_ais_data(
+        preprocessed_gridded_dataset = landice_mesh.preprocess_ais_data(
             self, bm_updated_gridded_dataset, floodFillMask)
 
         # interpolate fields from *preprocessed* composite dataset
@@ -140,7 +130,7 @@ class Mesh(Step):
         interpolate_data = section_ais.getboolean(
             'interpolate_data', fallback=False)
         if interpolate_data:
-            run_optional_interpolation(
+            landice_mesh.run_optional_interpolation(
                 self, self.mesh_filename, src_proj,
                 parallel_executable, nProcs,
                 bedmachine_dataset=bedmachine_dataset,
@@ -153,14 +143,16 @@ class Mesh(Step):
 
         # create a region mask
         mask_filename = f'{self.mesh_filename[:-3]}_imbie_regionMasks.nc'
-        make_region_masks(self, self.mesh_filename, mask_filename,
-                          self.cpus_per_task,
-                          tags=['EastAntarcticaIMBIE',
-                                'WestAntarcticaIMBIE',
-                                'AntarcticPeninsulaIMBIE'],
-                          all_tags=False)
+        landice_mesh.make_region_masks(
+            self, self.mesh_filename, mask_filename,
+            self.cpus_per_task,
+            tags=['EastAntarcticaIMBIE',
+                  'WestAntarcticaIMBIE',
+                  'AntarcticPeninsulaIMBIE'],
+            all_tags=False)
 
         mask_filename = f'{self.mesh_filename[:-3]}_ismip6_regionMasks.nc'
-        make_region_masks(self, self.mesh_filename, mask_filename,
-                          self.cpus_per_task,
-                          tags=['ISMIP6_Basin'])
+        landice_mesh.make_region_masks(
+            self, self.mesh_filename, mask_filename,
+            self.cpus_per_task,
+            tags=['ISMIP6_Basin'])
