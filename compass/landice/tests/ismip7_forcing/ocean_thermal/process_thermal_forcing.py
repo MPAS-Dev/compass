@@ -2,16 +2,15 @@ import glob
 import os
 import shutil
 
-import numpy as np
 import xarray as xr
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
-from scipy.ndimage import distance_transform_edt
 
 from compass.landice.tests.ismip7_forcing.create_mapfile import (
     build_mapping_file,
 )
 from compass.landice.tests.ismip7_forcing.ice_sheet_params import get_params
+from compass.landice.tests.ismip7_forcing.remap_utils import extrapolate_source
 from compass.step import Step
 
 
@@ -68,9 +67,9 @@ class ProcessThermalForcing(Step):
     def _run_scenario(self):
         """
         Process time-varying ocean thermal forcing from an ESM
-        (e.g., CESM2-WACCM historical or ssp585).
+        (e.g., CESM2-WACCM historical or ssp585) or, for AIS OCX, from one
+        or more reanalysis ocean "choices" (main/cold/warm/vary).
         """
-        logger = self.logger
         config = self.config
         params = get_params(config)
 
@@ -88,14 +87,177 @@ class ProcessThermalForcing(Step):
         start_year = section.getint("start_year")
         end_year = section.getint("end_year")
 
-        # Discover input files
         prefix = params['prefix']
         ocean_version = params['ocean_version']
+        ocean_grid = params['ocean_grid']
         ocean_3d = params['ocean_3d']
-        input_path = os.path.join(base_path_ismip7, "ocean", "tf",
-                                  ocean_version)
-        file_pattern = (f"tf_{prefix}_{model}_{scenario}_"
-                        f"ocean_{ocean_version}_*.nc")
+
+        # Assemble the list of forcing sources to process. AIS OCX has several
+        # ocean "choices" (main/cold/warm/vary) in per-choice subdirectories
+        # with no model token in the filename; all other cases (ESM scenarios
+        # and GrIS OCX) have a single source.
+        jobs = []
+        if params.get('ocean_choice_layout', False):
+            for choice in self._get_ocean_choices(config):
+                input_path = os.path.join(base_path_ismip7, "ocean", choice,
+                                          ocean_version)
+                file_pattern = (f"tf_{prefix}_{scenario}_ocean_{choice}_"
+                                f"{ocean_version}_*.nc")
+                jobs.append({
+                    'input_path': input_path,
+                    'file_pattern': file_pattern,
+                    'forcing_group': f"{scenario}_{choice}",
+                    'label': f"{scenario}_{choice}",
+                })
+        else:
+            if params['ocean_model'] is not None:
+                forcing_group = scenario
+                model = params['ocean_model']
+            else:
+                forcing_group = f"{model}_{scenario}"
+            input_path = os.path.join(base_path_ismip7, "ocean", "tf",
+                                      ocean_version)
+            file_pattern = (f"tf_{prefix}_{model}_{scenario}_"
+                            f"{ocean_grid}_{ocean_version}_*.nc")
+            jobs.append({
+                'input_path': input_path,
+                'file_pattern': file_pattern,
+                'forcing_group': forcing_group,
+                'label': f"{model}_{scenario}",
+            })
+
+        # Mapping file is shared across sources (identical ocean source grid).
+        mapping_file = (f"map_ismip7_{ice_sheet}_ocean_to_"
+                        f"{mali_mesh_name}_{method_remap}.nc")
+
+        for job in jobs:
+            self._process_ocean_forcing(
+                job, mapping_file, ocean_3d, method_remap,
+                start_year, end_year, mali_mesh_name, mali_mesh_file,
+                output_base_path)
+
+        # AIS OCX writes one ocean_thermal_forcing dir per ocean choice
+        # (OCX_<choice>), but atmosphere output is written once, under OCX.
+        # Mirror the atmosphere files into each OCX_<choice> directory so
+        # ismip7_run can treat it as a single, self-contained forcing dir.
+        if params.get('ocean_choice_layout', False):
+            for job in jobs:
+                self._link_atmosphere_outputs(
+                    output_base_path, scenario, job['forcing_group'])
+
+    def _get_ocean_choices(self, config):
+        """
+        Parse the comma-separated ``ocean_choice`` option (AIS OCX only) into a
+        list of ocean choices, expanding ``all`` to every available choice.
+
+        Parameters
+        ----------
+        config : compass.config.CompassConfigParser
+            Configuration options for the test case
+
+        Returns
+        -------
+        choices : list of str
+            Ordered, de-duplicated list of ocean choices to process
+        """
+        valid = ["main", "cold", "warm", "vary"]
+        raw = config.get("ismip7_ocean_thermal", "ocean_choice")
+        tokens = [t.strip() for t in raw.split(",") if t.strip()]
+        if any(t.lower() == "all" for t in tokens):
+            return valid
+
+        choices = []
+        for token in tokens:
+            if token not in valid:
+                raise ValueError(
+                    f"Invalid ocean_choice '{token}'. Must be a "
+                    f"comma-separated list of {valid} or 'all'.")
+            if token not in choices:
+                choices.append(token)
+        if not choices:
+            raise ValueError(
+                "No ocean_choice specified for AIS OCX ocean forcing.")
+        return choices
+
+    def _link_atmosphere_outputs(self, output_base_path, atm_forcing_group,
+                                 choice_forcing_group):
+        """
+        Symlink the shared atmosphere output files into an ocean-choice
+        forcing directory (e.g. OCX_main) so it mirrors the atmosphere's
+        directory (e.g. OCX) and can be used standalone as an
+        ``ocx_forcing_path`` by ismip7_run.
+
+        Parameters
+        ----------
+        output_base_path : str
+            Base path under which output is written
+
+        atm_forcing_group : str
+            Name of the directory under ``output_base_path`` that holds the
+            actual atmosphere output files (e.g. 'OCX')
+
+        choice_forcing_group : str
+            Name of the ocean-choice directory to populate with symlinks
+            (e.g. 'OCX_main')
+        """
+        logger = self.logger
+        src_dir = os.path.join(output_base_path, atm_forcing_group,
+                               "atmosphere")
+        if not os.path.isdir(src_dir):
+            logger.warning(
+                f"Atmosphere output not found at {src_dir}; skipping "
+                f"atmosphere symlinks for {choice_forcing_group}. Run the "
+                f"atmosphere test case to populate it.")
+            return
+
+        dst_dir = os.path.join(output_base_path, choice_forcing_group,
+                               "atmosphere")
+        os.makedirs(dst_dir, exist_ok=True)
+
+        for fname in os.listdir(src_dir):
+            src = os.path.join(src_dir, fname)
+            if not os.path.isfile(src):
+                continue
+            dst = os.path.join(dst_dir, fname)
+            if os.path.lexists(dst):
+                os.remove(dst)
+            os.symlink(src, dst)
+            logger.info(f"  Linked {dst} -> {src}")
+
+    def _process_ocean_forcing(self, job, mapping_file, ocean_3d,
+                               method_remap, start_year, end_year,
+                               mali_mesh_name, mali_mesh_file,
+                               output_base_path):
+        """
+        Discover, remap, combine, and save the thermal forcing for a single
+        forcing source described by ``job``.
+
+        Parameters
+        ----------
+        job : dict
+            Source description with keys ``input_path``, ``file_pattern``,
+            ``forcing_group``, and ``label``
+        mapping_file : str
+            Path of the shared ocean-to-MALI mapping file (built on demand)
+        ocean_3d : bool
+            Whether the thermal forcing is 3D (AIS) or 2D (GrIS)
+        method_remap : str
+            Remapping method passed to the mapping-file builder
+        start_year, end_year : int
+            Inclusive year range to process
+        mali_mesh_name, mali_mesh_file : str
+            MALI mesh name and file
+        output_base_path : str
+            Base path under which output is written
+        """
+        logger = self.logger
+        config = self.config
+
+        input_path = job['input_path']
+        file_pattern = job['file_pattern']
+        forcing_group = job['forcing_group']
+        label = job['label']
+
         all_files = sorted(glob.glob(os.path.join(input_path, file_pattern)))
 
         if not all_files:
@@ -104,8 +266,8 @@ class ProcessThermalForcing(Step):
                 f"  {os.path.join(input_path, file_pattern)}")
 
         # Filter to files that overlap with the requested year range.
-        # AIS files are named with decade ranges (e.g., 1850-1859).
-        # GrIS files are named with single years (e.g., 2015).
+        # AIS files are named with decade or multi-decade ranges (e.g.,
+        # 1850-1859, 1950-2025). GrIS files are named with single years.
         input_files = []
         for f in all_files:
             # Extract year range from filename (last part before .nc)
@@ -125,9 +287,6 @@ class ProcessThermalForcing(Step):
                     f"overlapping years {start_year}-{end_year}")
 
         # Build mapping file using the first input file as grid template.
-        mapping_file = (f"map_ismip7_{ice_sheet}_ocean_to_"
-                        f"{mali_mesh_name}_{method_remap}.nc")
-
         if not os.path.exists(mapping_file):
             logger.info("Building mapping file for ocean grid...")
             build_mapping_file(config, logger,
@@ -135,7 +294,7 @@ class ProcessThermalForcing(Step):
                                mali_mesh_file=mali_mesh_file,
                                method_remap=method_remap)
 
-        # Remap each decade file
+        # Remap each file
         remapped_files = []
         for input_file in input_files:
             basename = os.path.basename(input_file)
@@ -150,8 +309,7 @@ class ProcessThermalForcing(Step):
             # so they don't pollute neighboring cells during interpolation
             extrap_file = f"extrap_{basename}"
             if not os.path.exists(extrap_file):
-                self._extrapolate_source(input_file, extrap_file, "tf",
-                                         logger)
+                extrapolate_source(input_file, extrap_file, "tf", logger)
 
             logger.info(f"  Remapping: {basename}")
             args = ["ncremap",
@@ -167,7 +325,7 @@ class ProcessThermalForcing(Step):
 
         # Combine remapped files and rename to MALI conventions
         logger.info("Combining remapped files and renaming variables...")
-        output_file = (f"{mali_mesh_name}_thermal_forcing_{model}_{scenario}_"
+        output_file = (f"{mali_mesh_name}_thermal_forcing_{label}_"
                        f"{start_year}-{end_year}.nc")
 
         if ocean_3d:
@@ -184,8 +342,8 @@ class ProcessThermalForcing(Step):
                 os.remove(f)
 
         # Place output in appropriate directory
-        output_path = os.path.join(output_base_path, "ocean_thermal_forcing",
-                                   f"{model}_{scenario}")
+        output_path = os.path.join(output_base_path, forcing_group,
+                                   "ocean_thermal_forcing")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
@@ -246,8 +404,7 @@ class ProcessThermalForcing(Step):
         if not os.path.exists(remapped_file):
             extrap_file = f"extrap_{basename}"
             if not os.path.exists(extrap_file):
-                self._extrapolate_source(input_file, extrap_file, "tf",
-                                         logger)
+                extrapolate_source(input_file, extrap_file, "tf", logger)
 
             logger.info(f"  Remapping: {basename}")
             args = ["ncremap",
@@ -305,7 +462,8 @@ class ProcessThermalForcing(Step):
             Last year to include in output
         """
         ds = xr.open_mfdataset(remapped_files, concat_dim="time",
-                               combine="nested", engine="netcdf4")
+                               combine="nested", engine="netcdf4",
+                               drop_variables="time_bnds")
 
         # Subset to requested year range
         years = ds.time.dt.year
@@ -419,7 +577,8 @@ class ProcessThermalForcing(Step):
             Last year to include in output
         """
         ds = xr.open_mfdataset(remapped_files, concat_dim="time",
-                               combine="nested", engine="netcdf4")
+                               combine="nested", engine="netcdf4",
+                               drop_variables="time_bnds")
 
         # Subset to requested year range
         years = ds.time.dt.year
@@ -561,61 +720,5 @@ class ProcessThermalForcing(Step):
         # Drop the z coordinate if it persists
         if "nISMIP6OceanLayers" in ds.coords:
             ds = ds.drop_vars("nISMIP6OceanLayers")
-
-        write_netcdf(ds, output_file)
-
-    def _extrapolate_source(self, input_file, output_file, varname, logger):
-        """
-        Extrapolate fill/missing values on the source polar stereographic
-        grid using nearest-neighbor interpolation from valid cells. This
-        must be done before remapping so that fill values don't contaminate
-        the interpolation stencil.
-
-        Parameters
-        ----------
-        input_file : str
-            Path to the input NetCDF file on the source grid
-
-        output_file : str
-            Path to write the extrapolated file
-
-        varname : str
-            Name of the variable to extrapolate (e.g., "tf")
-
-        logger : logging.Logger
-            Logger for status messages
-        """
-        logger.info(f"    Extrapolating fill values on source grid: "
-                    f"{os.path.basename(input_file)}")
-
-        ds = xr.open_dataset(input_file, engine="netcdf4")
-        data = ds[varname]
-
-        # Process each time step (and z level if 3D)
-        # Source files have dims like (time, z, y, x) or (time, y, x)
-        values = data.values.copy()
-        non_spatial_shape = values.shape[:-2]  # (time,) or (time, z)
-
-        # Use distance_transform_edt with return_indices to find the
-        # nearest valid cell index for each invalid cell. This is O(n)
-        # on the grid and much faster than KD-tree approaches.
-        for idx in np.ndindex(non_spatial_shape):
-            slab = values[idx]  # shape (ny, nx)
-            valid_mask = np.isfinite(slab)
-            if valid_mask.all() or not valid_mask.any():
-                continue
-            nearest_inds = distance_transform_edt(
-                ~valid_mask, return_distances=False, return_indices=True)
-            invalid = ~valid_mask
-            values[idx][invalid] = slab[
-                nearest_inds[0, invalid],
-                nearest_inds[1, invalid]]
-
-        ds[varname] = (data.dims, values)
-        ds[varname].attrs = data.attrs
-
-        # Remove _FillValue encoding so output has no masked values
-        if "_FillValue" in ds[varname].encoding:
-            del ds[varname].encoding["_FillValue"]
 
         write_netcdf(ds, output_file)
