@@ -114,16 +114,15 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">distance_transform_edt</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_forcing.create_mapfile</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">build_mapping_file</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_forcing.ice_sheet_params</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_params</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_forcing.remap_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">extrapolate_source</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -194,6 +193,11 @@
         <span class="n">prefix</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'prefix'</span><span class="p">]</span>
         <span class="n">resolution</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'atm_resolution'</span><span class="p">]</span>
         <span class="n">version</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'atm_version'</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">'atm_model'</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">forcing_group</span> <span class="o">=</span> <span class="n">scenario</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'atm_model'</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">forcing_group</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">"</span>
         <span class="n">input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_ismip7</span><span class="p">,</span> <span class="s2">"mrro"</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
         <span class="n">file_pattern</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"mrro_</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_"</span>
                         <span class="sa">f</span><span class="s2">"SDBN1-</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">_*.nc"</span><span class="p">)</span>
@@ -207,7 +211,11 @@
         <span class="c1"># Filter to requested year range</span>
         <span class="n">input_files</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">all_files</span><span class="p">:</span>
-            <span class="n">year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">".nc"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span>
+            <span class="c1"># skip non-yearly files such as climatology averages (*_avg.nc)</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">".nc"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                <span class="k">continue</span>
+            <span class="n">year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">start_year</span> <span class="o">&lt;=</span> <span class="n">year</span> <span class="o">&lt;=</span> <span class="n">end_year</span><span class="p">:</span>
                 <span class="n">input_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
@@ -245,8 +253,7 @@
             <span class="c1"># so they don't pollute neighboring cells during interpolation</span>
             <span class="n">extrap_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"extrap_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"mrro"</span><span class="p">,</span>
-                                         <span class="n">logger</span><span class="p">)</span>
+                <span class="n">extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"mrro"</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Remapping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncremap"</span><span class="p">,</span>
@@ -274,8 +281,8 @@
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
         <span class="c1"># Place output in appropriate directory</span>
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="s2">"atmosphere_forcing"</span><span class="p">,</span>
-                                   <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="n">forcing_group</span><span class="p">,</span>
+                                   <span class="s2">"atmosphere"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
 
@@ -299,7 +306,8 @@
 <span class="sd">            Output file path</span>
 <span class="sd">        """</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">concat_dim</span><span class="o">=</span><span class="s2">"time"</span><span class="p">,</span>
-                               <span class="n">combine</span><span class="o">=</span><span class="s2">"nested"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">)</span>
+                               <span class="n">combine</span><span class="o">=</span><span class="s2">"nested"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">,</span>
+                               <span class="n">drop_variables</span><span class="o">=</span><span class="s2">"time_bnds"</span><span class="p">)</span>
 
         <span class="c1"># Rename dimensions to MALI conventions</span>
         <span class="n">rename_dims</span> <span class="o">=</span> <span class="p">{}</span>
@@ -346,59 +354,6 @@
         <span class="c1"># MALI uses xtime, not CF-encoded time coordinates</span>
         <span class="k">if</span> <span class="s2">"Time"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">"Time"</span><span class="p">)</span>
-
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_extrapolate_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Extrapolate fill/missing values on the source polar stereographic</span>
-<span class="sd">        grid using nearest-neighbor via distance_transform_edt. This must</span>
-<span class="sd">        be done before remapping so that fill values don't contaminate the</span>
-<span class="sd">        interpolation stencil.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        input_file : str</span>
-<span class="sd">            Path to the input NetCDF file on the source grid</span>
-
-<span class="sd">        output_file : str</span>
-<span class="sd">            Path to write the extrapolated file</span>
-
-<span class="sd">        varname : str</span>
-<span class="sd">            Name of the variable to extrapolate (e.g., "mrro")</span>
-
-<span class="sd">        logger : logging.Logger</span>
-<span class="sd">            Logger for status messages</span>
-<span class="sd">        """</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Extrapolating fill values on source grid: "</span>
-                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span>
-
-        <span class="c1"># Process each time step</span>
-        <span class="c1"># Source files have dims like (time, y, x)</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">non_spatial_shape</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>  <span class="c1"># (time,)</span>
-
-        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">non_spatial_shape</span><span class="p">):</span>
-            <span class="n">slab</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>  <span class="c1"># shape (ny, nx)</span>
-            <span class="n">valid_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">slab</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">valid_mask</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">valid_mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
-                <span class="k">continue</span>
-            <span class="n">nearest_inds</span> <span class="o">=</span> <span class="n">distance_transform_edt</span><span class="p">(</span>
-                <span class="o">~</span><span class="n">valid_mask</span><span class="p">,</span> <span class="n">return_distances</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">invalid</span> <span class="o">=</span> <span class="o">~</span><span class="n">valid_mask</span>
-            <span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="n">invalid</span><span class="p">]</span> <span class="o">=</span> <span class="n">slab</span><span class="p">[</span>
-                <span class="n">nearest_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">invalid</span><span class="p">],</span>
-                <span class="n">nearest_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">invalid</span><span class="p">]]</span>
-
-        <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">attrs</span>
-
-        <span class="c1"># Remove _FillValue encoding so output has no masked values</span>
-        <span class="k">if</span> <span class="s2">"_FillValue"</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="p">:</span>
-            <span class="k">del</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="p">[</span><span class="s2">"_FillValue"</span><span class="p">]</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span></div>
 

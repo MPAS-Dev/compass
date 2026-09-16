@@ -122,6 +122,7 @@
     <span class="n">build_mapping_file</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_forcing.ice_sheet_params</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_params</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_forcing.remap_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">extrapolate_source</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -192,6 +193,11 @@
         <span class="n">prefix</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'prefix'</span><span class="p">]</span>
         <span class="n">resolution</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'atm_resolution'</span><span class="p">]</span>
         <span class="n">version</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'atm_version'</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">'atm_model'</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">forcing_group</span> <span class="o">=</span> <span class="n">scenario</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'atm_model'</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">forcing_group</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">"</span>
         <span class="n">input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_ismip7</span><span class="p">,</span> <span class="s2">"dacabfdz"</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
         <span class="n">file_pattern</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"dacabfdz_</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_"</span>
                         <span class="sa">f</span><span class="s2">"SDBN1-</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">_*.nc"</span><span class="p">)</span>
@@ -205,7 +211,11 @@
         <span class="c1"># Filter to requested year range</span>
         <span class="n">input_files</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">all_files</span><span class="p">:</span>
-            <span class="n">year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">".nc"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span>
+            <span class="c1"># skip non-yearly files such as climatology averages (*_avg.nc)</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">".nc"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                <span class="k">continue</span>
+            <span class="n">year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">start_year</span> <span class="o">&lt;=</span> <span class="n">year</span> <span class="o">&lt;=</span> <span class="n">end_year</span><span class="p">:</span>
                 <span class="n">input_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
@@ -240,14 +250,24 @@
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Remapped file exists, skipping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                 <span class="k">continue</span>
 
+            <span class="c1"># Extrapolate fill values on source grid before remapping</span>
+            <span class="c1"># so they don't pollute neighboring cells during interpolation</span>
+            <span class="n">extrap_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"extrap_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">):</span>
+                <span class="n">extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"dacabfdz"</span><span class="p">,</span>
+                                   <span class="n">logger</span><span class="p">)</span>
+
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Remapping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncremap"</span><span class="p">,</span>
-                    <span class="s2">"-i"</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span>
+                    <span class="s2">"-i"</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span>
                     <span class="s2">"-o"</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">,</span>
                     <span class="s2">"-m"</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
                     <span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"dacabfdz"</span><span class="p">]</span>
 
             <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+            <span class="c1"># Clean up extrapolated source file</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">)</span>
 
         <span class="c1"># Combine remapped files and rename to MALI conventions</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Combining remapped files and renaming variables..."</span><span class="p">)</span>
@@ -263,8 +283,8 @@
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
         <span class="c1"># Place output in appropriate directory</span>
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="s2">"atmosphere_forcing"</span><span class="p">,</span>
-                                   <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="n">forcing_group</span><span class="p">,</span>
+                                   <span class="s2">"atmosphere"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
 
@@ -288,7 +308,8 @@
 <span class="sd">            Output file path</span>
 <span class="sd">        """</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">concat_dim</span><span class="o">=</span><span class="s2">"time"</span><span class="p">,</span>
-                               <span class="n">combine</span><span class="o">=</span><span class="s2">"nested"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">)</span>
+                               <span class="n">combine</span><span class="o">=</span><span class="s2">"nested"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">,</span>
+                               <span class="n">drop_variables</span><span class="o">=</span><span class="s2">"time_bnds"</span><span class="p">)</span>
 
         <span class="c1"># Rename dimensions to MALI conventions</span>
         <span class="n">rename_dims</span> <span class="o">=</span> <span class="p">{}</span>

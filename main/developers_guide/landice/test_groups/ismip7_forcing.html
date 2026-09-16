@@ -161,10 +161,17 @@ in <a class="reference internal" href="../../../users_guide/landice/test_groups/
 <h3>ice_sheet_params<a class="headerlink" href="#ice-sheet-params" title="Link to this heading"></a></h3>
 <p>The module <code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_forcing.ice_sheet_params</span></code>
 defines a dictionary of ice-sheet-specific parameters (projection, file
-naming prefix, grid resolution, data version, ocean dimensionality) and
-provides the function
+naming prefix, grid resolution, data version, ocean dimensionality, and the
+atmosphere/ocean source names) and provides the function
 <a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.ice_sheet_params.get_params.html#compass.landice.tests.ismip7_forcing.ice_sheet_params.get_params" title="compass.landice.tests.ismip7_forcing.ice_sheet_params.get_params"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_forcing.ice_sheet_params.get_params()</span></code></a>
 to retrieve them based on the <code class="docutils literal notranslate"><span class="pre">ice_sheet</span></code> config option.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">scenario</span> <span class="pre">=</span> <span class="pre">OCX</span></code>, <code class="docutils literal notranslate"><span class="pre">get_params</span></code> applies a set of OCX overrides on top
+of the ice-sheet defaults: data version <code class="docutils literal notranslate"><span class="pre">v1</span></code>, the ocean file-name grid token
+(e.g. <code class="docutils literal notranslate"><span class="pre">ocean-1000m</span></code>), and the fixed reanalysis sources (<code class="docutils literal notranslate"><span class="pre">atm_model</span></code> =
+<code class="docutils literal notranslate"><span class="pre">RACMO2.3p2-ERA</span></code> and <code class="docutils literal notranslate"><span class="pre">ocean_model</span></code> = <code class="docutils literal notranslate"><span class="pre">EN4</span></code>). The processing steps use
+<code class="docutils literal notranslate"><span class="pre">atm_model</span></code> / <code class="docutils literal notranslate"><span class="pre">ocean_model</span></code> in place of the <code class="docutils literal notranslate"><span class="pre">[ismip7]</span> <span class="pre">model</span></code> option when
+they are set, so the OCX <code class="docutils literal notranslate"><span class="pre">model</span></code> option is ignored. This keeps OCX handling
+centralized and lets a single config file drive both test cases.</p>
 </section>
 <section id="configure">
 <h3>configure<a class="headerlink" href="#configure" title="Link to this heading"></a></h3>
@@ -174,6 +181,8 @@ the user (i.e., are not <code class="docutils literal notranslate"><span class="
 <p>Repository-local example user configs are available at
 <code class="docutils literal notranslate"><span class="pre">compass/landice/tests/ismip7_forcing/ismip7_forcing_test.cfg</span></code> (AIS) and
 <code class="docutils literal notranslate"><span class="pre">compass/landice/tests/ismip7_forcing/ismip7_forcing_test_gis.cfg</span></code> (GrIS).
+The GrIS OCX scenario has a dedicated example
+<code class="docutils literal notranslate"><span class="pre">ismip7_forcing_ocx_gis.cfg</span></code> in the same directory.
 These are intended for development/testing and include environment-specific
 paths.</p>
 </section>

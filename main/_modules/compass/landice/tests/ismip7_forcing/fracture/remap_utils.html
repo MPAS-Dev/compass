@@ -113,70 +113,8 @@
 <span></span><span class="sd">"""</span>
 <span class="sd">Shared helpers for remapping ISMIP7 fracture forcing data to the MALI mesh.</span>
 <span class="sd">"""</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">distance_transform_edt</span>
-
-
-<div class="viewcode-block" id="extrapolate_source">
-<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_forcing.fracture.remap_utils.extrapolate_source.html#compass.landice.tests.ismip7_forcing.fracture.remap_utils.extrapolate_source">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">varnames</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Extrapolate fill/missing values on the source polar stereographic grid</span>
-<span class="sd">    using nearest-neighbor via ``distance_transform_edt``. This must be done</span>
-<span class="sd">    before remapping so that fill values don't contaminate the interpolation</span>
-<span class="sd">    stencil.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    input_file : str</span>
-<span class="sd">        Path to the input NetCDF file on the source grid</span>
-
-<span class="sd">    output_file : str</span>
-<span class="sd">        Path to write the extrapolated file</span>
-
-<span class="sd">    varnames : str or list of str</span>
-<span class="sd">        Name(s) of the variable(s) to extrapolate</span>
-
-<span class="sd">    logger : logging.Logger</span>
-<span class="sd">        Logger for status messages</span>
-<span class="sd">    """</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">varnames</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">varnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">varnames</span><span class="p">]</span>
-
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Extrapolating fill values on source grid: "</span>
-                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">varname</span> <span class="ow">in</span> <span class="n">varnames</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">non_spatial_shape</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-
-        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">non_spatial_shape</span><span class="p">):</span>
-            <span class="n">slab</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-            <span class="n">valid_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">slab</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">valid_mask</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">valid_mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
-                <span class="k">continue</span>
-            <span class="n">nearest_inds</span> <span class="o">=</span> <span class="n">distance_transform_edt</span><span class="p">(</span>
-                <span class="o">~</span><span class="n">valid_mask</span><span class="p">,</span> <span class="n">return_distances</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">invalid</span> <span class="o">=</span> <span class="o">~</span><span class="n">valid_mask</span>
-            <span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="n">invalid</span><span class="p">]</span> <span class="o">=</span> <span class="n">slab</span><span class="p">[</span>
-                <span class="n">nearest_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">invalid</span><span class="p">],</span>
-                <span class="n">nearest_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">invalid</span><span class="p">]]</span>
-
-        <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">attrs</span>
-        <span class="k">if</span> <span class="s2">"_FillValue"</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="p">:</span>
-            <span class="k">del</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="p">[</span><span class="s2">"_FillValue"</span><span class="p">]</span>
-
-    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
-    <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-
 
 
 <div class="viewcode-block" id="open_rename_and_trim">

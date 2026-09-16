@@ -114,16 +114,15 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">distance_transform_edt</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_forcing.create_mapfile</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">build_mapping_file</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_forcing.ice_sheet_params</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_params</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_forcing.remap_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">extrapolate_source</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -191,9 +190,9 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_run_scenario</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process time-varying ocean thermal forcing from an ESM</span>
-<span class="sd">        (e.g., CESM2-WACCM historical or ssp585).</span>
+<span class="sd">        (e.g., CESM2-WACCM historical or ssp585) or, for AIS OCX, from one</span>
+<span class="sd">        or more reanalysis ocean "choices" (main/cold/warm/vary).</span>
 <span class="sd">        """</span>
-        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">params</span> <span class="o">=</span> <span class="n">get_params</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
@@ -211,14 +210,177 @@
         <span class="n">start_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">"start_year"</span><span class="p">)</span>
         <span class="n">end_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">"end_year"</span><span class="p">)</span>
 
-        <span class="c1"># Discover input files</span>
         <span class="n">prefix</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'prefix'</span><span class="p">]</span>
         <span class="n">ocean_version</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'ocean_version'</span><span class="p">]</span>
+        <span class="n">ocean_grid</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'ocean_grid'</span><span class="p">]</span>
         <span class="n">ocean_3d</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'ocean_3d'</span><span class="p">]</span>
-        <span class="n">input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_ismip7</span><span class="p">,</span> <span class="s2">"ocean"</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span>
-                                  <span class="n">ocean_version</span><span class="p">)</span>
-        <span class="n">file_pattern</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"tf_</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_"</span>
-                        <span class="sa">f</span><span class="s2">"ocean_</span><span class="si">{</span><span class="n">ocean_version</span><span class="si">}</span><span class="s2">_*.nc"</span><span class="p">)</span>
+
+        <span class="c1"># Assemble the list of forcing sources to process. AIS OCX has several</span>
+        <span class="c1"># ocean "choices" (main/cold/warm/vary) in per-choice subdirectories</span>
+        <span class="c1"># with no model token in the filename; all other cases (ESM scenarios</span>
+        <span class="c1"># and GrIS OCX) have a single source.</span>
+        <span class="n">jobs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ocean_choice_layout'</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ocean_choices</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+                <span class="n">input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_ismip7</span><span class="p">,</span> <span class="s2">"ocean"</span><span class="p">,</span> <span class="n">choice</span><span class="p">,</span>
+                                          <span class="n">ocean_version</span><span class="p">)</span>
+                <span class="n">file_pattern</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"tf_</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_ocean_</span><span class="si">{</span><span class="n">choice</span><span class="si">}</span><span class="s2">_"</span>
+                                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ocean_version</span><span class="si">}</span><span class="s2">_*.nc"</span><span class="p">)</span>
+                <span class="n">jobs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s1">'input_path'</span><span class="p">:</span> <span class="n">input_path</span><span class="p">,</span>
+                    <span class="s1">'file_pattern'</span><span class="p">:</span> <span class="n">file_pattern</span><span class="p">,</span>
+                    <span class="s1">'forcing_group'</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">choice</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                    <span class="s1">'label'</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">choice</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">'ocean_model'</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">forcing_group</span> <span class="o">=</span> <span class="n">scenario</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'ocean_model'</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">forcing_group</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_ismip7</span><span class="p">,</span> <span class="s2">"ocean"</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span>
+                                      <span class="n">ocean_version</span><span class="p">)</span>
+            <span class="n">file_pattern</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"tf_</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_"</span>
+                            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ocean_grid</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">ocean_version</span><span class="si">}</span><span class="s2">_*.nc"</span><span class="p">)</span>
+            <span class="n">jobs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s1">'input_path'</span><span class="p">:</span> <span class="n">input_path</span><span class="p">,</span>
+                <span class="s1">'file_pattern'</span><span class="p">:</span> <span class="n">file_pattern</span><span class="p">,</span>
+                <span class="s1">'forcing_group'</span><span class="p">:</span> <span class="n">forcing_group</span><span class="p">,</span>
+                <span class="s1">'label'</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="p">})</span>
+
+        <span class="c1"># Mapping file is shared across sources (identical ocean source grid).</span>
+        <span class="n">mapping_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"map_ismip7_</span><span class="si">{</span><span class="n">ice_sheet</span><span class="si">}</span><span class="s2">_ocean_to_"</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_process_ocean_forcing</span><span class="p">(</span>
+                <span class="n">job</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span> <span class="n">ocean_3d</span><span class="p">,</span> <span class="n">method_remap</span><span class="p">,</span>
+                <span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span><span class="p">,</span> <span class="n">mali_mesh_name</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">,</span>
+                <span class="n">output_base_path</span><span class="p">)</span>
+
+        <span class="c1"># AIS OCX writes one ocean_thermal_forcing dir per ocean choice</span>
+        <span class="c1"># (OCX_&lt;choice&gt;), but atmosphere output is written once, under OCX.</span>
+        <span class="c1"># Mirror the atmosphere files into each OCX_&lt;choice&gt; directory so</span>
+        <span class="c1"># ismip7_run can treat it as a single, self-contained forcing dir.</span>
+        <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ocean_choice_layout'</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_link_atmosphere_outputs</span><span class="p">(</span>
+                    <span class="n">output_base_path</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">job</span><span class="p">[</span><span class="s1">'forcing_group'</span><span class="p">])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_ocean_choices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Parse the comma-separated ``ocean_choice`` option (AIS OCX only) into a</span>
+<span class="sd">        list of ocean choices, expanding ``all`` to every available choice.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : compass.config.CompassConfigParser</span>
+<span class="sd">            Configuration options for the test case</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        choices : list of str</span>
+<span class="sd">            Ordered, de-duplicated list of ocean choices to process</span>
+<span class="sd">        """</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"main"</span><span class="p">,</span> <span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"warm"</span><span class="p">,</span> <span class="s2">"vary"</span><span class="p">]</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ismip7_ocean_thermal"</span><span class="p">,</span> <span class="s2">"ocean_choice"</span><span class="p">)</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">raw</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"all"</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">valid</span>
+
+        <span class="n">choices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">token</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Invalid ocean_choice '</span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">'. Must be a "</span>
+                    <span class="sa">f</span><span class="s2">"comma-separated list of </span><span class="si">{</span><span class="n">valid</span><span class="si">}</span><span class="s2"> or 'all'."</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">token</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">choices</span><span class="p">:</span>
+                <span class="n">choices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">choices</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"No ocean_choice specified for AIS OCX ocean forcing."</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">choices</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_link_atmosphere_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_base_path</span><span class="p">,</span> <span class="n">atm_forcing_group</span><span class="p">,</span>
+                                 <span class="n">choice_forcing_group</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Symlink the shared atmosphere output files into an ocean-choice</span>
+<span class="sd">        forcing directory (e.g. OCX_main) so it mirrors the atmosphere's</span>
+<span class="sd">        directory (e.g. OCX) and can be used standalone as an</span>
+<span class="sd">        ``ocx_forcing_path`` by ismip7_run.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        output_base_path : str</span>
+<span class="sd">            Base path under which output is written</span>
+
+<span class="sd">        atm_forcing_group : str</span>
+<span class="sd">            Name of the directory under ``output_base_path`` that holds the</span>
+<span class="sd">            actual atmosphere output files (e.g. 'OCX')</span>
+
+<span class="sd">        choice_forcing_group : str</span>
+<span class="sd">            Name of the ocean-choice directory to populate with symlinks</span>
+<span class="sd">            (e.g. 'OCX_main')</span>
+<span class="sd">        """</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">src_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="n">atm_forcing_group</span><span class="p">,</span>
+                               <span class="s2">"atmosphere"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">src_dir</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Atmosphere output not found at </span><span class="si">{</span><span class="n">src_dir</span><span class="si">}</span><span class="s2">; skipping "</span>
+                <span class="sa">f</span><span class="s2">"atmosphere symlinks for </span><span class="si">{</span><span class="n">choice_forcing_group</span><span class="si">}</span><span class="s2">. Run the "</span>
+                <span class="sa">f</span><span class="s2">"atmosphere test case to populate it."</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">dst_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="n">choice_forcing_group</span><span class="p">,</span>
+                               <span class="s2">"atmosphere"</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dst_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">src_dir</span><span class="p">):</span>
+            <span class="n">src</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dst_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">lexists</span><span class="p">(</span><span class="n">dst</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Linked </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_ocean_forcing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span> <span class="n">ocean_3d</span><span class="p">,</span>
+                               <span class="n">method_remap</span><span class="p">,</span> <span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span><span class="p">,</span>
+                               <span class="n">mali_mesh_name</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">,</span>
+                               <span class="n">output_base_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Discover, remap, combine, and save the thermal forcing for a single</span>
+<span class="sd">        forcing source described by ``job``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        job : dict</span>
+<span class="sd">            Source description with keys ``input_path``, ``file_pattern``,</span>
+<span class="sd">            ``forcing_group``, and ``label``</span>
+<span class="sd">        mapping_file : str</span>
+<span class="sd">            Path of the shared ocean-to-MALI mapping file (built on demand)</span>
+<span class="sd">        ocean_3d : bool</span>
+<span class="sd">            Whether the thermal forcing is 3D (AIS) or 2D (GrIS)</span>
+<span class="sd">        method_remap : str</span>
+<span class="sd">            Remapping method passed to the mapping-file builder</span>
+<span class="sd">        start_year, end_year : int</span>
+<span class="sd">            Inclusive year range to process</span>
+<span class="sd">        mali_mesh_name, mali_mesh_file : str</span>
+<span class="sd">            MALI mesh name and file</span>
+<span class="sd">        output_base_path : str</span>
+<span class="sd">            Base path under which output is written</span>
+<span class="sd">        """</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="n">input_path</span> <span class="o">=</span> <span class="n">job</span><span class="p">[</span><span class="s1">'input_path'</span><span class="p">]</span>
+        <span class="n">file_pattern</span> <span class="o">=</span> <span class="n">job</span><span class="p">[</span><span class="s1">'file_pattern'</span><span class="p">]</span>
+        <span class="n">forcing_group</span> <span class="o">=</span> <span class="n">job</span><span class="p">[</span><span class="s1">'forcing_group'</span><span class="p">]</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">job</span><span class="p">[</span><span class="s1">'label'</span><span class="p">]</span>
+
         <span class="n">all_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">file_pattern</span><span class="p">)))</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">all_files</span><span class="p">:</span>
@@ -227,8 +389,8 @@
                 <span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span><span class="w"> </span><span class="n">file_pattern</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Filter to files that overlap with the requested year range.</span>
-        <span class="c1"># AIS files are named with decade ranges (e.g., 1850-1859).</span>
-        <span class="c1"># GrIS files are named with single years (e.g., 2015).</span>
+        <span class="c1"># AIS files are named with decade or multi-decade ranges (e.g.,</span>
+        <span class="c1"># 1850-1859, 1950-2025). GrIS files are named with single years.</span>
         <span class="n">input_files</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">all_files</span><span class="p">:</span>
             <span class="c1"># Extract year range from filename (last part before .nc)</span>
@@ -248,9 +410,6 @@
                     <span class="sa">f</span><span class="s2">"overlapping years </span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Build mapping file using the first input file as grid template.</span>
-        <span class="n">mapping_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"map_ismip7_</span><span class="si">{</span><span class="n">ice_sheet</span><span class="si">}</span><span class="s2">_ocean_to_"</span>
-                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Building mapping file for ocean grid..."</span><span class="p">)</span>
             <span class="n">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
@@ -258,7 +417,7 @@
                                <span class="n">mali_mesh_file</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
                                <span class="n">method_remap</span><span class="o">=</span><span class="n">method_remap</span><span class="p">)</span>
 
-        <span class="c1"># Remap each decade file</span>
+        <span class="c1"># Remap each file</span>
         <span class="n">remapped_files</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">input_file</span> <span class="ow">in</span> <span class="n">input_files</span><span class="p">:</span>
             <span class="n">basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
@@ -273,8 +432,7 @@
             <span class="c1"># so they don't pollute neighboring cells during interpolation</span>
             <span class="n">extrap_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"extrap_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span>
-                                         <span class="n">logger</span><span class="p">)</span>
+                <span class="n">extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Remapping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncremap"</span><span class="p">,</span>
@@ -290,7 +448,7 @@
 
         <span class="c1"># Combine remapped files and rename to MALI conventions</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Combining remapped files and renaming variables..."</span><span class="p">)</span>
-        <span class="n">output_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_thermal_forcing_</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_"</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_thermal_forcing_</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">_"</span>
                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ocean_3d</span><span class="p">:</span>
@@ -307,8 +465,8 @@
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
         <span class="c1"># Place output in appropriate directory</span>
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="s2">"ocean_thermal_forcing"</span><span class="p">,</span>
-                                   <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="n">forcing_group</span><span class="p">,</span>
+                                   <span class="s2">"ocean_thermal_forcing"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
 
@@ -369,8 +527,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">):</span>
             <span class="n">extrap_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"extrap_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span>
-                                         <span class="n">logger</span><span class="p">)</span>
+                <span class="n">extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Remapping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncremap"</span><span class="p">,</span>
@@ -428,7 +585,8 @@
 <span class="sd">            Last year to include in output</span>
 <span class="sd">        """</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">concat_dim</span><span class="o">=</span><span class="s2">"time"</span><span class="p">,</span>
-                               <span class="n">combine</span><span class="o">=</span><span class="s2">"nested"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">)</span>
+                               <span class="n">combine</span><span class="o">=</span><span class="s2">"nested"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">,</span>
+                               <span class="n">drop_variables</span><span class="o">=</span><span class="s2">"time_bnds"</span><span class="p">)</span>
 
         <span class="c1"># Subset to requested year range</span>
         <span class="n">years</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span>
@@ -542,7 +700,8 @@
 <span class="sd">            Last year to include in output</span>
 <span class="sd">        """</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">concat_dim</span><span class="o">=</span><span class="s2">"time"</span><span class="p">,</span>
-                               <span class="n">combine</span><span class="o">=</span><span class="s2">"nested"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">)</span>
+                               <span class="n">combine</span><span class="o">=</span><span class="s2">"nested"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">,</span>
+                               <span class="n">drop_variables</span><span class="o">=</span><span class="s2">"time_bnds"</span><span class="p">)</span>
 
         <span class="c1"># Subset to requested year range</span>
         <span class="n">years</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span>
@@ -684,62 +843,6 @@
         <span class="c1"># Drop the z coordinate if it persists</span>
         <span class="k">if</span> <span class="s2">"nISMIP6OceanLayers"</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">"nISMIP6OceanLayers"</span><span class="p">)</span>
-
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_extrapolate_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Extrapolate fill/missing values on the source polar stereographic</span>
-<span class="sd">        grid using nearest-neighbor interpolation from valid cells. This</span>
-<span class="sd">        must be done before remapping so that fill values don't contaminate</span>
-<span class="sd">        the interpolation stencil.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        input_file : str</span>
-<span class="sd">            Path to the input NetCDF file on the source grid</span>
-
-<span class="sd">        output_file : str</span>
-<span class="sd">            Path to write the extrapolated file</span>
-
-<span class="sd">        varname : str</span>
-<span class="sd">            Name of the variable to extrapolate (e.g., "tf")</span>
-
-<span class="sd">        logger : logging.Logger</span>
-<span class="sd">            Logger for status messages</span>
-<span class="sd">        """</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Extrapolating fill values on source grid: "</span>
-                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span>
-
-        <span class="c1"># Process each time step (and z level if 3D)</span>
-        <span class="c1"># Source files have dims like (time, z, y, x) or (time, y, x)</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">non_spatial_shape</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>  <span class="c1"># (time,) or (time, z)</span>
-
-        <span class="c1"># Use distance_transform_edt with return_indices to find the</span>
-        <span class="c1"># nearest valid cell index for each invalid cell. This is O(n)</span>
-        <span class="c1"># on the grid and much faster than KD-tree approaches.</span>
-        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">non_spatial_shape</span><span class="p">):</span>
-            <span class="n">slab</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>  <span class="c1"># shape (ny, nx)</span>
-            <span class="n">valid_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">slab</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">valid_mask</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">valid_mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
-                <span class="k">continue</span>
-            <span class="n">nearest_inds</span> <span class="o">=</span> <span class="n">distance_transform_edt</span><span class="p">(</span>
-                <span class="o">~</span><span class="n">valid_mask</span><span class="p">,</span> <span class="n">return_distances</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">invalid</span> <span class="o">=</span> <span class="o">~</span><span class="n">valid_mask</span>
-            <span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="n">invalid</span><span class="p">]</span> <span class="o">=</span> <span class="n">slab</span><span class="p">[</span>
-                <span class="n">nearest_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">invalid</span><span class="p">],</span>
-                <span class="n">nearest_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">invalid</span><span class="p">]]</span>
-
-        <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">attrs</span>
-
-        <span class="c1"># Remove _FillValue encoding so output has no masked values</span>
-        <span class="k">if</span> <span class="s2">"_FillValue"</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="p">:</span>
-            <span class="k">del</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="p">[</span><span class="s2">"_FillValue"</span><span class="p">]</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span></div>
 

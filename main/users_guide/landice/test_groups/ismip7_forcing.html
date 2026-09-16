@@ -65,6 +65,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ismip6_run.html">ismip6_run</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">ismip7_forcing</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output-layout">Output Layout</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#input-data">Input Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#atmosphere">atmosphere</a></li>
@@ -203,6 +204,32 @@ your environment before using it with <code class="docutils literal notranslate"
 <p>The AIS example enables both ocean processing modes and uses a 2015-2300
 processing window for both atmosphere and ocean thermal scenario forcing.
 The GrIS example enables scenario ocean processing only and uses 1980-2015.</p>
+<p>For the GrIS OCX (reanalysis) scenario, use the dedicated example config
+<code class="docutils literal notranslate"><span class="pre">compass/landice/tests/ismip7_forcing/ismip7_forcing_ocx_gis.cfg</span></code>. OCX has
+no distinct ESM model: it uses <code class="docutils literal notranslate"><span class="pre">RACMO2.3p2-ERA</span></code> for the atmosphere and
+<code class="docutils literal notranslate"><span class="pre">EN4</span></code> for the ocean, both selected automatically when <code class="docutils literal notranslate"><span class="pre">scenario</span> <span class="pre">=</span> <span class="pre">OCX</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">[ismip7]</span> <span class="pre">model</span></code> option is ignored for OCX (set it to <code class="docutils literal notranslate"><span class="pre">None</span></code>), so a
+single config file processes both the <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code> and <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code>
+test cases, just like the ESM scenarios.</p>
+</section>
+<section id="output-layout">
+<span id="landice-ismip7-forcing-output"></span><h2>Output Layout<a class="headerlink" href="#output-layout" title="Link to this heading"></a></h2>
+<p>Processed forcing is written under <code class="docutils literal notranslate"><span class="pre">output_base_path</span></code> in a layout that the
+<a class="reference internal" href="ismip7_run.html#landice-ismip7-run"><span class="std std-ref">ismip7_run</span></a> test group can ingest directly:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{output_base_path}/{group}/atmosphere/{mesh}_SMB_{source}_{scenario}_{years}.nc
+{output_base_path}/{group}/atmosphere/{mesh}_temperature_{source}_{scenario}_{years}.nc
+{output_base_path}/{group}/atmosphere/{mesh}_runoff_...  (and the two gradients)
+{output_base_path}/{group}/ocean_thermal_forcing/{mesh}_thermal_forcing_{source}_{scenario}_{years}.nc
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">group</span></code> directory is <code class="docutils literal notranslate"><span class="pre">{model}_{scenario}</span></code> for ESM scenarios and <code class="docutils literal notranslate"><span class="pre">OCX</span></code>
+for GrIS OCX. AIS OCX writes one group per selected ocean product,
+<code class="docutils literal notranslate"><span class="pre">OCX_{choice}</span></code>, and links the shared atmosphere files into each group. To feed
+<a class="reference internal" href="ismip7_run.html#landice-ismip7-run"><span class="std std-ref">ismip7_run</span></a>, point <code class="docutils literal notranslate"><span class="pre">forcing_basepath</span></code> at <code class="docutils literal notranslate"><span class="pre">output_base_path</span></code>
+for ESM scenarios; point <code class="docutils literal notranslate"><span class="pre">ocx_forcing_path</span></code> at <code class="docutils literal notranslate"><span class="pre">{output_base_path}/OCX</span></code> for
+GrIS OCX or <code class="docutils literal notranslate"><span class="pre">{output_base_path}/OCX_{choice}</span></code> for AIS OCX.</p>
+<p>Process only one year range into a given <code class="docutils literal notranslate"><span class="pre">group</span></code> directory: the run setup
+expects exactly one file per forcing field there.</p>
 </section>
 <section id="input-data">
 <span id="landice-ismip7-forcing-input-data"></span><h2>Input Data<a class="headerlink" href="#input-data" title="Link to this heading"></a></h2>
@@ -240,6 +267,17 @@ mrro/v2/mrro_GrIS_{model}_{scenario}_SDBN1-1000m_v2_{year}.nc
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/tf/v2/tf_GrIS_{model}_{scenario}_ocean_v2_{year}.nc
 </pre></div>
 </div>
+<p>The OCX (reanalysis) scenario follows the same directory layout as the ESM
+scenarios, but uses fixed reanalysis sources, data version <code class="docutils literal notranslate"><span class="pre">v1</span></code>, and a
+named grid resolution in the ocean file names. For GrIS OCX the atmosphere
+source is <code class="docutils literal notranslate"><span class="pre">RACMO2.3p2-ERA</span></code> and the ocean source is <code class="docutils literal notranslate"><span class="pre">EN4</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>acabf/v1/acabf_GrIS_RACMO2.3p2-ERA_OCX_SDBN1-1000m_v1_{year}.nc
+ocean/tf/v1/tf_GrIS_EN4_OCX_ocean-1000m_v1_{year}.nc
+</pre></div>
+</div>
+<p>Set <code class="docutils literal notranslate"><span class="pre">base_path_ismip7</span></code> to the <code class="docutils literal notranslate"><span class="pre">OCX</span></code> directory and <code class="docutils literal notranslate"><span class="pre">scenario</span> <span class="pre">=</span> <span class="pre">OCX</span></code>.
+The sources, version, and ocean grid token are selected automatically for
+OCX, and the <code class="docutils literal notranslate"><span class="pre">[ismip7]</span> <span class="pre">model</span></code> option is ignored (set it to <code class="docutils literal notranslate"><span class="pre">None</span></code>).</p>
 </section>
 <section id="config-options">
 <span id="landice-ismip7-forcing-config"></span><h2>config options<a class="headerlink" href="#config-options" title="Link to this heading"></a></h2>

@@ -121,8 +121,11 @@
         <span class="s1">'atm_resolution'</span><span class="p">:</span> <span class="s1">'2000m'</span><span class="p">,</span>
         <span class="s1">'atm_version'</span><span class="p">:</span> <span class="s1">'v2'</span><span class="p">,</span>
         <span class="s1">'ocean_version'</span><span class="p">:</span> <span class="s1">'v3'</span><span class="p">,</span>
+        <span class="s1">'ocean_grid'</span><span class="p">:</span> <span class="s1">'ocean'</span><span class="p">,</span>
         <span class="s1">'ocean_3d'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="s1">'ocean_temporal'</span><span class="p">:</span> <span class="s1">'decade'</span><span class="p">,</span>
+        <span class="s1">'atm_model'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">'ocean_model'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="s1">'gis'</span><span class="p">:</span> <span class="p">{</span>
         <span class="s1">'projection'</span><span class="p">:</span> <span class="s1">'gis-bamber'</span><span class="p">,</span>
@@ -130,8 +133,34 @@
         <span class="s1">'atm_resolution'</span><span class="p">:</span> <span class="s1">'1000m'</span><span class="p">,</span>
         <span class="s1">'atm_version'</span><span class="p">:</span> <span class="s1">'v2'</span><span class="p">,</span>
         <span class="s1">'ocean_version'</span><span class="p">:</span> <span class="s1">'v2'</span><span class="p">,</span>
+        <span class="s1">'ocean_grid'</span><span class="p">:</span> <span class="s1">'ocean'</span><span class="p">,</span>
         <span class="s1">'ocean_3d'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s1">'ocean_temporal'</span><span class="p">:</span> <span class="s1">'yearly'</span><span class="p">,</span>
+        <span class="s1">'atm_model'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">'ocean_model'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="c1"># Overrides applied for the OCX (reanalysis) scenario. OCX has no distinct</span>
+<span class="c1"># ESM model: it uses fixed reanalysis products (RACMO for the atmosphere and</span>
+<span class="c1"># EN4 for the ocean) at data version v1. When scenario is 'OCX' the [ismip7]</span>
+<span class="c1"># model option is ignored and these sources are used instead.</span>
+<span class="n">_OCX_OVERRIDES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'gis'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'atm_version'</span><span class="p">:</span> <span class="s1">'v1'</span><span class="p">,</span>
+        <span class="s1">'ocean_version'</span><span class="p">:</span> <span class="s1">'v1'</span><span class="p">,</span>
+        <span class="s1">'ocean_grid'</span><span class="p">:</span> <span class="s1">'ocean-1000m'</span><span class="p">,</span>
+        <span class="s1">'atm_model'</span><span class="p">:</span> <span class="s1">'RACMO2.3p2-ERA'</span><span class="p">,</span>
+        <span class="s1">'ocean_model'</span><span class="p">:</span> <span class="s1">'EN4'</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s1">'ais'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'atm_version'</span><span class="p">:</span> <span class="s1">'v1'</span><span class="p">,</span>
+        <span class="s1">'ocean_version'</span><span class="p">:</span> <span class="s1">'v1'</span><span class="p">,</span>
+        <span class="s1">'atm_model'</span><span class="p">:</span> <span class="s1">'RACMO2.3p2-ERA'</span><span class="p">,</span>
+        <span class="s1">'ocean_model'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># AIS OCX ocean files have no model token and live in per-choice</span>
+        <span class="c1"># subdirectories (main/cold/warm/vary); see process_thermal_forcing.</span>
+        <span class="s1">'ocean_choice_layout'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">}</span>
 
@@ -157,7 +186,17 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">"Unknown ice_sheet '</span><span class="si">{</span><span class="n">ice_sheet</span><span class="si">}</span><span class="s2">'. "</span>
             <span class="sa">f</span><span class="s2">"Must be one of: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">_PARAMS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_PARAMS</span><span class="p">[</span><span class="n">ice_sheet</span><span class="p">]</span></div>
+    <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">_PARAMS</span><span class="p">[</span><span class="n">ice_sheet</span><span class="p">])</span>
+
+    <span class="n">scenario</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ismip7"</span><span class="p">,</span> <span class="s2">"scenario"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">"OCX"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ice_sheet</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_OCX_OVERRIDES</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"The OCX scenario is not yet supported for ice_sheet "</span>
+                <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">ice_sheet</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_OCX_OVERRIDES</span><span class="p">[</span><span class="n">ice_sheet</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">params</span></div>
 
 </pre></div>
 

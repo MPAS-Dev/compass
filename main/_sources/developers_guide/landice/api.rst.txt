@@ -385,6 +385,7 @@ ismip7_forcing
    configure.configure
    ice_sheet_params.get_params
    create_mapfile.build_mapping_file
+   remap_utils.extrapolate_source
 
    atmosphere.Atmosphere
    atmosphere.Atmosphere.configure
@@ -412,7 +413,6 @@ ismip7_forcing
 
    fracture.Fracture
    fracture.Fracture.configure
-   fracture.remap_utils.extrapolate_source
    fracture.remap_utils.open_rename_and_trim
    fracture.remap_utils.add_xtime_and_write
    fracture.process_excess_melt.ProcessExcessMelt
