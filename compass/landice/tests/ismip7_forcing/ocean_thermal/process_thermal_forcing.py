@@ -256,7 +256,7 @@ class ProcessThermalForcing(Step):
         input_path = job['input_path']
         file_pattern = job['file_pattern']
         forcing_group = job['forcing_group']
-        label = job['label']
+        source_label = job['label']
 
         all_files = sorted(glob.glob(os.path.join(input_path, file_pattern)))
 
@@ -325,7 +325,8 @@ class ProcessThermalForcing(Step):
 
         # Combine remapped files and rename to MALI conventions
         logger.info("Combining remapped files and renaming variables...")
-        output_file = (f"{mali_mesh_name}_thermal_forcing_{label}_"
+        tf_label = "3dThermalForcing" if ocean_3d else "2dThermalForcing"
+        output_file = (f"{mali_mesh_name}_{tf_label}_{source_label}_"
                        f"{start_year}-{end_year}.nc")
 
         if ocean_3d:

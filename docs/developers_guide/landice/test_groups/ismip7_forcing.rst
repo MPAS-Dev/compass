@@ -98,10 +98,12 @@ ocean_thermal
 ~~~~~~~~~~~~~
 
 The :py:class:`compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal`
-test case processes the ISMIP7 ocean thermal forcing. It contains a single step,
+test case processes the ISMIP7 ocean thermal forcing. It contains two steps,
 :py:class:`~compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing`,
 which handles both AIS (3D, decade-spanning files) and GrIS (2D, yearly files)
-by branching on the ``ocean_3d`` parameter from ``ice_sheet_params``.
+by branching on the ``ocean_3d`` parameter from ``ice_sheet_params``, and
+:py:class:`~compass.landice.tests.ismip7_forcing.ocean_thermal.build_3d_thermal_forcing.BuildGreenland3dThermalForcing`,
+which optionally builds a 3D GrIS field from the 2D forcing (see below).
 
 The ``run()`` method dispatches to two sub-methods based on the boolean config
 options ``process_ocean_thermal`` and ``process_ocean_climatology`` in the
@@ -131,6 +133,29 @@ For GrIS, the step:
 
 * Remaps 2D monthly thermal forcing
 * Produces ``ismip6_2dThermalForcing`` (dims: Time × nCells)
+
+build_3d_thermal_forcing (GrIS 3-D)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The
+:py:class:`~compass.landice.tests.ismip7_forcing.ocean_thermal.build_3d_thermal_forcing.BuildGreenland3dThermalForcing`
+step (GrIS only, gated by ``process_ocean_thermal_3d``) converts the GrIS 2D
+thermal forcing into a 30-level 3D field for MALI's nonlocal (Jourdain et al.
+2020) melt scheme. Its ``run()`` reconstructs the 2D output path that
+``ProcessThermalForcing._run_scenario`` wrote (mirroring the ``forcing_group``
+and ocean-source logic), injects the compass-derived mesh / 2D-forcing /
+output / diagnostics paths into a
+:py:class:`~compass.landice.tests.ismip7_forcing.ocean_thermal.greenland_3d.Config`
+built from the JSON ``config_file``, and calls
+:py:func:`~compass.landice.tests.ismip7_forcing.ocean_thermal.greenland_3d.run`.
+The ported science lives in
+:py:mod:`compass.landice.tests.ismip7_forcing.ocean_thermal.greenland_3d`:
+seven regional EN4 profiles, seafloor anchoring to the 2D forcing, and
+per-region ``deltaT`` calibration. The output supplements the 2D file with
+``ismip6shelfMelt_3dThermalForcing``, ``ismip6shelfMelt_deltaT``,
+``ismip6shelfMelt_gamma0``, ``ismip6shelfMelt_zOcean``, and
+``ismip6shelfMelt_basin``. The multi-gigabyte field is streamed record by
+record (dask, ``scipy`` engine, ``NETCDF3_64BIT``, ``.partial``-then-rename).
 
 .. _dev_landice_ismip7_forcing_fracture:
 

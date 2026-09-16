@@ -180,7 +180,23 @@ All config options should be reviewed and altered as needed.
    nglv = 2048
 
 **GrIS config** (``[ismip7_run_gris]``) is similar (including
-``reference_surface_path``) but without sea-level model options
+``reference_surface_path``) but without sea-level model options, and adds
+``use_3d_thermal_forcing`` (default ``false``):
+
+.. code-block:: cfg
+
+   # Whether to force with 3D ocean thermal forcing (built by the
+   # build_3d_thermal_forcing step of landice/ismip7_forcing/ocean_thermal)
+   # instead of the default 2D forcing. Requires melt_params_path.
+   use_3d_thermal_forcing = false
+
+When ``use_3d_thermal_forcing`` is ``false`` (the default), GrIS looks for
+``*2dThermalForcing_*.nc`` and reads ``ismip6_2dThermalForcing`` at monthly
+intervals. When ``true``, it instead looks for ``*3dThermalForcing_*.nc`` and
+reads ``ismip6shelfMelt_3dThermalForcing`` and ``ismip6shelfMelt_zOcean`` at
+annual intervals, plus ``ismip6shelfMelt_deltaT``, ``ismip6shelfMelt_basin``,
+and ``ismip6shelfMelt_gamma0`` from the file at ``melt_params_path`` (which
+must be supplied in that case), matching the AIS convention.
 
 .. _landice_ismip7_run_forcing_streams:
 
@@ -194,17 +210,19 @@ ISMIP7 uses more forcing fields than ISMIP6, at mixed temporal resolutions:
 * ``sfcMassBal`` — surface mass balance
 * ``surfaceAirTemperature`` — surface air temperature
 * ``ismip6Runoff`` — ice sheet runoff
-* ``ismip6_2dThermalForcing`` (GrIS) — ocean thermal forcing
+* ``ismip6_2dThermalForcing`` (GrIS, default) — ocean thermal forcing
 
 **Annual forcing** (``input_interval = 0001-00-00_00:00:00``):
 
 * ``sfcMassBalLapseRate`` — SMB elevation lapse rate
 * ``surfaceAirTemperatureLapseRate`` — temperature lapse rate
-* ``ismip6shelfMelt_3dThermalForcing`` (AIS)
+* ``ismip6shelfMelt_3dThermalForcing`` (AIS; GrIS when
+  ``use_3d_thermal_forcing = true``)
 
 **Static** (``input_interval = initial_only``):
 
-* ``ismip6shelfMelt_zOcean`` — ocean depth coordinates (AIS only)
+* ``ismip6shelfMelt_zOcean`` — ocean depth coordinates (AIS; GrIS when
+  ``use_3d_thermal_forcing = true``)
 * ``ismip6shelfMelt_deltaT``, ``ismip6shelfMelt_basin``,
   ``ismip6shelfMelt_gamma0`` — melt parameterization coefficients
 
@@ -225,5 +243,8 @@ ismip7_gris
 -----------
 
 ``landice/ismip7_run/ismip7_gris`` sets up GrIS experiments with 2D
-(depth-averaged) ocean thermal forcing. Sea-level model coupling is not
-currently supported for GrIS. Crevasse-depth calving is the default.
+(depth-averaged) ocean thermal forcing by default, or 3D forcing (matching
+the AIS convention) when ``use_3d_thermal_forcing = true`` and the GrIS
+``build_3d_thermal_forcing`` step (see :ref:`landice_ismip7_forcing_ocean_thermal`)
+has been run. Sea-level model coupling is not currently supported for GrIS.
+Crevasse-depth calving is the default.
