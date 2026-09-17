@@ -91,6 +91,9 @@ Processed forcing is written under ``output_base_path`` in a layout that the
    {output_base_path}/{group}/atmosphere/{mesh}_temperature_{source}_{scenario}_{years}.nc
    {output_base_path}/{group}/atmosphere/{mesh}_runoff_...  (and the two gradients)
    {output_base_path}/{group}/ocean_thermal_forcing/{mesh}_thermal_forcing_{source}_{scenario}_{years}.nc
+   {output_base_path}/{group}/shelf_collapse/{mesh}_ice_shelf_collapse_mask_*.nc
+   {output_base_path}/{group}/excess_melt/{mesh}_excess_melt_*.nc
+   {output_base_path}/{group}/lake_properties/{mesh}_lake_properties_*.nc
 
 The ``group`` directory is ``{model}_{scenario}`` for ESM scenarios and ``OCX``
 for GrIS OCX. AIS OCX writes one group per selected ocean product,
@@ -365,7 +368,7 @@ is useful when only some of the pathway source files are available.
   (melt + rain after firn air content depletion), matching
   ``excess_melt_*.nc``. The output variable is ``ismip7ExcessMelt``
   (converted from mm w.e. yr-1 to SI units of kg m-2 s-1) and is written to
-  ``{output_base_path}/excess_melt/{model}_{scenario}/``. Conservative
+  ``{output_base_path}/{model}_{scenario}/excess_melt/``. Conservative
   remapping is used by default since this is a flux. This source file has no
   ``x``/``y`` coordinate variables and its array is flipped along the y axis
   relative to the other fracture files, so the step reconstructs the source
@@ -376,7 +379,7 @@ is useful when only some of the pathway source files are available.
   depth and area fraction from the Grau et al. (2025) parameterization,
   matching ``lake_properties_*.nc``. The output variables are
   ``ismip7LakeDepth`` (m) and ``ismip7LakeAreaFraction`` (unitless), written
-  to ``{output_base_path}/lake_properties/{model}_{scenario}/``. Bilinear
+  to ``{output_base_path}/{model}_{scenario}/lake_properties/``. Bilinear
   remapping is used by default.
 
 * **process_shelf_collapse** (Path C): Remaps the annual ice shelf collapse
@@ -389,7 +392,7 @@ is useful when only some of the pathway source files are available.
   that the 0/1 mask values are preserved, and the remapped mask is rounded to
   0/1. The output variable is ``calvingMask`` with an accompanying ``xtime``
   variable, and the result is written to
-  ``{output_base_path}/shelf_collapse/{model}_{scenario}/``.
+  ``{output_base_path}/{model}_{scenario}/shelf_collapse/``.
 
 All three pathways produce continuous fields (Paths A and B) or a discrete
 mask (Path C) with an accompanying ``xtime`` variable. The output variable

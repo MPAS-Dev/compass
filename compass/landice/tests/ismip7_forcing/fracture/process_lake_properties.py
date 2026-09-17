@@ -147,8 +147,8 @@ class ProcessLakeProperties(Step):
                 os.remove(f)
 
         # Place output in the appropriate directory
-        output_path = os.path.join(output_base_path, "lake_properties",
-                                   f"{model}_{scenario}")
+        output_path = os.path.join(output_base_path, f"{model}_{scenario}",
+                                   "lake_properties")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 

@@ -113,12 +113,20 @@ Usage
       ├── CESM2-WACCM_historical/
       │   ├── atmosphere/
       │   │   └── {mesh}_smb_CESM2-WACCM_historical_*.nc
-      │   └── ocean_thermal_forcing/
-      │       └── {mesh}_thermal_forcing_CESM2-WACCM_historical_*.nc
+      │   ├── ocean_thermal_forcing/
+      │   │   └── {mesh}_thermal_forcing_CESM2-WACCM_historical_*.nc
+      │   └── shelf_collapse/
+      │       └── {mesh}_ice_shelf_collapse_mask_*.nc
       ├── CESM2-WACCM_ssp585/
       │   ├── atmosphere/
-      │   └── ocean_thermal_forcing/
+      │   ├── ocean_thermal_forcing/
+      │   └── shelf_collapse/
       └── ...
+
+   The ``shelf_collapse`` subdirectory (ISMIP7 Path C ice shelf collapse
+   mask, produced by :ref:`landice_ismip7_forcing_fracture`) is required
+   for ``ssp*`` experiments unless ``use_hydrofracture_forcing`` is set to
+   ``false``; see :ref:`landice_ismip7_run_mask_calving` below.
 
 3. Create a user config file overriding the ``NotAvailable`` paths.
 
@@ -168,6 +176,17 @@ All config options should be reviewed and altered as needed.
    calving_method = restore
    von_mises_parameter_path = NotAvailable
 
+   # Whether to apply the ISMIP7 Path C ice shelf collapse mask as
+   # hydrofracture-gated mask calving (not used for historical, ctrl, or
+   # ocx experiments). If true, setup fails when the mask file is missing
+   # for an experiment that should have one.
+   use_hydrofracture_forcing = true
+
+   # Ice fracture toughness (Pa m^0.5) for the hydrofracture vulnerability
+   # criterion gating mask calving, used only when use_hydrofracture_forcing
+   # is true.
+   calving_fracture_toughness = 2.0e5
+
    # Face melting
    use_face_melting = false
 
@@ -210,6 +229,38 @@ ISMIP7 uses more forcing fields than ISMIP6, at mixed temporal resolutions:
 
 For CTRL2015 experiments, all forcing intervals are set to
 ``initial_only`` (constant climate).
+
+.. _landice_ismip7_run_mask_calving:
+
+Mask Calving (Path C)
+----------------------
+
+``ismip7_ais`` can optionally apply the ISMIP7 Path C ice shelf collapse
+mask produced by :ref:`landice_ismip7_forcing_fracture`. The mask is looked
+up under the same ``forcing_basepath`` used for the atmosphere/ocean
+forcing, at
+``{forcing_basepath}/{model}_{scenario}/shelf_collapse/*ice_shelf_collapse_mask_*.nc``.
+``historical``, ``ctrl``, and ``ocx`` experiments never use this pathway,
+regardless of ``use_hydrofracture_forcing``.
+
+When ``use_hydrofracture_forcing`` is ``true`` (the default) for any other
+experiment (e.g. ``ssp126``, ``ssp370``, ``ssp585``), a matching mask file
+is required: if it is missing, ``compass setup`` fails with an error rather
+than silently skipping mask calving. When found, the mask is symlinked into
+the run directory and used to force calving:
+
+* ``config_calving`` is set to ``'none'``
+* ``config_apply_calving_mask`` is set to ``.true.``
+* ``config_restore_calving_front`` is set to ``.false.``
+* ``config_require_extensional_stresses_for_mask_calving`` is set to
+  ``.true.``, so the mask only removes floating ice that is also vulnerable
+  to hydrofracture per the fracture-toughness criterion of Lai et al.
+  (2020) / Reynolds and Nowicki (2026). The threshold depends on
+  ``config_calving_fracture_toughness``.
+
+Set ``use_hydrofracture_forcing = false`` to disable mask calving and the
+hydrofracture gating entirely; experiments then use their normal
+``calving_method`` configuration instead.
 
 .. _landice_ismip7_run_ais:
 
