@@ -11,6 +11,7 @@ from compass.landice.tests.humboldt import Humboldt
 from compass.landice.tests.hydro_radial import HydroRadial
 from compass.landice.tests.ismip6_forcing import Ismip6Forcing
 from compass.landice.tests.ismip6_run import Ismip6Run
+from compass.landice.tests.ismip7_calibration import Ismip7Calibration
 from compass.landice.tests.ismip7_forcing import Ismip7Forcing
 from compass.landice.tests.ismip7_run import Ismip7Run
 from compass.landice.tests.isunnguata_sermia import IsunnguataSermia
@@ -48,6 +49,7 @@ class Landice(MpasCore):
         self.add_test_group(HydroRadial(mpas_core=self))
         self.add_test_group(Ismip6Forcing(mpas_core=self))
         self.add_test_group(Ismip6Run(mpas_core=self))
+        self.add_test_group(Ismip7Calibration(mpas_core=self))
         self.add_test_group(Ismip7Forcing(mpas_core=self))
         self.add_test_group(Ismip7Run(mpas_core=self))
         self.add_test_group(IsunnguataSermia(mpas_core=self))

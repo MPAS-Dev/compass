@@ -4,14 +4,12 @@ import shutil
 
 from mpas_tools.logging import check_call
 
-from compass.landice.tests.ismip7_forcing.create_mapfile import (
-    build_mapping_file,
-)
-from compass.landice.tests.ismip7_forcing.fracture.remap_utils import (
+from compass.landice.ismip7.mapping import build_mapping_file
+from compass.landice.ismip7.remap import (
     add_xtime_and_write,
+    extrapolate_source,
     open_rename_and_trim,
 )
-from compass.landice.tests.ismip7_forcing.remap_utils import extrapolate_source
 from compass.step import Step
 
 
@@ -124,7 +122,8 @@ class ProcessLakeProperties(Step):
         # they don't pollute neighboring cells during interpolation
         extrap_file = f"extrap_{basename}"
         extrapolate_source(input_file, extrap_file,
-                           list(self._variables.keys()), logger)
+                           list(self._variables.keys()), logger,
+                           decode_times=False)
 
         # Remap both lake property variables onto the MALI mesh
         remapped_file = f"remapped_{basename}"

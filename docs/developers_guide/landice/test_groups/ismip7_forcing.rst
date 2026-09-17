@@ -19,15 +19,15 @@ framework
 The shared config options for the ``ismip7_forcing`` test group are described
 in :ref:`landice_ismip7_forcing` in the User's Guide.
 
-ice_sheet_params
-~~~~~~~~~~~~~~~~
-
-The module :py:mod:`compass.landice.tests.ismip7_forcing.ice_sheet_params`
-defines a dictionary of ice-sheet-specific parameters (projection, file
-naming prefix, grid resolution, data version, ocean dimensionality, and the
-atmosphere/ocean source names) and provides the function
-:py:func:`compass.landice.tests.ismip7_forcing.ice_sheet_params.get_params`
-to retrieve them based on the ``ice_sheet`` config option.
+Code shared with the other ISMIP7 test groups lives in the landice framework
+package :py:mod:`compass.landice.ismip7`, described in
+:ref:`dev_landice_framework`.  This test group uses
+:py:func:`compass.landice.ismip7.ice_sheet_params.get_params` for the
+ice-sheet-specific parameters (projection, file naming prefix, grid
+resolution, data version, ocean dimensionality),
+:py:func:`compass.landice.ismip7.mapping.build_mapping_file` to create the
+SCRIP and ESMF mapping files, and the remapping helpers in
+:py:mod:`compass.landice.ismip7.remap`.
 
 When ``scenario = OCX``, ``get_params`` applies a set of OCX overrides on top
 of the ice-sheet defaults: data version ``v1``, the ocean file-name grid token
@@ -51,18 +51,6 @@ The GrIS OCX scenario has a dedicated example
 ``ismip7_forcing_ocx_gis.cfg`` in the same directory.
 These are intended for development/testing and include environment-specific
 paths.
-
-create_mapfile
-~~~~~~~~~~~~~~
-
-The module :py:mod:`compass.landice.tests.ismip7_forcing.create_mapfile`
-defines a unified framework for creating SCRIP and mapping files. The function
-:py:func:`compass.landice.tests.ismip7_forcing.create_mapfile.build_mapping_file`
-creates a SCRIP file from the input polar stereographic grid using the
-``create_scrip_file_from_planar_rectangular_grid`` command from MPAS-Tools,
-then generates a mapping file via ``ESMF_RegridWeightGen``. The projection
-is automatically determined from the ``ice_sheet`` config option using
-``ice_sheet_params``.
 
 Test cases
 ----------
@@ -173,7 +161,7 @@ The annual source fields use an integer ``year``/``time`` coordinate with
 ``decode_times=False`` and constructs ``xtime`` at January 1st of each year.
 
 Shared remapping helpers used by the fracture steps live in
-:py:mod:`compass.landice.tests.ismip7_forcing.fracture.remap_utils`:
+:py:mod:`compass.landice.ismip7.remap`:
 ``extrapolate_source`` (nearest-neighbor fill of NaNs on the source grid),
 ``open_rename_and_trim`` (open a remapped file, rename dimensions/variables
 to MALI conventions, and restrict to the requested year range), and

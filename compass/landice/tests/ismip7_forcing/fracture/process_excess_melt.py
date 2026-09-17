@@ -7,14 +7,12 @@ import xarray as xr
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 
-from compass.landice.tests.ismip7_forcing.create_mapfile import (
-    build_mapping_file,
-)
-from compass.landice.tests.ismip7_forcing.fracture.remap_utils import (
+from compass.landice.ismip7.mapping import build_mapping_file
+from compass.landice.ismip7.remap import (
     add_xtime_and_write,
+    extrapolate_source,
     open_rename_and_trim,
 )
-from compass.landice.tests.ismip7_forcing.remap_utils import extrapolate_source
 from compass.step import Step
 
 
@@ -122,7 +120,8 @@ class ProcessExcessMelt(Step):
         # Extrapolate fill values on the source grid before remapping so
         # they don't pollute neighboring cells during interpolation
         extrap_file = f"extrap_{basename}"
-        extrapolate_source(gridded_file, extrap_file, "excess_melt", logger)
+        extrapolate_source(gridded_file, extrap_file, "excess_melt",
+                           logger, decode_times=False)
 
         # Remap the excess melt onto the MALI mesh
         remapped_file = f"remapped_{basename}"

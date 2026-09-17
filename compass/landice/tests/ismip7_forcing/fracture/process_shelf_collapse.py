@@ -4,10 +4,8 @@ import shutil
 
 from mpas_tools.logging import check_call
 
-from compass.landice.tests.ismip7_forcing.create_mapfile import (
-    build_mapping_file,
-)
-from compass.landice.tests.ismip7_forcing.fracture.remap_utils import (
+from compass.landice.ismip7.mapping import build_mapping_file
+from compass.landice.ismip7.remap import (
     add_xtime_and_write,
     open_rename_and_trim,
 )
