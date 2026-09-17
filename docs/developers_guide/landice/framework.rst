@@ -18,6 +18,36 @@ The landice framework module ``compass/landice/extrapolate.py`` provides a
 function for extrapolating variables into undefined regions.  It is copied
 from a similar script in MPAS-Tools.
 
+ismip7
+~~~~~~
+
+The landice framework package :py:mod:`compass.landice.ismip7` holds code
+shared by the ISMIP7 test groups -- ``ismip7_forcing``, ``ismip7_run`` and
+``ismip7_calibration``.  All of them remap data from an ISMIP7 polar
+stereographic grid onto a MALI mesh, so the helpers to do that live here
+rather than in any one test group.
+
+:py:func:`compass.landice.ismip7.ice_sheet_params.get_params()` returns the
+parameters that differ between the Antarctic and Greenland ice sheets: the
+projection, the filename prefix, dataset versions and resolutions, and whether
+the ocean forcing is 3-D.
+
+:py:func:`compass.landice.ismip7.mapping.build_mapping_file()` builds an ESMF
+mapping file from an ISMIP7 polar stereographic grid to a MALI mesh, using
+``mpas_tools.scrip.from_mpas`` and ``ESMF_RegridWeightGen``.
+
+:py:func:`compass.landice.ismip7.remap.extrapolate_source()` fills missing
+values on the source grid by nearest neighbour before remapping, so that fill
+values do not contaminate the interpolation stencil.  A slab that is entirely
+missing keeps a fill value, so ``ncremap`` ignores it rather than smearing
+it into its neighbours, and the intermediate file is written as CDF-5 so
+that ``ncremap`` can open even the largest 3-D fields.
+
+:py:func:`compass.landice.ismip7.remap.open_rename_and_trim()` and
+:py:func:`compass.landice.ismip7.remap.add_xtime_and_write()` convert a
+remapped file to MALI's variable and dimension names, restrict it to a range
+of years, and add the ``xtime`` variable MALI needs.
+
 iceshelf_melt
 ~~~~~~~~~~~~~
 The landice framework module ``compass/landice/iceshelf_melt.py`` provides

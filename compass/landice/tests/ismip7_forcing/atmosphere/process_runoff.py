@@ -6,11 +6,9 @@ import xarray as xr
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 
-from compass.landice.tests.ismip7_forcing.create_mapfile import (
-    build_mapping_file,
-)
-from compass.landice.tests.ismip7_forcing.ice_sheet_params import get_params
-from compass.landice.tests.ismip7_forcing.remap_utils import extrapolate_source
+from compass.landice.ismip7.ice_sheet_params import get_params
+from compass.landice.ismip7.mapping import build_mapping_file
+from compass.landice.ismip7.remap import extrapolate_source
 from compass.step import Step
 
 
@@ -131,7 +129,8 @@ class ProcessRunoff(Step):
             # so they don't pollute neighboring cells during interpolation
             extrap_file = f"extrap_{basename}"
             if not os.path.exists(extrap_file):
-                extrapolate_source(input_file, extrap_file, "mrro", logger)
+                extrapolate_source(input_file, extrap_file, "mrro",
+                                   logger)
 
             logger.info(f"  Remapping: {basename}")
             args = ["ncremap",
