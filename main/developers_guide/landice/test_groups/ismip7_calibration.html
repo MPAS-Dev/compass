@@ -1,0 +1,448 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ismip7_calibration &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ismip7_forcing" href="ismip7_forcing.html" />
+    <link rel="prev" title="ismip6_run" href="ismip6_run.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../organization.html">Organization of Tests</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Landice core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="antarctica.html">antarctica</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calving_dt_convergence.html">calving_dt_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="circular_shelf.html">circular_shelf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crane.html">crane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dome.html">dome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensemble_generator.html">ensemble_generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
+<li class="toctree-l3"><a class="reference internal" href="humboldt.html">humboldt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_forcing.html">ismip6_forcing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_run.html">ismip6_run</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ismip7_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#replication">replication</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ais">ais</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#melt-forms-and-salinity">melt forms and salinity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-a-mali-build-with-the-ismip7-melt-method">using a MALI build with the ISMIP7 melt method</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ismip7_forcing.html">ismip7_forcing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip7_run.html">ismip7_run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isunnguata_sermia.html">isunnguata_sermia</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
+<li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesh_convergence.html">mesh_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesh_modifications.html">mesh_modifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mismipplus.html">mismipplus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slm_circ_icesheet.html">slm_circ_icesheet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework.html">Land-ice Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Landice core</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Test groups</a></li>
+      <li class="breadcrumb-item active">ismip7_calibration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/developers_guide/landice/test_groups/ismip7_calibration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ismip7-calibration">
+<span id="dev-landice-ismip7-calibration"></span><h1>ismip7_calibration<a class="headerlink" href="#ismip7-calibration" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">ismip7_calibration</span></code> test group
+(<a class="reference internal" href="../generated/compass.landice.tests.ismip7_calibration.Ismip7Calibration.html#compass.landice.tests.ismip7_calibration.Ismip7Calibration" title="compass.landice.tests.ismip7_calibration.Ismip7Calibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_calibration.Ismip7Calibration</span></code></a>)
+calibrates MALI’s sub-shelf melt parameterization against the ISMIP7
+Antarctic ice-ocean protocol (Reese et al., Sect. 4.2).</p>
+<p>The protocol asks each ice-sheet model to fit the free parameter of its melt
+module against four objective-function terms and to report the 5th, 50th and
+95th percentiles of the resulting parameter distribution:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>term</p></th>
+<th class="head"><p>what it constrains</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>J1</p></td>
+<td><p>present-day melt integrated over each IMBIE2 drainage basin</p></td>
+</tr>
+<tr class="row-odd"><td><p>J2</p></td>
+<td><p>present-day melt integrated over bins of equal buttressing importance</p></td>
+</tr>
+<tr class="row-even"><td><p>J3</p></td>
+<td><p>the warm-minus-cold basin-mean melt difference of ocean models</p></td>
+</tr>
+<tr class="row-odd"><td><p>J4</p></td>
+<td><p>observed melt of Pine Island and Dotson, per observation year</p></td>
+</tr>
+</tbody>
+</table>
+<p>The user’s guide describes the config options in
+<a class="reference internal" href="../../../users_guide/landice/test_groups/ismip7_calibration.html#landice-ismip7-calibration"><span class="std std-ref">ismip7_calibration</span></a>.</p>
+<p>The test group has two test cases: <code class="docutils literal notranslate"><span class="pre">replication</span></code> and <code class="docutils literal notranslate"><span class="pre">ais</span></code>.</p>
+<section id="framework">
+<span id="dev-landice-ismip7-calibration-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading"></a></h2>
+<p>Code shared with the other ISMIP7 test groups lives in the landice framework
+package <code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.ismip7</span></code>, described in
+<a class="reference internal" href="../framework.html#dev-landice-framework"><span class="std std-ref">Land-ice Framework</span></a>.  The modules below are specific to the
+calibration.</p>
+<section id="datasets">
+<h3>datasets<a class="headerlink" href="#datasets" title="Link to this heading"></a></h3>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_calibration.datasets</span></code> is the single
+registry of <em>which</em> ocean states feed <em>which</em> objective-function term, and of
+where the calibration targets live.  Both test cases drive it, so the 8 km
+replication and the MALI-mesh calibration cannot drift apart.</p>
+<p><a class="reference internal" href="../generated/compass.landice.tests.ismip7_calibration.datasets.ocean_states.html#compass.landice.tests.ismip7_calibration.datasets.ocean_states" title="compass.landice.tests.ismip7_calibration.datasets.ocean_states"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_calibration.datasets.ocean_states()</span></code></a>
+returns the <code class="docutils literal notranslate"><span class="pre">minimal</span></code> (7), <code class="docutils literal notranslate"><span class="pre">recommended</span></code> (11) or <code class="docutils literal notranslate"><span class="pre">all</span></code> (28) subset of
+protocol Table 2.  Regional ocean models record the basins they cover, so
+that melt outside their domains is discarded.</p>
+</section>
+<section id="terms">
+<h3>terms<a class="headerlink" href="#terms" title="Link to this heading"></a></h3>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_calibration.terms</span></code> implements J1-J4 in
+a form that works on any mesh.  The upstream toolbox assumes a uniform
+structured grid: it converts cell sums to Gt/yr with a single scalar
+<code class="docutils literal notranslate"><span class="pre">reso**2</span></code> and takes unweighted means over basins.  That is correct on the
+ISMIP 8 km grid and wrong on MALI’s 4-20 km mesh, where cell area varies by a
+factor of about 25.  These functions take an explicit cell-area array
+instead, so passing a uniform area reproduces the structured-grid answer
+exactly while a real mesh gets an area-weighted one.</p>
+</section>
+<section id="quadratic">
+<h3>quadratic<a class="headerlink" href="#quadratic" title="Link to this heading"></a></h3>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_calibration.quadratic</span></code> implements both
+melt formulas in Python: the Burgard et al. (2022) local quadratic of
+protocol Eq. (1), and the ISMIP6 non-local quadratic.  It serves as the
+specification MALI’s Fortran is checked against and as what the replication
+drives.</p>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">local_quadratic_melt</span></code> takes the slope <em>angle</em> while MALI’s
+<code class="docutils literal notranslate"><span class="pre">config_ismip7_melt_sin_slope</span></code> is a <em>sine</em>;
+<a class="reference internal" href="../generated/compass.landice.tests.ismip7_calibration.quadratic.angle_from_sin_slope.html#compass.landice.tests.ismip7_calibration.quadratic.angle_from_sin_slope" title="compass.landice.tests.ismip7_calibration.quadratic.angle_from_sin_slope"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_calibration.quadratic.angle_from_sin_slope()</span></code></a>
+converts between them.</p>
+</section>
+<section id="toolbox">
+<h3>toolbox<a class="headerlink" href="#toolbox" title="Link to this heading"></a></h3>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_calibration.toolbox</span></code> holds a verbatim
+copy of the upstream ISMIP7 parameter-selection toolbox, which implements the
+objective function itself.  <code class="docutils literal notranslate"><span class="pre">PROVENANCE.md</span></code> alongside it records the
+upstream commit and a SHA256 that is verified on import and asserted by a
+unit test, so an accidental edit or a partial update fails loudly rather than
+quietly changing published numbers.</p>
+</section>
+<section id="objective">
+<h3>objective<a class="headerlink" href="#objective" title="Link to this heading"></a></h3>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_calibration.objective</span></code> assembles the
+toolbox’s arguments and reduces its output to percentiles.  Each term is
+built once at a unit parameter value and scaled onto the parameter grid,
+which is exact because melt is proportional to the parameter.</p>
+</section>
+</section>
+<section id="replication">
+<span id="dev-landice-ismip7-calibration-replication"></span><h2>replication<a class="headerlink" href="#replication" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/ismip7_calibration/replication</span></code> reproduces the published 8 km
+calibration through compass’s own code path, using the Python reference melt
+implementation on the ISMIP grid.  It runs in about a minute, needs no MALI
+run, and must reproduce the published percentiles</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>K = 4.75e-5 / 8.5e-5 / 1.375e-4
+</pre></div>
+</div>
+<p>exactly.  <code class="docutils literal notranslate"><span class="pre">validate()</span></code> raises if it does not.  This is the check that the
+vendored toolbox is being driven correctly; the MALI calibration is built on
+the same code path, so if this fails the MALI numbers cannot be trusted
+either.</p>
+<p>This test case deliberately uses the <strong>published inputs</strong>, including the
+spatially varying 8 km salinity fields.  It replicates a published
+calculation, so it must not be changed to match the constant-salinity choice
+the MALI calibration makes.</p>
+</section>
+<section id="ais">
+<span id="dev-landice-ismip7-calibration-ais"></span><h2>ais<a class="headerlink" href="#ais" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/ismip7_calibration/ais</span></code> is the calibration itself, on an Antarctic
+MALI mesh.</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">make_graph</span></code></dt><dd><p>Builds the graph partition file the melt diagnostics run on, once, from
+the mesh.  Doing it here means the test group works on any MALI mesh
+rather than only on meshes that already have a partition file
+distributed alongside them.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">remap_masks</span></code></dt><dd><p>Remaps the ISMIP7 IMBIE2 basins, buttressing (BFRN) bins, floating mask
+and PIG/Dotson regions onto the MALI mesh, nearest-neighbour throughout
+since every field is categorical.</p>
+<p><strong>Two basin-numbering conventions are in play and they differ by one.</strong>
+ISMIP7’s <code class="docutils literal notranslate"><span class="pre">basinNumber</span></code> is 0-based, 0-15, with basin 9 the Eastern
+Amundsen and basin 14 Ronne-Filchner, which is how the protocol refers to
+them.  MALI’s <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_basin</span></code> is 1-based, 1-16, so MALI basin
+10 is ISMIP7 basin 9.  Both are written, under distinct names, so that
+neither can be silently reinterpreted as the other – a mistake that
+mis-assigns every basin while still producing plausible-looking numbers.
+The step cross-tabulates the result against the mesh’s existing
+<code class="docutils literal notranslate"><span class="pre">regionCellMasks</span></code> in both directions and fails below 80% agreement.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">remap_forcing</span></code></dt><dd><p>Remaps the calibration thermal forcing for each ocean state.  The
+observational states cover only about 6% of the ISMIP grid (protocol
+Sect. A10), so they are filled from the present-day climatology <em>before</em>
+remapping, exactly as the regional model datasets are distributed
+(Sect. A9); interpolation then never blends a real value with a missing
+one.  The remapped field is required to be finite everywhere.</p>
+<p><strong>Only thermal forcing is remapped.</strong>  See the salinity note below.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&lt;melt_form&gt;_&lt;ocean_state&gt;</span></code></dt><dd><p>One single-timestep MALI melt diagnostic per ocean state and melt form,
+with the velocity solver off, so Albany is not required.</p>
+<p>The run takes <strong>one short timestep rather than none</strong>: MALI computes melt
+inside the timestep, not in the initial diagnostic solve, so a zero-length
+run would produce no melt at all.</p>
+<p>There is one run per ocean state, <strong>not</strong> one per parameter value.  Melt
+is exactly proportional to the melt parameter, so the whole parameter
+ensemble follows by scaling a single run.  That is what makes this 28 runs
+per melt form rather than about 1300.  Do not “improve” this away.</p>
+<p>Both melt forms read their parameter from an input stream –
+<code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_gamma0</span></code> for the ISMIP6 method and <code class="docutils literal notranslate"><span class="pre">ismip7shelfMelt_K</span></code>
+for the ISMIP7 one – rather than from the namelist, so that a single
+parameter file carries a complete calibration.  Each run writes a small
+<code class="docutils literal notranslate"><span class="pre">melt_parameter.nc</span></code> holding the reference value, which the aggregation
+divides out again.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&lt;melt_form&gt;_&lt;ocean_state&gt;_x&lt;scale&gt;</span></code></dt><dd><p>Two extra runs of the reference ocean state at other multiples of the
+melt parameter, so that the linearity the ensemble design relies on is
+measured in MALI rather than argued from the code.  Only the <code class="docutils literal notranslate"><span class="pre">ismip7</span></code>
+form is scaled this way: its parameter is a namelist option, while the
+ISMIP6 <code class="docutils literal notranslate"><span class="pre">gamma0</span></code> is read from an input file.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">verify_melt</span></code></dt><dd><p>Checks MALI’s melt against the Python reference evaluated on MALI’s <em>own</em>
+<code class="docutils literal notranslate"><span class="pre">TFdraft</span></code>, which isolates the melt expression from the vertical
+interpolation; checks that interpolation against an independent
+implementation written from the protocol, over all four of MALI’s code
+paths; and measures the linearity in the melt parameter from the scaled
+runs above.</p>
+<p>The comparison is restricted to the cells MALI itself computes melt for
+– floating <em>and</em> connected to the open ocean.  MALI leaves <code class="docutils literal notranslate"><span class="pre">TFdraft</span></code>
+and the melt at zero elsewhere, so including those cells would compare
+against values MALI never calculated.</p>
+<p>The draft is reconstructed from the mesh file, never taken from the run
+output.  Melt thins the ice over the single timestep, so the output
+<code class="docutils literal notranslate"><span class="pre">lowerSurface</span></code> and <code class="docutils literal notranslate"><span class="pre">thickness</span></code> are <em>post</em>-step while <code class="docutils literal notranslate"><span class="pre">TFdraft</span></code> was
+computed <em>pre</em>-step; pairing them is inconsistent by up to a metre of
+draft.</p>
+<p>MALI applies the depth dependence of the freezing temperature to the
+thermal forcing in the two branches that extrapolate downward – below
+the deepest layer centre, and where the layer below the draft is beneath
+the bed.  The Python reference must do the same, or the two disagree by
+several kelvin over thousands of cells.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">aggregate</span></code></dt><dd><p>Aggregates melt to basins, buttressing bins and shelf regions.  All
+aggregation is <strong>area-weighted</strong>: integrals use <code class="docutils literal notranslate"><span class="pre">melt</span> <span class="pre">*</span> <span class="pre">areaCell</span></code> and
+means are weighted by <code class="docutils literal notranslate"><span class="pre">areaCell</span></code>.  Also reports MALI’s per-basin
+ice-shelf area against the observed ISMIP7 extent, since J1, J2 and J4
+are integrals and any shelf-area mismatch enters the calibrated parameter
+directly.</p>
+<p>The contributing cells are the ones MALI computed melt for, as in
+<code class="docutils literal notranslate"><span class="pre">verify_melt</span></code>.  Including the rest would not change an integral, since
+their melt is zero, but it would dilute the area-weighted basin means
+that J3 is built from.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">calibrate</span></code></dt><dd><p>Runs the 100,000-sample parameter selection per melt form.  The objective
+<strong>normalises each term by its own median</strong> over the parameter ensemble, so
+a minimised objective is <em>not</em> comparable between melt forms – only
+between parameter values within one form.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">fit_delta_t</span></code></dt><dd><p>Fits the per-basin thermal-forcing correction <code class="docutils literal notranslate"><span class="pre">dT_b</span></code> <strong>after</strong> parameter
+selection, following protocol Sect. 4.2.1 option 2, as the published
+quadratic worked example does.  <code class="docutils literal notranslate"><span class="pre">dT_b</span></code> depends on the melt parameter,
+so it is fitted separately at the 5th, 50th and 95th percentiles, and a
+complete MALI parameter file – <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_basin</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_deltaT</span></code> and the parameter itself, <code class="docutils literal notranslate"><span class="pre">ismip7shelfMelt_K</span></code>
+or <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_gamma0</span></code> – is written for each as
+<code class="docutils literal notranslate"><span class="pre">melt_params_&lt;form&gt;_p05.nc</span></code>, <code class="docutils literal notranslate"><span class="pre">_p50.nc</span></code> and <code class="docutils literal notranslate"><span class="pre">_p95.nc</span></code>.  These are
+the deliverable: a projection at a given percentile points its
+parameter stream at the matching file.  Fitting it first would leave the parameter
+bounds unconstrained where present-day melt is compared with observations,
+which is the drawback Sect. 4.2.1 names.  The toolbox’s own
+<code class="docutils literal notranslate"><span class="pre">optimise_deltaT</span></code> cannot be used because it sums over structured-grid
+<code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> with a single scalar cell area, so the search is
+reimplemented area-weighted.  <code class="docutils literal notranslate"><span class="pre">dT</span></code> enters the melt only through the
+thermal forcing, so melt is recomputed in Python from <code class="docutils literal notranslate"><span class="pre">TFdraft</span></code> and no
+further MALI runs are needed.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">report</span></code></dt><dd><p>Parameter-distribution plots and a summary table.</p>
+</dd>
+</dl>
+</section>
+<section id="melt-forms-and-salinity">
+<h2>melt forms and salinity<a class="headerlink" href="#melt-forms-and-salinity" title="Link to this heading"></a></h2>
+<p>Two melt forms are calibrated, selected with the <code class="docutils literal notranslate"><span class="pre">melt_forms</span></code> config
+option:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">ismip7</span></code></dt><dd><p>The Burgard et al. (2022) <strong>local</strong> quadratic of protocol Eq. (1),
+calibrating <code class="docutils literal notranslate"><span class="pre">K</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ismip6</span></code></dt><dd><p>The <strong>non-local</strong> quadratic MALI already had, calibrating <code class="docutils literal notranslate"><span class="pre">gamma0</span></code>.
+With a constant salinity this is algebraically identical to the Burgard
+<em>semi-local</em> form of protocol Eq. (2) – only the decomposition of the
+constant differs – so this is how the semi-local form is calibrated,
+rather than as a third melt module.</p>
+</dd>
+</dl>
+<p><strong>The calibration uses a constant salinity</strong>, set by the <code class="docutils literal notranslate"><span class="pre">salinity</span></code> config
+option and passed to MALI as
+<code class="docutils literal notranslate"><span class="pre">config_ismip7_melt_salinity_source</span> <span class="pre">=</span> <span class="pre">'constant'</span></code>.  MALI can read a 3-D
+salinity field, but the ISMIP7 ocean forcing already processed for the MALI
+projections carries thermal forcing only, so a projection has no salinity
+field to read.  Calibrating against a spatially varying salinity would tune
+<code class="docutils literal notranslate"><span class="pre">K</span></code> for physics the projections cannot run.</p>
+<p>Melt is linear in salinity and basin-mean salinity spans about 34.1 to 34.7
+against the constant 34.5, so this shifts the calibrated parameter by roughly
+1%.  Note that the published <code class="docutils literal notranslate"><span class="pre">K</span></code> was obtained with a locally varying
+salinity, so comparison with it is approximate at about that level.</p>
+</section>
+<section id="using-a-mali-build-with-the-ismip7-melt-method">
+<h2>using a MALI build with the ISMIP7 melt method<a class="headerlink" href="#using-a-mali-build-with-the-ismip7-melt-method" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ismip7</span></code> melt form needs a MALI build that has
+<code class="docutils literal notranslate"><span class="pre">config_basal_mass_bal_float</span> <span class="pre">=</span> <span class="pre">'ismip7'</span></code>, which the compass <code class="docutils literal notranslate"><span class="pre">MALI-Dev</span></code>
+submodule has had since MALI-Dev/E3SM#191.  An older build can still be
+pointed at with</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[paths]</span>
+<span class="na">mpas_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/path/to/E3SM/components/mpas-albany-landice</span>
+</pre></div>
+</div>
+<p>Compass only <em>warns</em> when a namelist option is missing from the model’s
+defaults, so a build without the ISMIP7 melt method would silently drop
+<code class="docutils literal notranslate"><span class="pre">config_ismip7_melt_sin_slope</span></code> and produce a plausible but wrong
+calibration.  The
+<code class="docutils literal notranslate"><span class="pre">run_state</span></code> step therefore checks the default namelist at setup and fails
+with a clear message instead.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ismip6_run.html" class="btn btn-neutral float-left" title="ismip6_run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ismip7_forcing.html" class="btn btn-neutral float-right" title="ismip7_forcing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

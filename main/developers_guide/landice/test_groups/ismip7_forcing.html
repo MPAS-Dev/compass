@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="ismip7_run" href="ismip7_run.html" />
-    <link rel="prev" title="ismip6_run" href="ismip6_run.html" /> 
+    <link rel="prev" title="ismip7_calibration" href="ismip7_calibration.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -73,6 +73,7 @@
 <li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ismip6_forcing.html">ismip6_forcing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ismip6_run.html">ismip6_run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip7_calibration.html">ismip7_calibration</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">ismip7_forcing</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#test-cases">Test cases</a></li>
@@ -157,14 +158,15 @@ three test cases: <code class="docutils literal notranslate"><span class="pre">a
 <span id="dev-landice-ismip7-forcing-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading"></a></h2>
 <p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">ismip7_forcing</span></code> test group are described
 in <a class="reference internal" href="../../../users_guide/landice/test_groups/ismip7_forcing.html#landice-ismip7-forcing"><span class="std std-ref">ismip7_forcing</span></a> in the User’s Guide.</p>
-<section id="ice-sheet-params">
-<h3>ice_sheet_params<a class="headerlink" href="#ice-sheet-params" title="Link to this heading"></a></h3>
-<p>The module <code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_forcing.ice_sheet_params</span></code>
-defines a dictionary of ice-sheet-specific parameters (projection, file
-naming prefix, grid resolution, data version, ocean dimensionality, and the
-atmosphere/ocean source names) and provides the function
-<a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.ice_sheet_params.get_params.html#compass.landice.tests.ismip7_forcing.ice_sheet_params.get_params" title="compass.landice.tests.ismip7_forcing.ice_sheet_params.get_params"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_forcing.ice_sheet_params.get_params()</span></code></a>
-to retrieve them based on the <code class="docutils literal notranslate"><span class="pre">ice_sheet</span></code> config option.</p>
+<p>Code shared with the other ISMIP7 test groups lives in the landice framework
+package <code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.ismip7</span></code>, described in
+<a class="reference internal" href="../framework.html#dev-landice-framework"><span class="std std-ref">Land-ice Framework</span></a>.  This test group uses
+<a class="reference internal" href="../generated/compass.landice.ismip7.ice_sheet_params.get_params.html#compass.landice.ismip7.ice_sheet_params.get_params" title="compass.landice.ismip7.ice_sheet_params.get_params"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.ismip7.ice_sheet_params.get_params()</span></code></a> for the
+ice-sheet-specific parameters (projection, file naming prefix, grid
+resolution, data version, ocean dimensionality),
+<a class="reference internal" href="../generated/compass.landice.ismip7.mapping.build_mapping_file.html#compass.landice.ismip7.mapping.build_mapping_file" title="compass.landice.ismip7.mapping.build_mapping_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.ismip7.mapping.build_mapping_file()</span></code></a> to create the
+SCRIP and ESMF mapping files, and the remapping helpers in
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.ismip7.remap</span></code>.</p>
 <p>When <code class="docutils literal notranslate"><span class="pre">scenario</span> <span class="pre">=</span> <span class="pre">OCX</span></code>, <code class="docutils literal notranslate"><span class="pre">get_params</span></code> applies a set of OCX overrides on top
 of the ice-sheet defaults: data version <code class="docutils literal notranslate"><span class="pre">v1</span></code>, the ocean file-name grid token
 (e.g. <code class="docutils literal notranslate"><span class="pre">ocean-1000m</span></code>), and the fixed reanalysis sources (<code class="docutils literal notranslate"><span class="pre">atm_model</span></code> =
@@ -172,7 +174,6 @@ of the ice-sheet defaults: data version <code class="docutils literal notranslat
 <code class="docutils literal notranslate"><span class="pre">atm_model</span></code> / <code class="docutils literal notranslate"><span class="pre">ocean_model</span></code> in place of the <code class="docutils literal notranslate"><span class="pre">[ismip7]</span> <span class="pre">model</span></code> option when
 they are set, so the OCX <code class="docutils literal notranslate"><span class="pre">model</span></code> option is ignored. This keeps OCX handling
 centralized and lets a single config file drive both test cases.</p>
-</section>
 <section id="configure">
 <h3>configure<a class="headerlink" href="#configure" title="Link to this heading"></a></h3>
 <p>The module <code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_forcing.configure</span></code> validates
@@ -185,17 +186,6 @@ The GrIS OCX scenario has a dedicated example
 <code class="docutils literal notranslate"><span class="pre">ismip7_forcing_ocx_gis.cfg</span></code> in the same directory.
 These are intended for development/testing and include environment-specific
 paths.</p>
-</section>
-<section id="create-mapfile">
-<h3>create_mapfile<a class="headerlink" href="#create-mapfile" title="Link to this heading"></a></h3>
-<p>The module <code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_forcing.create_mapfile</span></code>
-defines a unified framework for creating SCRIP and mapping files. The function
-<a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.create_mapfile.build_mapping_file.html#compass.landice.tests.ismip7_forcing.create_mapfile.build_mapping_file" title="compass.landice.tests.ismip7_forcing.create_mapfile.build_mapping_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_forcing.create_mapfile.build_mapping_file()</span></code></a>
-creates a SCRIP file from the input polar stereographic grid using the
-<code class="docutils literal notranslate"><span class="pre">create_scrip_file_from_planar_rectangular_grid</span></code> command from MPAS-Tools,
-then generates a mapping file via <code class="docutils literal notranslate"><span class="pre">ESMF_RegridWeightGen</span></code>. The projection
-is automatically determined from the <code class="docutils literal notranslate"><span class="pre">ice_sheet</span></code> config option using
-<code class="docutils literal notranslate"><span class="pre">ice_sheet_params</span></code>.</p>
 </section>
 </section>
 <section id="test-cases">
@@ -295,7 +285,7 @@ default and rounded to 0/1 so the discrete collapse mask is preserved.</p></li>
 <code class="docutils literal notranslate"><span class="pre">units=&quot;year&quot;</span></code> (not CF-compliant), so each step opens the data with
 <code class="docutils literal notranslate"><span class="pre">decode_times=False</span></code> and constructs <code class="docutils literal notranslate"><span class="pre">xtime</span></code> at January 1st of each year.</p>
 <p>Shared remapping helpers used by the fracture steps live in
-<code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_forcing.fracture.remap_utils</span></code>:
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.ismip7.remap</span></code>:
 <code class="docutils literal notranslate"><span class="pre">extrapolate_source</span></code> (nearest-neighbor fill of NaNs on the source grid),
 <code class="docutils literal notranslate"><span class="pre">open_rename_and_trim</span></code> (open a remapped file, rename dimensions/variables
 to MALI conventions, and restrict to the requested year range), and
@@ -313,7 +303,7 @@ model input fields are defined.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ismip6_run.html" class="btn btn-neutral float-left" title="ismip6_run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ismip7_calibration.html" class="btn btn-neutral float-left" title="ismip7_calibration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ismip7_run.html" class="btn btn-neutral float-right" title="ismip7_run" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

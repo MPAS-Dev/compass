@@ -1,0 +1,339 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip7_calibration.configure &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../ismip7_calibration.html">compass.landice.tests.ismip7_calibration</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip7_calibration.configure</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip7_calibration.configure</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Shared configuration checks for the ISMIP7 calibration test cases.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PUBLISHED_T3_MODELS</span><span class="p">,</span>
+    <span class="n">PUBLISHED_T4_REGIONS</span><span class="p">,</span>
+    <span class="n">PUBLISHED_T4_YEARS</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="check_options">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.configure.check_options.html#compass.landice.tests.ismip7_calibration.configure.check_options">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_options</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Check that user-supplied config options have been set.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options for the test case</span>
+
+<span class="sd">    options : list of str</span>
+<span class="sd">        Options in the ``ismip7_calibration`` section that the user must</span>
+<span class="sd">        supply</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If any of ``options`` is still ``NotAvailable``</span>
+<span class="sd">    """</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="s1">'ismip7_calibration'</span>
+    <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="o">=</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="o">=</span><span class="n">option</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">'NotAvailable'</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">'You need to supply a user config file containing the '</span>
+                <span class="sa">f</span><span class="s1">'[</span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s1">] section with the </span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s1"> option set.'</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="parameter_values">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.configure.parameter_values.html#compass.landice.tests.ismip7_calibration.configure.parameter_values">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parameter_values</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The grid of parameter values to select from, for one melt form.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options for the test case</span>
+
+<span class="sd">    melt_form : {'ismip7', 'ismip6'}</span>
+<span class="sd">        Which melt form the parameter belongs to.  ``'ismip7'`` calibrates</span>
+<span class="sd">        ``K`` and ``'ismip6'`` calibrates ``gamma0``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    values : numpy.ndarray</span>
+<span class="sd">        The parameter grid</span>
+<span class="sd">    """</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration_melt'</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">melt_form</span> <span class="o">==</span> <span class="s1">'ismip7'</span><span class="p">:</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'k_min'</span><span class="p">)</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'k_max'</span><span class="p">)</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'k_step'</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">melt_form</span> <span class="o">==</span> <span class="s1">'ismip6'</span><span class="p">:</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'gamma0_min'</span><span class="p">)</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'gamma0_max'</span><span class="p">)</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'gamma0_step'</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"melt_form must be 'ismip7' or 'ismip6', but is "</span>
+                         <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+
+    <span class="c1"># add half a step so that ``high`` itself is included</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">step</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="parameter_name">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.configure.parameter_name.html#compass.landice.tests.ismip7_calibration.configure.parameter_name">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parameter_name</span><span class="p">(</span><span class="n">melt_form</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The name of the parameter a melt form calibrates.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    melt_form : {'ismip7', 'ismip6'}</span>
+<span class="sd">        The melt form</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        ``'K'`` for ``'ismip7'`` and ``'gamma0'`` for ``'ismip6'``</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">melt_form</span> <span class="o">==</span> <span class="s1">'ismip7'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">'K'</span>
+    <span class="k">if</span> <span class="n">melt_form</span> <span class="o">==</span> <span class="s1">'ismip6'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">'gamma0'</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"melt_form must be 'ismip7' or 'ismip6', but is "</span>
+                     <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="melt_forms">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.configure.melt_forms.html#compass.landice.tests.ismip7_calibration.configure.melt_forms">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">melt_forms</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The melt forms to calibrate.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options for the test case</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    forms : list of str</span>
+<span class="sd">        Each of ``'ismip7'`` and ``'ismip6'`` that was requested</span>
+<span class="sd">    """</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ismip7_calibration'</span><span class="p">,</span> <span class="s1">'melt_forms'</span><span class="p">)</span>
+    <span class="n">forms</span> <span class="o">=</span> <span class="p">[</span><span class="n">form</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">form</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span> <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+    <span class="k">for</span> <span class="n">form</span> <span class="ow">in</span> <span class="n">forms</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">form</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'ismip7'</span><span class="p">,</span> <span class="s1">'ismip6'</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"melt_forms must contain only 'ismip7' and "</span>
+                             <span class="sa">f</span><span class="s2">"'ismip6', but contains '</span><span class="si">{</span><span class="n">form</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">forms</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'melt_forms must name at least one melt form'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">forms</span></div>
+
+
+
+<div class="viewcode-block" id="weighting">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.configure.weighting.html#compass.landice.tests.ismip7_calibration.configure.weighting">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">weighting</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Which summands of J3 and J4 carry non-zero weight.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options for the test case</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    t3_models : tuple of str or None</span>
+<span class="sd">        Ocean models to weight in J3, or None to weight all of them</span>
+
+<span class="sd">    t4_regions : tuple of str or None</span>
+<span class="sd">        Ice shelves to weight in J4, or None to weight all of them</span>
+
+<span class="sd">    t4_years : tuple of int or None</span>
+<span class="sd">        Observation years to weight in J4, or None to weight all of them</span>
+<span class="sd">    """</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration_objective'</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_select</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">published</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">option</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">'published'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">published</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">'all'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s2"> must be 'published' or 'all', but is "</span>
+                         <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">_select</span><span class="p">(</span><span class="s1">'t3_models'</span><span class="p">,</span> <span class="n">PUBLISHED_T3_MODELS</span><span class="p">),</span>
+            <span class="n">_select</span><span class="p">(</span><span class="s1">'t4_regions'</span><span class="p">,</span> <span class="n">PUBLISHED_T4_REGIONS</span><span class="p">),</span>
+            <span class="n">_select</span><span class="p">(</span><span class="s1">'t4_years'</span><span class="p">,</span> <span class="n">PUBLISHED_T4_YEARS</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="objective_options">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.configure.objective_options.html#compass.landice.tests.ismip7_calibration.configure.objective_options">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">objective_options</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The sample size and random seed for the parameter selection.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options for the test case</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sample_size : int</span>
+<span class="sd">        Number of random draws</span>
+
+<span class="sd">    seed : int or None</span>
+<span class="sd">        Seed for the random draws, or None to leave the random state alone</span>
+<span class="sd">    """</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration_objective'</span><span class="p">]</span>
+    <span class="n">sample_size</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'sample_size'</span><span class="p">)</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'seed'</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">seed</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'none'</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sample_size</span><span class="p">,</span> <span class="n">seed</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

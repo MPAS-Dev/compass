@@ -1,0 +1,244 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip7_calibration.toolbox &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../ismip7_calibration.html">compass.landice.tests.ismip7_calibration</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip7_calibration.toolbox</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip7_calibration.toolbox</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">The ISMIP7 parameter-selection toolbox, vendored from upstream.</span>
+
+<span class="sd">:py:mod:`~compass.landice.tests.ismip7_calibration.toolbox.parameter_selection_toolbox`</span>
+<span class="sd">is a verbatim copy of ``parameterisations/parameter_selection_toolbox.py`` from</span>
+<span class="sd">https://github.com/ismip/ismip7-antarctic-ocean-forcing.  It implements the</span>
+<span class="sd">objective function of the ISMIP7 AIS ice-ocean protocol (Reese et al.,</span>
+<span class="sd">Sect. 4.2) and the downstream ``deltaT`` fit.  ``PROVENANCE.md`` in this</span>
+<span class="sd">directory records exactly which upstream revision it came from and how to</span>
+<span class="sd">update it.</span>
+
+<span class="sd">The copy must stay byte-for-byte identical to upstream, so that a future</span>
+<span class="sd">refresh is a clean replace and so that the published calibration numbers</span>
+<span class="sd">cannot change without anyone noticing.  :py:func:`check_integrity` enforces</span>
+<span class="sd">that, and is called on import.</span>
+<span class="sd">"""</span>  <span class="c1"># noqa: E501</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="c1">#: SHA256 of the vendored toolbox; see ``PROVENANCE.md``</span>
+<span class="n">EXPECTED_SHA256</span> <span class="o">=</span> \
+    <span class="s1">'3d016c04987d7c66c2603e2c3110d8a6a68cee0b6193c7f47bccf64aaa1ce029'</span>
+
+<span class="c1">#: upstream commit that last modified the vendored file</span>
+<span class="n">UPSTREAM_COMMIT</span> <span class="o">=</span> <span class="s1">'132beb155e63fd07957e28407a83cb9d2c954447'</span>
+
+<span class="c1">#: upstream repository the file was copied from</span>
+<span class="n">UPSTREAM_URL</span> <span class="o">=</span> <span class="s1">'https://github.com/ismip/ismip7-antarctic-ocean-forcing'</span>
+
+
+<div class="viewcode-block" id="toolbox_path">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.toolbox.toolbox_path.html#compass.landice.tests.ismip7_calibration.toolbox.toolbox_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">toolbox_path</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The path to the vendored toolbox source file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        Absolute path to ``parameter_selection_toolbox.py``</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span>
+                        <span class="s1">'parameter_selection_toolbox.py'</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="file_sha256">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.toolbox.file_sha256.html#compass.landice.tests.ismip7_calibration.toolbox.file_sha256">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">file_sha256</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The SHA256 of the vendored toolbox source file, as it is on disk.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    digest : str</span>
+<span class="sd">        Hex digest of ``parameter_selection_toolbox.py``</span>
+<span class="sd">    """</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">toolbox_path</span><span class="p">(),</span> <span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="check_integrity">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.toolbox.check_integrity.html#compass.landice.tests.ismip7_calibration.toolbox.check_integrity">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_integrity</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Verify that the vendored toolbox still matches the recorded upstream copy.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        If the file on disk does not match :py:data:`EXPECTED_SHA256`.  The</span>
+<span class="sd">        vendored copy must be an unmodified upstream file, because the</span>
+<span class="sd">        published ISMIP7 calibration numbers depend on it; a local edit or a</span>
+<span class="sd">        partial update should fail loudly rather than quietly change results.</span>
+<span class="sd">    """</span>
+    <span class="n">digest</span> <span class="o">=</span> <span class="n">file_sha256</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">digest</span> <span class="o">!=</span> <span class="n">EXPECTED_SHA256</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">'The vendored ISMIP7 parameter-selection toolbox at</span><span class="se">\n</span><span class="s1">'</span>
+            <span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">toolbox_path</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s1">'</span>
+            <span class="sa">f</span><span class="s1">'does not match the recorded upstream copy.</span><span class="se">\n</span><span class="s1">'</span>
+            <span class="sa">f</span><span class="s1">'  expected SHA256: </span><span class="si">{</span><span class="n">EXPECTED_SHA256</span><span class="si">}</span><span class="se">\n</span><span class="s1">'</span>
+            <span class="sa">f</span><span class="s1">'  found SHA256:    </span><span class="si">{</span><span class="n">digest</span><span class="si">}</span><span class="se">\n</span><span class="s1">'</span>
+            <span class="sa">f</span><span class="s1">'The file must be a verbatim copy of</span><span class="se">\n</span><span class="s1">'</span>
+            <span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">UPSTREAM_URL</span><span class="si">}</span><span class="se">\n</span><span class="s1">'</span>
+            <span class="sa">f</span><span class="s1">'  parameterisations/parameter_selection_toolbox.py</span><span class="se">\n</span><span class="s1">'</span>
+            <span class="sa">f</span><span class="s1">'at commit </span><span class="si">{</span><span class="n">UPSTREAM_COMMIT</span><span class="si">}</span><span class="s1">.  If you are deliberately updating '</span>
+            <span class="sa">f</span><span class="s1">'it, follow the instructions in PROVENANCE.md in this '</span>
+            <span class="sa">f</span><span class="s1">'directory.'</span><span class="p">)</span></div>
+
+
+
+<span class="n">check_integrity</span><span class="p">()</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.toolbox</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
+    <span class="n">parameter_selection_toolbox</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'parameter_selection_toolbox'</span><span class="p">,</span> <span class="s1">'check_integrity'</span><span class="p">,</span> <span class="s1">'file_sha256'</span><span class="p">,</span>
+           <span class="s1">'toolbox_path'</span><span class="p">,</span> <span class="s1">'EXPECTED_SHA256'</span><span class="p">,</span> <span class="s1">'UPSTREAM_COMMIT'</span><span class="p">,</span>
+           <span class="s1">'UPSTREAM_URL'</span><span class="p">]</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

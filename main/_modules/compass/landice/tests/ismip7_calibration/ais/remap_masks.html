@@ -1,0 +1,546 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip7_calibration.ais.remap_masks &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../../ismip7_calibration.html">compass.landice.tests.ismip7_calibration</a></li>
+          <li class="breadcrumb-item"><a href="../ais.html">compass.landice.tests.ismip7_calibration.ais</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip7_calibration.ais.remap_masks</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip7_calibration.ais.remap_masks</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Remap the ISMIP7 Antarctic masks onto a MALI mesh.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.ismip7.mapping</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_mapping_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
+
+<span class="c1">#: codes written to ``ismip7ShelfRegion``</span>
+<span class="n">REGION_CODES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'none'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'pig'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'dotson'</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+
+<span class="c1">#: below this level of agreement, the basin numbering is probably mismatched</span>
+<span class="n">MIN_BASIN_AGREEMENT</span> <span class="o">=</span> <span class="mf">80.0</span>
+
+<span class="c1">#: the ISMIP7 (0-based) basin Pine Island and Dotson both drain into</span>
+<span class="n">EASTERN_AMUNDSEN_BASIN</span> <span class="o">=</span> <span class="mi">9</span>
+
+<span class="c1">#: the fraction of PIG and Dotson cells that must land in that basin</span>
+<span class="n">MIN_SHELF_BASIN_AGREEMENT</span> <span class="o">=</span> <span class="mf">90.0</span>
+
+
+<div class="viewcode-block" id="RemapMasks">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks.html#compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapMasks</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A step that remaps the ISMIP7 masks onto the MALI mesh.</span>
+
+<span class="sd">    The calibration aggregates modelled melt over IMBIE2 drainage basins</span>
+<span class="sd">    (J1, J3), over bins of equal buttressing importance (J2), and over the</span>
+<span class="sd">    Pine Island and Dotson ice shelves (J4).  Those masks are distributed on</span>
+<span class="sd">    the ISMIP polar stereographic grid; this step puts them on the MALI mesh</span>
+<span class="sd">    so that the aggregation happens in MALI's own discretization.</span>
+
+<span class="sd">    Remapping is nearest neighbour throughout, since every field is</span>
+<span class="sd">    categorical.</span>
+
+<span class="sd">    **Two basin-numbering conventions are in play and they differ by one.**</span>
+<span class="sd">    ISMIP7's ``basin_numbers_ismip8km_v2.nc`` is 0-based, 0-15, with basin 9</span>
+<span class="sd">    the Eastern Amundsen and basin 14 Ronne-Filchner, which is how the</span>
+<span class="sd">    protocol refers to them.  MALI's ``ismip6shelfMelt_basin`` is 1-based,</span>
+<span class="sd">    1-16.  Both are written here, under distinct names, so that neither can</span>
+<span class="sd">    be silently reinterpreted as the other -- a mistake that produces</span>
+<span class="sd">    plausible-looking but wrong basin aggregates rather than an error.</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="RemapMasks.__init__">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks.html#compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.landice.tests.ismip7_calibration.ais.Ais</span>
+<span class="sd">            The test case this step belongs to</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'remap_masks'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'ismip7_masks_on_mali.nc'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemapMasks.setup">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks.setup.html#compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks.setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Set up this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration'</span><span class="p">]</span>
+        <span class="n">base_path_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'base_path_mali'</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mali_mesh_file'</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_mali</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">))</span>
+
+        <span class="n">region_mask_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'region_mask_file'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">region_mask_file</span> <span class="o">!=</span> <span class="s1">'None'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="n">region_mask_file</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_mali</span><span class="p">,</span> <span class="n">region_mask_file</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'esmf_ntasks'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span></div>
+
+
+<div class="viewcode-block" id="RemapMasks.run">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks.run.html#compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration'</span><span class="p">]</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'base_path_ismip7'</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mali_mesh_file'</span><span class="p">)</span>
+        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mali_mesh_name'</span><span class="p">)</span>
+        <span class="n">region_mask_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'region_mask_file'</span><span class="p">)</span>
+        <span class="n">ntasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'esmf_ntasks'</span><span class="p">)</span>
+
+        <span class="n">method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ismip7_calibration_masks'</span><span class="p">,</span> <span class="s1">'method_remap'</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Loading the ISMIP7 masks from </span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">ds_masks</span> <span class="o">=</span> <span class="n">_load_ismip7_masks</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
+
+        <span class="c1"># any of the mask files defines the source grid; they share it</span>
+        <span class="n">src_grid_file</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">mask_files</span><span class="p">(</span><span class="n">base_path</span><span class="p">)[</span><span class="s1">'basins'</span><span class="p">]</span>
+
+        <span class="n">ds_remapped</span> <span class="o">=</span> <span class="n">_remap_to_mali</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span> <span class="n">ds_masks</span><span class="p">,</span> <span class="n">src_grid_file</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">,</span> <span class="n">mali_mesh_name</span><span class="p">,</span>
+            <span class="n">method</span><span class="p">,</span> <span class="n">ntasks</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">_to_integer_masks</span><span class="p">(</span><span class="n">ds_remapped</span><span class="p">)</span>
+
+        <span class="n">_check_shelves_are_in_their_basin</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">region_mask_file</span> <span class="o">!=</span> <span class="s1">'None'</span><span class="p">:</span>
+            <span class="n">_cross_check_basins</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="n">region_mask_file</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'No region mask supplied, so the cross-check against '</span>
+                        <span class="s1">'the ISMIP6-era regions is skipped.'</span><span class="p">)</span>
+
+        <span class="n">ds_out</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'source'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s1">'ISMIP7 masks from </span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s1"> remapped onto </span><span class="si">{</span><span class="n">mali_mesh_file</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">ds_out</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'remap_method'</span><span class="p">]</span> <span class="o">=</span> <span class="n">method</span>
+
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">'ismip7_masks_on_mali.nc'</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Wrote ismip7_masks_on_mali.nc'</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_ismip7_masks</span><span class="p">(</span><span class="n">base_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Load the ISMIP7 masks on the ISMIP grid, as floats for remapping."""</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">mask_files</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
+
+    <span class="n">basins</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="s1">'basins'</span><span class="p">])[</span><span class="s1">'basinNumber'</span><span class="p">]</span>
+    <span class="n">bfrn</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="s1">'bfrn'</span><span class="p">])[</span><span class="s1">'BFRN_bins'</span><span class="p">]</span>
+    <span class="n">floating</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="s1">'floating'</span><span class="p">])[</span><span class="s1">'mask'</span><span class="p">]</span>
+
+    <span class="n">shelves</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="s1">'shelves'</span><span class="p">])[</span><span class="s1">'shelf_mask'</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">'time'</span> <span class="ow">in</span> <span class="n">shelves</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="n">shelves</span> <span class="o">=</span> <span class="n">shelves</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># restrict Pine Island to its main trunk, as the worked example does</span>
+    <span class="n">pig</span> <span class="o">=</span> <span class="p">(</span><span class="n">shelves</span> <span class="o">==</span> <span class="n">datasets</span><span class="o">.</span><span class="n">PIG_ID</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">shelves</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">datasets</span><span class="o">.</span><span class="n">PIG_X_MAX</span><span class="p">)</span>
+    <span class="n">dotson</span> <span class="o">=</span> <span class="n">shelves</span> <span class="o">==</span> <span class="n">datasets</span><span class="o">.</span><span class="n">DOTSON_ID</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pig</span><span class="p">,</span> <span class="n">REGION_CODES</span><span class="p">[</span><span class="s1">'pig'</span><span class="p">],</span>
+                      <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">dotson</span><span class="p">,</span> <span class="n">REGION_CODES</span><span class="p">[</span><span class="s1">'dotson'</span><span class="p">],</span>
+                               <span class="n">REGION_CODES</span><span class="p">[</span><span class="s1">'none'</span><span class="p">]))</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip7BasinNumber'</span><span class="p">]</span> <span class="o">=</span> <span class="n">basins</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip7BFRNBin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">bfrn</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip7FloatingMask'</span><span class="p">]</span> <span class="o">=</span> <span class="n">floating</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip7ShelfRegion'</span><span class="p">]</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ds</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_remap_to_mali</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds_masks</span><span class="p">,</span> <span class="n">src_grid_file</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">,</span>
+                   <span class="n">mali_mesh_name</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">ntasks</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Remap the ISMIP7 masks onto the MALI mesh.</span>
+
+<span class="sd">    This goes through the shared</span>
+<span class="sd">    :py:func:`compass.landice.ismip7.mapping.build_mapping_file` and</span>
+<span class="sd">    ``ncremap``, the same route ``ismip7_forcing`` uses, rather than through</span>
+<span class="sd">    pyremap's ``Remapper``.  pyremap invokes ``mpirun`` directly, which</span>
+<span class="sd">    conflicts with the Slurm allocation on machines where compass launches</span>
+<span class="sd">    with ``srun``; ``build_mapping_file`` uses the configured</span>
+<span class="sd">    ``parallel_executable`` instead.</span>
+<span class="sd">    """</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">ISMIP_RESOLUTION_KM</span>
+    <span class="n">mapping_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'map_ismip</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_to_</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc'</span>
+    <span class="n">source_file</span> <span class="o">=</span> <span class="s1">'ismip7_masks_source.nc'</span>
+    <span class="n">remapped_file</span> <span class="o">=</span> <span class="s1">'ismip7_masks_remapped.nc'</span>
+
+    <span class="c1"># the masks are assembled in memory, so write them back onto the ISMIP</span>
+    <span class="c1"># grid for ncremap; the source grid file supplies the x/y coordinates</span>
+    <span class="c1"># that the SCRIP description needs</span>
+    <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">src_grid_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_grid</span><span class="p">:</span>
+        <span class="n">ds_source</span> <span class="o">=</span> <span class="n">ds_masks</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">ds_grid</span><span class="p">[</span><span class="s1">'x'</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">ds_grid</span><span class="p">[</span><span class="s1">'y'</span><span class="p">])</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_source</span><span class="p">,</span> <span class="n">source_file</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Building mapping file </span><span class="si">{</span><span class="n">mapping_file</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">source_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+                       <span class="n">mali_mesh_file</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span> <span class="n">method_remap</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+                       <span class="n">projection</span><span class="o">=</span><span class="s1">'ais-bedmap2'</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Remapping the masks onto the MALI mesh'</span><span class="p">)</span>
+    <span class="n">variables</span> <span class="o">=</span> <span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">ds_masks</span><span class="o">.</span><span class="n">data_vars</span><span class="p">))</span>
+    <span class="n">check_call</span><span class="p">([</span><span class="s1">'ncremap'</span><span class="p">,</span> <span class="s1">'-i'</span><span class="p">,</span> <span class="n">source_file</span><span class="p">,</span> <span class="s1">'-o'</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">,</span>
+                <span class="s1">'-m'</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span> <span class="s1">'-v'</span><span class="p">,</span> <span class="n">variables</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="n">ds_remapped</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">'ncol'</span> <span class="ow">in</span> <span class="n">ds_remapped</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="n">ds_remapped</span> <span class="o">=</span> <span class="n">ds_remapped</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">'ncol'</span><span class="p">:</span> <span class="s1">'nCells'</span><span class="p">})</span>
+
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">source_file</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ds_remapped</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_to_integer_masks</span><span class="p">(</span><span class="n">ds_remapped</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Round the remapped fields to integers and derive the MALI basin field.</span>
+
+<span class="sd">    Nearest-neighbour remapping should already return exact source values,</span>
+<span class="sd">    but they come back as floats; rounding makes the intent explicit and</span>
+<span class="sd">    guards against a different method being used.</span>
+<span class="sd">    """</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+
+    <span class="n">basin0</span> <span class="o">=</span> <span class="n">ds_remapped</span><span class="p">[</span><span class="s1">'ismip7BasinNumber'</span><span class="p">]</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">basin0</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+    <span class="n">basin0</span> <span class="o">=</span> <span class="n">basin0</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip7BasinNumber'</span><span class="p">]</span> <span class="o">=</span> <span class="n">basin0</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip7BasinNumber'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'long_name'</span><span class="p">:</span> <span class="s1">'IMBIE2 drainage basin number, ISMIP7 convention'</span><span class="p">,</span>
+        <span class="s1">'convention'</span><span class="p">:</span> <span class="s1">'0-based, 0-15; basin 9 is Eastern Amundsen, '</span>
+                      <span class="s1">'basin 14 is Ronne-Filchner'</span><span class="p">}</span>
+
+    <span class="c1"># MALI's melt parameterization expects the 1-based convention</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_basin'</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">basin0</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_basin'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'long_name'</span><span class="p">:</span> <span class="s1">'basin number for the MALI melt parameterization'</span><span class="p">,</span>
+        <span class="s1">'convention'</span><span class="p">:</span> <span class="s1">'1-based, 1-16, equal to ismip7BasinNumber + 1; '</span>
+                      <span class="s1">'0 marks cells with no basin'</span><span class="p">}</span>
+
+    <span class="c1"># MALI reads the per-basin thermal-forcing correction from the same input</span>
+    <span class="c1"># stream as the basin numbers, so it has to be present or the run fails.</span>
+    <span class="c1"># The calibration fits dT_b *after* the melt parameter, and uses zero</span>
+    <span class="c1"># throughout; the fit_delta_t step writes calibrated values over this.</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_deltaT'</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_basin'</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_deltaT'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'long_name'</span><span class="p">:</span> <span class="s1">'basin-wide thermal forcing correction'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="s1">'degC'</span><span class="p">,</span>
+        <span class="s1">'note'</span><span class="p">:</span> <span class="s1">'zero as written here; the fit_delta_t step fits one value '</span>
+                <span class="s1">'per basin and writes them back over this field'</span><span class="p">}</span>
+
+    <span class="n">bfrn</span> <span class="o">=</span> <span class="n">ds_remapped</span><span class="p">[</span><span class="s1">'ismip7BFRNBin'</span><span class="p">]</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip7BFRNBin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">bfrn</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip7BFRNBin'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'long_name'</span><span class="p">:</span> <span class="s1">'buttressing flux response number bin'</span><span class="p">,</span>
+        <span class="s1">'convention'</span><span class="p">:</span> <span class="s1">'0-9; bin 0 is passive ice, bin 9 the most '</span>
+                      <span class="s1">'buttressing-relevant; -1 marks cells with no bin'</span><span class="p">}</span>
+
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip7FloatingMask'</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">ds_remapped</span><span class="p">[</span><span class="s1">'ismip7FloatingMask'</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip7FloatingMask'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'long_name'</span><span class="p">:</span> <span class="s1">'ISMIP7 floating-ice mask'</span><span class="p">,</span>
+        <span class="s1">'convention'</span><span class="p">:</span> <span class="s1">'1 where floating, 0 otherwise'</span><span class="p">,</span>
+        <span class="s1">'note'</span><span class="p">:</span> <span class="s1">'This is the observed ISMIP7 shelf extent, for diagnostics '</span>
+                <span class="s1">'such as comparing modelled with observed shelf area.  Melt '</span>
+                <span class="s1">'aggregation uses MALI own floating cells, since the '</span>
+                <span class="s1">'calibration holds the model accountable for its own shelf '</span>
+                <span class="s1">'extent.'</span><span class="p">}</span>
+
+    <span class="n">region</span> <span class="o">=</span> <span class="n">ds_remapped</span><span class="p">[</span><span class="s1">'ismip7ShelfRegion'</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip7ShelfRegion'</span><span class="p">]</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip7ShelfRegion'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'long_name'</span><span class="p">:</span> <span class="s1">'ice-shelf region for calibration term J4'</span><span class="p">,</span>
+        <span class="s1">'convention'</span><span class="p">:</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span>
+                                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">REGION_CODES</span><span class="o">.</span><span class="n">items</span><span class="p">())}</span>
+    <span class="k">return</span> <span class="n">ds</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_shelves_are_in_their_basin</span><span class="p">(</span><span class="n">ds_masks</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Check that Pine Island and Dotson land in the basin the protocol says.</span>
+
+<span class="sd">    This is the cheap half of the basin-numbering check, and unlike</span>
+<span class="sd">    :py:func:`_cross_check_basins` it needs no extra input file, so it runs</span>
+<span class="sd">    on any mesh.  The protocol refers to the Eastern Amundsen as basin 9 and</span>
+<span class="sd">    Ronne-Filchner as basin 14, both 0-based.  If the two numbering</span>
+<span class="sd">    conventions were confused anywhere between the ISMIP7 mask and this</span>
+<span class="sd">    file, the ice shelves would land in the wrong basin.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If too few PIG and Dotson cells fall in the Eastern Amundsen</span>
+<span class="sd">    """</span>
+    <span class="n">basin</span> <span class="o">=</span> <span class="n">ds_masks</span><span class="p">[</span><span class="s1">'ismip7BasinNumber'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">ds_masks</span><span class="p">[</span><span class="s1">'ismip7ShelfRegion'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">shelves</span> <span class="o">=</span> <span class="n">region</span> <span class="o">&gt;</span> <span class="n">REGION_CODES</span><span class="p">[</span><span class="s1">'none'</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">shelves</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">'No cells were assigned to Pine Island or Dotson, so term J4 '</span>
+            <span class="s1">'would have nothing to aggregate over.  Check that the ISMIP7 '</span>
+            <span class="s1">'shelf mask covers this mesh.'</span><span class="p">)</span>
+
+    <span class="n">in_basin</span> <span class="o">=</span> <span class="n">basin</span><span class="p">[</span><span class="n">shelves</span><span class="p">]</span> <span class="o">==</span> <span class="n">EASTERN_AMUNDSEN_BASIN</span>
+    <span class="n">percent</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="n">in_basin</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'PIG and Dotson cells in ISMIP7 basin '</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">EASTERN_AMUNDSEN_BASIN</span><span class="si">}</span><span class="s1"> (Eastern Amundsen): '</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">percent</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">% of </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">shelves</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">percent</span> <span class="o">&lt;</span> <span class="n">MIN_SHELF_BASIN_AGREEMENT</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">'Only </span><span class="si">{</span><span class="n">percent</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">% of the Pine Island and Dotson cells fall '</span>
+            <span class="sa">f</span><span class="s1">'in ISMIP7 basin </span><span class="si">{</span><span class="n">EASTERN_AMUNDSEN_BASIN</span><span class="si">}</span><span class="s1">, the Eastern '</span>
+            <span class="sa">f</span><span class="s1">'Amundsen, which the protocol says they drain into.  The basin '</span>
+            <span class="sa">f</span><span class="s1">'numbering is probably off: ISMIP7 is 0-based and MALI is '</span>
+            <span class="sa">f</span><span class="s1">'1-based, so MALI basin 10 is ISMIP7 basin 9.'</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_cross_check_basins</span><span class="p">(</span><span class="n">ds_masks</span><span class="p">,</span> <span class="n">region_mask_file</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compare the remapped basin field with MALI's existing region mask.</span>
+
+<span class="sd">    The two are built from different sources -- ISMIP7 IMBIE2 v3 here, versus</span>
+<span class="sd">    the ISMIP6 regions rasterized with ``geometric_features`` in 2022 -- so</span>
+<span class="sd">    exact agreement is not expected.  What matters is that the *offset* is</span>
+<span class="sd">    the expected one: an off-by-one would show near-zero agreement</span>
+<span class="sd">    everywhere, whereas genuine boundary differences show up in individual</span>
+<span class="sd">    basins.</span>
+
+<span class="sd">    Agreement is reported in **both directions**, because the two masks do</span>
+<span class="sd">    not cover the same cells and a one-directional figure is misleading.  A</span>
+<span class="sd">    basin that ISMIP7 draws smaller than ISMIP6 scores high conditioned on</span>
+<span class="sd">    ours and low conditioned on theirs; that is a real difference in the</span>
+<span class="sd">    basin outlines, not an error.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If overall agreement is below :py:data:`MIN_BASIN_AGREEMENT`, which</span>
+<span class="sd">        means the numbering conventions are almost certainly mismatched</span>
+<span class="sd">    """</span>
+    <span class="n">ds_region</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">region_mask_file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">'regionCellMasks'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds_region</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'No regionCellMasks in the region mask file; skipping '</span>
+                       <span class="s1">'the basin cross-check'</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">masks</span> <span class="o">=</span> <span class="n">ds_region</span><span class="p">[</span><span class="s1">'regionCellMasks'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="c1"># column index + 1 is MALI's 1-based basin number</span>
+    <span class="n">mali_basin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">masks</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">masks</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">mali_basin</span><span class="p">[</span><span class="n">masks</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">col</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">ours</span> <span class="o">=</span> <span class="n">ds_masks</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_basin'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">floating</span> <span class="o">=</span> <span class="n">ds_masks</span><span class="p">[</span><span class="s1">'ismip7FloatingMask'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">both</span> <span class="o">=</span> <span class="p">(</span><span class="n">ours</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">mali_basin</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">both</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'No cells carry both basin numbers; skipping the '</span>
+                       <span class="s1">'basin cross-check'</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Cross-check against the existing MALI region mask:'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">sel</span> <span class="ow">in</span> <span class="p">((</span><span class="s1">'all cells'</span><span class="p">,</span> <span class="n">both</span><span class="p">),</span>
+                       <span class="p">(</span><span class="s1">'floating only'</span><span class="p">,</span> <span class="n">both</span> <span class="o">&amp;</span> <span class="n">floating</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sel</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">continue</span>
+        <span class="n">frac</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">ours</span><span class="p">[</span><span class="n">sel</span><span class="p">]</span> <span class="o">==</span> <span class="n">mali_basin</span><span class="p">[</span><span class="n">sel</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">label</span><span class="si">:</span><span class="s1">14s</span><span class="si">}</span><span class="s1"> agreement </span><span class="si">{</span><span class="n">frac</span><span class="si">:</span><span class="s1">5.1f</span><span class="si">}</span><span class="s1">%  '</span>
+                    <span class="sa">f</span><span class="s1">'(n=</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">sel</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
+
+    <span class="n">overall</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">ours</span><span class="p">[</span><span class="n">both</span><span class="p">]</span> <span class="o">==</span> <span class="n">mali_basin</span><span class="p">[</span><span class="n">both</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  per basin, conditioned on each mask in turn:'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'    </span><span class="si">{</span><span class="s2">"basin"</span><span class="si">:</span><span class="s1">&gt;5s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">"ours-&gt;theirs"</span><span class="si">:</span><span class="s1">&gt;13s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">"n"</span><span class="si">:</span><span class="s1">&gt;7s</span><span class="si">}</span><span class="s1"> '</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="s2">"theirs-&gt;ours"</span><span class="si">:</span><span class="s1">&gt;13s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">"n"</span><span class="si">:</span><span class="s1">&gt;7s</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">basin</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">masks</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">sel_ours</span> <span class="o">=</span> <span class="n">both</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ours</span> <span class="o">==</span> <span class="n">basin</span><span class="p">)</span>
+        <span class="n">sel_theirs</span> <span class="o">=</span> <span class="n">both</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">mali_basin</span> <span class="o">==</span> <span class="n">basin</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">sel_ours</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="ow">or</span> <span class="n">sel_theirs</span><span class="o">.</span><span class="n">any</span><span class="p">()):</span>
+            <span class="k">continue</span>
+        <span class="n">forward</span> <span class="o">=</span> <span class="p">(</span><span class="mf">100.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">mali_basin</span><span class="p">[</span><span class="n">sel_ours</span><span class="p">]</span> <span class="o">==</span> <span class="n">basin</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                   <span class="k">if</span> <span class="n">sel_ours</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s1">'nan'</span><span class="p">))</span>
+        <span class="n">backward</span> <span class="o">=</span> <span class="p">(</span><span class="mf">100.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">ours</span><span class="p">[</span><span class="n">sel_theirs</span><span class="p">]</span> <span class="o">==</span> <span class="n">basin</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">sel_theirs</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s1">'nan'</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'    </span><span class="si">{</span><span class="n">basin</span><span class="si">:</span><span class="s1">5d</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">forward</span><span class="si">:</span><span class="s1">12.1f</span><span class="si">}</span><span class="s1">% '</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">sel_ours</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">:</span><span class="s1">7d</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">backward</span><span class="si">:</span><span class="s1">12.1f</span><span class="si">}</span><span class="s1">% '</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">sel_theirs</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">:</span><span class="s1">7d</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  (a basin drawn smaller by ISMIP7 than by ISMIP6 scores '</span>
+                <span class="s1">'high in the first column and low in the second; that is a '</span>
+                <span class="s1">'real difference in the outlines, not an error)'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">overall</span> <span class="o">&lt;</span> <span class="n">MIN_BASIN_AGREEMENT</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">'The remapped ISMIP7 basins agree with the existing MALI region '</span>
+            <span class="sa">f</span><span class="s1">'mask for only </span><span class="si">{</span><span class="n">overall</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">% of cells, below the '</span>
+            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">MIN_BASIN_AGREEMENT</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">% threshold.  The basin numbering '</span>
+            <span class="sa">f</span><span class="s1">'conventions are probably mismatched: ISMIP7 is 0-based and '</span>
+            <span class="sa">f</span><span class="s1">'MALI is 1-based, so MALI basin 10 is ISMIP7 basin 9.  Using '</span>
+            <span class="sa">f</span><span class="s1">'one where the other is expected mis-assigns every basin and '</span>
+            <span class="sa">f</span><span class="s1">'still produces plausible-looking numbers.'</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

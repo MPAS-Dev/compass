@@ -1,0 +1,454 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip7_calibration.ais.aggregate &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../../ismip7_calibration.html">compass.landice.tests.ismip7_calibration</a></li>
+          <li class="breadcrumb-item"><a href="../ais.html">compass.landice.tests.ismip7_calibration.ais</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip7_calibration.ais.aggregate</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip7_calibration.ais.aggregate</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Aggregate the MALI melt ensemble into the four objective-function terms.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.ais</span><span class="w"> </span><span class="kn">import</span> <span class="n">melt_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.terms</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">average_by_group</span><span class="p">,</span>
+    <span class="n">integrate_by_group</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
+
+<span class="c1">#: cell dimension of an MPAS mesh</span>
+<span class="n">CELL_DIMS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'nCells'</span><span class="p">,)</span>
+
+
+<div class="viewcode-block" id="Aggregate">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate.html#compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Aggregate</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A step that turns the MALI melt fields into unit-parameter aggregates of</span>
+<span class="sd">    the four objective-function terms.</span>
+
+<span class="sd">    All aggregation is **area-weighted**.  On a 4-20 km variable-resolution</span>
+<span class="sd">    mesh a plain mean is wrong: integrals use ``melt * areaCell`` and means</span>
+<span class="sd">    are weighted by ``areaCell``.</span>
+
+<span class="sd">    Because melt is exactly proportional to the melt parameter, each</span>
+<span class="sd">    aggregate is divided by the reference parameter the ensemble was run at,</span>
+<span class="sd">    giving a unit aggregate that the calibration scales onto the whole</span>
+<span class="sd">    parameter grid.  That scaling is exact, not an approximation.</span>
+
+<span class="sd">    This step also reports MALI's per-basin ice-shelf area against the</span>
+<span class="sd">    observed ISMIP7 extent.  J1, J2 and J4 are integrals, so any shelf-area</span>
+<span class="sd">    mismatch enters the calibrated parameter directly; the protocol intends</span>
+<span class="sd">    that, but it should be reported alongside the result.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    melt_forms : list of str</span>
+<span class="sd">        The melt forms to aggregate</span>
+
+<span class="sd">    states : list of compass.landice.tests.ismip7_calibration.datasets.OceanState</span>
+<span class="sd">        The ocean states in the ensemble</span>
+<span class="sd">    """</span>  <span class="c1"># noqa: E501</span>
+
+<div class="viewcode-block" id="Aggregate.__init__">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate.html#compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">melt_forms</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.landice.tests.ismip7_calibration.ais.Ais</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        melt_forms : list of str</span>
+<span class="sd">            The melt forms to aggregate</span>
+
+<span class="sd">        states : list of datasets.OceanState</span>
+<span class="sd">            The ocean states in the ensemble</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'aggregate'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">melt_forms</span> <span class="o">=</span> <span class="n">melt_forms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="n">states</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'masks.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../remap_masks/ismip7_masks_on_mali.nc'</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">melt_form</span> <span class="ow">in</span> <span class="n">melt_forms</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                    <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'melt_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">,</span>
+                    <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'../</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">/output_melt.nc'</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'aggregates_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'shelf_area.nc'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Aggregate.setup">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate.setup.html#compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate.setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Set up this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration'</span><span class="p">]</span>
+        <span class="n">base_path_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'base_path_mali'</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mali_mesh_file'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'mesh.nc'</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">base_path_mali</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">mali_mesh_file</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Aggregate.run">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate.run.html#compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration_melt'</span><span class="p">]</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'ismip7'</span><span class="p">:</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'reference_k'</span><span class="p">),</span>
+                     <span class="s1">'ismip6'</span><span class="p">:</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'reference_gamma0'</span><span class="p">)}</span>
+
+        <span class="n">static</span> <span class="o">=</span> <span class="n">_load_static</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">melt_form</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">melt_forms</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Aggregating the </span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1"> ensemble'</span><span class="p">)</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">_aggregate_form</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">,</span>
+                                 <span class="n">reference</span><span class="p">[</span><span class="n">melt_form</span><span class="p">],</span> <span class="n">static</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'aggregates_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span>
+
+        <span class="n">_report_shelf_area</span><span class="p">(</span><span class="n">static</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_static</span><span class="p">(</span><span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Load the mesh, masks and MALI's own floating-cell mask."""</span>
+    <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'mesh.nc'</span><span class="p">)</span>
+    <span class="n">ds_masks</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'masks.nc'</span><span class="p">)</span>
+
+    <span class="n">area</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="p">[</span><span class="s1">'areaCell'</span><span class="p">]</span>
+
+    <span class="n">basins</span> <span class="o">=</span> <span class="n">ds_masks</span><span class="p">[</span><span class="s1">'ismip7BasinNumber'</span><span class="p">]</span>
+    <span class="n">bfrn</span> <span class="o">=</span> <span class="n">ds_masks</span><span class="p">[</span><span class="s1">'ismip7BFRNBin'</span><span class="p">]</span>
+    <span class="n">region_code</span> <span class="o">=</span> <span class="n">ds_masks</span><span class="p">[</span><span class="s1">'ismip7ShelfRegion'</span><span class="p">]</span>
+    <span class="n">observed_floating</span> <span class="o">=</span> <span class="n">ds_masks</span><span class="p">[</span><span class="s1">'ismip7FloatingMask'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="c1"># map the region codes onto the labels the targets use</span>
+    <span class="n">region_label</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">region_code</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'pig'</span><span class="p">,</span>
+                            <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">region_code</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'dotson'</span><span class="p">,</span> <span class="s1">''</span><span class="p">))</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">basins</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s1"> cells carry a basin number'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">area</span><span class="o">=</span><span class="n">area</span><span class="p">,</span> <span class="n">basins</span><span class="o">=</span><span class="n">basins</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">basins</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="n">bfrn</span><span class="o">=</span><span class="n">bfrn</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bfrn</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">),</span> <span class="n">region_label</span><span class="o">=</span><span class="n">region_label</span><span class="p">,</span>
+                <span class="n">observed_floating</span><span class="o">=</span><span class="n">observed_floating</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_melt_from_run</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Read one melt field, in kg m-2 yr-1 per unit parameter.</span>
+
+<span class="sd">    Dividing by the reference parameter the run used gives melt at a unit</span>
+<span class="sd">    parameter, which is exact because melt is proportional to the parameter.</span>
+
+<span class="sd">    The contributing cells are the ones MALI actually computed melt for --</span>
+<span class="sd">    floating *and* connected to the open ocean.  Including the rest would</span>
+<span class="sd">    not change an integral, since their melt is zero, but it would dilute</span>
+<span class="sd">    the area-weighted basin means that J3 is built from.</span>
+<span class="sd">    """</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="n">melt_model</span><span class="o">.</span><span class="n">read_run</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'mesh.nc'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'melt'</span><span class="p">]</span> <span class="o">/</span> <span class="n">reference</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'floating'</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_aggregate_form</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">static</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Build the four unit aggregates for one melt form."""</span>
+    <span class="n">area</span> <span class="o">=</span> <span class="n">static</span><span class="p">[</span><span class="s1">'area'</span><span class="p">]</span>
+    <span class="n">basins</span><span class="p">,</span> <span class="n">bfrn</span> <span class="o">=</span> <span class="n">static</span><span class="p">[</span><span class="s1">'basins'</span><span class="p">],</span> <span class="n">static</span><span class="p">[</span><span class="s1">'bfrn'</span><span class="p">]</span>
+
+    <span class="n">by_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">state</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">}</span>
+    <span class="n">melt</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">floating</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'melt_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.nc'</span>
+        <span class="n">melt</span><span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">],</span> <span class="n">floating</span><span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">_melt_from_run</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span>
+
+    <span class="c1"># J1 and J2 come from the present-day climatology</span>
+    <span class="n">pd_melt</span> <span class="o">=</span> <span class="n">melt</span><span class="p">[</span><span class="s1">'climatology'</span><span class="p">]</span>
+    <span class="n">pd_floating</span> <span class="o">=</span> <span class="n">floating</span><span class="p">[</span><span class="s1">'climatology'</span><span class="p">]</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">integrate_by_group</span><span class="p">(</span><span class="n">pd_melt</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">pd_floating</span><span class="p">,</span> <span class="n">basins</span><span class="p">,</span> <span class="n">CELL_DIMS</span><span class="p">,</span>
+                            <span class="n">group_dim</span><span class="o">=</span><span class="s1">'basins'</span><span class="p">)</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">integrate_by_group</span><span class="p">(</span><span class="n">pd_melt</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">pd_floating</span><span class="p">,</span> <span class="n">bfrn</span><span class="p">,</span> <span class="n">CELL_DIMS</span><span class="p">,</span>
+                            <span class="n">group_dim</span><span class="o">=</span><span class="s1">'BFRN_bins'</span><span class="p">)</span>
+
+    <span class="c1"># J3: the warm-minus-cold basin-mean difference, per ocean model</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">which</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'cold'</span><span class="p">,</span> <span class="s1">'warm'</span><span class="p">):</span>
+        <span class="n">per_model</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="s1">'model'</span> <span class="ow">or</span> <span class="n">state</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">which</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">melt</span><span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="c1"># regional models only constrain the basins they cover</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">basins</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">basins</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">basins</span><span class="p">)))</span>
+            <span class="n">agg</span> <span class="o">=</span> <span class="n">average_by_group</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">floating</span><span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
+                                   <span class="n">basins</span><span class="p">,</span> <span class="n">CELL_DIMS</span><span class="p">,</span> <span class="n">group_dim</span><span class="o">=</span><span class="s1">'basins'</span><span class="p">)</span>
+            <span class="n">per_model</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agg</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">({</span><span class="s1">'model'</span><span class="p">:</span> <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">label</span><span class="p">]}))</span>
+        <span class="n">means</span><span class="p">[</span><span class="n">which</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">per_model</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">'model'</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="s1">'minimal'</span><span class="p">)</span>
+    <span class="n">t3</span> <span class="o">=</span> <span class="n">means</span><span class="p">[</span><span class="s1">'warm'</span><span class="p">]</span> <span class="o">-</span> <span class="n">means</span><span class="p">[</span><span class="s1">'cold'</span><span class="p">]</span>
+
+    <span class="c1"># J4: PIG and Dotson integrated melt, per observation year</span>
+    <span class="n">per_year</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="s1">'obs'</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">agg</span> <span class="o">=</span> <span class="n">integrate_by_group</span><span class="p">(</span><span class="n">melt</span><span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">],</span> <span class="n">area</span><span class="p">,</span>
+                                 <span class="n">floating</span><span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
+                                 <span class="n">static</span><span class="p">[</span><span class="s1">'region_label'</span><span class="p">],</span> <span class="n">CELL_DIMS</span><span class="p">,</span>
+                                 <span class="n">group_dim</span><span class="o">=</span><span class="s1">'region'</span><span class="p">)</span>
+        <span class="n">per_year</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agg</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">({</span><span class="s1">'year'</span><span class="p">:</span> <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">year</span><span class="p">]}))</span>
+    <span class="n">t4</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">per_year</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">'year'</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="s1">'minimal'</span><span class="p">)</span>
+    <span class="c1"># drop the '' label used for cells outside PIG and Dotson</span>
+    <span class="n">t4</span> <span class="o">=</span> <span class="n">t4</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">region</span><span class="o">=</span><span class="p">[</span><span class="n">region</span> <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">t4</span><span class="o">.</span><span class="n">region</span><span class="o">.</span><span class="n">values</span> <span class="k">if</span> <span class="n">region</span><span class="p">])</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  total present-day melt at the reference parameter: '</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">t1</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">reference</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> Gt/yr'</span><span class="p">)</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">({</span><span class="s1">'t1'</span><span class="p">:</span> <span class="n">t1</span><span class="p">,</span> <span class="s1">'t2'</span><span class="p">:</span> <span class="n">t2</span><span class="p">,</span> <span class="s1">'t3'</span><span class="p">:</span> <span class="n">t3</span><span class="p">,</span> <span class="s1">'t4'</span><span class="p">:</span> <span class="n">t4</span><span class="p">})</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'melt_form'</span><span class="p">]</span> <span class="o">=</span> <span class="n">melt_form</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'reference_parameter'</span><span class="p">]</span> <span class="o">=</span> <span class="n">reference</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'note'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">'Aggregates at a unit melt parameter.  Melt is exactly proportional '</span>
+        <span class="s1">'to the parameter, so the whole parameter ensemble is these times '</span>
+        <span class="s1">'each parameter value.'</span><span class="p">)</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'ocean_states'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">by_name</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">ds</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_report_shelf_area</span><span class="p">(</span><span class="n">static</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Report MALI's per-basin shelf area against the observed extent."""</span>
+    <span class="n">area</span> <span class="o">=</span> <span class="n">static</span><span class="p">[</span><span class="s1">'area'</span><span class="p">]</span>
+    <span class="n">basins</span> <span class="o">=</span> <span class="n">static</span><span class="p">[</span><span class="s1">'basins'</span><span class="p">]</span>
+    <span class="n">observed</span> <span class="o">=</span> <span class="n">static</span><span class="p">[</span><span class="s1">'observed_floating'</span><span class="p">]</span>
+
+    <span class="n">modelled_file</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'melt_ismip7_climatology.nc'</span><span class="p">,</span> <span class="s1">'melt_ismip6_climatology.nc'</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">modelled</span> <span class="o">=</span> <span class="n">melt_model</span><span class="o">.</span><span class="n">read_run</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">'mesh.nc'</span><span class="p">)[</span><span class="s1">'floating'</span><span class="p">]</span>
+            <span class="n">modelled_file</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="k">break</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">continue</span>
+    <span class="k">if</span> <span class="n">modelled_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'No melt output found; skipping the shelf-area report'</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">grouper</span> <span class="o">=</span> <span class="n">basins</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">'basins'</span><span class="p">)</span>
+    <span class="n">modelled_area</span> <span class="o">=</span> <span class="p">(</span><span class="n">area</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">modelled</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">grouper</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1.0e9</span><span class="p">)</span>
+    <span class="n">observed_area</span> <span class="o">=</span> <span class="p">(</span><span class="n">area</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">observed</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">grouper</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1.0e9</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Ice-shelf area by ISMIP7 basin, 10^3 km^2:'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="s2">"basin"</span><span class="si">:</span><span class="s1">&gt;5s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">"MALI"</span><span class="si">:</span><span class="s1">&gt;10s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">"observed"</span><span class="si">:</span><span class="s1">&gt;10s</span><span class="si">}</span><span class="s1"> '</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="s2">"ratio"</span><span class="si">:</span><span class="s1">&gt;8s</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">basin</span> <span class="ow">in</span> <span class="n">modelled_area</span><span class="o">.</span><span class="n">basins</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+        <span class="n">mali</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">modelled_area</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">basins</span><span class="o">=</span><span class="n">basin</span><span class="p">))</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">observed_area</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">basins</span><span class="o">=</span><span class="n">basin</span><span class="p">))</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="n">mali</span> <span class="o">/</span> <span class="n">obs</span> <span class="k">if</span> <span class="n">obs</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s1">'nan'</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">basin</span><span class="p">)</span><span class="si">:</span><span class="s1">5d</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">mali</span><span class="si">:</span><span class="s1">10.1f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">obs</span><span class="si">:</span><span class="s1">10.1f</span><span class="si">}</span><span class="s1"> '</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">ratio</span><span class="si">:</span><span class="s1">8.2f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">total_mali</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">modelled_area</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="n">total_obs</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">observed_area</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="s2">"total"</span><span class="si">:</span><span class="s1">&gt;5s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">total_mali</span><span class="si">:</span><span class="s1">10.1f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">total_obs</span><span class="si">:</span><span class="s1">10.1f</span><span class="si">}</span><span class="s1"> '</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">total_mali</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">total_obs</span><span class="si">:</span><span class="s1">8.2f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  (J1, J2 and J4 are integrals, so a shelf-area mismatch '</span>
+                <span class="s1">'enters the calibrated parameter directly; J3 is a mean and '</span>
+                <span class="s1">'is much less sensitive)'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">({</span><span class="s1">'modelled_shelf_area'</span><span class="p">:</span> <span class="n">modelled_area</span><span class="p">,</span>
+                     <span class="s1">'observed_shelf_area'</span><span class="p">:</span> <span class="n">observed_area</span><span class="p">})</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'modelled_shelf_area'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10^3 km^2'</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'observed_shelf_area'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'10^3 km^2'</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">'shelf_area.nc'</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="unit_aggregates">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.aggregate.unit_aggregates.html#compass.landice.tests.ismip7_calibration.ais.aggregate.unit_aggregates">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">unit_aggregates</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Read the unit aggregates written by this step.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        An ``aggregates_&lt;melt_form&gt;.nc`` file</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    units : dict</span>
+<span class="sd">        ``t1``, ``t2``, ``t3`` and ``t4``</span>
+<span class="sd">    """</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">ds</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'t1'</span><span class="p">,</span> <span class="s1">'t2'</span><span class="p">,</span> <span class="s1">'t3'</span><span class="p">,</span> <span class="s1">'t4'</span><span class="p">)}</span></div>
+
+
+
+<div class="viewcode-block" id="basin_coordinate">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.aggregate.basin_coordinate.html#compass.landice.tests.ismip7_calibration.ais.aggregate.basin_coordinate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">basin_coordinate</span><span class="p">(</span><span class="n">units</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The ISMIP7 basin numbers present in an aggregate, as integers.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    units : dict</span>
+<span class="sd">        From :py:func:`unit_aggregates`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    basins : numpy.ndarray</span>
+<span class="sd">        The basin numbers</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">units</span><span class="p">[</span><span class="s1">'t1'</span><span class="p">]</span><span class="o">.</span><span class="n">basins</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

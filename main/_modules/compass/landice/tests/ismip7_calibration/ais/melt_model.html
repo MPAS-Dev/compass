@@ -1,0 +1,483 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip7_calibration.ais.melt_model &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../../ismip7_calibration.html">compass.landice.tests.ismip7_calibration</a></li>
+          <li class="breadcrumb-item"><a href="../ais.html">compass.landice.tests.ismip7_calibration.ais</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip7_calibration.ais.melt_model</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip7_calibration.ais.melt_model</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Recompute MALI's melt from its diagnostic output.</span>
+
+<span class="sd">Both melt forms are functions of the thermal forcing at the ice draft, which</span>
+<span class="sd">MALI writes as ``ismip6shelfMelt_TFdraft``.  That means melt can be</span>
+<span class="sd">recomputed in Python for any melt parameter and any basin correction</span>
+<span class="sd">``dT_b`` without re-running MALI, which is what the ``dT_b`` fit needs and</span>
+<span class="sd">what the verification step compares against.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">dataclasses</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.quadratic</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MALI</span><span class="p">,</span>
+    <span class="n">angle_from_sin_slope</span><span class="p">,</span>
+    <span class="n">local_quadratic_melt</span><span class="p">,</span>
+    <span class="n">nonlocal_quadratic_melt</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1">#: bit of ``cellMask`` marking floating ice</span>
+<span class="n">FLOATING_MASK_BIT</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="c1">#: seconds in a year, matching MALI's ``scyr`` and its noleap calendar</span>
+<span class="n">SECONDS_PER_YEAR</span> <span class="o">=</span> <span class="mf">31536000.0</span>
+
+<span class="c1">#: rate of change of the freezing temperature of seawater with depth,</span>
+<span class="c1">#: K m-1, matching MALI's ``oceanFreezingTempDepthDependence``</span>
+<span class="n">FREEZING_TEMP_DEPTH_DEPENDENCE</span> <span class="o">=</span> <span class="o">-</span><span class="mf">7.53e-4</span>
+
+
+<div class="viewcode-block" id="read_run">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.melt_model.read_run.html#compass.landice.tests.ismip7_calibration.ais.melt_model.read_run">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_run</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mesh_file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Read the fields a melt diagnostic run writes.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        An ``output_melt.nc`` written by a</span>
+<span class="sd">        :py:class:`~compass.landice.tests.ismip7_calibration.ais.run_state.RunState`</span>
+<span class="sd">        step</span>
+
+<span class="sd">    mesh_file : str</span>
+<span class="sd">        The MALI mesh file the run started from, used for the geometry the</span>
+<span class="sd">        melt was computed from</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fields : dict</span>
+<span class="sd">        ``melt`` (kg m-2 yr-1, positive for melting), ``tf_draft``,</span>
+<span class="sd">        ``floating``, ``basin`` (MALI's 1-based numbering), ``delta_t`` and</span>
+<span class="sd">        ``area``</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    **The contributing cells come from the initial geometry, not from the</span>
+<span class="sd">    output.**  MALI computes melt where the ice is floating *and* the cell</span>
+<span class="sd">    is connected to the open ocean, evaluated on the geometry at the start</span>
+<span class="sd">    of the timestep.  The ``cellMask`` in the output is *post*-step, and</span>
+<span class="sd">    over a single step some cells with no ice at the start end up with a</span>
+<span class="sd">    trace of it, so the output mask marks thousands of cells as floating</span>
+<span class="sd">    that MALI never computed melt for.  Their melt is zero, which does not</span>
+<span class="sd">    change an integral, but it would dilute the area-weighted basin means</span>
+<span class="sd">    that J3 is built from -- and it would make any comparison against an</span>
+<span class="sd">    independent implementation disagree on cells MALI never calculated.</span>
+<span class="sd">    """</span>  <span class="c1"># noqa: E501</span>
+    <span class="n">thickness</span><span class="p">,</span> <span class="n">bed</span> <span class="o">=</span> <span class="n">_initial_geometry</span><span class="p">(</span><span class="n">mesh_file</span><span class="p">)</span>
+    <span class="n">ice</span> <span class="o">=</span> <span class="n">thickness</span> <span class="o">&gt;</span> <span class="mf">0.0</span>
+    <span class="c1"># MALI counts ice exactly at flotation as floating</span>
+    <span class="n">floating</span> <span class="o">=</span> <span class="n">ice</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">MALI</span><span class="o">.</span><span class="n">rho_ice</span> <span class="o">/</span> <span class="n">MALI</span><span class="o">.</span><span class="n">rho_ocean</span> <span class="o">*</span> <span class="n">thickness</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="n">bed</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+        <span class="n">bmb</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'floatingBasalMassBal'</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">connected</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'connectedOceanMask'</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">melt</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">bmb</span> <span class="o">*</span> <span class="n">SECONDS_PER_YEAR</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">(),</span>
+            <span class="n">tf_draft</span><span class="o">=</span><span class="n">ds</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_TFdraft'</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">(),</span>
+            <span class="n">floating</span><span class="o">=</span><span class="p">(</span><span class="n">floating</span> <span class="o">&amp;</span> <span class="n">connected</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">(),</span>
+            <span class="n">basin</span><span class="o">=</span><span class="n">ds</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_basin'</span><span class="p">]</span><span class="o">.</span><span class="n">compute</span><span class="p">(),</span>
+            <span class="n">delta_t</span><span class="o">=</span><span class="n">ds</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_deltaT'</span><span class="p">]</span><span class="o">.</span><span class="n">compute</span><span class="p">(),</span>
+            <span class="n">area</span><span class="o">=</span><span class="n">ds</span><span class="p">[</span><span class="s1">'areaCell'</span><span class="p">]</span><span class="o">.</span><span class="n">compute</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">fields</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_initial_geometry</span><span class="p">(</span><span class="n">mesh_file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Ice thickness and bed topography at the start of the timestep."""</span>
+    <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">mesh_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+        <span class="n">thickness</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'thickness'</span><span class="p">]</span>
+        <span class="n">bed</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'bedTopography'</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">'Time'</span> <span class="ow">in</span> <span class="n">thickness</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">thickness</span> <span class="o">=</span> <span class="n">thickness</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">'Time'</span> <span class="ow">in</span> <span class="n">bed</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">bed</span> <span class="o">=</span> <span class="n">bed</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">thickness</span><span class="o">.</span><span class="n">compute</span><span class="p">(),</span> <span class="n">bed</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="initial_draft">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.melt_model.initial_draft.html#compass.landice.tests.ismip7_calibration.ais.melt_model.initial_draft">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">initial_draft</span><span class="p">(</span><span class="n">mesh_file</span><span class="p">,</span> <span class="n">constants</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Reconstruct the ice draft from the mesh file, before the timestep.</span>
+
+<span class="sd">    **The diagnostic run evolves the geometry.**  Melt is applied over the</span>
+<span class="sd">    single timestep and thins the ice by up to a metre or so, so the</span>
+<span class="sd">    ``lowerSurface`` and ``thickness`` written to the output are *post*-step</span>
+<span class="sd">    while ``TFdraft`` was computed *pre*-step.  Any check that pairs output</span>
+<span class="sd">    geometry with output melt is therefore inconsistent by up to a metre of</span>
+<span class="sd">    draft; the initial draft has to come from the mesh file instead.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh_file : str</span>
+<span class="sd">        The MALI mesh file the run started from</span>
+
+<span class="sd">    constants : compass.landice.tests.ismip7_calibration.quadratic.Constants, optional</span>
+<span class="sd">        The densities to use; defaults to MALI's</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    draft : xarray.DataArray</span>
+<span class="sd">        The ice draft, negative below sea level</span>
+<span class="sd">    """</span>  <span class="c1"># noqa: E501</span>
+    <span class="k">if</span> <span class="n">constants</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">constants</span> <span class="o">=</span> <span class="n">MALI</span>
+    <span class="n">thickness</span><span class="p">,</span> <span class="n">bed</span> <span class="o">=</span> <span class="n">_initial_geometry</span><span class="p">(</span><span class="n">mesh_file</span><span class="p">)</span>
+
+    <span class="n">floating_draft</span> <span class="o">=</span> <span class="o">-</span><span class="n">constants</span><span class="o">.</span><span class="n">rho_ice</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">rho_ocean</span> <span class="o">*</span> <span class="n">thickness</span>
+    <span class="c1"># where the ice is grounded the draft is the bed</span>
+    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">floating_draft</span> <span class="o">&gt;</span> <span class="n">bed</span><span class="p">,</span> <span class="n">floating_draft</span><span class="p">,</span> <span class="n">bed</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="basin_mean_tf">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.melt_model.basin_mean_tf.html#compass.landice.tests.ismip7_calibration.ais.melt_model.basin_mean_tf">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">basin_mean_tf</span><span class="p">(</span><span class="n">tf_draft</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">floating</span><span class="p">,</span> <span class="n">basin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Area-weighted mean thermal forcing per basin, mapped back onto cells.</span>
+
+<span class="sd">    This is what MALI's ISMIP6 non-local form computes internally, and it</span>
+<span class="sd">    must be area-weighted: on a 4-20 km mesh a plain mean is wrong.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tf_draft : xarray.DataArray</span>
+<span class="sd">        Thermal forcing at the ice draft</span>
+
+<span class="sd">    area : xarray.DataArray</span>
+<span class="sd">        Cell area</span>
+
+<span class="sd">    floating : xarray.DataArray</span>
+<span class="sd">        True on floating cells</span>
+
+<span class="sd">    basin : xarray.DataArray</span>
+<span class="sd">        Basin number per cell</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mean_tf : xarray.DataArray</span>
+<span class="sd">        The basin mean, broadcast back onto every cell</span>
+<span class="sd">    """</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">area</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">floating</span><span class="p">)</span>
+    <span class="n">numer</span> <span class="o">=</span> <span class="p">(</span><span class="n">tf_draft</span> <span class="o">*</span> <span class="n">weights</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">basin</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">'basin'</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">denom</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">basin</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">'basin'</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">numer</span> <span class="o">/</span> <span class="n">denom</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">denom</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">means</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">basin</span><span class="o">=</span><span class="n">basin</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">'basin'</span><span class="p">))</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">'basin'</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="melt_from_tf">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.melt_model.melt_from_tf.html#compass.landice.tests.ismip7_calibration.ais.melt_model.melt_from_tf">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">melt_from_tf</span><span class="p">(</span><span class="n">melt_form</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">delta_t</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">mean_tf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Recompute the melt field from the thermal forcing at the draft.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    melt_form : {'ismip7', 'ismip6'}</span>
+<span class="sd">        Which melt form to evaluate</span>
+
+<span class="sd">    parameter : float or xarray.DataArray</span>
+<span class="sd">        ``K`` for ``'ismip7'`` or ``gamma0`` for ``'ismip6'``</span>
+
+<span class="sd">    fields : dict</span>
+<span class="sd">        From :py:func:`read_run`</span>
+
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options, for the constant salinity, slope and Coriolis</span>
+<span class="sd">        parameter</span>
+
+<span class="sd">    delta_t : float or xarray.DataArray, optional</span>
+<span class="sd">        The basin correction to apply; defaults to the field the run used</span>
+
+<span class="sd">    mean_tf : xarray.DataArray, optional</span>
+<span class="sd">        Precomputed basin-mean thermal forcing, for ``'ismip6'``</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    melt : xarray.DataArray</span>
+<span class="sd">        Melt rate in kg m-2 yr-1, positive for melting, zero off the shelves</span>
+<span class="sd">    """</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration_melt'</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">delta_t</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">delta_t</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'delta_t'</span><span class="p">]</span>
+
+    <span class="n">tf_draft</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'tf_draft'</span><span class="p">]</span>
+    <span class="n">floating</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'floating'</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">melt_form</span> <span class="o">==</span> <span class="s1">'ismip7'</span><span class="p">:</span>
+        <span class="c1"># config gives the *sine* of the slope while local_quadratic_melt</span>
+        <span class="c1"># takes the angle</span>
+        <span class="n">slope</span> <span class="o">=</span> <span class="n">angle_from_sin_slope</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'sin_slope'</span><span class="p">))</span>
+        <span class="n">constants</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="n">MALI</span><span class="p">,</span> <span class="n">coriolis</span><span class="o">=</span><span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'coriolis'</span><span class="p">))</span>
+        <span class="n">melt</span> <span class="o">=</span> <span class="n">local_quadratic_melt</span><span class="p">(</span>
+            <span class="n">parameter</span><span class="p">,</span> <span class="n">tf_draft</span><span class="p">,</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'salinity'</span><span class="p">),</span> <span class="n">slope</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">=</span><span class="n">constants</span><span class="p">,</span> <span class="n">delta_t</span><span class="o">=</span><span class="n">delta_t</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">melt_form</span> <span class="o">==</span> <span class="s1">'ismip6'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mean_tf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mean_tf</span> <span class="o">=</span> <span class="n">basin_mean_tf</span><span class="p">(</span><span class="n">tf_draft</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'area'</span><span class="p">],</span> <span class="n">floating</span><span class="p">,</span>
+                                    <span class="n">fields</span><span class="p">[</span><span class="s1">'basin'</span><span class="p">])</span>
+        <span class="n">melt</span> <span class="o">=</span> <span class="n">nonlocal_quadratic_melt</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="n">tf_draft</span><span class="p">,</span> <span class="n">mean_tf</span><span class="p">,</span>
+                                       <span class="n">constants</span><span class="o">=</span><span class="n">MALI</span><span class="p">,</span> <span class="n">delta_t</span><span class="o">=</span><span class="n">delta_t</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"melt_form must be 'ismip7' or 'ismip6', but is "</span>
+                         <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">floating</span><span class="p">,</span> <span class="n">melt</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="integrate_by_basin">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.melt_model.integrate_by_basin.html#compass.landice.tests.ismip7_calibration.ais.melt_model.integrate_by_basin">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">integrate_by_basin</span><span class="p">(</span><span class="n">melt</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">floating</span><span class="p">,</span> <span class="n">basin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Integrate a melt rate over each basin, in Gt yr-1.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    melt : xarray.DataArray</span>
+<span class="sd">        Melt rate in kg m-2 yr-1</span>
+
+<span class="sd">    area : xarray.DataArray</span>
+<span class="sd">        Cell area in m2</span>
+
+<span class="sd">    floating : xarray.DataArray</span>
+<span class="sd">        True on floating cells</span>
+
+<span class="sd">    basin : xarray.DataArray</span>
+<span class="sd">        Basin number per cell</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    total : xarray.DataArray</span>
+<span class="sd">        Integrated melt per basin, in Gt yr-1</span>
+<span class="sd">    """</span>
+    <span class="n">weighted</span> <span class="o">=</span> <span class="p">(</span><span class="n">melt</span> <span class="o">*</span> <span class="n">area</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">floating</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">weighted</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">basin</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">'basin'</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1.0e12</span></div>
+
+
+
+<div class="viewcode-block" id="interpolate_to_draft">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.melt_model.interpolate_to_draft.html#compass.landice.tests.ismip7_calibration.ais.melt_model.interpolate_to_draft">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">interpolate_to_draft</span><span class="p">(</span><span class="n">field_3d</span><span class="p">,</span> <span class="n">z_ocean</span><span class="p">,</span> <span class="n">draft</span><span class="p">,</span> <span class="n">bed</span><span class="p">,</span>
+                         <span class="n">freezing_correction</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Interpolate a 3-D ocean field to the ice draft.</span>
+
+<span class="sd">    Written from the protocol rather than transliterated from MALI's</span>
+<span class="sd">    Fortran, so that comparing the two is a real check of the</span>
+<span class="sd">    implementation.  The four cases match MALI's: above the shallowest layer</span>
+<span class="sd">    centre, below the deepest, where the layer below the draft is beneath</span>
+<span class="sd">    the bed, and linear interpolation between layer centres.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    field_3d : numpy.ndarray</span>
+<span class="sd">        The field, shaped ``(nCells, nLayers)``</span>
+
+<span class="sd">    z_ocean : numpy.ndarray</span>
+<span class="sd">        Layer centre depths, negative downward and decreasing</span>
+
+<span class="sd">    draft : numpy.ndarray</span>
+<span class="sd">        Ice draft per cell, negative below sea level</span>
+
+<span class="sd">    bed : numpy.ndarray</span>
+<span class="sd">        Bed topography per cell</span>
+
+<span class="sd">    freezing_correction : bool, optional</span>
+<span class="sd">        Whether to apply the depth dependence of the freezing temperature</span>
+<span class="sd">        when the draft is below the layer centre being used.  MALI applies</span>
+<span class="sd">        it to the thermal forcing in the two branches that extrapolate</span>
+<span class="sd">        downward -- below the deepest layer centre, and where the layer</span>
+<span class="sd">        below the draft is beneath the bed -- so pass True when comparing</span>
+<span class="sd">        against ``ismip6shelfMelt_TFdraft``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    at_draft : numpy.ndarray</span>
+<span class="sd">        The field interpolated to the draft, per cell</span>
+<span class="sd">    """</span>
+    <span class="n">n_cells</span> <span class="o">=</span> <span class="n">field_3d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">at_draft</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">n_layers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">z_ocean</span><span class="p">)</span>
+    <span class="n">rate</span> <span class="o">=</span> <span class="n">FREEZING_TEMP_DEPTH_DEPENDENCE</span> <span class="k">if</span> <span class="n">freezing_correction</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cells</span><span class="p">):</span>
+        <span class="c1"># ksup is the deepest layer centre still at or above the draft</span>
+        <span class="n">above</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">z_ocean</span> <span class="o">&gt;=</span> <span class="n">draft</span><span class="p">[</span><span class="n">index</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ksup</span> <span class="o">=</span> <span class="n">above</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">above</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="n">ksup</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># above the shallowest centre: take the shallowest layer, with</span>
+            <span class="c1"># no correction, since the draft is above it</span>
+            <span class="n">at_draft</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">field_3d</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">ksup</span> <span class="o">==</span> <span class="n">n_layers</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># below the deepest centre: take the deepest layer, corrected</span>
+            <span class="c1"># for the freezing point at the draft</span>
+            <span class="n">at_draft</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">field_3d</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">n_layers</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span>
+                <span class="p">(</span><span class="n">z_ocean</span><span class="p">[</span><span class="n">n_layers</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">draft</span><span class="p">[</span><span class="n">index</span><span class="p">])</span> <span class="o">*</span> <span class="n">rate</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">z_ocean</span><span class="p">[</span><span class="n">ksup</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">bed</span><span class="p">[</span><span class="n">index</span><span class="p">]:</span>
+            <span class="c1"># the layer below the draft is beneath the bed, so there is no</span>
+            <span class="c1"># water there to interpolate into; take the layer above,</span>
+            <span class="c1"># corrected for the freezing point at the draft</span>
+            <span class="n">at_draft</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">field_3d</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">ksup</span><span class="p">]</span> <span class="o">-</span>
+                <span class="p">(</span><span class="n">z_ocean</span><span class="p">[</span><span class="n">ksup</span><span class="p">]</span> <span class="o">-</span> <span class="n">draft</span><span class="p">[</span><span class="n">index</span><span class="p">])</span> <span class="o">*</span> <span class="n">rate</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># between layer centres, interpolate linearly in depth</span>
+            <span class="n">span</span> <span class="o">=</span> <span class="n">z_ocean</span><span class="p">[</span><span class="n">ksup</span><span class="p">]</span> <span class="o">-</span> <span class="n">z_ocean</span><span class="p">[</span><span class="n">ksup</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">w_deep</span> <span class="o">=</span> <span class="p">(</span><span class="n">z_ocean</span><span class="p">[</span><span class="n">ksup</span><span class="p">]</span> <span class="o">-</span> <span class="n">draft</span><span class="p">[</span><span class="n">index</span><span class="p">])</span> <span class="o">/</span> <span class="n">span</span>
+            <span class="n">w_shallow</span> <span class="o">=</span> <span class="p">(</span><span class="n">draft</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">-</span> <span class="n">z_ocean</span><span class="p">[</span><span class="n">ksup</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">span</span>
+            <span class="n">at_draft</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">w_deep</span> <span class="o">*</span> <span class="n">field_3d</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">ksup</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+                               <span class="n">w_shallow</span> <span class="o">*</span> <span class="n">field_3d</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">ksup</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">at_draft</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

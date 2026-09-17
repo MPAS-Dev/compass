@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ismip7_calibration &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ismip7_forcing" href="ismip7_forcing.html" />
+    <link rel="prev" title="ismip6_run" href="ismip6_run.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Landice core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test Groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="antarctica.html">antarctica</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calving_dt_convergence.html">calving_dt_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="circular_shelf.html">circular_shelf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crane.html">crane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dome.html">dome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensemble_generator.html">ensemble_generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
+<li class="toctree-l3"><a class="reference internal" href="humboldt.html">humboldt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_forcing.html">ismip6_forcing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_run.html">ismip6_run</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ismip7_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#a-note-on-salinity">A note on salinity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#config-options">Config options</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ismip7_forcing.html">ismip7_forcing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip7_run.html">ismip7_run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isunnguata_sermia.html">isunnguata_sermia</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
+<li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesh_convergence.html">mesh_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesh_modifications.html">mesh_modifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mismipplus.html">mismipplus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slm_circ_icesheet.html">slm_circ_icesheet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework.html">Land-ice Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Landice core</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Test Groups</a></li>
+      <li class="breadcrumb-item active">ismip7_calibration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/landice/test_groups/ismip7_calibration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ismip7-calibration">
+<span id="landice-ismip7-calibration"></span><h1>ismip7_calibration<a class="headerlink" href="#ismip7-calibration" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/ismip7_calibration</span></code> test group calibrates MALI’s sub-shelf
+melt parameterization against the Ice Sheet Model Intercomparison for CMIP7
+(ISMIP7) Antarctic ice-ocean protocol (Reese et al., Sect. 4.2), and produces
+the 5th, 50th and 95th percentiles of the melt parameter that the ISMIP7 MALI
+projections need.</p>
+<p>The protocol fits the free parameter of the melt module against four terms:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>term</p></th>
+<th class="head"><p>what it constrains</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>J1</p></td>
+<td><p>present-day melt integrated over each IMBIE2 drainage basin</p></td>
+</tr>
+<tr class="row-odd"><td><p>J2</p></td>
+<td><p>present-day melt integrated over bins of equal buttressing importance</p></td>
+</tr>
+<tr class="row-even"><td><p>J3</p></td>
+<td><p>the warm-minus-cold basin-mean melt difference of ocean models</p></td>
+</tr>
+<tr class="row-odd"><td><p>J4</p></td>
+<td><p>observed melt of Pine Island and Dotson, per observation year</p></td>
+</tr>
+</tbody>
+</table>
+<p>It then draws 100,000 random samples of the term weights and of the targets
+within their uncertainties, minimising the objective for each draw.  The
+distribution of the minimisers gives the percentiles.</p>
+<p>The test group includes two test cases.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">replication</span></code> reproduces the published 8 km calibration through compass’s
+own code path.  It runs in about a minute on one core, needs no MALI run,
+and needs only the ISMIP7 datasets.  Use it to check that everything is
+wired up before running the full calibration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ais</span></code> is the calibration itself on an Antarctic MALI mesh: it remaps the
+ISMIP7 masks and forcing, runs one single-timestep MALI melt diagnostic per
+ocean state, aggregates the melt, selects the parameter and fits the
+per-basin thermal-forcing correction <code class="docutils literal notranslate"><span class="pre">dT_b</span></code>.  Its deliverable is three
+MALI parameter files per melt form, <code class="docutils literal notranslate"><span class="pre">fit_delta_t/melt_params_&lt;form&gt;_p05.nc</span></code>,
+<code class="docutils literal notranslate"><span class="pre">_p50.nc</span></code> and <code class="docutils literal notranslate"><span class="pre">_p95.nc</span></code>, each carrying the basins, the fitted <code class="docutils literal notranslate"><span class="pre">dT_b</span></code>
+and the calibrated parameter at that percentile.  A projection points its
+parameter input stream at the one it wants.</p></li>
+</ul>
+<p>Two melt forms can be calibrated, and by default both are:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">ismip7</span></code></dt><dd><p>the Burgard et al. (2022) <strong>local</strong> quadratic recommended for ISMIP7,
+calibrating <code class="docutils literal notranslate"><span class="pre">K</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ismip6</span></code></dt><dd><p>the <strong>non-local</strong> quadratic MALI already had, calibrating <code class="docutils literal notranslate"><span class="pre">gamma0</span></code>.
+With a constant salinity this is algebraically the same as the Burgard
+<em>semi-local</em> form, so this is how that form is calibrated.</p>
+</dd>
+</dl>
+<section id="a-note-on-salinity">
+<span id="landice-ismip7-calibration-salinity"></span><h2>A note on salinity<a class="headerlink" href="#a-note-on-salinity" title="Link to this heading"></a></h2>
+<p>The calibration runs MALI with a <strong>constant</strong> ocean salinity.  MALI can read
+a 3-D salinity field, but the ISMIP7 ocean forcing already processed for the
+MALI projections carries thermal forcing only, so a projection has no
+salinity field to read.  Calibrating against a spatially varying salinity
+would tune the melt parameter for physics the projections cannot run.</p>
+<p>Melt is linear in salinity, and basin-mean salinity spans about 34.1 to 34.7
+against the default constant of 34.5, so this shifts the calibrated parameter
+by roughly 1%.  The published <code class="docutils literal notranslate"><span class="pre">K</span></code> was obtained with a locally varying
+salinity, so comparison with it is approximate at about that level.</p>
+</section>
+<section id="usage">
+<span id="landice-ismip7-calibration-usage"></span><h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<p>The test group needs the ISMIP7 AIS datasets and a MALI mesh.  Supply them
+in a user config file:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[ismip7_calibration]</span>
+<span class="na">base_path_ismip7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/path/to/ISMIP7/data/AIS</span>
+<span class="na">base_path_mali</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/path/to/inputdata/glc/mpasli/mpas.ais4to20km</span>
+<span class="na">mali_mesh_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ais_4to20km.20250625.nc</span>
+<span class="na">mali_mesh_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ais_4to20km</span>
+<span class="c1"># optional; set to None if no ISMIP6-era region mask exists on this</span>
+<span class="c1"># mesh, which skips the basin cross-check</span>
+<span class="na">region_mask_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ais_4to20km_region_mask.20230105.nc</span>
+</pre></div>
+</div>
+<p>Then set up and run, for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>setup<span class="w"> </span>-t<span class="w"> </span>landice/ismip7_calibration/replication<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-f<span class="w"> </span>my.cfg<span class="w"> </span>-w<span class="w"> </span><span class="nv">$WORKDIR</span>
+<span class="nb">cd</span><span class="w"> </span><span class="nv">$WORKDIR</span>/landice/ismip7_calibration/replication
+sbatch<span class="w"> </span>job_script.sh
+</pre></div>
+</div>
+<p>Setting up needs nothing but the config file above; every part of the
+calibration is a step of the test case, so <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> from the test case
+directory does the whole thing in order, and the job script <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code>
+writes runs exactly that.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ais</span></code> test case creates one step per ocean state and melt form – 56
+with the default settings – plus two more for the linearity check.  Each is a
+short MALI run, but compass runs steps one after another, so the ensemble
+takes a few hours of wall clock.  The runs do not depend on each other, so if
+that matters, run <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> from each step directory in separate jobs
+instead, and then run the <code class="docutils literal notranslate"><span class="pre">verify_melt</span></code>, <code class="docutils literal notranslate"><span class="pre">aggregate</span></code>, <code class="docutils literal notranslate"><span class="pre">calibrate</span></code>,
+<code class="docutils literal notranslate"><span class="pre">fit_delta_t</span></code> and <code class="docutils literal notranslate"><span class="pre">report</span></code> steps in that order.</p>
+</section>
+<section id="config-options">
+<h2>Config options<a class="headerlink" href="#config-options" title="Link to this heading"></a></h2>
+<p>The default config options are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[ismip7_calibration]</span>
+
+<span class="c1"># Which ocean states to use. Options:</span>
+<span class="c1">#   minimal     - 7 states, those marked X in protocol Table 2</span>
+<span class="c1">#   recommended - 11 states, adding the regional pairs marked +</span>
+<span class="c1">#   all         - 28 states, everything ISMIP7 distributes</span>
+<span class="na">ocean_state_subset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">all</span>
+
+<span class="c1"># Which melt forms to calibrate, comma separated</span>
+<span class="na">melt_forms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ismip7, ismip6</span>
+
+<span class="c1"># Number of MPI tasks for ESMF_RegridWeightGen</span>
+<span class="na">esmf_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
+
+<span class="c1"># Number of MPI tasks for each MALI run</span>
+<span class="na">ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
+
+<span class="c1"># Length of the single timestep the melt diagnostic takes</span>
+<span class="na">timestep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0000-00-01_00:00:00</span>
+
+<span class="k">[ismip7_calibration_melt]</span>
+
+<span class="c1"># Practical salinity at the ice draft, PSU</span>
+<span class="na">salinity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">34.5</span>
+
+<span class="c1"># The sin(theta) factor of the ISMIP7 quadratic</span>
+<span class="na">sin_slope</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.0051117</span>
+
+<span class="c1"># Magnitude of the Coriolis parameter, s^-1</span>
+<span class="na">coriolis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.4e-4</span>
+
+<span class="k">[ismip7_calibration_objective]</span>
+
+<span class="c1"># Number of random draws of the term weights and the targets</span>
+<span class="na">sample_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100000</span>
+
+<span class="c1"># Seed for the random draws, so the percentiles are reproducible</span>
+<span class="na">seed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+
+<span class="c1"># Which summands carry non-zero weight: 'published' or 'all'</span>
+<span class="na">t3_models</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">all</span>
+<span class="na">t4_regions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">all</span>
+<span class="na">t4_years</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">all</span>
+</pre></div>
+</div>
+<p>See <code class="docutils literal notranslate"><span class="pre">compass/landice/tests/ismip7_calibration/ismip7_calibration.cfg</span></code> for
+the full set with comments.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">t4_regions</span></code> option is worth understanding.  The published weighting
+uses Pine Island alone, which is 2 of the 18 available observations.  So
+weighted, J4 constrains a single amplitude that either melt form can match by
+rescaling its parameter, so it cannot discriminate between them.  Including
+Dotson makes J4 a relative constraint between two shelves, which no rescaling
+can satisfy if the ratio is wrong.  The default is therefore <code class="docutils literal notranslate"><span class="pre">all</span></code>; set
+<code class="docutils literal notranslate"><span class="pre">published</span></code> to reproduce the published weighting.</p>
+<p>Similarly, the reduced ocean-state subsets leave J4 structurally
+under-powered, which is why <code class="docutils literal notranslate"><span class="pre">ocean_state_subset</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">all</span></code>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ismip6_run.html" class="btn btn-neutral float-left" title="ismip6_run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ismip7_forcing.html" class="btn btn-neutral float-right" title="ismip7_forcing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

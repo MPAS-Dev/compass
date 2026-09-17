@@ -71,6 +71,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">landice</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="generated/compass.landice.Landice.html">compass.landice.Landice</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ismip7-framework">ISMIP7 framework</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#test-groups">Test Groups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#landice-framework">Landice Framework</a></li>
 </ul>
@@ -139,6 +140,28 @@
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.util.calculate_decomp_core_pair.html#compass.landice.util.calculate_decomp_core_pair" title="compass.landice.util.calculate_decomp_core_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_decomp_core_pair</span></code></a>(config, ...)</p></td>
 <td><p>Get a pair of decomposition task counts based on available cores.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ismip7-framework">
+<h2>ISMIP7 framework<a class="headerlink" href="#ismip7-framework" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.ismip7.ice_sheet_params.get_params.html#compass.landice.ismip7.ice_sheet_params.get_params" title="compass.landice.ismip7.ice_sheet_params.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ice_sheet_params.get_params</span></code></a>(config)</p></td>
+<td><p>Get ice-sheet-specific parameters from the config.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.ismip7.mapping.build_mapping_file.html#compass.landice.ismip7.mapping.build_mapping_file" title="compass.landice.ismip7.mapping.build_mapping_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mapping.build_mapping_file</span></code></a>(config, logger, ...)</p></td>
+<td><p>Build a mapping file for regridding from an ISMIP7 polar stereographic grid to the MALI unstructured mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.ismip7.remap.extrapolate_source.html#compass.landice.ismip7.remap.extrapolate_source" title="compass.landice.ismip7.remap.extrapolate_source"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remap.extrapolate_source</span></code></a>(input_file, ...)</p></td>
+<td><p>Extrapolate fill/missing values on the source polar stereographic grid using nearest-neighbor via <code class="docutils literal notranslate"><span class="pre">distance_transform_edt</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.ismip7.remap.open_rename_and_trim.html#compass.landice.ismip7.remap.open_rename_and_trim" title="compass.landice.ismip7.remap.open_rename_and_trim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remap.open_rename_and_trim</span></code></a>(remapped_file, ...)</p></td>
+<td><p>Open a remapped file, rename dimensions/variables to MALI conventions, and restrict to the requested year range.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.ismip7.remap.add_xtime_and_write.html#compass.landice.ismip7.remap.add_xtime_and_write" title="compass.landice.ismip7.remap.add_xtime_and_write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remap.add_xtime_and_write</span></code></a>(ds, years, output_file)</p></td>
+<td><p>Add an <code class="docutils literal notranslate"><span class="pre">xtime</span></code> variable (January 1st of each year), drop auxiliary remapping variables, and write the dataset.</p></td>
 </tr>
 </tbody>
 </table>
@@ -764,6 +787,241 @@
 </tbody>
 </table>
 </section>
+<section id="ismip7-calibration">
+<h3>ismip7_calibration<a class="headerlink" href="#ismip7-calibration" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.Ismip7Calibration.html#compass.landice.tests.ismip7_calibration.Ismip7Calibration" title="compass.landice.tests.ismip7_calibration.Ismip7Calibration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Ismip7Calibration</span></code></a>(mpas_core)</p></td>
+<td><p>A test group for calibrating MALI's sub-shelf melt parameterization against the ISMIP7 Antarctic ice-ocean protocol (Reese et al., Sect.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.configure.check_options.html#compass.landice.tests.ismip7_calibration.configure.check_options" title="compass.landice.tests.ismip7_calibration.configure.check_options"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure.check_options</span></code></a>(config, options)</p></td>
+<td><p>Check that user-supplied config options have been set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.configure.melt_forms.html#compass.landice.tests.ismip7_calibration.configure.melt_forms" title="compass.landice.tests.ismip7_calibration.configure.melt_forms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure.melt_forms</span></code></a>(config)</p></td>
+<td><p>The melt forms to calibrate.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.configure.objective_options.html#compass.landice.tests.ismip7_calibration.configure.objective_options" title="compass.landice.tests.ismip7_calibration.configure.objective_options"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure.objective_options</span></code></a>(config)</p></td>
+<td><p>The sample size and random seed for the parameter selection.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.configure.parameter_name.html#compass.landice.tests.ismip7_calibration.configure.parameter_name" title="compass.landice.tests.ismip7_calibration.configure.parameter_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure.parameter_name</span></code></a>(melt_form)</p></td>
+<td><p>The name of the parameter a melt form calibrates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.configure.parameter_values.html#compass.landice.tests.ismip7_calibration.configure.parameter_values" title="compass.landice.tests.ismip7_calibration.configure.parameter_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure.parameter_values</span></code></a>(config, melt_form)</p></td>
+<td><p>The grid of parameter values to select from, for one melt form.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.configure.weighting.html#compass.landice.tests.ismip7_calibration.configure.weighting" title="compass.landice.tests.ismip7_calibration.configure.weighting"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure.weighting</span></code></a>(config)</p></td>
+<td><p>Which summands of J3 and J4 carry non-zero weight.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.datasets.climatology_files.html#compass.landice.tests.ismip7_calibration.datasets.climatology_files" title="compass.landice.tests.ismip7_calibration.datasets.climatology_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datasets.climatology_files</span></code></a>(base_path)</p></td>
+<td><p>Paths to the Zhou et al. present-day climatology TF and salinity.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.datasets.load_targets.html#compass.landice.tests.ismip7_calibration.datasets.load_targets" title="compass.landice.tests.ismip7_calibration.datasets.load_targets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datasets.load_targets</span></code></a>(base_path)</p></td>
+<td><p>Load the observational targets for the four objective-function terms.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.datasets.mask_files.html#compass.landice.tests.ismip7_calibration.datasets.mask_files" title="compass.landice.tests.ismip7_calibration.datasets.mask_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datasets.mask_files</span></code></a>(base_path[, resolution_km])</p></td>
+<td><p>Paths to the ISMIP7 mask datasets on the ISMIP polar stereographic grid.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.datasets.missing_files.html#compass.landice.tests.ismip7_calibration.datasets.missing_files" title="compass.landice.tests.ismip7_calibration.datasets.missing_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datasets.missing_files</span></code></a>(states)</p></td>
+<td><p>The input files of <code class="docutils literal notranslate"><span class="pre">states</span></code> that are not present on disk.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.datasets.ocean_states.html#compass.landice.tests.ismip7_calibration.datasets.ocean_states" title="compass.landice.tests.ismip7_calibration.datasets.ocean_states"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datasets.ocean_states</span></code></a>(base_path[, subset])</p></td>
+<td><p>The ocean states to run the melt module for.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.objective.build_toolbox_terms.html#compass.landice.tests.ismip7_calibration.objective.build_toolbox_terms" title="compass.landice.tests.ismip7_calibration.objective.build_toolbox_terms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">objective.build_toolbox_terms</span></code></a>(units, ...[, ...])</p></td>
+<td><p>Assemble the arguments <code class="docutils literal notranslate"><span class="pre">calculate_objective_function</span></code> expects.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.objective.run_optimisation.html#compass.landice.tests.ismip7_calibration.objective.run_optimisation" title="compass.landice.tests.ismip7_calibration.objective.run_optimisation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">objective.run_optimisation</span></code></a>(terms, param_values)</p></td>
+<td><p>Sample the objective function and return the parameter distribution.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.objective.scale_to_ensemble.html#compass.landice.tests.ismip7_calibration.objective.scale_to_ensemble" title="compass.landice.tests.ismip7_calibration.objective.scale_to_ensemble"><code class="xref py py-obj docutils literal notranslate"><span class="pre">objective.scale_to_ensemble</span></code></a>(unit_aggregate, ...)</p></td>
+<td><p>Turn a unit-parameter aggregate into the <code class="docutils literal notranslate"><span class="pre">(p1,</span> <span class="pre">p2,</span> <span class="pre">...)</span></code> ensemble.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.quadratic.angle_from_sin_slope.html#compass.landice.tests.ismip7_calibration.quadratic.angle_from_sin_slope" title="compass.landice.tests.ismip7_calibration.quadratic.angle_from_sin_slope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quadratic.angle_from_sin_slope</span></code></a>(sin_slope)</p></td>
+<td><p>The slope angle corresponding to a sine, in radians.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.quadratic.draft_slope.html#compass.landice.tests.ismip7_calibration.quadratic.draft_slope" title="compass.landice.tests.ismip7_calibration.quadratic.draft_slope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quadratic.draft_slope</span></code></a>(draft, dx, dy[, ...])</p></td>
+<td><p>Ice-draft slope angle on a structured grid, in radians.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.quadratic.local_quadratic_melt.html#compass.landice.tests.ismip7_calibration.quadratic.local_quadratic_melt" title="compass.landice.tests.ismip7_calibration.quadratic.local_quadratic_melt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quadratic.local_quadratic_melt</span></code></a>(k, ...[, ...])</p></td>
+<td><p>Melt rate from the quadratic local parameterisation, in kg m-2 yr-1.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.quadratic.mean_slope.html#compass.landice.tests.ismip7_calibration.quadratic.mean_slope" title="compass.landice.tests.ismip7_calibration.quadratic.mean_slope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quadratic.mean_slope</span></code></a>(draft, floating, dx, dy)</p></td>
+<td><p>Antarctic-mean ice-draft slope angle over floating ice, in radians.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.quadratic.nonlocal_quadratic_melt.html#compass.landice.tests.ismip7_calibration.quadratic.nonlocal_quadratic_melt" title="compass.landice.tests.ismip7_calibration.quadratic.nonlocal_quadratic_melt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quadratic.nonlocal_quadratic_melt</span></code></a>(gamma0, ...)</p></td>
+<td><p>Melt rate from the ISMIP6 non-local quadratic, in kg m-2 yr-1.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.quadratic.u_factor.html#compass.landice.tests.ismip7_calibration.quadratic.u_factor" title="compass.landice.tests.ismip7_calibration.quadratic.u_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quadratic.u_factor</span></code></a>(salinity)</p></td>
+<td><p>The velocity-scale factor of Jenkins et al. (2018).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.terms.average_by_group.html#compass.landice.tests.ismip7_calibration.terms.average_by_group" title="compass.landice.tests.ismip7_calibration.terms.average_by_group"><code class="xref py py-obj docutils literal notranslate"><span class="pre">terms.average_by_group</span></code></a>(melt, area, mask, ...)</p></td>
+<td><p>Area-weighted mean melt rate over each group, in kg m-2 yr-1.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.terms.calculate_term1.html#compass.landice.tests.ismip7_calibration.terms.calculate_term1" title="compass.landice.tests.ismip7_calibration.terms.calculate_term1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">terms.calculate_term1</span></code></a>(ensemble, area, mask, ...)</p></td>
+<td><p>J1: basin-integrated present-day melt, in Gt yr-1.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.terms.calculate_term2.html#compass.landice.tests.ismip7_calibration.terms.calculate_term2" title="compass.landice.tests.ismip7_calibration.terms.calculate_term2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">terms.calculate_term2</span></code></a>(ensemble, area, mask, ...)</p></td>
+<td><p>J2: melt integrated over buttressing (BFRN) bins, in Gt yr-1.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.terms.calculate_term3.html#compass.landice.tests.ismip7_calibration.terms.calculate_term3" title="compass.landice.tests.ismip7_calibration.terms.calculate_term3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">terms.calculate_term3</span></code></a>(cold_ensemble, ...[, var])</p></td>
+<td><p>J3: warm-minus-cold basin-mean melt difference, in kg m-2 yr-1.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.terms.calculate_term4.html#compass.landice.tests.ismip7_calibration.terms.calculate_term4" title="compass.landice.tests.ismip7_calibration.terms.calculate_term4"><code class="xref py py-obj docutils literal notranslate"><span class="pre">terms.calculate_term4</span></code></a>(obs_ensemble, area, ...)</p></td>
+<td><p>J4: PIG/Dotson integrated melt per observation year, in Gt yr-1.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.terms.integrate_by_group.html#compass.landice.tests.ismip7_calibration.terms.integrate_by_group" title="compass.landice.tests.ismip7_calibration.terms.integrate_by_group"><code class="xref py py-obj docutils literal notranslate"><span class="pre">terms.integrate_by_group</span></code></a>(melt, area, mask, ...)</p></td>
+<td><p>Integrate a melt rate over each group, in Gt yr-1.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.terms.stack_cells.html#compass.landice.tests.ismip7_calibration.terms.stack_cells" title="compass.landice.tests.ismip7_calibration.terms.stack_cells"><code class="xref py py-obj docutils literal notranslate"><span class="pre">terms.stack_cells</span></code></a>(da, cell_dims)</p></td>
+<td><p>Flatten the cell dimensions of <code class="docutils literal notranslate"><span class="pre">da</span></code> into a single dimension.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.terms.uniform_area.html#compass.landice.tests.ismip7_calibration.terms.uniform_area" title="compass.landice.tests.ismip7_calibration.terms.uniform_area"><code class="xref py py-obj docutils literal notranslate"><span class="pre">terms.uniform_area</span></code></a>(template, resolution, ...)</p></td>
+<td><p>Build a uniform cell-area array, for structured grids.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.toolbox.check_integrity.html#compass.landice.tests.ismip7_calibration.toolbox.check_integrity" title="compass.landice.tests.ismip7_calibration.toolbox.check_integrity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">toolbox.check_integrity</span></code></a>()</p></td>
+<td><p>Verify that the vendored toolbox still matches the recorded upstream copy.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.toolbox.file_sha256.html#compass.landice.tests.ismip7_calibration.toolbox.file_sha256" title="compass.landice.tests.ismip7_calibration.toolbox.file_sha256"><code class="xref py py-obj docutils literal notranslate"><span class="pre">toolbox.file_sha256</span></code></a>()</p></td>
+<td><p>The SHA256 of the vendored toolbox source file, as it is on disk.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.toolbox.toolbox_path.html#compass.landice.tests.ismip7_calibration.toolbox.toolbox_path" title="compass.landice.tests.ismip7_calibration.toolbox.toolbox_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">toolbox.toolbox_path</span></code></a>()</p></td>
+<td><p>The path to the vendored toolbox source file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.replication.Replication.html#compass.landice.tests.ismip7_calibration.replication.Replication" title="compass.landice.tests.ismip7_calibration.replication.Replication"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replication.Replication</span></code></a>(test_group)</p></td>
+<td><p>A test case that reproduces the published ISMIP7 quadratic calibration on the ISMIP 8 km grid, through compass's own code path.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.replication.Replication.configure.html#compass.landice.tests.ismip7_calibration.replication.Replication.configure" title="compass.landice.tests.ismip7_calibration.replication.Replication.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replication.Replication.configure</span></code></a>()</p></td>
+<td><p>Check that the ISMIP7 dataset path has been supplied</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.replication.Replication.validate.html#compass.landice.tests.ismip7_calibration.replication.Replication.validate" title="compass.landice.tests.ismip7_calibration.replication.Replication.validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replication.Replication.validate</span></code></a>()</p></td>
+<td><p>Check the percentiles against the published values, and against a baseline if one was provided</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.replication.replicate.Replicate.html#compass.landice.tests.ismip7_calibration.replication.replicate.Replicate" title="compass.landice.tests.ismip7_calibration.replication.replicate.Replicate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replication.replicate.Replicate</span></code></a>(test_case)</p></td>
+<td><p>A step that reproduces the published 8 km quadratic calibration.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.replication.replicate.Replicate.setup.html#compass.landice.tests.ismip7_calibration.replication.replicate.Replicate.setup" title="compass.landice.tests.ismip7_calibration.replication.replicate.Replicate.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replication.replicate.Replicate.setup</span></code></a>()</p></td>
+<td><p>Check that the ISMIP7 datasets this step needs are present</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.replication.replicate.Replicate.run.html#compass.landice.tests.ismip7_calibration.replication.replicate.Replicate.run" title="compass.landice.tests.ismip7_calibration.replication.replicate.Replicate.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replication.replicate.Replicate.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.replication.replicate.check_published.html#compass.landice.tests.ismip7_calibration.replication.replicate.check_published" title="compass.landice.tests.ismip7_calibration.replication.replicate.check_published"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replication.replicate.check_published</span></code></a>(...)</p></td>
+<td><p>Check the replicated percentiles against the published values.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.Ais.html#compass.landice.tests.ismip7_calibration.ais.Ais" title="compass.landice.tests.ismip7_calibration.ais.Ais"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.Ais</span></code></a>(test_group)</p></td>
+<td><p>A test case that calibrates MALI's sub-shelf melt parameterization on an Antarctic MALI mesh, following the ISMIP7 protocol.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.Ais.configure.html#compass.landice.tests.ismip7_calibration.ais.Ais.configure" title="compass.landice.tests.ismip7_calibration.ais.Ais.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.Ais.configure</span></code></a>()</p></td>
+<td><p>Add a step per ocean state and melt form, once the config is known</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.Ais.validate.html#compass.landice.tests.ismip7_calibration.ais.Ais.validate" title="compass.landice.tests.ismip7_calibration.ais.Ais.validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.Ais.validate</span></code></a>()</p></td>
+<td><p>Compare the calibration against a baseline, if one was provided</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate.html#compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate" title="compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.aggregate.Aggregate</span></code></a>(test_case, ...)</p></td>
+<td><p>A step that turns the MALI melt fields into unit-parameter aggregates of the four objective-function terms.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate.setup.html#compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate.setup" title="compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.aggregate.Aggregate.setup</span></code></a>()</p></td>
+<td><p>Set up this step of the test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate.run.html#compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate.run" title="compass.landice.tests.ismip7_calibration.ais.aggregate.Aggregate.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.aggregate.Aggregate.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.aggregate.unit_aggregates.html#compass.landice.tests.ismip7_calibration.ais.aggregate.unit_aggregates" title="compass.landice.tests.ismip7_calibration.ais.aggregate.unit_aggregates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.aggregate.unit_aggregates</span></code></a>(filename)</p></td>
+<td><p>Read the unit aggregates written by this step.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.aggregate.basin_coordinate.html#compass.landice.tests.ismip7_calibration.ais.aggregate.basin_coordinate" title="compass.landice.tests.ismip7_calibration.ais.aggregate.basin_coordinate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.aggregate.basin_coordinate</span></code></a>(units)</p></td>
+<td><p>The ISMIP7 basin numbers present in an aggregate, as integers.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.calibrate.Calibrate.html#compass.landice.tests.ismip7_calibration.ais.calibrate.Calibrate" title="compass.landice.tests.ismip7_calibration.ais.calibrate.Calibrate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.calibrate.Calibrate</span></code></a>(test_case, melt_forms)</p></td>
+<td><p>A step that runs the ISMIP7 parameter selection on the MALI ensemble.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.calibrate.Calibrate.run.html#compass.landice.tests.ismip7_calibration.ais.calibrate.Calibrate.run" title="compass.landice.tests.ismip7_calibration.ais.calibrate.Calibrate.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.calibrate.Calibrate.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT.html#compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT" title="compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.fit_delta_t.FitDeltaT</span></code></a>(test_case, melt_forms)</p></td>
+<td><p>A step that fits the basin thermal-forcing correction <code class="docutils literal notranslate"><span class="pre">dT_b</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT.setup.html#compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT.setup" title="compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.fit_delta_t.FitDeltaT.setup</span></code></a>()</p></td>
+<td><p>Set up this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT.run.html#compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT.run" title="compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.fit_delta_t.FitDeltaT.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.make_graph.MakeGraph.html#compass.landice.tests.ismip7_calibration.ais.make_graph.MakeGraph" title="compass.landice.tests.ismip7_calibration.ais.make_graph.MakeGraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.make_graph.MakeGraph</span></code></a>(test_case)</p></td>
+<td><p>A step that builds a graph partition file for the MALI mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.make_graph.MakeGraph.setup.html#compass.landice.tests.ismip7_calibration.ais.make_graph.MakeGraph.setup" title="compass.landice.tests.ismip7_calibration.ais.make_graph.MakeGraph.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.make_graph.MakeGraph.setup</span></code></a>()</p></td>
+<td><p>Set up this step of the test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.make_graph.MakeGraph.run.html#compass.landice.tests.ismip7_calibration.ais.make_graph.MakeGraph.run" title="compass.landice.tests.ismip7_calibration.ais.make_graph.MakeGraph.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.make_graph.MakeGraph.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.melt_model.basin_mean_tf.html#compass.landice.tests.ismip7_calibration.ais.melt_model.basin_mean_tf" title="compass.landice.tests.ismip7_calibration.ais.melt_model.basin_mean_tf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.melt_model.basin_mean_tf</span></code></a>(tf_draft, area, ...)</p></td>
+<td><p>Area-weighted mean thermal forcing per basin, mapped back onto cells.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.melt_model.initial_draft.html#compass.landice.tests.ismip7_calibration.ais.melt_model.initial_draft" title="compass.landice.tests.ismip7_calibration.ais.melt_model.initial_draft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.melt_model.initial_draft</span></code></a>(mesh_file[, ...])</p></td>
+<td><p>Reconstruct the ice draft from the mesh file, before the timestep.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.melt_model.integrate_by_basin.html#compass.landice.tests.ismip7_calibration.ais.melt_model.integrate_by_basin" title="compass.landice.tests.ismip7_calibration.ais.melt_model.integrate_by_basin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.melt_model.integrate_by_basin</span></code></a>(melt, ...)</p></td>
+<td><p>Integrate a melt rate over each basin, in Gt yr-1.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.melt_model.interpolate_to_draft.html#compass.landice.tests.ismip7_calibration.ais.melt_model.interpolate_to_draft" title="compass.landice.tests.ismip7_calibration.ais.melt_model.interpolate_to_draft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.melt_model.interpolate_to_draft</span></code></a>(...[, ...])</p></td>
+<td><p>Interpolate a 3-D ocean field to the ice draft.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.melt_model.melt_from_tf.html#compass.landice.tests.ismip7_calibration.ais.melt_model.melt_from_tf" title="compass.landice.tests.ismip7_calibration.ais.melt_model.melt_from_tf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.melt_model.melt_from_tf</span></code></a>(melt_form, ...)</p></td>
+<td><p>Recompute the melt field from the thermal forcing at the draft.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.melt_model.read_run.html#compass.landice.tests.ismip7_calibration.ais.melt_model.read_run" title="compass.landice.tests.ismip7_calibration.ais.melt_model.read_run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.melt_model.read_run</span></code></a>(filename, mesh_file)</p></td>
+<td><p>Read the fields a melt diagnostic run writes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing.html#compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing" title="compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.remap_forcing.RemapForcing</span></code></a>(test_case)</p></td>
+<td><p>A step that remaps the ISMIP7 calibration thermal forcing onto the MALI mesh, one file per ocean state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing.setup.html#compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing.setup" title="compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.remap_forcing.RemapForcing.setup</span></code></a>()</p></td>
+<td><p>Set up this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing.run.html#compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing.run" title="compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.remap_forcing.RemapForcing.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks.html#compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks" title="compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.remap_masks.RemapMasks</span></code></a>(test_case)</p></td>
+<td><p>A step that remaps the ISMIP7 masks onto the MALI mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks.setup.html#compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks.setup" title="compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.remap_masks.RemapMasks.setup</span></code></a>()</p></td>
+<td><p>Set up this step of the test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks.run.html#compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks.run" title="compass.landice.tests.ismip7_calibration.ais.remap_masks.RemapMasks.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.remap_masks.RemapMasks.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.report.Report.html#compass.landice.tests.ismip7_calibration.ais.report.Report" title="compass.landice.tests.ismip7_calibration.ais.report.Report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.report.Report</span></code></a>(test_case, melt_forms)</p></td>
+<td><p>A step that plots and tabulates the calibration result.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.report.Report.run.html#compass.landice.tests.ismip7_calibration.ais.report.Report.run" title="compass.landice.tests.ismip7_calibration.ais.report.Report.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.report.Report.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.run_state.RunState.html#compass.landice.tests.ismip7_calibration.ais.run_state.RunState" title="compass.landice.tests.ismip7_calibration.ais.run_state.RunState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.run_state.RunState</span></code></a>(test_case, ...[, ...])</p></td>
+<td><p>A step that runs MALI for a single timestep to diagnose the melt field for one ocean state, using one melt form.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.run_state.RunState.setup.html#compass.landice.tests.ismip7_calibration.ais.run_state.RunState.setup" title="compass.landice.tests.ismip7_calibration.ais.run_state.RunState.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.run_state.RunState.setup</span></code></a>()</p></td>
+<td><p>Set up this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.run_state.RunState.runtime_setup.html#compass.landice.tests.ismip7_calibration.ais.run_state.RunState.runtime_setup" title="compass.landice.tests.ismip7_calibration.ais.run_state.RunState.runtime_setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.run_state.RunState.runtime_setup</span></code></a>()</p></td>
+<td><p>Set the number of ocean layers from the forcing file</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.run_state.RunState.run.html#compass.landice.tests.ismip7_calibration.ais.run_state.RunState.run" title="compass.landice.tests.ismip7_calibration.ais.run_state.RunState.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.run_state.RunState.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt.html#compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt" title="compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.verify_melt.VerifyMelt</span></code></a>(test_case, ...[, ...])</p></td>
+<td><p>A step that checks MALI's melt field against an independent Python implementation of the same equations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt.setup.html#compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt.setup" title="compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.verify_melt.VerifyMelt.setup</span></code></a>()</p></td>
+<td><p>Set up this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt.run.html#compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt.run" title="compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ais.verify_melt.VerifyMelt.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="ismip7-forcing">
 <h3>ismip7_forcing<a class="headerlink" href="#ismip7-forcing" title="Link to this heading"></a></h3>
 <table class="autosummary longtable docutils align-default">
@@ -774,118 +1032,103 @@
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.configure.configure.html#compass.landice.tests.ismip7_forcing.configure.configure" title="compass.landice.tests.ismip7_forcing.configure.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure.configure</span></code></a>(config)</p></td>
 <td><p>A shared function for configuring options for all ismip7 forcing test cases</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.ice_sheet_params.get_params.html#compass.landice.tests.ismip7_forcing.ice_sheet_params.get_params" title="compass.landice.tests.ismip7_forcing.ice_sheet_params.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ice_sheet_params.get_params</span></code></a>(config)</p></td>
-<td><p>Get ice-sheet-specific parameters from the config.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.create_mapfile.build_mapping_file.html#compass.landice.tests.ismip7_forcing.create_mapfile.build_mapping_file" title="compass.landice.tests.ismip7_forcing.create_mapfile.build_mapping_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_mapfile.build_mapping_file</span></code></a>(config, ...)</p></td>
-<td><p>Build a mapping file for regridding from an ISMIP7 polar stereographic grid to the MALI unstructured mesh.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.remap_utils.extrapolate_source.html#compass.landice.tests.ismip7_forcing.remap_utils.extrapolate_source" title="compass.landice.tests.ismip7_forcing.remap_utils.extrapolate_source"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remap_utils.extrapolate_source</span></code></a>(input_file, ...)</p></td>
-<td><p>Extrapolate fill/missing values on the source polar stereographic grid using nearest-neighbor via <code class="docutils literal notranslate"><span class="pre">distance_transform_edt</span></code>.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere.html#compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere" title="compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.Atmosphere</span></code></a>(test_group)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere.html#compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere" title="compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.Atmosphere</span></code></a>(test_group)</p></td>
 <td><p>A test case for processing ISMIP7 atmosphere forcing data.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere.configure.html#compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere.configure" title="compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.Atmosphere.configure</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere.configure.html#compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere.configure" title="compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.Atmosphere.configure</span></code></a>()</p></td>
 <td><p>Configures test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb.html#compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb" title="compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_smb.ProcessSmb</span></code></a>(test_case)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb.html#compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb" title="compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_smb.ProcessSmb</span></code></a>(test_case)</p></td>
 <td><p>A step for processing ISMIP7 surface mass balance (acabf) data.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb.setup.html#compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb.setup" title="compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_smb.ProcessSmb.setup</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb.setup.html#compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb.setup" title="compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_smb.ProcessSmb.setup</span></code></a>()</p></td>
 <td><p>Set up this step of the test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb.run.html#compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb.run" title="compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_smb.ProcessSmb.run</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb.run.html#compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb.run" title="compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_smb.ProcessSmb.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature" title="compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_temperature.ProcessTemperature</span></code></a>(...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature" title="compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_temperature.ProcessTemperature</span></code></a>(...)</p></td>
 <td><p>A step for processing ISMIP7 ice surface temperature (ts) data.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.setup.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.setup" title="compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_temperature.ProcessTemperature.setup</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.setup.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.setup" title="compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_temperature.ProcessTemperature.setup</span></code></a>()</p></td>
 <td><p>Set up this step of the test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.run.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.run" title="compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_temperature.ProcessTemperature.run</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.run.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.run" title="compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_temperature.ProcessTemperature.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient.html#compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient" title="compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_smb_gradient.ProcessSmbGradient</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient.html#compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient" title="compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_smb_gradient.ProcessSmbGradient</span></code></a>(...)</p></td>
 <td><p>A step for processing ISMIP7 SMB elevation gradient (dacabfdz) data.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient.setup.html#compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient.setup" title="compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_smb_gradient.ProcessSmbGradient.setup</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient.setup.html#compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient.setup" title="compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_smb_gradient.ProcessSmbGradient.setup</span></code></a>()</p></td>
 <td><p>Set up this step of the test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient.run.html#compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient.run" title="compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_smb_gradient.ProcessSmbGradient.run</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient.run.html#compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient.run" title="compass.landice.tests.ismip7_forcing.atmosphere.process_smb_gradient.ProcessSmbGradient.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_smb_gradient.ProcessSmbGradient.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient" title="compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_temperature_gradient.ProcessTemperatureGradient</span></code></a>(...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient" title="compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_temperature_gradient.ProcessTemperatureGradient</span></code></a>(...)</p></td>
 <td><p>A step for processing ISMIP7 temperature elevation gradient (dtsdz) data.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient.setup.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient.setup" title="compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_temperature_gradient.ProcessTemperatureGradient.setup</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient.setup.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient.setup" title="compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_temperature_gradient.ProcessTemperatureGradient.setup</span></code></a>()</p></td>
 <td><p>Set up this step of the test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient.run.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient.run" title="compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_temperature_gradient.ProcessTemperatureGradient.run</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient.run.html#compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient.run" title="compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_temperature_gradient.ProcessTemperatureGradient.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff.html#compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff" title="compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_runoff.ProcessRunoff</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff.html#compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff" title="compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_runoff.ProcessRunoff</span></code></a>(...)</p></td>
 <td><p>A step for processing ISMIP7 ice sheet runoff (mrro) data.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff.setup.html#compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff.setup" title="compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_runoff.ProcessRunoff.setup</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff.setup.html#compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff.setup" title="compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_runoff.ProcessRunoff.setup</span></code></a>()</p></td>
 <td><p>Set up this step of the test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff.run.html#compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff.run" title="compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_runoff.ProcessRunoff.run</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff.run.html#compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff.run" title="compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atmosphere.process_runoff.ProcessRunoff.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal.html#compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal" title="compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ocean_thermal.OceanThermal</span></code></a>(test_group)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal.html#compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal" title="compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ocean_thermal.OceanThermal</span></code></a>(test_group)</p></td>
 <td><p>A test case for processing ISMIP7 ocean thermal forcing data.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal.configure.html#compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal.configure" title="compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ocean_thermal.OceanThermal.configure</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal.configure.html#compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal.configure" title="compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ocean_thermal.OceanThermal.configure</span></code></a>()</p></td>
 <td><p>Configures test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.html#compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing" title="compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ocean_thermal.process_thermal_forcing.ProcessThermalForcing</span></code></a>(...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.html#compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing" title="compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ocean_thermal.process_thermal_forcing.ProcessThermalForcing</span></code></a>(...)</p></td>
 <td><p>A step for processing ISMIP7 ocean thermal forcing (tf) data.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup.html#compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup" title="compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup.html#compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup" title="compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup</span></code></a>()</p></td>
 <td><p>Set up this step of the test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run.html#compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run" title="compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run.html#compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run" title="compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.Fracture.html#compass.landice.tests.ismip7_forcing.fracture.Fracture" title="compass.landice.tests.ismip7_forcing.fracture.Fracture"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.Fracture</span></code></a>(test_group)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.Fracture.html#compass.landice.tests.ismip7_forcing.fracture.Fracture" title="compass.landice.tests.ismip7_forcing.fracture.Fracture"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.Fracture</span></code></a>(test_group)</p></td>
 <td><p>A test case for processing ISMIP7 fracture forcing data.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.Fracture.configure.html#compass.landice.tests.ismip7_forcing.fracture.Fracture.configure" title="compass.landice.tests.ismip7_forcing.fracture.Fracture.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.Fracture.configure</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.Fracture.configure.html#compass.landice.tests.ismip7_forcing.fracture.Fracture.configure" title="compass.landice.tests.ismip7_forcing.fracture.Fracture.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.Fracture.configure</span></code></a>()</p></td>
 <td><p>Configures test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.remap_utils.open_rename_and_trim.html#compass.landice.tests.ismip7_forcing.fracture.remap_utils.open_rename_and_trim" title="compass.landice.tests.ismip7_forcing.fracture.remap_utils.open_rename_and_trim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.remap_utils.open_rename_and_trim</span></code></a>(...)</p></td>
-<td><p>Open a remapped file, rename dimensions/variables to MALI conventions, and restrict to the requested year range.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.remap_utils.add_xtime_and_write.html#compass.landice.tests.ismip7_forcing.fracture.remap_utils.add_xtime_and_write" title="compass.landice.tests.ismip7_forcing.fracture.remap_utils.add_xtime_and_write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.remap_utils.add_xtime_and_write</span></code></a>(ds, ...)</p></td>
-<td><p>Add an <code class="docutils literal notranslate"><span class="pre">xtime</span></code> variable (January 1st of each year), drop auxiliary remapping variables, and write the dataset.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.html#compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt" title="compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_excess_melt.ProcessExcessMelt</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.html#compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt" title="compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_excess_melt.ProcessExcessMelt</span></code></a>(...)</p></td>
 <td><p>A step for processing the ISMIP7 excess meltwater field (Path A).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.setup.html#compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.setup" title="compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_excess_melt.ProcessExcessMelt.setup</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.setup.html#compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.setup" title="compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_excess_melt.ProcessExcessMelt.setup</span></code></a>()</p></td>
 <td><p>Set up this step of the test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.run.html#compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.run" title="compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_excess_melt.ProcessExcessMelt.run</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.run.html#compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.run" title="compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_excess_melt.ProcessExcessMelt.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.html#compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties" title="compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_lake_properties.ProcessLakeProperties</span></code></a>(...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.html#compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties" title="compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_lake_properties.ProcessLakeProperties</span></code></a>(...)</p></td>
 <td><p>A step for processing the ISMIP7 supraglacial lake properties (Path B).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.setup.html#compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.setup" title="compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_lake_properties.ProcessLakeProperties.setup</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.setup.html#compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.setup" title="compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_lake_properties.ProcessLakeProperties.setup</span></code></a>()</p></td>
 <td><p>Set up this step of the test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.run.html#compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.run" title="compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_lake_properties.ProcessLakeProperties.run</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.run.html#compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.run" title="compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_lake_properties.ProcessLakeProperties.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.html#compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse" title="compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_shelf_collapse.ProcessShelfCollapse</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.html#compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse" title="compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_shelf_collapse.ProcessShelfCollapse</span></code></a>(...)</p></td>
 <td><p>A step for processing the ISMIP7 ice shelf collapse mask (Path C).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.setup.html#compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.setup" title="compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_shelf_collapse.ProcessShelfCollapse.setup</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.setup.html#compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.setup" title="compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_shelf_collapse.ProcessShelfCollapse.setup</span></code></a>()</p></td>
 <td><p>Set up this step of the test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.run.html#compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.run" title="compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_shelf_collapse.ProcessShelfCollapse.run</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.run.html#compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.run" title="compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fracture.process_shelf_collapse.ProcessShelfCollapse.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
 </tr>
 </tbody>

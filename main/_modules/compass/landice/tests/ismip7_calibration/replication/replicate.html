@@ -1,0 +1,435 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip7_calibration.replication.replicate &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../../ismip7_calibration.html">compass.landice.tests.ismip7_calibration</a></li>
+          <li class="breadcrumb-item"><a href="../replication.html">compass.landice.tests.ismip7_calibration.replication</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip7_calibration.replication.replicate</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip7_calibration.replication.replicate</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Reproduce the published 8 km ISMIP7 quadratic calibration.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.configure</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">objective_options</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.objective</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">build_toolbox_terms</span><span class="p">,</span>
+    <span class="n">run_optimisation</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.quadratic</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">local_quadratic_melt</span><span class="p">,</span>
+    <span class="n">mean_slope</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.terms</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">average_by_group</span><span class="p">,</span>
+    <span class="n">integrate_by_group</span><span class="p">,</span>
+    <span class="n">uniform_area</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
+
+<span class="c1">#: the ISMIP grid resolution the published calibration used, m</span>
+<span class="n">RESOLUTION</span> <span class="o">=</span> <span class="mf">8000.0</span>
+
+<span class="c1">#: cell dimensions of the ISMIP structured grid</span>
+<span class="n">CELL_DIMS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'y'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">)</span>
+
+<span class="c1">#: the 120 K values the protocol's worked example samples</span>
+<span class="n">K_VALUES</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.25e-5</span><span class="p">,</span> <span class="mf">3.025e-4</span><span class="p">,</span> <span class="mf">0.25e-5</span><span class="p">)</span>
+
+<span class="c1">#: percentiles published in protocol Sect. 4.3.1 and Fig. 5</span>
+<span class="n">PUBLISHED</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'p5'</span><span class="p">:</span> <span class="mf">4.75e-5</span><span class="p">,</span> <span class="s1">'median'</span><span class="p">:</span> <span class="mf">8.5e-5</span><span class="p">,</span> <span class="s1">'p95'</span><span class="p">:</span> <span class="mf">1.375e-4</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="Replicate">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.replication.replicate.Replicate.html#compass.landice.tests.ismip7_calibration.replication.replicate.Replicate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Replicate</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A step that reproduces the published 8 km quadratic calibration.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_path : str</span>
+<span class="sd">        Root of the ISMIP7 AIS datasets</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="Replicate.__init__">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.replication.replicate.Replicate.html#compass.landice.tests.ismip7_calibration.replication.replicate.Replicate.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.landice.tests.ismip7_calibration.replication.Replication</span>
+<span class="sd">            The test case this step belongs to</span>
+<span class="sd">        """</span>  <span class="c1"># noqa: E501</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'replicate'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'replication_8km.nc'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Replicate.setup">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.replication.replicate.Replicate.setup.html#compass.landice.tests.ismip7_calibration.replication.replicate.Replicate.setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Check that the ISMIP7 datasets this step needs are present</span>
+<span class="sd">        """</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ismip7_calibration'</span><span class="p">,</span> <span class="s1">'base_path_ismip7'</span><span class="p">)</span>
+
+        <span class="n">states</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">ocean_states</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_path</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="s1">'all'</span><span class="p">)</span>
+        <span class="n">missing</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">missing_files</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+            <span class="n">listing</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">  '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">missing</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="si">}</span><span class="s1"> ISMIP7 input files are missing:</span><span class="se">\n</span><span class="s1">  '</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">listing</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Replicate.run">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.replication.replicate.Replicate.run.html#compass.landice.tests.ismip7_calibration.replication.replicate.Replicate.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ismip7_calibration'</span><span class="p">,</span> <span class="s1">'base_path_ismip7'</span><span class="p">)</span>
+
+        <span class="n">static</span> <span class="o">=</span> <span class="n">_load_static</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+        <span class="n">units</span> <span class="o">=</span> <span class="n">_build_unit_terms</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">static</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+        <span class="n">targets</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_targets</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
+
+        <span class="c1"># The published example weights four ocean models, and PIG alone in</span>
+        <span class="c1"># 2009 and 2012.  Reproducing the published numbers means reproducing</span>
+        <span class="c1"># that weighting, so it is fixed here rather than taken from config.</span>
+        <span class="n">terms</span> <span class="o">=</span> <span class="n">build_toolbox_terms</span><span class="p">(</span>
+            <span class="n">units</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">K_VALUES</span><span class="p">,</span>
+            <span class="n">t3_models</span><span class="o">=</span><span class="n">datasets</span><span class="o">.</span><span class="n">PUBLISHED_T3_MODELS</span><span class="p">,</span>
+            <span class="n">t4_regions</span><span class="o">=</span><span class="n">datasets</span><span class="o">.</span><span class="n">PUBLISHED_T4_REGIONS</span><span class="p">,</span>
+            <span class="n">t4_years</span><span class="o">=</span><span class="n">datasets</span><span class="o">.</span><span class="n">PUBLISHED_T4_YEARS</span><span class="p">)</span>
+
+        <span class="n">sample_size</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">objective_options</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Sampling the objective function </span><span class="si">{</span><span class="n">sample_size</span><span class="si">}</span><span class="s1"> times...'</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">run_optimisation</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">K_VALUES</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">RESOLUTION</span><span class="p">,</span>
+                                  <span class="n">sample_size</span><span class="o">=</span><span class="n">sample_size</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="n">_write_result</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">K_VALUES</span><span class="p">,</span> <span class="s1">'replication_8km.nc'</span><span class="p">)</span>
+        <span class="n">_report</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="check_published">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.replication.replicate.check_published.html#compass.landice.tests.ismip7_calibration.replication.replicate.check_published">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_published</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Check the replicated percentiles against the published values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        The file written by :py:class:`Replicate`</span>
+
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        A logger to report the comparison to</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If any percentile differs from the published value</span>
+<span class="sd">    """</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">mismatched</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">expected</span> <span class="ow">in</span> <span class="n">PUBLISHED</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+        <span class="c1"># the published values are points on the parameter grid, so this</span>
+        <span class="c1"># should be exact to within floating-point representation rather</span>
+        <span class="c1"># than merely close</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">found</span><span class="p">,</span> <span class="n">expected</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1.0e-9</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+            <span class="n">mismatched</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">: expected </span><span class="si">{</span><span class="n">expected</span><span class="si">:</span><span class="s1">.5e</span><span class="si">}</span><span class="s1">, '</span>
+                              <span class="sa">f</span><span class="s1">'found </span><span class="si">{</span><span class="n">found</span><span class="si">:</span><span class="s1">.5e</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">mismatched</span><span class="p">:</span>
+        <span class="n">listing</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mismatched</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">'The replication of the published 8 km ISMIP7 calibration does '</span>
+            <span class="sa">f</span><span class="s1">'not reproduce the published percentiles:</span><span class="se">\n</span><span class="si">{</span><span class="n">listing</span><span class="si">}</span><span class="se">\n</span><span class="s1">'</span>
+            <span class="sa">f</span><span class="s1">'This means the vendored parameter-selection toolbox is not '</span>
+            <span class="sa">f</span><span class="s1">'being driven as it was for the published numbers, so the MALI '</span>
+            <span class="sa">f</span><span class="s1">'calibration built on the same code path cannot be trusted '</span>
+            <span class="sa">f</span><span class="s1">'either.'</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'The published 8 km percentiles are reproduced exactly.'</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_static</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Load the 8 km topography, masks and derived fields."""</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Loading the ISMIP 8 km topography and masks...'</span><span class="p">)</span>
+    <span class="n">masks</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">mask_files</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
+
+    <span class="n">topo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="s1">'obs'</span><span class="p">,</span> <span class="s1">'ocean'</span><span class="p">,</span> <span class="s1">'topography'</span><span class="p">,</span> <span class="s1">'bedmap3'</span><span class="p">,</span> <span class="s1">'v3'</span><span class="p">,</span>
+                     <span class="s1">'bedmap3_AIS_obs_ocean_topography_v3.nc'</span><span class="p">))</span>
+    <span class="n">basins</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="n">masks</span><span class="p">[</span><span class="s1">'basins'</span><span class="p">])</span><span class="o">.</span><span class="n">basinNumber</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">'basins'</span><span class="p">)</span>
+    <span class="n">bfrn</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="n">masks</span><span class="p">[</span><span class="s1">'bfrn'</span><span class="p">])</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="n">masks</span><span class="p">[</span><span class="s1">'floating'</span><span class="p">])</span><span class="o">.</span><span class="n">mask</span>
+
+    <span class="n">floating</span> <span class="o">=</span> <span class="n">topo</span><span class="p">[</span><span class="s1">'floating_frac'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span>
+    <span class="n">slope</span> <span class="o">=</span> <span class="n">mean_slope</span><span class="p">(</span><span class="n">topo</span><span class="p">[</span><span class="s1">'draft'</span><span class="p">],</span> <span class="n">floating</span><span class="p">,</span> <span class="n">RESOLUTION</span><span class="p">,</span> <span class="n">RESOLUTION</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  mean draft slope: </span><span class="si">{</span><span class="n">slope</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1"> rad '</span>
+                <span class="sa">f</span><span class="s1">'(sin = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">slope</span><span class="p">)</span><span class="si">:</span><span class="s1">.7f</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
+
+    <span class="n">shelves</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="n">masks</span><span class="p">[</span><span class="s1">'shelves'</span><span class="p">])</span><span class="o">.</span><span class="n">shelf_mask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">shelves</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span> <span class="k">if</span> <span class="s1">'x'</span> <span class="ow">in</span> <span class="n">shelves</span><span class="o">.</span><span class="n">coords</span> <span class="k">else</span> <span class="n">basins</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span>
+    <span class="c1"># restrict Pine Island to its main trunk, as the worked example does</span>
+    <span class="n">pig</span> <span class="o">=</span> <span class="p">(</span><span class="n">shelves</span> <span class="o">==</span> <span class="n">datasets</span><span class="o">.</span><span class="n">PIG_ID</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">datasets</span><span class="o">.</span><span class="n">PIG_X_MAX</span><span class="p">)</span>
+    <span class="n">dotson</span> <span class="o">=</span> <span class="n">shelves</span> <span class="o">==</span> <span class="n">datasets</span><span class="o">.</span><span class="n">DOTSON_ID</span>
+    <span class="n">region_label</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pig</span><span class="p">,</span> <span class="s1">'pig'</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">dotson</span><span class="p">,</span> <span class="s1">'dotson'</span><span class="p">,</span> <span class="s1">''</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">draft</span><span class="o">=</span><span class="n">topo</span><span class="p">[</span><span class="s1">'draft'</span><span class="p">],</span> <span class="n">floating</span><span class="o">=</span><span class="n">floating</span><span class="p">,</span> <span class="n">basins</span><span class="o">=</span><span class="n">basins</span><span class="p">,</span>
+                <span class="n">bfrn</span><span class="o">=</span><span class="n">bfrn</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="n">slope</span><span class="p">,</span> <span class="n">region_label</span><span class="o">=</span><span class="n">region_label</span><span class="p">,</span>
+                <span class="n">area</span><span class="o">=</span><span class="n">uniform_area</span><span class="p">(</span><span class="n">topo</span><span class="p">[</span><span class="s1">'draft'</span><span class="p">],</span> <span class="n">RESOLUTION</span><span class="p">,</span> <span class="n">CELL_DIMS</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_unit_melt</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">static</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Melt at a unit ``K`` for one ocean state, in kg m-2 yr-1.</span>
+
+<span class="sd">    Melt is exactly linear in ``K``, so every member of the parameter</span>
+<span class="sd">    ensemble is this field times its ``K``.  Working at ``K = 1`` keeps the</span>
+<span class="sd">    whole replication in single fields rather than 120 copies of each.</span>
+<span class="sd">    """</span>
+    <span class="n">draft</span> <span class="o">=</span> <span class="n">static</span><span class="p">[</span><span class="s1">'draft'</span><span class="p">]</span>
+    <span class="n">floating</span> <span class="o">=</span> <span class="n">static</span><span class="p">[</span><span class="s1">'floating'</span><span class="p">]</span>
+
+    <span class="n">tf</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">tf_file</span><span class="p">)[</span><span class="s1">'tf'</span><span class="p">]</span>
+    <span class="n">so</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">so_file</span><span class="p">)[</span><span class="s1">'so'</span><span class="p">]</span>
+
+    <span class="n">tf_draft</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">draft</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">floating</span><span class="p">)</span>
+    <span class="n">so_draft</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">draft</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">floating</span><span class="p">)</span>
+
+    <span class="n">melt</span> <span class="o">=</span> <span class="n">local_quadratic_melt</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">tf_draft</span><span class="p">,</span> <span class="n">so_draft</span><span class="p">,</span> <span class="n">static</span><span class="p">[</span><span class="s1">'slope'</span><span class="p">])</span>
+    <span class="c1"># the observational files carry a scalar Time coordinate that differs</span>
+    <span class="c1"># between years, which would collide when the per-year aggregates are</span>
+    <span class="c1"># concatenated; nothing downstream uses any non-dimension coordinate</span>
+    <span class="k">return</span> <span class="n">melt</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">melt</span><span class="o">.</span><span class="n">coords</span>
+                           <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">melt</span><span class="o">.</span><span class="n">dims</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'ignore'</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_unit_terms</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">static</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Aggregate unit melt into the four objective-function terms."""</span>
+    <span class="n">area</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">static</span><span class="p">[</span><span class="s1">'area'</span><span class="p">],</span> <span class="n">static</span><span class="p">[</span><span class="s1">'mask'</span><span class="p">]</span>
+    <span class="n">basins</span><span class="p">,</span> <span class="n">bfrn</span> <span class="o">=</span> <span class="n">static</span><span class="p">[</span><span class="s1">'basins'</span><span class="p">],</span> <span class="n">static</span><span class="p">[</span><span class="s1">'bfrn'</span><span class="p">]</span>
+    <span class="n">states</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">ocean_states</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="s1">'all'</span><span class="p">)</span>
+    <span class="n">by_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">state</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">}</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Building the present-day ensemble (J1, J2)...'</span><span class="p">)</span>
+    <span class="n">pd_unit</span> <span class="o">=</span> <span class="n">_unit_melt</span><span class="p">(</span><span class="n">by_name</span><span class="p">[</span><span class="s1">'climatology'</span><span class="p">],</span> <span class="n">static</span><span class="p">)</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">integrate_by_group</span><span class="p">(</span><span class="n">pd_unit</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">basins</span><span class="p">,</span> <span class="n">CELL_DIMS</span><span class="p">,</span>
+                            <span class="n">group_dim</span><span class="o">=</span><span class="s1">'basins'</span><span class="p">)</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">integrate_by_group</span><span class="p">(</span><span class="n">pd_unit</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">bfrn</span><span class="p">[</span><span class="s1">'BFRN_bins'</span><span class="p">],</span>
+                            <span class="n">CELL_DIMS</span><span class="p">,</span> <span class="n">group_dim</span><span class="o">=</span><span class="s1">'BFRN_bins'</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Building the ocean-model ensemble (J3)...'</span><span class="p">)</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">which</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'cold'</span><span class="p">,</span> <span class="s1">'warm'</span><span class="p">):</span>
+        <span class="n">per_model</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="s1">'model'</span> <span class="ow">or</span> <span class="n">state</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">which</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">melt</span> <span class="o">=</span> <span class="n">_unit_melt</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">static</span><span class="p">)</span>
+            <span class="c1"># regional models only constrain the basins they cover</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">basins</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">melt</span> <span class="o">=</span> <span class="n">melt</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">basins</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">basins</span><span class="p">)))</span>
+            <span class="n">agg</span> <span class="o">=</span> <span class="n">average_by_group</span><span class="p">(</span><span class="n">melt</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">basins</span><span class="p">,</span> <span class="n">CELL_DIMS</span><span class="p">,</span>
+                                   <span class="n">group_dim</span><span class="o">=</span><span class="s1">'basins'</span><span class="p">)</span>
+            <span class="n">per_model</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agg</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">({</span><span class="s1">'model'</span><span class="p">:</span> <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">label</span><span class="p">]}))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">which</span><span class="si">:</span><span class="s1">4s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">means</span><span class="p">[</span><span class="n">which</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">per_model</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">'model'</span><span class="p">,</span>
+                                 <span class="n">coords</span><span class="o">=</span><span class="s1">'minimal'</span><span class="p">)</span>
+    <span class="n">t3</span> <span class="o">=</span> <span class="n">means</span><span class="p">[</span><span class="s1">'warm'</span><span class="p">]</span> <span class="o">-</span> <span class="n">means</span><span class="p">[</span><span class="s1">'cold'</span><span class="p">]</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Building the observational ensemble (J4)...'</span><span class="p">)</span>
+    <span class="n">per_year</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="s1">'obs'</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">melt</span> <span class="o">=</span> <span class="n">_unit_melt</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">static</span><span class="p">)</span>
+        <span class="n">agg</span> <span class="o">=</span> <span class="n">integrate_by_group</span><span class="p">(</span><span class="n">melt</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">static</span><span class="p">[</span><span class="s1">'region_label'</span><span class="p">],</span>
+                                 <span class="n">CELL_DIMS</span><span class="p">,</span> <span class="n">group_dim</span><span class="o">=</span><span class="s1">'region'</span><span class="p">)</span>
+        <span class="n">per_year</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agg</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">({</span><span class="s1">'year'</span><span class="p">:</span> <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">year</span><span class="p">]}))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">year</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">t4</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">per_year</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">'year'</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="s1">'minimal'</span><span class="p">)</span>
+    <span class="c1"># drop the '' label used for cells outside PIG and Dotson</span>
+    <span class="n">t4</span> <span class="o">=</span> <span class="n">t4</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">region</span><span class="o">=</span><span class="p">[</span><span class="n">region</span> <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">t4</span><span class="o">.</span><span class="n">region</span><span class="o">.</span><span class="n">values</span> <span class="k">if</span> <span class="n">region</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">t1</span><span class="o">=</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="o">=</span><span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="o">=</span><span class="n">t3</span><span class="p">,</span> <span class="n">t4</span><span class="o">=</span><span class="n">t4</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_result</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">param_values</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Write the parameter distribution to a file."""</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'min_p1'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'sample'</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s1">'min_p1'</span><span class="p">])</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'parameter_values'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'parameter'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">param_values</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'p5'</span><span class="p">,</span> <span class="s1">'median'</span><span class="p">,</span> <span class="s1">'p95'</span><span class="p">,</span> <span class="s1">'mode'</span><span class="p">):</span>
+        <span class="n">ds</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">'Replication of the published ISMIP7 quadratic calibration on the '</span>
+        <span class="s1">'ISMIP 8 km grid'</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_report</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Log the percentiles beside the published values."""</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'K percentiles, ISMIP 8 km grid:'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="s2">""</span><span class="si">:</span><span class="s1">12s</span><span class="si">}{</span><span class="s2">"compass"</span><span class="si">:</span><span class="s1">&gt;12s</span><span class="si">}{</span><span class="s2">"published"</span><span class="si">:</span><span class="s1">&gt;12s</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">expected</span> <span class="ow">in</span> <span class="n">PUBLISHED</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s1">12s</span><span class="si">}{</span><span class="n">result</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">:</span><span class="s1">12.5e</span><span class="si">}{</span><span class="n">expected</span><span class="si">:</span><span class="s1">12.5e</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="s2">"mode"</span><span class="si">:</span><span class="s1">12s</span><span class="si">}{</span><span class="n">result</span><span class="p">[</span><span class="s2">"mode"</span><span class="p">]</span><span class="si">:</span><span class="s1">12.5e</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

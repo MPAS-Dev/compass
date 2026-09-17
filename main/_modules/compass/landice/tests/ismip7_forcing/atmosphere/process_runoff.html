@@ -118,11 +118,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_forcing.create_mapfile</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">build_mapping_file</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_forcing.ice_sheet_params</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_params</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_forcing.remap_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">extrapolate_source</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.ismip7.ice_sheet_params</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_params</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.ismip7.mapping</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_mapping_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.ismip7.remap</span><span class="w"> </span><span class="kn">import</span> <span class="n">extrapolate_source</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -253,7 +251,8 @@
             <span class="c1"># so they don't pollute neighboring cells during interpolation</span>
             <span class="n">extrap_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"extrap_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">):</span>
-                <span class="n">extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"mrro"</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+                <span class="n">extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"mrro"</span><span class="p">,</span>
+                                   <span class="n">logger</span><span class="p">)</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Remapping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncremap"</span><span class="p">,</span>

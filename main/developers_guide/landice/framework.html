@@ -63,6 +63,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Land-ice Framework</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#ais-observations">ais_observations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#extrapolate">extrapolate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ismip7">ismip7</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#iceshelf-melt">iceshelf_melt</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mesh">mesh</a></li>
 </ul>
@@ -134,6 +135,31 @@ not need to be mutually exclusive, so more can be added as needed.</p>
 <p>The landice framework module <code class="docutils literal notranslate"><span class="pre">compass/landice/extrapolate.py</span></code> provides a
 function for extrapolating variables into undefined regions.  It is copied
 from a similar script in MPAS-Tools.</p>
+</section>
+<section id="ismip7">
+<h2>ismip7<a class="headerlink" href="#ismip7" title="Link to this heading"></a></h2>
+<p>The landice framework package <code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.ismip7</span></code> holds code
+shared by the ISMIP7 test groups – <code class="docutils literal notranslate"><span class="pre">ismip7_forcing</span></code>, <code class="docutils literal notranslate"><span class="pre">ismip7_run</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ismip7_calibration</span></code>.  All of them remap data from an ISMIP7 polar
+stereographic grid onto a MALI mesh, so the helpers to do that live here
+rather than in any one test group.</p>
+<p><a class="reference internal" href="generated/compass.landice.ismip7.ice_sheet_params.get_params.html#compass.landice.ismip7.ice_sheet_params.get_params" title="compass.landice.ismip7.ice_sheet_params.get_params"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.ismip7.ice_sheet_params.get_params()</span></code></a> returns the
+parameters that differ between the Antarctic and Greenland ice sheets: the
+projection, the filename prefix, dataset versions and resolutions, and whether
+the ocean forcing is 3-D.</p>
+<p><a class="reference internal" href="generated/compass.landice.ismip7.mapping.build_mapping_file.html#compass.landice.ismip7.mapping.build_mapping_file" title="compass.landice.ismip7.mapping.build_mapping_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.ismip7.mapping.build_mapping_file()</span></code></a> builds an ESMF
+mapping file from an ISMIP7 polar stereographic grid to a MALI mesh, using
+<code class="docutils literal notranslate"><span class="pre">mpas_tools.scrip.from_mpas</span></code> and <code class="docutils literal notranslate"><span class="pre">ESMF_RegridWeightGen</span></code>.</p>
+<p><a class="reference internal" href="generated/compass.landice.ismip7.remap.extrapolate_source.html#compass.landice.ismip7.remap.extrapolate_source" title="compass.landice.ismip7.remap.extrapolate_source"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.ismip7.remap.extrapolate_source()</span></code></a> fills missing
+values on the source grid by nearest neighbour before remapping, so that fill
+values do not contaminate the interpolation stencil.  A slab that is entirely
+missing keeps a fill value, so <code class="docutils literal notranslate"><span class="pre">ncremap</span></code> ignores it rather than smearing
+it into its neighbours, and the intermediate file is written as CDF-5 so
+that <code class="docutils literal notranslate"><span class="pre">ncremap</span></code> can open even the largest 3-D fields.</p>
+<p><a class="reference internal" href="generated/compass.landice.ismip7.remap.open_rename_and_trim.html#compass.landice.ismip7.remap.open_rename_and_trim" title="compass.landice.ismip7.remap.open_rename_and_trim"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.ismip7.remap.open_rename_and_trim()</span></code></a> and
+<a class="reference internal" href="generated/compass.landice.ismip7.remap.add_xtime_and_write.html#compass.landice.ismip7.remap.add_xtime_and_write" title="compass.landice.ismip7.remap.add_xtime_and_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.ismip7.remap.add_xtime_and_write()</span></code></a> convert a
+remapped file to MALI’s variable and dimension names, restrict it to a range
+of years, and add the <code class="docutils literal notranslate"><span class="pre">xtime</span></code> variable MALI needs.</p>
 </section>
 <section id="iceshelf-melt">
 <h2>iceshelf_melt<a class="headerlink" href="#iceshelf-melt" title="Link to this heading"></a></h2>

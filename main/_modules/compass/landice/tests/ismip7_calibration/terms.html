@@ -1,0 +1,469 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip7_calibration.terms &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../ismip7_calibration.html">compass.landice.tests.ismip7_calibration</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip7_calibration.terms</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip7_calibration.terms</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Objective-function terms J1-J4 for ISMIP7 melt-module calibration, on any mesh.</span>
+
+<span class="sd">The reference implementation in</span>
+<span class="sd">``parameterisations/parameter_selection_toolbox.py`` assumes a uniform</span>
+<span class="sd">structured grid: it converts cell sums to Gt/yr with a single scalar</span>
+<span class="sd">``cvt_m = reso**2 / 1e12`` and takes unweighted means over basins.  That is</span>
+<span class="sd">correct for the ISMIP 8 km grid but wrong for a variable-resolution</span>
+<span class="sd">unstructured mesh such as MALI's 4-20 km Antarctic mesh, where cell area</span>
+<span class="sd">varies by a factor of ~25.</span>
+
+<span class="sd">The functions here take an explicit cell-area array instead, and work over an</span>
+<span class="sd">arbitrary set of cell dimensions.  Passing a uniform area reproduces the</span>
+<span class="sd">structured-grid result exactly, so the same code serves both cases; see</span>
+<span class="sd">``tests/test_terms.py``.</span>
+
+<span class="sd">Conventions, matching the toolbox:</span>
+
+<span class="sd">* melt rates are in kg m-2 yr-1, positive for melting, negative for refreezing</span>
+<span class="sd">* integrated terms (J1, J2, J4) are in Gt yr-1</span>
+<span class="sd">* averaged terms (J3) are in kg m-2 yr-1</span>
+<span class="sd">* an aggregate that comes out exactly zero is set to NaN, so that regions</span>
+<span class="sd">  with no contributing cells drop out of the objective function rather than</span>
+<span class="sd">  being treated as a real zero</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+
+<span class="c1">#: kg per Gt</span>
+<span class="n">KG_PER_GT</span> <span class="o">=</span> <span class="mf">1.0e12</span>
+
+<span class="c1">#: name of the flattened cell dimension used internally</span>
+<span class="n">CELL_DIM</span> <span class="o">=</span> <span class="s1">'_cell'</span>
+
+
+<div class="viewcode-block" id="stack_cells">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.terms.stack_cells.html#compass.landice.tests.ismip7_calibration.terms.stack_cells">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">stack_cells</span><span class="p">(</span><span class="n">da</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Flatten the cell dimensions of ``da`` into a single dimension.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    da : xarray.DataArray</span>
+<span class="sd">        Array with one or more cell dimensions.</span>
+<span class="sd">    cell_dims : sequence of str</span>
+<span class="sd">        The dimensions to flatten, e.g. ``('y', 'x')`` for a structured grid or</span>
+<span class="sd">        ``('nCells',)`` for an MPAS mesh.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    xarray.DataArray</span>
+<span class="sd">        ``da`` with ``cell_dims`` replaced by :data:`CELL_DIM`.</span>
+<span class="sd">    """</span>
+    <span class="n">cell_dims</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cell_dims</span><span class="p">)</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">dim</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">cell_dims</span> <span class="k">if</span> <span class="n">dim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">da</span><span class="o">.</span><span class="n">dims</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s1"> not found in dimensions </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">da</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cell_dims</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">cell_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">CELL_DIM</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">da</span>
+    <span class="n">stacked</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">stack</span><span class="p">({</span><span class="n">CELL_DIM</span><span class="p">:</span> <span class="n">cell_dims</span><span class="p">})</span>
+    <span class="c1"># drop the MultiIndex coordinate; we only need positional alignment and the</span>
+    <span class="c1"># index would otherwise have to be carried through every groupby</span>
+    <span class="k">return</span> <span class="n">stacked</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">CELL_DIM</span><span class="p">,</span> <span class="o">*</span><span class="n">cell_dims</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'ignore'</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">({</span><span class="n">CELL_DIM</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stacked</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">CELL_DIM</span><span class="p">])})</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_prepare</span><span class="p">(</span><span class="n">melt</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Flatten melt, area, mask and groups onto a common cell dimension."""</span>
+    <span class="n">melt</span> <span class="o">=</span> <span class="n">stack_cells</span><span class="p">(</span><span class="n">melt</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">)</span>
+    <span class="n">area</span> <span class="o">=</span> <span class="n">stack_cells</span><span class="p">(</span><span class="n">area</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">)</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="n">stack_cells</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">area</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="n">stack_cells</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="c1"># cells with no group assignment never contribute</span>
+    <span class="k">if</span> <span class="n">groups</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s1">'f'</span><span class="p">:</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="n">valid</span> <span class="o">&amp;</span> <span class="n">groups</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">melt</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">valid</span><span class="p">,</span> <span class="n">groups</span>
+
+
+<div class="viewcode-block" id="integrate_by_group">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.terms.integrate_by_group.html#compass.landice.tests.ismip7_calibration.terms.integrate_by_group">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">integrate_by_group</span><span class="p">(</span>
+    <span class="n">melt</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">,</span> <span class="n">group_dim</span><span class="o">=</span><span class="s1">'basins'</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Integrate a melt rate over each group, in Gt yr-1.</span>
+
+<span class="sd">    This is the mesh-agnostic form of the toolbox's</span>
+<span class="sd">    ``melt.where(mask).groupby(groups).sum() * reso**2 / 1e12``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    melt : xarray.DataArray</span>
+<span class="sd">        Melt rate in kg m-2 yr-1.  May carry any number of extra dimensions</span>
+<span class="sd">        (parameter values, ocean model, year, ...); they are preserved.</span>
+<span class="sd">    area : xarray.DataArray</span>
+<span class="sd">        Cell area in m2, over ``cell_dims`` only.</span>
+<span class="sd">    mask : xarray.DataArray or None</span>
+<span class="sd">        Boolean; True where the cell should contribute (e.g. floating ice).</span>
+<span class="sd">    groups : xarray.DataArray</span>
+<span class="sd">        Group id per cell (basin number, buttressing bin, ...).</span>
+<span class="sd">    cell_dims : sequence of str</span>
+<span class="sd">        Dimensions of ``melt`` that index cells.</span>
+<span class="sd">    group_dim : str, optional</span>
+<span class="sd">        Name to give the resulting group dimension.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    xarray.DataArray</span>
+<span class="sd">        Integrated melt in Gt yr-1, with ``cell_dims`` replaced by</span>
+<span class="sd">        ``group_dim``.  Groups whose total is exactly zero are set to NaN.</span>
+<span class="sd">    """</span>
+    <span class="n">melt</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">valid</span><span class="p">,</span> <span class="n">groups</span> <span class="o">=</span> <span class="n">_prepare</span><span class="p">(</span><span class="n">melt</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">)</span>
+
+    <span class="n">weighted</span> <span class="o">=</span> <span class="p">(</span><span class="n">melt</span> <span class="o">*</span> <span class="n">area</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">valid</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">weighted</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groups</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">group_dim</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">skipna</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">total</span> <span class="o">/</span> <span class="n">KG_PER_GT</span>
+    <span class="k">return</span> <span class="n">total</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">total</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="average_by_group">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.terms.average_by_group.html#compass.landice.tests.ismip7_calibration.terms.average_by_group">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">average_by_group</span><span class="p">(</span><span class="n">melt</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">,</span> <span class="n">group_dim</span><span class="o">=</span><span class="s1">'basins'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Area-weighted mean melt rate over each group, in kg m-2 yr-1.</span>
+
+<span class="sd">    This is the mesh-agnostic form of the toolbox's</span>
+<span class="sd">    ``melt.where(mask).groupby(groups).mean()``.  On a uniform grid an</span>
+<span class="sd">    area-weighted mean and a plain mean coincide; on a variable-resolution mesh</span>
+<span class="sd">    they do not, and the area-weighted one is the physically meaningful choice.</span>
+
+<span class="sd">    Parameters and returns are as for :func:`integrate_by_group`, except</span>
+<span class="sd">    that the result is a mean rather than an integral.</span>
+<span class="sd">    """</span>
+    <span class="n">melt</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">valid</span><span class="p">,</span> <span class="n">groups</span> <span class="o">=</span> <span class="n">_prepare</span><span class="p">(</span><span class="n">melt</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">)</span>
+
+    <span class="n">grouper</span> <span class="o">=</span> <span class="n">groups</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">group_dim</span><span class="p">)</span>
+    <span class="n">weighted</span> <span class="o">=</span> <span class="p">(</span><span class="n">melt</span> <span class="o">*</span> <span class="n">area</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">valid</span><span class="p">)</span>
+    <span class="c1"># only count area where melt is defined, so that NaN melt does not bias the</span>
+    <span class="c1"># denominator</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">area</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">valid</span> <span class="o">&amp;</span> <span class="n">melt</span><span class="o">.</span><span class="n">notnull</span><span class="p">())</span>
+
+    <span class="n">numer</span> <span class="o">=</span> <span class="n">weighted</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">grouper</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">skipna</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">denom</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">grouper</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">skipna</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">numer</span> <span class="o">/</span> <span class="n">denom</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">denom</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mean</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mean</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_term1">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.terms.calculate_term1.html#compass.landice.tests.ismip7_calibration.terms.calculate_term1">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_term1</span><span class="p">(</span>
+    <span class="n">ensemble</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">basins</span><span class="p">,</span> <span class="n">melt_obs</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="s1">'melt_rate'</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    J1: basin-integrated present-day melt, in Gt yr-1.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ensemble : xarray.Dataset</span>
+<span class="sd">        Present-day ensemble, with ``var`` indexed by at least ``p1`` and</span>
+<span class="sd">        ``p2``.</span>
+<span class="sd">    area, mask, basins : xarray.DataArray</span>
+<span class="sd">        Cell area (m2), contributing-cell mask, and IMBIE2 basin number per</span>
+<span class="sd">        cell.  Basin numbers follow the **ISMIP7 0-based convention**,</span>
+<span class="sd">        which differs by one from MALI's; see the basin-numbering note in</span>
+<span class="sd">        the developer guide for why that matters.</span>
+<span class="sd">    melt_obs : pandas.DataFrame</span>
+<span class="sd">        Observational targets, with columns ``'BMR (Gt/yr)'`` and</span>
+<span class="sd">        ``'BMR uncert (Gt/yr)'``, one row per basin in basin order.</span>
+<span class="sd">    cell_dims : sequence of str</span>
+<span class="sd">        Cell dimensions of the ensemble.</span>
+<span class="sd">    var : str, optional</span>
+<span class="sd">        Name of the melt-rate variable.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    model, obs_mean, obs_sigma : xarray.DataArray</span>
+<span class="sd">    """</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">integrate_by_group</span><span class="p">(</span>
+        <span class="n">ensemble</span><span class="p">[</span><span class="n">var</span><span class="p">],</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">basins</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">,</span> <span class="n">group_dim</span><span class="o">=</span><span class="s1">'basins'</span>
+    <span class="p">)</span>
+    <span class="n">obs_mean</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">melt_obs</span><span class="p">[</span><span class="s1">'BMR (Gt/yr)'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">'melt_Gt_per_y'</span><span class="p">,</span>
+        <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">'basin'</span><span class="p">],</span>
+        <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">'basin'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">melt_obs</span><span class="p">))},</span>
+    <span class="p">)</span>
+    <span class="n">obs_sigma</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">melt_obs</span><span class="p">[</span><span class="s1">'BMR uncert (Gt/yr)'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">'melt_unc_Gt_per_y'</span><span class="p">,</span>
+        <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">'basin'</span><span class="p">],</span>
+        <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">'basin'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">melt_obs</span><span class="p">))},</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">obs_mean</span><span class="p">,</span> <span class="n">obs_sigma</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_term2">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.terms.calculate_term2.html#compass.landice.tests.ismip7_calibration.terms.calculate_term2">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_term2</span><span class="p">(</span>
+    <span class="n">ensemble</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">bfrn_bins</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="s1">'melt_rate'</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    J2: melt integrated over buttressing (BFRN) bins, in Gt yr-1.</span>
+
+<span class="sd">    ``target`` is the dataset holding ``melt_mean`` and ``melt_mean_err`` per</span>
+<span class="sd">    bin.  Other parameters are as for :func:`calculate_term1`.</span>
+<span class="sd">    """</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">integrate_by_group</span><span class="p">(</span>
+        <span class="n">ensemble</span><span class="p">[</span><span class="n">var</span><span class="p">],</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">bfrn_bins</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">,</span> <span class="n">group_dim</span><span class="o">=</span><span class="s1">'BFRN_bins'</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">target</span><span class="p">[</span><span class="s1">'melt_mean'</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="s1">'melt_mean_err'</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_term3">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.terms.calculate_term3.html#compass.landice.tests.ismip7_calibration.terms.calculate_term3">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_term3</span><span class="p">(</span>
+    <span class="n">cold_ensemble</span><span class="p">,</span>
+    <span class="n">warm_ensemble</span><span class="p">,</span>
+    <span class="n">cold_target</span><span class="p">,</span>
+    <span class="n">warm_target</span><span class="p">,</span>
+    <span class="n">area</span><span class="p">,</span>
+    <span class="n">mask</span><span class="p">,</span>
+    <span class="n">basins</span><span class="p">,</span>
+    <span class="n">cell_dims</span><span class="p">,</span>
+    <span class="n">var</span><span class="o">=</span><span class="s1">'melt_rate'</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    J3: warm-minus-cold basin-mean melt difference, in kg m-2 yr-1.</span>
+
+<span class="sd">    The model term is the difference of area-weighted basin means between the</span>
+<span class="sd">    warm and cold ocean states; the target is the corresponding difference from</span>
+<span class="sd">    the ocean models, with uncertainties combined in quadrature.</span>
+<span class="sd">    """</span>
+    <span class="n">cold</span> <span class="o">=</span> <span class="n">average_by_group</span><span class="p">(</span>
+        <span class="n">cold_ensemble</span><span class="p">[</span><span class="n">var</span><span class="p">],</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">basins</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">,</span> <span class="n">group_dim</span><span class="o">=</span><span class="s1">'basins'</span>
+    <span class="p">)</span>
+    <span class="n">warm</span> <span class="o">=</span> <span class="n">average_by_group</span><span class="p">(</span>
+        <span class="n">warm_ensemble</span><span class="p">[</span><span class="n">var</span><span class="p">],</span> <span class="n">area</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">basins</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">,</span> <span class="n">group_dim</span><span class="o">=</span><span class="s1">'basins'</span>
+    <span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">warm</span> <span class="o">-</span> <span class="n">cold</span>
+
+    <span class="n">obs_mean</span> <span class="o">=</span> <span class="n">warm_target</span><span class="o">.</span><span class="n">melt_rate</span> <span class="o">-</span> <span class="n">cold_target</span><span class="o">.</span><span class="n">melt_rate</span>
+    <span class="n">obs_sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+        <span class="n">warm_target</span><span class="o">.</span><span class="n">melt_rate_uncert</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">cold_target</span><span class="o">.</span><span class="n">melt_rate_uncert</span><span class="o">**</span><span class="mi">2</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">obs_mean</span><span class="p">,</span> <span class="n">obs_sigma</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_term4">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.terms.calculate_term4.html#compass.landice.tests.ismip7_calibration.terms.calculate_term4">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_term4</span><span class="p">(</span>
+    <span class="n">obs_ensemble</span><span class="p">,</span>
+    <span class="n">area</span><span class="p">,</span>
+    <span class="n">mask</span><span class="p">,</span>
+    <span class="n">region_label</span><span class="p">,</span>
+    <span class="n">target</span><span class="p">,</span>
+    <span class="n">cell_dims</span><span class="p">,</span>
+    <span class="n">var</span><span class="o">=</span><span class="s1">'melt_rate'</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    J4: PIG/Dotson integrated melt per observation year, in Gt yr-1.</span>
+
+<span class="sd">    ``region_label`` labels each cell with an ice-shelf name (``'pig'``,</span>
+<span class="sd">    ``'dotson'``); ``target`` holds ``melt_rate`` and ``melt_rate_uncert``</span>
+<span class="sd">    indexed by region and year.  The result is reindexed onto the target so the</span>
+<span class="sd">    region ordering matches.</span>
+<span class="sd">    """</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">integrate_by_group</span><span class="p">(</span>
+        <span class="n">obs_ensemble</span><span class="p">[</span><span class="n">var</span><span class="p">],</span>
+        <span class="n">area</span><span class="p">,</span>
+        <span class="n">mask</span><span class="p">,</span>
+        <span class="n">region_label</span><span class="p">,</span>
+        <span class="n">cell_dims</span><span class="p">,</span>
+        <span class="n">group_dim</span><span class="o">=</span><span class="s1">'region'</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">melt_rate</span><span class="o">.</span><span class="n">notnull</span><span class="p">())</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">reindex_like</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">melt_rate</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">melt_rate</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">melt_rate_uncert</span></div>
+
+
+
+<div class="viewcode-block" id="uniform_area">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.terms.uniform_area.html#compass.landice.tests.ismip7_calibration.terms.uniform_area">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">uniform_area</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">cell_dims</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Build a uniform cell-area array, for structured grids.</span>
+
+<span class="sd">    Convenience so that a structured-grid case can call the same functions:</span>
+<span class="sd">    ``area = uniform_area(melt, 8000.0, ('y', 'x'))``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    template : xarray.DataArray</span>
+<span class="sd">        Any array carrying the cell dimensions and their coordinates.</span>
+<span class="sd">    resolution : float</span>
+<span class="sd">        Grid spacing in m; cell area is ``resolution**2``.</span>
+<span class="sd">    cell_dims : sequence of str</span>
+<span class="sd">        The cell dimensions.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    xarray.DataArray</span>
+<span class="sd">        Constant array of ``resolution**2``, over ``cell_dims`` only.</span>
+<span class="sd">    """</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">dim</span><span class="p">:</span> <span class="n">template</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">cell_dims</span>
+        <span class="k">if</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">template</span><span class="o">.</span><span class="n">coords</span>
+    <span class="p">}</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">cell_dims</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="n">dims</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">cell_dims</span><span class="p">),</span>
+        <span class="n">coords</span><span class="o">=</span><span class="n">coords</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">'area'</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

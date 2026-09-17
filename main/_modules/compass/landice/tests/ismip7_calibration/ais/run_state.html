@@ -1,0 +1,421 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip7_calibration.ais.run_state &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../../ismip7_calibration.html">compass.landice.tests.ismip7_calibration</a></li>
+          <li class="breadcrumb-item"><a href="../ais.html">compass.landice.tests.ismip7_calibration.ais</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip7_calibration.ais.run_state</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip7_calibration.ais.run_state</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">A single-timestep MALI melt diagnostic for one ocean state and melt form.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
+
+<span class="c1">#: namelist options that must exist in MALI's defaults for each melt form.</span>
+<span class="c1">#: Compass only *warns* when an option is missing from the defaults, so</span>
+<span class="c1">#: without an explicit check a MALI build without the ISMIP7 melt method</span>
+<span class="c1">#: would silently drop these and produce a plausible but wrong calibration.</span>
+<span class="n">REQUIRED_OPTIONS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'ismip7'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'config_ismip7_melt_sin_slope'</span><span class="p">,</span> <span class="s1">'config_ismip7_melt_coriolis'</span><span class="p">,</span>
+               <span class="s1">'config_ismip7_melt_salinity'</span><span class="p">,</span>
+               <span class="s1">'config_ismip7_melt_salinity_source'</span><span class="p">],</span>
+    <span class="s1">'ismip6'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'config_basal_mass_bal_float'</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="c1">#: the input-stream variable each melt form reads its parameter from</span>
+<span class="n">PARAMETER_VARIABLE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'ismip7'</span><span class="p">:</span> <span class="s1">'ismip7shelfMelt_K'</span><span class="p">,</span>
+                      <span class="s1">'ismip6'</span><span class="p">:</span> <span class="s1">'ismip6shelfMelt_gamma0'</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="RunState">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.run_state.RunState.html#compass.landice.tests.ismip7_calibration.ais.run_state.RunState">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RunState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A step that runs MALI for a single timestep to diagnose the melt field</span>
+<span class="sd">    for one ocean state, using one melt form.</span>
+
+<span class="sd">    Melt is computed from the geometry and the forcing alone, so no ice</span>
+<span class="sd">    dynamics, no thermal evolution and no transient are needed.  The velocity</span>
+<span class="sd">    solver is off, which also means Albany is not required.</span>
+
+<span class="sd">    The run takes **one short timestep rather than none**, because MALI</span>
+<span class="sd">    computes melt inside the timestep rather than in the initial diagnostic</span>
+<span class="sd">    solve; a zero-length run would produce no melt at all.</span>
+
+<span class="sd">    One run per ocean state suffices, not one per parameter value: melt is</span>
+<span class="sd">    exactly proportional to the melt parameter, so the whole parameter</span>
+<span class="sd">    ensemble follows by scaling a single run.  That is what turns a ~1300-run</span>
+<span class="sd">    campaign into 28.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    state_name : str</span>
+<span class="sd">        Name of the ocean state this step runs</span>
+
+<span class="sd">    melt_form : str</span>
+<span class="sd">        ``'ismip7'`` for the Burgard local quadratic or ``'ismip6'`` for the</span>
+<span class="sd">        non-local quadratic</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="RunState.__init__">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.run_state.RunState.html#compass.landice.tests.ismip7_calibration.ais.run_state.RunState.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">state_name</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span>
+                 <span class="n">parameter_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.landice.tests.ismip7_calibration.ais.Ais</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        state_name : str</span>
+<span class="sd">            Name of the ocean state to run</span>
+
+<span class="sd">        melt_form : {'ismip7', 'ismip6'}</span>
+<span class="sd">            Which melt form to run</span>
+
+<span class="sd">        subdir : str</span>
+<span class="sd">            Subdirectory for this step</span>
+
+<span class="sd">        parameter_scale : float, optional</span>
+<span class="sd">            Multiple of the reference melt parameter to run at.  Only the</span>
+<span class="sd">            linearity check uses anything other than 1.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_name</span> <span class="o">=</span> <span class="n">state_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">melt_form</span> <span class="o">=</span> <span class="n">melt_form</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameter_scale</span> <span class="o">=</span> <span class="n">parameter_scale</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">subdir</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RunState.setup">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.run_state.RunState.setup.html#compass.landice.tests.ismip7_calibration.ais.run_state.RunState.setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Set up this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration'</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'ntasks'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span>
+        <span class="n">base_path_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'base_path_mali'</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mali_mesh_file'</span><span class="p">)</span>
+        <span class="n">timestep</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timestep'</span><span class="p">)</span>
+
+        <span class="n">_check_namelist_options</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">melt_form</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'mesh.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_mali</span><span class="p">,</span>
+                                                <span class="n">mali_mesh_file</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'masks.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../remap_masks/'</span>
+                                   <span class="s1">'ismip7_masks_on_mali.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'forcing.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'../remap_forcing/'</span>
+                                   <span class="sa">f</span><span class="s1">'forcing_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state_name</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span>
+
+        <span class="c1"># MALI builds the partition filename from</span>
+        <span class="c1"># config_block_decomp_file_prefix plus the task count; a symlink</span>
+        <span class="c1"># called graph.info alone is silently not found</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'graph.info.part.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'../make_graph/graph.info.part.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+        <span class="n">resource_location</span> <span class="o">=</span> <span class="s1">'compass.landice.tests.ismip7_calibration.ais'</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">resource_location</span><span class="p">,</span> <span class="s1">'namelist.landice'</span><span class="p">,</span>
+                               <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
+
+        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'config_basal_mass_bal_float'</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">melt_form</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                   <span class="s1">'config_dt'</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">timestep</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                   <span class="s1">'config_run_duration'</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">timestep</span><span class="si">}</span><span class="s2">'"</span><span class="p">}</span>
+        <span class="n">options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_melt_namelist_options</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">melt_form</span><span class="p">,</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">parameter_scale</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+                                  <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
+            <span class="n">resource_location</span><span class="p">,</span> <span class="s1">'streams.landice.template'</span><span class="p">,</span>
+            <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.landice'</span><span class="p">,</span>
+            <span class="n">template_replacements</span><span class="o">=</span><span class="p">{</span><span class="s1">'mesh_file'</span><span class="p">:</span> <span class="s1">'mesh.nc'</span><span class="p">,</span>
+                                   <span class="s1">'masks_file'</span><span class="p">:</span> <span class="s1">'masks.nc'</span><span class="p">,</span>
+                                   <span class="s1">'parameter_file'</span><span class="p">:</span> <span class="s1">'melt_parameter.nc'</span><span class="p">,</span>
+                                   <span class="s1">'parameter_variable'</span><span class="p">:</span>
+                                       <span class="n">PARAMETER_VARIABLE</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">melt_form</span><span class="p">],</span>
+                                   <span class="s1">'forcing_file'</span><span class="p">:</span> <span class="s1">'forcing.nc'</span><span class="p">,</span>
+                                   <span class="s1">'output_interval'</span><span class="p">:</span> <span class="n">timestep</span><span class="p">})</span>
+
+        <span class="n">_write_parameter_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">melt_form</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_scale</span><span class="p">,</span>
+                              <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
+                                           <span class="s1">'melt_parameter.nc'</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'output_melt.nc'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RunState.runtime_setup">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.run_state.RunState.runtime_setup.html#compass.landice.tests.ismip7_calibration.ais.run_state.RunState.runtime_setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">runtime_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Set the number of ocean layers from the forcing file</span>
+
+<span class="sd">        MPAS takes dimension sizes from the input stream only, and the mesh</span>
+<span class="sd">        file has no ``nISMIP6OceanLayers``.  Without this the 3-D forcing</span>
+<span class="sd">        fields are allocated against a zero-length dimension and the run dies</span>
+<span class="sd">        trying to allocate hundreds of GB.  It is read from the forcing</span>
+<span class="sd">        rather than hard-coded, so it stays right if ISMIP7 changes the</span>
+<span class="sd">        vertical grid.</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">runtime_setup</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'forcing.nc'</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+            <span class="n">n_layers</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nISMIP6OceanLayers'</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">'config_nISMIP6OceanLayers'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">n_layers</span><span class="si">}</span><span class="s1">'</span><span class="p">},</span>
+            <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RunState.run">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.run_state.RunState.run.html#compass.landice.tests.ismip7_calibration.ais.run_state.RunState.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="c1"># the partition file is supplied ready-made alongside the mesh, so</span>
+        <span class="c1"># there is no plain graph.info for gpmetis to partition</span>
+        <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partition_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_melt_namelist_options</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">,</span> <span class="n">parameter_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The namelist options specific to one melt form."""</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration_melt'</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">melt_form</span> <span class="o">==</span> <span class="s1">'ismip7'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">'config_ismip7_melt_sin_slope'</span><span class="p">:</span>
+                <span class="nb">repr</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'sin_slope'</span><span class="p">)),</span>
+            <span class="s1">'config_ismip7_melt_coriolis'</span><span class="p">:</span>
+                <span class="nb">repr</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'coriolis'</span><span class="p">)),</span>
+            <span class="s1">'config_ismip7_melt_salinity_source'</span><span class="p">:</span> <span class="s2">"'constant'"</span><span class="p">,</span>
+            <span class="s1">'config_ismip7_melt_salinity'</span><span class="p">:</span>
+                <span class="nb">repr</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'salinity'</span><span class="p">))}</span>
+    <span class="k">return</span> <span class="p">{}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">reference_parameter</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The reference value of a melt form's parameter, from config.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options for the test case</span>
+
+<span class="sd">    melt_form : {'ismip7', 'ismip6'}</span>
+<span class="sd">        The melt form</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    value : float</span>
+<span class="sd">        ``reference_k`` or ``reference_gamma0``</span>
+<span class="sd">    """</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration_melt'</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">melt_form</span> <span class="o">==</span> <span class="s1">'ismip7'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'reference_k'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'reference_gamma0'</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_parameter_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">,</span> <span class="n">parameter_scale</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Write the file MALI reads the melt parameter from.</span>
+
+<span class="sd">    Both melt forms read their parameter from an input stream -- gamma0 for</span>
+<span class="sd">    the ISMIP6 method, K for the ISMIP7 one -- so that a single parameter</span>
+<span class="sd">    file carries a complete calibration.  The ensemble runs at a reference</span>
+<span class="sd">    value that the aggregation divides out again; the linearity check runs</span>
+<span class="sd">    at multiples of it.</span>
+<span class="sd">    """</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">reference_parameter</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">)</span> <span class="o">*</span> <span class="n">parameter_scale</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+    <span class="n">ds</span><span class="p">[</span><span class="n">PARAMETER_VARIABLE</span><span class="p">[</span><span class="n">melt_form</span><span class="p">]]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'note'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">PARAMETER_VARIABLE</span><span class="p">[</span><span class="n">melt_form</span><span class="p">]</span><span class="si">}</span><span class="s1"> at </span><span class="si">{</span><span class="n">parameter_scale</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1"> times the '</span>
+        <span class="sa">f</span><span class="s1">'reference value; melt is proportional to it and the calibration '</span>
+        <span class="sa">f</span><span class="s1">'scales this away'</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_namelist_options</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Check that MALI's default namelist has the options this melt form needs.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If any required option is missing, which means the MALI build does</span>
+<span class="sd">        not support this melt form</span>
+<span class="sd">    """</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'namelists'</span><span class="p">,</span> <span class="s1">'forward'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">defaults</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">'MALI default namelist not found at </span><span class="si">{</span><span class="n">defaults</span><span class="si">}</span><span class="s1">.  Build MALI, or '</span>
+            <span class="sa">f</span><span class="s1">'set [paths] mpas_model (or [namelists] forward) in your config '</span>
+            <span class="sa">f</span><span class="s1">'file.'</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">defaults</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">option</span> <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">REQUIRED_OPTIONS</span><span class="p">[</span><span class="n">melt_form</span><span class="p">]</span>
+               <span class="k">if</span> <span class="n">option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"MALI's default namelist at</span><span class="se">\n</span><span class="s2">  </span><span class="si">{</span><span class="n">defaults</span><span class="si">}</span><span class="se">\n</span><span class="s2">does not contain "</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="si">}</span><span class="s2">, so this build does not support "</span>
+            <span class="sa">f</span><span class="s2">"config_basal_mass_bal_float = '</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s2">'.</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="sa">f</span><span class="s2">"Compass only warns about namelist options it cannot find, so "</span>
+            <span class="sa">f</span><span class="s2">"without this check the run would silently use MALI's defaults "</span>
+            <span class="sa">f</span><span class="s2">"and produce a plausible but wrong calibration.</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="sa">f</span><span class="s2">"Build MALI from a branch that has the ISMIP7 melt "</span>
+            <span class="sa">f</span><span class="s2">"parameterization and point [paths] mpas_model at it."</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

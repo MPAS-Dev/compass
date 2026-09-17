@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip7_calibration.ais.verify_melt &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../../ismip7_calibration.html">compass.landice.tests.ismip7_calibration</a></li>
+          <li class="breadcrumb-item"><a href="../ais.html">compass.landice.tests.ismip7_calibration.ais</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip7_calibration.ais.verify_melt</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip7_calibration.ais.verify_melt</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Verify MALI's melt against the Python reference implementation.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.ais</span><span class="w"> </span><span class="kn">import</span> <span class="n">melt_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
+
+<span class="c1">#: the melt expression should agree to round-off</span>
+<span class="n">MELT_TOLERANCE</span> <span class="o">=</span> <span class="mf">1.0e-10</span>
+
+<span class="c1">#: so should the vertical interpolation of thermal forcing, in K</span>
+<span class="n">INTERPOLATION_TOLERANCE</span> <span class="o">=</span> <span class="mf">1.0e-10</span>
+
+<span class="c1">#: melt should be exactly proportional to the melt parameter; allow only</span>
+<span class="c1">#: floating-point noise</span>
+<span class="n">LINEARITY_TOLERANCE</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
+
+
+<div class="viewcode-block" id="VerifyMelt">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt.html#compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">VerifyMelt</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A step that checks MALI's melt field against an independent Python</span>
+<span class="sd">    implementation of the same equations.</span>
+
+<span class="sd">    Three things are checked, and they are deliberately independent:</span>
+
+<span class="sd">    * the **melt expression**, by evaluating the Python reference on MALI's</span>
+<span class="sd">      *own* ``TFdraft``.  That isolates the formula from the vertical</span>
+<span class="sd">      interpolation that produced ``TFdraft``.</span>
+<span class="sd">    * the **vertical interpolation**, by interpolating the 3-D forcing to the</span>
+<span class="sd">      ice draft with a plain ``numpy`` implementation written from the</span>
+<span class="sd">      protocol rather than transliterated from the Fortran, and comparing</span>
+<span class="sd">      against MALI's ``TFdraft``.</span>
+<span class="sd">    * the **linearity in the melt parameter**, which is what licenses one</span>
+<span class="sd">      MALI run per ocean state instead of one per (state, parameter) pair.</span>
+
+<span class="sd">    The draft used for the interpolation check is reconstructed from the</span>
+<span class="sd">    mesh file, never taken from the run output: melt thins the ice over the</span>
+<span class="sd">    single timestep, so the output geometry is post-step while ``TFdraft``</span>
+<span class="sd">    was computed pre-step.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    melt_form : str</span>
+<span class="sd">        The melt form being verified</span>
+
+<span class="sd">    state_name : str</span>
+<span class="sd">        The ocean state used for the check</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="VerifyMelt.__init__">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt.html#compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">,</span> <span class="n">state_name</span><span class="p">,</span>
+                 <span class="n">linearity_scales</span><span class="o">=</span><span class="p">()):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.landice.tests.ismip7_calibration.ais.Ais</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        melt_form : {'ismip7', 'ismip6'}</span>
+<span class="sd">            The melt form to verify</span>
+
+<span class="sd">        state_name : str</span>
+<span class="sd">            The ocean state to verify against</span>
+
+<span class="sd">        linearity_scales : sequence of float, optional</span>
+<span class="sd">            Multiples of the reference melt parameter that extra MALI runs</span>
+<span class="sd">            were done at, for the linearity check</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'verify_melt'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">melt_form</span> <span class="o">=</span> <span class="n">melt_form</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_name</span> <span class="o">=</span> <span class="n">state_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linearity_scales</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">linearity_scales</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">linearity_scales</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'linearity_</span><span class="si">{</span><span class="n">scale</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'../</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">state_name</span><span class="si">}</span><span class="s1">_x</span><span class="si">{</span><span class="n">scale</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">/'</span>
+                       <span class="sa">f</span><span class="s1">'output_melt.nc'</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'output_melt.nc'</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'../</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">state_name</span><span class="si">}</span><span class="s1">/output_melt.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'forcing.nc'</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'../remap_forcing/forcing_</span><span class="si">{</span><span class="n">state_name</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'verification.nc'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VerifyMelt.setup">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt.setup.html#compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt.setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Set up this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration'</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'mesh.nc'</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"base_path_mali"</span><span class="p">)</span><span class="si">}</span><span class="s1">/'</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_file"</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="VerifyMelt.run">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt.run.html#compass.landice.tests.ismip7_calibration.ais.verify_melt.VerifyMelt.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration_melt'</span><span class="p">]</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'ismip7'</span><span class="p">:</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'reference_k'</span><span class="p">),</span>
+                     <span class="s1">'ismip6'</span><span class="p">:</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'reference_gamma0'</span><span class="p">)}</span>
+
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">melt_model</span><span class="o">.</span><span class="n">read_run</span><span class="p">(</span><span class="s1">'output_melt.nc'</span><span class="p">,</span>
+                                     <span class="s1">'mesh.nc'</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">results</span><span class="p">[</span><span class="s1">'melt'</span><span class="p">]</span> <span class="o">=</span> <span class="n">_check_melt_expression</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">melt_form</span><span class="p">,</span> <span class="n">reference</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">melt_form</span><span class="p">],</span> <span class="n">fields</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
+            <span class="n">logger</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">'interpolation'</span><span class="p">]</span> <span class="o">=</span> <span class="n">_check_interpolation</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">'linearity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">_check_linearity</span><span class="p">(</span>
+            <span class="n">fields</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">linearity_scales</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">({</span><span class="n">name</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'melt_form'</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">melt_form</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'ocean_state'</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_name</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">'verification.nc'</span><span class="p">)</span>
+
+        <span class="n">_raise_on_failure</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_melt_expression</span><span class="p">(</span><span class="n">melt_form</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Compare MALI's melt with the Python reference on MALI's TFdraft."""</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">melt_model</span><span class="o">.</span><span class="n">melt_from_tf</span><span class="p">(</span><span class="n">melt_form</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+    <span class="n">actual</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'melt'</span><span class="p">]</span>
+
+    <span class="n">melting</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'floating'</span><span class="p">]</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">actual</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">melting</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'MALI produced no melt anywhere, so the melt '</span>
+                         <span class="s1">'expression cannot be checked.  Check that the run '</span>
+                         <span class="s1">'took a real timestep and that the forcing was '</span>
+                         <span class="s1">'read.'</span><span class="p">)</span>
+
+    <span class="n">difference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">actual</span> <span class="o">-</span> <span class="n">expected</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">melting</span><span class="p">)</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">actual</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">melting</span><span class="p">)</span>
+    <span class="n">relative</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">difference</span> <span class="o">/</span> <span class="n">scale</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Melt expression, </span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">:'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  melting cells                 </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  MALI melt range               '</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">actual</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">melting</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="si">:</span><span class="s1">.4g</span><span class="si">}</span><span class="s1"> .. '</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">actual</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">melting</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s1">.4g</span><span class="si">}</span><span class="s1"> kg/m2/yr'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  max relative difference       </span><span class="si">{</span><span class="n">relative</span><span class="si">:</span><span class="s1">.3e</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">relative</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_interpolation</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Compare MALI's TFdraft with an independent interpolation."""</span>
+    <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'forcing.nc'</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+        <span class="n">tf_3d</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_3dThermalForcing'</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">z_ocean</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_zOcean'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">draft</span> <span class="o">=</span> <span class="n">melt_model</span><span class="o">.</span><span class="n">initial_draft</span><span class="p">(</span><span class="s1">'mesh.nc'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'mesh.nc'</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_mesh</span><span class="p">:</span>
+        <span class="n">bed</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="p">[</span><span class="s1">'bedTopography'</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">'Time'</span> <span class="ow">in</span> <span class="n">bed</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">bed</span> <span class="o">=</span> <span class="n">bed</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">bed</span> <span class="o">=</span> <span class="n">bed</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">floating</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'floating'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">melt_model</span><span class="o">.</span><span class="n">interpolate_to_draft</span><span class="p">(</span><span class="n">tf_3d</span><span class="p">,</span> <span class="n">z_ocean</span><span class="p">,</span> <span class="n">draft</span><span class="p">,</span> <span class="n">bed</span><span class="p">,</span>
+                                               <span class="n">freezing_correction</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">actual</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'tf_draft'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># all four of MALI's code paths are covered, so nothing is excluded</span>
+    <span class="n">difference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">actual</span><span class="p">[</span><span class="n">floating</span><span class="p">]</span> <span class="o">-</span> <span class="n">expected</span><span class="p">[</span><span class="n">floating</span><span class="p">])</span>
+    <span class="n">largest</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">difference</span><span class="p">))</span> <span class="k">if</span> <span class="n">difference</span><span class="o">.</span><span class="n">size</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Vertical interpolation of thermal forcing:'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  cells compared                </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">floating</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  max |difference|              </span><span class="si">{</span><span class="n">largest</span><span class="si">:</span><span class="s1">.3e</span><span class="si">}</span><span class="s1"> K'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">largest</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_linearity</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">scales</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Check that MALI's melt is exactly proportional to the melt parameter.</span>
+
+<span class="sd">    This is measured with real MALI runs rather than argued, because it is</span>
+<span class="sd">    what licenses one run per ocean state instead of one per (state,</span>
+<span class="sd">    parameter) pair -- 28 runs rather than about 1300.</span>
+
+<span class="sd">    Each extra run is the same ocean state at a different multiple of the</span>
+<span class="sd">    reference melt parameter.  Dividing each total by its multiple must give</span>
+<span class="sd">    the same number every time.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">scales</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Linearity in the melt parameter: no scaled runs were '</span>
+                    <span class="s1">'set up, so this is not measured.  The melt parameter '</span>
+                    <span class="s1">'enters the melt expression only as a multiplicative '</span>
+                    <span class="s1">'coefficient, so linearity follows from the code, but '</span>
+                    <span class="s1">'measuring it is better.'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+
+    <span class="n">area</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'area'</span><span class="p">]</span>
+    <span class="n">floating</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'floating'</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">total</span><span class="p">(</span><span class="n">melt</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">((</span><span class="n">melt</span> <span class="o">*</span> <span class="n">area</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">floating</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">/</span> <span class="mf">1.0e12</span>
+
+    <span class="n">totals</span> <span class="o">=</span> <span class="p">{</span><span class="mf">1.0</span><span class="p">:</span> <span class="n">total</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="s1">'melt'</span><span class="p">])}</span>
+    <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="n">scales</span><span class="p">:</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">melt_model</span><span class="o">.</span><span class="n">read_run</span><span class="p">(</span><span class="sa">f</span><span class="s1">'linearity_</span><span class="si">{</span><span class="n">scale</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">,</span>
+                                    <span class="s1">'mesh.nc'</span><span class="p">)</span>
+        <span class="n">totals</span><span class="p">[</span><span class="n">scale</span><span class="p">]</span> <span class="o">=</span> <span class="n">total</span><span class="p">(</span><span class="n">other</span><span class="p">[</span><span class="s1">'melt'</span><span class="p">])</span>
+
+    <span class="n">per_unit</span> <span class="o">=</span> <span class="p">{</span><span class="n">scale</span><span class="p">:</span> <span class="n">value</span> <span class="o">/</span> <span class="n">scale</span> <span class="k">for</span> <span class="n">scale</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">totals</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">per_unit</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">spread</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">values</span><span class="p">))</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">per_unit</span><span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Linearity in the melt parameter, measured in MALI:'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="s2">"scale"</span><span class="si">:</span><span class="s1">&gt;8s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">"total melt"</span><span class="si">:</span><span class="s1">&gt;14s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">"total / scale"</span><span class="si">:</span><span class="s1">&gt;16s</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">totals</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">scale</span><span class="si">:</span><span class="s1">8.2f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">totals</span><span class="p">[</span><span class="n">scale</span><span class="p">]</span><span class="si">:</span><span class="s1">14.4f</span><span class="si">}</span><span class="s1"> '</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">per_unit</span><span class="p">[</span><span class="n">scale</span><span class="p">]</span><span class="si">:</span><span class="s1">16.6f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  max relative deviation        </span><span class="si">{</span><span class="n">spread</span><span class="si">:</span><span class="s1">.3e</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">spread</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_raise_on_failure</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raise if any check exceeded its tolerance."""</span>
+    <span class="n">checks</span> <span class="o">=</span> <span class="p">((</span><span class="s1">'melt'</span><span class="p">,</span> <span class="n">MELT_TOLERANCE</span><span class="p">,</span>
+               <span class="s2">"MALI's melt does not match the Python reference evaluated "</span>
+               <span class="s2">"on MALI's own TFdraft"</span><span class="p">),</span>
+              <span class="p">(</span><span class="s1">'interpolation'</span><span class="p">,</span> <span class="n">INTERPOLATION_TOLERANCE</span><span class="p">,</span>
+               <span class="s2">"MALI's vertical interpolation of thermal forcing to the ice "</span>
+               <span class="s2">"draft does not match an independent implementation"</span><span class="p">),</span>
+              <span class="p">(</span><span class="s1">'linearity'</span><span class="p">,</span> <span class="n">LINEARITY_TOLERANCE</span><span class="p">,</span>
+               <span class="s1">'melt is not exactly proportional to the melt parameter, so '</span>
+               <span class="s1">'the ensemble cannot be built by scaling a single run per '</span>
+               <span class="s1">'ocean state'</span><span class="p">))</span>
+
+    <span class="n">failures</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">:</span><span class="s1">.3e</span><span class="si">}</span><span class="s1"> exceeds </span><span class="si">{</span><span class="n">tol</span><span class="si">:</span><span class="s1">.0e</span><span class="si">}</span><span class="s1"> -- </span><span class="si">{</span><span class="n">why</span><span class="si">}</span><span class="s1">'</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">why</span> <span class="ow">in</span> <span class="n">checks</span> <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">failures</span><span class="p">:</span>
+        <span class="n">listing</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">failures</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'MALI melt verification failed:</span><span class="se">\n</span><span class="si">{</span><span class="n">listing</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'All melt verification checks passed.'</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

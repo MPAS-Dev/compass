@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip7_calibration.ais.remap_forcing &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../../ismip7_calibration.html">compass.landice.tests.ismip7_calibration</a></li>
+          <li class="breadcrumb-item"><a href="../ais.html">compass.landice.tests.ismip7_calibration.ais</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip7_calibration.ais.remap_forcing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip7_calibration.ais.remap_forcing</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Remap the ISMIP7 calibration thermal forcing onto a MALI mesh.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.ismip7.mapping</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_mapping_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.ismip7.remap</span><span class="w"> </span><span class="kn">import</span> <span class="n">extrapolate_source</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
+
+
+<div class="viewcode-block" id="RemapForcing">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing.html#compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapForcing</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A step that remaps the ISMIP7 calibration thermal forcing onto the MALI</span>
+<span class="sd">    mesh, one file per ocean state.</span>
+
+<span class="sd">    This mirrors ``ismip7_forcing/ocean_thermal``, driven by the calibration</span>
+<span class="sd">    ocean states rather than by CMIP scenario files.</span>
+
+<span class="sd">    **Only thermal forcing is remapped.**  The ISMIP7 ocean forcing processed</span>
+<span class="sd">    for the MALI projections carries thermal forcing and no salinity, so a</span>
+<span class="sd">    projection has no salinity field to read.  The melt parameterization is</span>
+<span class="sd">    run with a constant salinity instead</span>
+<span class="sd">    (``config_ismip7_melt_salinity_source = 'constant'``); calibrating</span>
+<span class="sd">    against a spatially varying salinity would tune the melt parameter for</span>
+<span class="sd">    physics the projections cannot run.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    states : list of compass.landice.tests.ismip7_calibration.datasets.OceanState</span>
+<span class="sd">        The ocean states to remap</span>
+<span class="sd">    """</span>  <span class="c1"># noqa: E501</span>
+
+<div class="viewcode-block" id="RemapForcing.__init__">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing.html#compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.landice.tests.ismip7_calibration.ais.Ais</span>
+<span class="sd">            The test case this step belongs to</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'remap_forcing'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="RemapForcing.setup">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing.setup.html#compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing.setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Set up this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration'</span><span class="p">]</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'base_path_ismip7'</span><span class="p">)</span>
+        <span class="n">base_path_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'base_path_mali'</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mali_mesh_file'</span><span class="p">)</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ocean_state_subset'</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_mali</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">ocean_states</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="n">subset</span><span class="p">)</span>
+        <span class="n">missing</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">missing_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
+        <span class="c1"># only the thermal forcing is needed; a missing salinity file is not</span>
+        <span class="c1"># a problem, since a constant salinity is used</span>
+        <span class="n">missing</span> <span class="o">=</span> <span class="p">[(</span><span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">missing</span>
+                   <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">'_S.nc'</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">'/so/'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">path</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+            <span class="n">listing</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">  '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">missing</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="si">}</span><span class="s1"> ISMIP7 thermal-forcing files are '</span>
+                <span class="sa">f</span><span class="s1">'missing:</span><span class="se">\n</span><span class="s1">  </span><span class="si">{</span><span class="n">listing</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'forcing_</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'esmf_ntasks'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span></div>
+
+
+<div class="viewcode-block" id="RemapForcing.run">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing.run.html#compass.landice.tests.ismip7_calibration.ais.remap_forcing.RemapForcing.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration'</span><span class="p">]</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'base_path_ismip7'</span><span class="p">)</span>
+        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mali_mesh_file'</span><span class="p">)</span>
+        <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mali_mesh_name'</span><span class="p">)</span>
+        <span class="n">ntasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'esmf_ntasks'</span><span class="p">)</span>
+
+        <span class="n">method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ismip7_calibration_forcing'</span><span class="p">,</span> <span class="s1">'method_remap'</span><span class="p">)</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">ISMIP_RESOLUTION_KM</span>
+        <span class="n">mapping_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">'map_ismip</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_to_</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s1">_'</span>
+                        <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span>
+        <span class="c1"># any calibration forcing file defines the source grid; they share it</span>
+        <span class="n">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tf_file</span><span class="p">,</span>
+                           <span class="n">mapping_file</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
+                           <span class="n">method_remap</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">'ais-bedmap2'</span><span class="p">,</span>
+                           <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">)</span>
+
+        <span class="n">clim_tf_file</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">climatology_files</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
+        <span class="n">clim_tf</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">clim_tf_file</span><span class="p">)[</span><span class="s1">'tf'</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">:</span>
+            <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'forcing_</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.nc'</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_file</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s1"> exists, skipping'</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Remapping </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">_remap_state</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">clim_tf</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_remap_state</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">clim_tf</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Fill, extrapolate, remap and rename one ocean state."""</span>
+    <span class="n">filled_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'filled_</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.nc'</span>
+    <span class="n">extrap_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'extrap_</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.nc'</span>
+    <span class="n">remapped_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'remapped_</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.nc'</span>
+
+    <span class="n">filled</span> <span class="o">=</span> <span class="n">_fill_from_climatology</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">clim_tf</span><span class="p">,</span> <span class="n">filled_file</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+    <span class="c1"># a safety net: after the climatology fill there should be nothing left</span>
+    <span class="c1"># to extrapolate, but a stray gap would otherwise be blended into</span>
+    <span class="c1"># neighbouring cells by the bilinear remap</span>
+    <span class="n">extrapolate_source</span><span class="p">(</span><span class="n">filled_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s1">'tf'</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+    <span class="n">check_call</span><span class="p">([</span><span class="s1">'ncremap'</span><span class="p">,</span> <span class="s1">'-i'</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s1">'-o'</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">,</span>
+                <span class="s1">'-m'</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span> <span class="s1">'-v'</span><span class="p">,</span> <span class="s1">'tf'</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="n">_to_mali_form</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">filled</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">filled_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="n">remapped_file</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fill_from_climatology</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">clim_tf</span><span class="p">,</span> <span class="n">filled_file</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Fill gaps in a partially covering ocean state from the climatology.</span>
+
+<span class="sd">    The ISMIP7 near-ice-shelf observational datasets apply a single profile</span>
+<span class="sd">    to the Amundsen basin only (protocol Sect. A10) and are undefined</span>
+<span class="sd">    elsewhere; about 6% of the ISMIP grid is valid.  The regional *model*</span>
+<span class="sd">    datasets, by contrast, are distributed already filled with the ISMIP7</span>
+<span class="sd">    climatology outside their domains (protocol Sect. A9), so they arrive</span>
+<span class="sd">    complete.</span>
+
+<span class="sd">    MALI needs valid forcing everywhere it has ice, so the observational</span>
+<span class="sd">    states are filled the same way the model states already were.  This does</span>
+<span class="sd">    not affect the calibration: J4 aggregates only over Pine Island and</span>
+<span class="sd">    Dotson, both inside the covered basin.</span>
+
+<span class="sd">    Filling happens *before* remapping, so that interpolation never blends a</span>
+<span class="sd">    real value with a missing one at the edge of the covered region.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fraction : float</span>
+<span class="sd">        Fraction of the source grid that was filled, recorded in the output</span>
+<span class="sd">    """</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">tf_file</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'tf'</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+    <span class="n">fraction</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="o">~</span><span class="n">valid</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+    <span class="k">if</span> <span class="n">fraction</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  filling </span><span class="si">{</span><span class="mf">100.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">fraction</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">% of the source grid '</span>
+                    <span class="sa">f</span><span class="s1">'from the climatology'</span><span class="p">)</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'tf'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'tf'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'tf'</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">clim_tf</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'tf'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
+
+    <span class="k">if</span> <span class="s1">'_FillValue'</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'tf'</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'tf'</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="p">[</span><span class="s1">'_FillValue'</span><span class="p">]</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">filled_file</span><span class="p">)</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fraction</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_to_mali_form</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">filled</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Put the remapped thermal forcing into the names, dimensions and order</span>
+<span class="sd">    MALI expects.</span>
+
+<span class="sd">    Two traps are avoided here.  MALI takes dimension sizes from its input</span>
+<span class="sd">    stream, so ``nISMIP6OceanLayers`` has to be a real dimension of this</span>
+<span class="sd">    file.  And a variable whose name matches a dimension breaks MALI's</span>
+<span class="sd">    reader, so the vertical coordinate is written as</span>
+<span class="sd">    ``ismip6shelfMelt_zOcean`` rather than as a coordinate variable named</span>
+<span class="sd">    after the dimension.</span>
+<span class="sd">    """</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">z_ocean</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'z'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">rename_dims</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="s1">'ncol'</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="n">rename_dims</span><span class="p">[</span><span class="s1">'ncol'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'nCells'</span>
+    <span class="k">if</span> <span class="s1">'z'</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="n">rename_dims</span><span class="p">[</span><span class="s1">'z'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'nISMIP6OceanLayers'</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">rename_dims</span><span class="p">)</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">'tf'</span><span class="p">:</span> <span class="s1">'ismip6shelfMelt_3dThermalForcing'</span><span class="p">})</span>
+
+    <span class="n">tf</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_3dThermalForcing'</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">'Time'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tf</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="n">tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Registry order is ``nISMIP6OceanLayers nCells Time``, which in C order</span>
+    <span class="c1"># is Time, nCells, nISMIP6OceanLayers</span>
+    <span class="n">tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="s1">'nCells'</span><span class="p">,</span> <span class="s1">'nISMIP6OceanLayers'</span><span class="p">)</span>
+
+    <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_3dThermalForcing'</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_3dThermalForcing'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'long_name'</span><span class="p">:</span> <span class="s1">'thermal forcing for the ISMIP6/ISMIP7 ice-shelf '</span>
+                     <span class="s1">'melting methods'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="s1">'degC'</span><span class="p">}</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_3dThermalForcing'</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="n">ds_out</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_zOcean'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'nISMIP6OceanLayers'</span><span class="p">,</span> <span class="n">z_ocean</span><span class="p">)</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_zOcean'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'long_name'</span><span class="p">:</span> <span class="s1">'depth coordinate for the ocean thermal forcing'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="s1">'m'</span><span class="p">}</span>
+
+    <span class="n">ds_out</span><span class="p">[</span><span class="s1">'xtime'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'0000-01-01_00:00:00'</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)])</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="s1">'xtime'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">xtime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'S'</span><span class="p">)</span>
+
+    <span class="n">ds_out</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'ocean_state'</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">ds_out</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'objective_term'</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">term</span>
+    <span class="n">ds_out</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'source_file'</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">tf_file</span>
+    <span class="n">ds_out</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'climatology_filled_fraction'</span><span class="p">]</span> <span class="o">=</span> <span class="n">filled</span>
+    <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">basins</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ds_out</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'constrains_ismip7_basins'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">basin</span><span class="p">)</span> <span class="k">for</span> <span class="n">basin</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">basins</span><span class="p">)</span>
+
+    <span class="n">finite</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">ds_out</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_3dThermalForcing'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">finite</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">'The remapped thermal forcing for </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> is not finite '</span>
+            <span class="sa">f</span><span class="s1">'everywhere: </span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="o">~</span><span class="n">finite</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s1"> of </span><span class="si">{</span><span class="n">finite</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="s1"> values are '</span>
+            <span class="sa">f</span><span class="s1">'missing.  MALI would produce invalid melt in those cells.'</span><span class="p">)</span>
+
+    <span class="c1"># Time must be UNLIMITED or MALI's reader mishandles the file, so this</span>
+    <span class="c1"># is written with xarray directly rather than through write_netcdf</span>
+    <span class="n">ds_out</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">unlimited_dims</span><span class="o">=</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">])</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

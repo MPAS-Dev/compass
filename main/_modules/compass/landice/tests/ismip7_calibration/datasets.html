@@ -1,0 +1,442 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip7_calibration.datasets &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../ismip7_calibration.html">compass.landice.tests.ismip7_calibration</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip7_calibration.datasets</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip7_calibration.datasets</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Registry of the ISMIP7 datasets used by the melt-module calibration.</span>
+
+<span class="sd">One source of truth for *which* ocean states feed *which* objective-function</span>
+<span class="sd">term, and for where the calibration targets live, shared by the 8 km</span>
+<span class="sd">``replication`` test case and the MALI-mesh ``ais`` test case so the two</span>
+<span class="sd">cannot drift apart.</span>
+
+<span class="sd">The ocean-state sets follow protocol Table 2 and the focus group's 31 July</span>
+<span class="sd">2026 update:</span>
+
+<span class="sd">* ``minimal`` -- the states marked X in Table 2: present-day climatology, two</span>
+<span class="sd">  circum-Antarctic cold/warm pairs, and PIG in 2009 and 2012.  7 states.</span>
+<span class="sd">* ``recommended`` -- adds the two regional cold/warm pairs marked +, which the</span>
+<span class="sd">  focus group strongly suggests.  11 states.</span>
+<span class="sd">* ``all`` -- every state distributed for ISMIP7: all seven ocean models of</span>
+<span class="sd">  protocol Table 2 (AIS1-AIS7) and all thirteen observation years.  28 states.</span>
+<span class="sd">  This is what the ``model`` coordinate of the J3 target file expects, so only</span>
+<span class="sd">  this subset exercises every target the protocol ships.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+
+<span class="c1">#: ISMIP grid resolution of the calibration datasets, in km</span>
+<span class="n">ISMIP_RESOLUTION_KM</span> <span class="o">=</span> <span class="mi">8</span>
+
+<span class="c1">#: ice-shelf ids in ``shelf_mask_ismip8km.nc``</span>
+<span class="n">PIG_ID</span> <span class="o">=</span> <span class="mi">110</span>
+<span class="n">DOTSON_ID</span> <span class="o">=</span> <span class="mi">97</span>
+
+<span class="c1">#: Pine Island is cut at this x to keep only its main trunk, following the</span>
+<span class="c1">#: protocol's worked example</span>
+<span class="n">PIG_X_MAX</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.625e6</span>
+
+<span class="c1">#: ocean-model datasets: file prefix, toolbox label, basins constrained.</span>
+<span class="c1">#: ``basins`` is None where the simulation is circum-Antarctic; otherwise it</span>
+<span class="c1">#: lists the ISMIP7 (0-based) basins the regional domain actually covers, and</span>
+<span class="c1">#: melt outside them must be discarded.</span>
+<span class="n">OCEAN_MODELS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">'Mathiot_NEMO_</span><span class="si">{state}</span><span class="s1">_v3_'</span><span class="p">,</span> <span class="s1">'mathiot'</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'Timmermann_FESOM_</span><span class="si">{state}</span><span class="s1">_v3_'</span><span class="p">,</span> <span class="s1">'timmermann'</span><span class="p">,</span> <span class="p">(</span><span class="mi">14</span><span class="p">,)),</span>
+    <span class="p">(</span><span class="s1">'Naughten_FESOM_ACCESS_</span><span class="si">{state}</span><span class="s1">_v2_'</span><span class="p">,</span> <span class="s1">'naughten_ais_1'</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'Naughten_FESOM_MMM_</span><span class="si">{state}</span><span class="s1">_v2_'</span><span class="p">,</span> <span class="s1">'naughten_ais_2'</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'Jourdain-Naughten_NEMO-MITgcm_</span><span class="si">{state}</span><span class="s1">_'</span><span class="p">,</span> <span class="s1">'jourdain_naughten'</span><span class="p">,</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">14</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">'Naughten_MITamu-MITwed_</span><span class="si">{state}</span><span class="s1">_'</span><span class="p">,</span> <span class="s1">'naughten_naughten'</span><span class="p">,</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">14</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">'Haid_FESOM_</span><span class="si">{state}</span><span class="s1">_'</span><span class="p">,</span> <span class="s1">'haid'</span><span class="p">,</span> <span class="p">(</span><span class="mi">14</span><span class="p">,)),</span>
+<span class="p">]</span>
+
+<span class="c1">#: all years of Amundsen near-ice-shelf ocean observations</span>
+<span class="n">OBS_YEARS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1994</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">2006</span><span class="p">,</span> <span class="mi">2007</span><span class="p">,</span> <span class="mi">2009</span><span class="p">,</span> <span class="mi">2010</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">2014</span><span class="p">,</span> <span class="mi">2016</span><span class="p">,</span>
+             <span class="mi">2018</span><span class="p">,</span> <span class="mi">2019</span><span class="p">,</span> <span class="mi">2020</span><span class="p">]</span>
+
+<span class="c1">#: minimal J3 set (Table 2, marked X)</span>
+<span class="n">MINIMAL_MODELS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'mathiot'</span><span class="p">,</span> <span class="s1">'naughten_ais_1'</span><span class="p">)</span>
+
+<span class="c1">#: J3 set the focus group recommends (adds those marked +)</span>
+<span class="n">RECOMMENDED_MODELS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'mathiot'</span><span class="p">,</span> <span class="s1">'naughten_ais_1'</span><span class="p">,</span> <span class="s1">'jourdain_naughten'</span><span class="p">,</span>
+                      <span class="s1">'naughten_naughten'</span><span class="p">)</span>
+
+<span class="c1">#: J4 years the protocol suggests as a minimum, a cold and a warm PIG state</span>
+<span class="n">RECOMMENDED_OBS_YEARS</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2009</span><span class="p">,</span> <span class="mi">2012</span><span class="p">)</span>
+
+<span class="c1">#: the weighting the published quadratic example used: four ocean models, and</span>
+<span class="c1">#: PIG alone in 2009 and 2012.  Narrower than protocol Table 2 makes available</span>
+<span class="n">PUBLISHED_T3_MODELS</span> <span class="o">=</span> <span class="n">RECOMMENDED_MODELS</span>
+<span class="n">PUBLISHED_T4_REGIONS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'pig'</span><span class="p">,)</span>
+<span class="n">PUBLISHED_T4_YEARS</span> <span class="o">=</span> <span class="n">RECOMMENDED_OBS_YEARS</span>
+
+<span class="c1">#: One ocean state to force the melt module with.</span>
+<span class="c1">#:</span>
+<span class="c1">#: ``name`` is a unique, filesystem-safe identifier such as ``mathiot_cold``;</span>
+<span class="c1">#: ``kind`` is ``'climatology'``, ``'model'`` or ``'obs'``; ``term`` names the</span>
+<span class="c1">#: objective-function term the state feeds; ``label`` and ``state`` apply to</span>
+<span class="c1">#: ocean-model states, ``year`` to observational ones; and ``basins`` lists</span>
+<span class="c1">#: the ISMIP7 (0-based) basins a regional state constrains, or None for a</span>
+<span class="c1">#: circum-Antarctic one.</span>
+<span class="n">OceanState</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span>
+    <span class="s1">'OceanState'</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'kind'</span><span class="p">,</span> <span class="s1">'tf_file'</span><span class="p">,</span> <span class="s1">'so_file'</span><span class="p">,</span> <span class="s1">'term'</span><span class="p">,</span> <span class="s1">'label'</span><span class="p">,</span> <span class="s1">'state'</span><span class="p">,</span> <span class="s1">'year'</span><span class="p">,</span>
+     <span class="s1">'basins'</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="climatology_files">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.datasets.climatology_files.html#compass.landice.tests.ismip7_calibration.datasets.climatology_files">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">climatology_files</span><span class="p">(</span><span class="n">base_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Paths to the Zhou et al. present-day climatology TF and salinity.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_path : str</span>
+<span class="sd">        Root of the ISMIP7 AIS datasets</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tf_file : str</span>
+<span class="sd">        The thermal-forcing file</span>
+
+<span class="sd">    so_file : str</span>
+<span class="sd">        The salinity file</span>
+<span class="sd">    """</span>
+    <span class="n">clim</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="s1">'obs'</span><span class="p">,</span> <span class="s1">'ocean'</span><span class="p">,</span> <span class="s1">'climatology'</span><span class="p">,</span>
+                        <span class="s1">'zhou_annual_06_nov'</span><span class="p">)</span>
+    <span class="n">stem</span> <span class="o">=</span> <span class="s1">'AIS_obs_ocean_climatology_zhou_annual_06_nov'</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">clim</span><span class="p">,</span> <span class="s1">'tf'</span><span class="p">,</span> <span class="s1">'v3'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'tf_</span><span class="si">{</span><span class="n">stem</span><span class="si">}</span><span class="s1">_v3_1972-2024.nc'</span><span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">clim</span><span class="p">,</span> <span class="s1">'so'</span><span class="p">,</span> <span class="s1">'v4'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'so_</span><span class="si">{</span><span class="n">stem</span><span class="si">}</span><span class="s1">_v4_1972-2024.nc'</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="ocean_states">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.datasets.ocean_states.html#compass.landice.tests.ismip7_calibration.datasets.ocean_states">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ocean_states</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="s1">'all'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The ocean states to run the melt module for.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_path : str</span>
+<span class="sd">        Root of the ISMIP7 AIS datasets</span>
+
+<span class="sd">    subset : {'minimal', 'recommended', 'all'}, optional</span>
+<span class="sd">        Which set of states to include; see the module docstring</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    states : list of OceanState</span>
+<span class="sd">        The ocean states in the requested subset</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">subset</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'minimal'</span><span class="p">,</span> <span class="s1">'recommended'</span><span class="p">,</span> <span class="s1">'all'</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"subset must be 'minimal', 'recommended' or 'all', "</span>
+                         <span class="sa">f</span><span class="s2">"but is '</span><span class="si">{</span><span class="n">subset</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+
+    <span class="n">param</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="s1">'parameterisations'</span><span class="p">,</span> <span class="s1">'ocean'</span><span class="p">)</span>
+    <span class="n">model_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="s1">'ocean_modelling_data'</span><span class="p">)</span>
+    <span class="n">obs_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="s1">'ocean_observations_data'</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">subset</span> <span class="o">==</span> <span class="s1">'minimal'</span><span class="p">:</span>
+        <span class="n">keep_models</span> <span class="o">=</span> <span class="n">MINIMAL_MODELS</span>
+        <span class="n">keep_years</span> <span class="o">=</span> <span class="n">RECOMMENDED_OBS_YEARS</span>
+    <span class="k">elif</span> <span class="n">subset</span> <span class="o">==</span> <span class="s1">'recommended'</span><span class="p">:</span>
+        <span class="n">keep_models</span> <span class="o">=</span> <span class="n">RECOMMENDED_MODELS</span>
+        <span class="n">keep_years</span> <span class="o">=</span> <span class="n">RECOMMENDED_OBS_YEARS</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">keep_models</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">label</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">OCEAN_MODELS</span><span class="p">)</span>
+        <span class="n">keep_years</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">OBS_YEARS</span><span class="p">)</span>
+
+    <span class="n">tf_file</span><span class="p">,</span> <span class="n">so_file</span> <span class="o">=</span> <span class="n">climatology_files</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
+    <span class="n">states</span> <span class="o">=</span> <span class="p">[</span><span class="n">OceanState</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'climatology'</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'climatology'</span><span class="p">,</span>
+                         <span class="n">tf_file</span><span class="o">=</span><span class="n">tf_file</span><span class="p">,</span> <span class="n">so_file</span><span class="o">=</span><span class="n">so_file</span><span class="p">,</span> <span class="n">term</span><span class="o">=</span><span class="s1">'J1,J2'</span><span class="p">,</span>
+                         <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">basins</span><span class="o">=</span><span class="kc">None</span><span class="p">)]</span>
+
+    <span class="k">for</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">basins</span> <span class="ow">in</span> <span class="n">OCEAN_MODELS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keep_models</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'cold'</span><span class="p">,</span> <span class="s1">'warm'</span><span class="p">):</span>
+            <span class="n">stem</span> <span class="o">=</span> <span class="n">prefix</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">)</span>
+            <span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">OceanState</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'model'</span><span class="p">,</span>
+                <span class="n">tf_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">stem</span><span class="si">}</span><span class="s1">TF.nc'</span><span class="p">),</span>
+                <span class="n">so_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">stem</span><span class="si">}</span><span class="s1">S.nc'</span><span class="p">),</span>
+                <span class="n">term</span><span class="o">=</span><span class="s1">'J3'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">basins</span><span class="o">=</span><span class="n">basins</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">OBS_YEARS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">year</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keep_years</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">OceanState</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'obs_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'obs'</span><span class="p">,</span>
+            <span class="n">tf_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">obs_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'Obs_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s1">_TF.nc'</span><span class="p">),</span>
+            <span class="n">so_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">obs_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'Obs_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s1">_S.nc'</span><span class="p">),</span>
+            <span class="n">term</span><span class="o">=</span><span class="s1">'J4'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">basins</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,)))</span>
+
+    <span class="k">return</span> <span class="n">states</span></div>
+
+
+
+<div class="viewcode-block" id="missing_files">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.datasets.missing_files.html#compass.landice.tests.ismip7_calibration.datasets.missing_files">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">missing_files</span><span class="p">(</span><span class="n">states</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The input files of ``states`` that are not present on disk.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    states : list of OceanState</span>
+<span class="sd">        The ocean states to check</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    missing : list of tuple</span>
+<span class="sd">        ``(state name, path)`` pairs for each file that does not exist</span>
+<span class="sd">    """</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">tf_file</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">so_file</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+                <span class="n">missing</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">missing</span></div>
+
+
+
+<div class="viewcode-block" id="mask_files">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.datasets.mask_files.html#compass.landice.tests.ismip7_calibration.datasets.mask_files">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">mask_files</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">resolution_km</span><span class="o">=</span><span class="n">ISMIP_RESOLUTION_KM</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Paths to the ISMIP7 mask datasets on the ISMIP polar stereographic grid.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_path : str</span>
+<span class="sd">        Root of the ISMIP7 AIS datasets</span>
+
+<span class="sd">    resolution_km : int, optional</span>
+<span class="sd">        ISMIP grid resolution in km</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    files : dict</span>
+<span class="sd">        Paths keyed by ``basins``, ``bfrn``, ``floating`` and ``shelves``</span>
+<span class="sd">    """</span>
+    <span class="n">param</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="s1">'parameterisations'</span><span class="p">,</span> <span class="s1">'ocean'</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">resolution_km</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">basins</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="s1">'imbie2'</span><span class="p">,</span>
+                            <span class="sa">f</span><span class="s1">'basin_numbers_ismip</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_v2.nc'</span><span class="p">),</span>
+        <span class="n">bfrn</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="s1">'bfrns'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'BFRN_ismip</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_v2.nc'</span><span class="p">),</span>
+        <span class="n">floating</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="s1">'floatingmasks'</span><span class="p">,</span>
+                              <span class="sa">f</span><span class="s1">'floatingmask_ismip</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km.nc'</span><span class="p">),</span>
+        <span class="n">shelves</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="s1">'shelfmask'</span><span class="p">,</span>
+                             <span class="sa">f</span><span class="s1">'shelf_mask_ismip</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km.nc'</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="load_targets">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.datasets.load_targets.html#compass.landice.tests.ismip7_calibration.datasets.load_targets">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_targets</span><span class="p">(</span><span class="n">base_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Load the observational targets for the four objective-function terms.</span>
+
+<span class="sd">    These are on the ISMIP grid or are already aggregated, so they are the</span>
+<span class="sd">    same whether the modelled melt came from the 8 km reference implementation</span>
+<span class="sd">    or from MALI.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_path : str</span>
+<span class="sd">        Root of the ISMIP7 AIS datasets</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    targets : dict</span>
+<span class="sd">        ``t1_mean``, ``t1_sigma``, ``t2_mean``, ``t2_sigma``, ``t2_weights``,</span>
+<span class="sd">        ``t3_mean``, ``t3_sigma``, ``t4_mean`` and ``t4_sigma``</span>
+<span class="sd">    """</span>
+    <span class="n">param</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="s1">'parameterisations'</span><span class="p">,</span> <span class="s1">'ocean'</span><span class="p">)</span>
+
+    <span class="n">melt_imbie</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="s1">'meltobs'</span><span class="p">,</span>
+                     <span class="s1">'Melt_Paolo_Davison_Adusumilli_imbie2.csv'</span><span class="p">),</span>
+        <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">basin_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">melt_imbie</span><span class="p">))</span>
+    <span class="n">t1_mean</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
+        <span class="n">melt_imbie</span><span class="p">[</span><span class="s1">'BMR (Gt/yr)'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">'basin'</span><span class="p">],</span> <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">'basin'</span><span class="p">:</span> <span class="n">basin_coord</span><span class="p">})</span>
+    <span class="n">t1_sigma</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
+        <span class="n">melt_imbie</span><span class="p">[</span><span class="s1">'BMR uncert (Gt/yr)'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">'basin'</span><span class="p">],</span> <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">'basin'</span><span class="p">:</span> <span class="n">basin_coord</span><span class="p">})</span>
+
+    <span class="n">buttressing</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="s1">'meltobs'</span><span class="p">,</span> <span class="s1">'melt_target_term2_v3.nc'</span><span class="p">))</span>
+    <span class="n">bfrn</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="n">mask_files</span><span class="p">(</span><span class="n">base_path</span><span class="p">)[</span><span class="s1">'bfrn'</span><span class="p">])</span>
+    <span class="n">t2_weights</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">bfrn</span><span class="p">[</span><span class="s1">'BFRN_medians'</span><span class="p">]</span> <span class="o">/</span> <span class="n">bfrn</span><span class="p">[</span><span class="s1">'BFRN_median'</span><span class="p">])</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+        <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">'BFRN_bins'</span><span class="p">],</span>
+        <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">'BFRN_bins'</span><span class="p">:</span> <span class="n">buttressing</span><span class="o">.</span><span class="n">BFRN_bins</span><span class="o">.</span><span class="n">values</span><span class="p">})</span>
+
+    <span class="n">cold</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="s1">'ocean_modelling_data'</span><span class="p">,</span>
+                     <span class="s1">'melt_cold_target_term3_v2.nc'</span><span class="p">))</span>
+    <span class="n">warm</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="s1">'ocean_modelling_data'</span><span class="p">,</span>
+                     <span class="s1">'melt_warm_target_term3_v2.nc'</span><span class="p">))</span>
+    <span class="n">t3_mean</span> <span class="o">=</span> <span class="n">warm</span><span class="o">.</span><span class="n">melt_rate</span> <span class="o">-</span> <span class="n">cold</span><span class="o">.</span><span class="n">melt_rate</span>
+    <span class="n">t3_sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">warm</span><span class="o">.</span><span class="n">melt_rate_uncert</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">cold</span><span class="o">.</span><span class="n">melt_rate_uncert</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">t4</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="s1">'ocean_observations_data'</span><span class="p">,</span>
+                     <span class="s1">'melt_observations_target_term4.nc'</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">t1_mean</span><span class="o">=</span><span class="n">t1_mean</span><span class="p">,</span> <span class="n">t1_sigma</span><span class="o">=</span><span class="n">t1_sigma</span><span class="p">,</span>
+                <span class="n">t2_mean</span><span class="o">=</span><span class="n">buttressing</span><span class="p">[</span><span class="s1">'melt_mean'</span><span class="p">],</span>
+                <span class="n">t2_sigma</span><span class="o">=</span><span class="n">buttressing</span><span class="p">[</span><span class="s1">'melt_mean_err'</span><span class="p">],</span>
+                <span class="n">t2_weights</span><span class="o">=</span><span class="n">t2_weights</span><span class="p">,</span>
+                <span class="n">t3_mean</span><span class="o">=</span><span class="n">t3_mean</span><span class="p">,</span> <span class="n">t3_sigma</span><span class="o">=</span><span class="n">t3_sigma</span><span class="p">,</span>
+                <span class="n">t4_mean</span><span class="o">=</span><span class="n">t4</span><span class="o">.</span><span class="n">melt_rate</span><span class="p">,</span> <span class="n">t4_sigma</span><span class="o">=</span><span class="n">t4</span><span class="o">.</span><span class="n">melt_rate_uncert</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

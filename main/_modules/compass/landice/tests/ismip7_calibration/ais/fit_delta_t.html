@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip7_calibration.ais.fit_delta_t &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../../ismip7_calibration.html">compass.landice.tests.ismip7_calibration</a></li>
+          <li class="breadcrumb-item"><a href="../ais.html">compass.landice.tests.ismip7_calibration.ais</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip7_calibration.ais.fit_delta_t</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip7_calibration.ais.fit_delta_t</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Fit the per-basin thermal-forcing correction dT_b, after parameter selection.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.ais</span><span class="w"> </span><span class="kn">import</span> <span class="n">melt_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.ais.run_state</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PARAMETER_VARIABLE</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.configure</span><span class="w"> </span><span class="kn">import</span> <span class="n">parameter_name</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
+
+<span class="c1">#: the percentiles of the parameter distribution a parameter file is</span>
+<span class="c1">#: written for, and the suffix that names each file</span>
+<span class="n">PERCENTILES</span> <span class="o">=</span> <span class="p">((</span><span class="s1">'p5'</span><span class="p">,</span> <span class="s1">'p05'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'median'</span><span class="p">,</span> <span class="s1">'p50'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'p95'</span><span class="p">,</span> <span class="s1">'p95'</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="FitDeltaT">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT.html#compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FitDeltaT</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A step that fits the basin thermal-forcing correction ``dT_b``.</span>
+
+<span class="sd">    Protocol Sect. 4.2.1 permits the corrections to be calculated at either</span>
+<span class="sd">    stage: **(1)** before the parameter optimisation, which "can lead to the</span>
+<span class="sd">    problem that the parameter bounds are not constrained when present-day</span>
+<span class="sd">    melt rates are compared to observations (namely, terms J1 and J2)"; or</span>
+<span class="sd">    **(2)** after it, "as in ISMIP6".  This step follows **(2)**, which is</span>
+<span class="sd">    what the published quadratic worked example does, and it is why the</span>
+<span class="sd">    calibration itself runs with ``dT_b = 0`` throughout.</span>
+
+<span class="sd">    ``dT_b`` depends on the melt parameter, so it is fitted separately at the</span>
+<span class="sd">    5th, 50th and 95th percentiles of the selected distribution, and a</span>
+<span class="sd">    complete MALI parameter file -- basins, corrections and the parameter</span>
+<span class="sd">    itself -- is written for each.  Projections at each percentile then</span>
+<span class="sd">    need only point at the matching file.</span>
+
+<span class="sd">    For each basin, ``dT`` is searched on a grid within the configured</span>
+<span class="sd">    bounds, minimising the absolute difference between the basin-integrated</span>
+<span class="sd">    melt and the IMBIE observed value.  The protocol recommends bounding</span>
+<span class="sd">    ``dT_b`` by about 2 K, since the warmest-to-coldest spread across</span>
+<span class="sd">    Antarctic ice shelves is only 3-4 K, and recommends avoiding the</span>
+<span class="sd">    correction where possible since it is "only an ad-hoc correction".</span>
+
+<span class="sd">    The search is done on the MALI mesh with **area-weighted** integrals.</span>
+<span class="sd">    The toolbox's own ``optimise_deltaT`` cannot be used, because it sums</span>
+<span class="sd">    over structured-grid ``x`` and ``y`` dimensions with a single scalar cell</span>
+<span class="sd">    area.  Melt is recomputed in Python from MALI's ``TFdraft``, so no</span>
+<span class="sd">    further MALI runs are needed: ``dT`` enters the melt expression only</span>
+<span class="sd">    through the thermal forcing.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    melt_forms : list of str</span>
+<span class="sd">        The melt forms to fit dT_b for</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="FitDeltaT.__init__">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT.html#compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">melt_forms</span><span class="p">,</span> <span class="n">state_name</span><span class="o">=</span><span class="s1">'climatology'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.landice.tests.ismip7_calibration.ais.Ais</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        melt_forms : list of str</span>
+<span class="sd">            The melt forms to fit dT_b for</span>
+
+<span class="sd">        state_name : str, optional</span>
+<span class="sd">            The ocean state to fit against; the present-day climatology, to</span>
+<span class="sd">            match the observed present-day melt</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'fit_delta_t'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">melt_forms</span> <span class="o">=</span> <span class="n">melt_forms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_name</span> <span class="o">=</span> <span class="n">state_name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'masks.nc'</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">'../remap_masks/ismip7_masks_on_mali.nc'</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">melt_form</span> <span class="ow">in</span> <span class="n">melt_forms</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'melt_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'../</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">state_name</span><span class="si">}</span><span class="s1">/output_melt.nc'</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'calibration_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'../calibrate/calibration_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">PERCENTILES</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span>
+                    <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'melt_params_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">'delta_t_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FitDeltaT.setup">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT.setup.html#compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT.setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Set up this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration'</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'mesh.nc'</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"base_path_mali"</span><span class="p">)</span><span class="si">}</span><span class="s1">/'</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_file"</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="FitDeltaT.run">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT.run.html#compass.landice.tests.ismip7_calibration.ais.fit_delta_t.FitDeltaT.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        """</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'ismip7_calibration_delta_t'</span><span class="p">,</span>
+                                 <span class="s1">'fit_delta_t'</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'fit_delta_t is False; not fitting dT_b'</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">base_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ismip7_calibration'</span><span class="p">,</span> <span class="s1">'base_path_ismip7'</span><span class="p">)</span>
+        <span class="n">observed</span> <span class="o">=</span> <span class="n">load_observed_melt</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration_delta_t'</span><span class="p">]</span>
+        <span class="n">delta_t_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'delta_t_min'</span><span class="p">),</span>
+                                   <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'delta_t_max'</span><span class="p">),</span>
+                                   <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'delta_t_count'</span><span class="p">))</span>
+
+        <span class="n">ds_masks</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">'masks.nc'</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">melt_form</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">melt_forms</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">parameter_name</span><span class="p">(</span><span class="n">melt_form</span><span class="p">)</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="n">melt_model</span><span class="o">.</span><span class="n">read_run</span><span class="p">(</span><span class="sa">f</span><span class="s1">'melt_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">,</span> <span class="s1">'mesh.nc'</span><span class="p">)</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">'calibration_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_calib</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">percentile</span><span class="p">,</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">PERCENTILES</span><span class="p">:</span>
+                    <span class="n">parameter</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ds_calib</span><span class="p">[</span><span class="n">percentile</span><span class="p">])</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Fitting dT_b for the </span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1"> form at '</span>
+                                <span class="sa">f</span><span class="s1">'the </span><span class="si">{</span><span class="n">percentile</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">parameter</span><span class="si">:</span><span class="s1">.5e</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_basins</span><span class="p">(</span><span class="n">melt_form</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">ds_masks</span><span class="p">,</span>
+                                     <span class="n">observed</span><span class="p">,</span> <span class="n">delta_t_grid</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+                    <span class="n">_report</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">,</span> <span class="n">delta_t_grid</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+                    <span class="n">_write_params</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">ds_masks</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                                  <span class="sa">f</span><span class="s1">'melt_params_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span>
+                    <span class="n">results</span><span class="p">[</span><span class="n">percentile</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="n">fit</span><span class="p">)</span>
+            <span class="n">_write_summary</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                           <span class="sa">f</span><span class="s1">'delta_t_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_observed_melt</span><span class="p">(</span><span class="n">base_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The IMBIE basin-integrated melt targets, in Gt yr-1.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_path : str</span>
+<span class="sd">        Root of the ISMIP7 AIS datasets</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    observed : pandas.Series</span>
+<span class="sd">        Observed melt per ISMIP7 (0-based) basin</span>
+<span class="sd">    """</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="s1">'parameterisations'</span><span class="p">,</span> <span class="s1">'ocean'</span><span class="p">,</span> <span class="s1">'meltobs'</span><span class="p">,</span>
+                        <span class="s1">'Melt_Paolo_Davison_Adusumilli_imbie2.csv'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="s1">'BMR (Gt/yr)'</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_basins</span><span class="p">(</span><span class="n">melt_form</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">ds_masks</span><span class="p">,</span> <span class="n">observed</span><span class="p">,</span> <span class="n">delta_t_grid</span><span class="p">,</span>
+               <span class="n">config</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Grid-search dT_b in every basin against the observed integrated melt.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    melt_form : {'ismip7', 'ismip6'}</span>
+<span class="sd">        The melt form</span>
+
+<span class="sd">    parameter : float</span>
+<span class="sd">        The value of the melt parameter to fit at</span>
+
+<span class="sd">    fields : dict</span>
+<span class="sd">        From :py:func:`compass.landice.tests.ismip7_calibration.ais.melt_model.read_run`</span>
+
+<span class="sd">    ds_masks : xarray.Dataset</span>
+<span class="sd">        The remapped ISMIP7 masks</span>
+
+<span class="sd">    observed : pandas.Series</span>
+<span class="sd">        From :py:func:`load_observed_melt`</span>
+
+<span class="sd">    delta_t_grid : numpy.ndarray</span>
+<span class="sd">        The dT values to search, in K</span>
+
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options, for the melt-form constants</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fit : dict</span>
+<span class="sd">        Per ISMIP7 basin number: ``delta_t``, ``observed``,</span>
+<span class="sd">        ``modelled_before`` (at dT = 0), ``modelled_after`` (at the fitted</span>
+<span class="sd">        dT) and ``residual``, all melt in Gt yr-1</span>
+<span class="sd">    """</span>  <span class="c1"># noqa: E501</span>
+    <span class="n">area</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'area'</span><span class="p">]</span>
+    <span class="n">floating</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'floating'</span><span class="p">]</span>
+    <span class="c1"># the ISMIP7 0-based numbering, which is what the observations use</span>
+    <span class="n">basin</span> <span class="o">=</span> <span class="n">ds_masks</span><span class="p">[</span><span class="s1">'ismip7BasinNumber'</span><span class="p">]</span>
+
+    <span class="c1"># the basin mean of the ISMIP6 form shifts with dT exactly as the local</span>
+    <span class="c1"># forcing does, because dT is constant within a basin</span>
+    <span class="n">mean_tf</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">melt_form</span> <span class="o">==</span> <span class="s1">'ismip6'</span><span class="p">:</span>
+        <span class="n">mean_tf</span> <span class="o">=</span> <span class="n">melt_model</span><span class="o">.</span><span class="n">basin_mean_tf</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="s1">'tf_draft'</span><span class="p">],</span> <span class="n">area</span><span class="p">,</span>
+                                           <span class="n">floating</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="s1">'basin'</span><span class="p">])</span>
+
+    <span class="c1"># melt at every dT on the grid, once, then integrate per basin</span>
+    <span class="n">totals</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">delta_t</span> <span class="ow">in</span> <span class="n">delta_t_grid</span><span class="p">:</span>
+        <span class="n">melt</span> <span class="o">=</span> <span class="n">melt_model</span><span class="o">.</span><span class="n">melt_from_tf</span><span class="p">(</span><span class="n">melt_form</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
+                                       <span class="n">delta_t</span><span class="o">=</span><span class="n">delta_t</span><span class="p">,</span> <span class="n">mean_tf</span><span class="o">=</span><span class="n">mean_tf</span><span class="p">)</span>
+        <span class="n">totals</span><span class="p">[</span><span class="n">delta_t</span><span class="p">]</span> <span class="o">=</span> <span class="n">melt_model</span><span class="o">.</span><span class="n">integrate_by_basin</span><span class="p">(</span>
+            <span class="n">melt</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">floating</span><span class="p">,</span> <span class="n">basin</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">basin</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">))</span>
+
+    <span class="n">fit</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">basin_number</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">basin</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+                               <span class="k">if</span> <span class="n">b</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">basin_number</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">observed</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">series</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">totals</span><span class="p">[</span><span class="n">dt</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">basin</span><span class="o">=</span><span class="n">basin_number</span><span class="p">))</span>
+                           <span class="k">if</span> <span class="n">basin_number</span> <span class="ow">in</span> <span class="n">totals</span><span class="p">[</span><span class="n">dt</span><span class="p">]</span><span class="o">.</span><span class="n">basin</span><span class="o">.</span><span class="n">values</span>
+                           <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">for</span> <span class="n">dt</span> <span class="ow">in</span> <span class="n">delta_t_grid</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">series</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">continue</span>
+        <span class="n">fit</span><span class="p">[</span><span class="n">basin_number</span><span class="p">]</span> <span class="o">=</span> <span class="n">fit_one_basin</span><span class="p">(</span>
+            <span class="n">series</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">observed</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">basin_number</span><span class="p">]),</span> <span class="n">delta_t_grid</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fit</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_one_basin</span><span class="p">(</span><span class="n">modelled</span><span class="p">,</span> <span class="n">observed</span><span class="p">,</span> <span class="n">delta_t_grid</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Pick the dT that brings one basin's integrated melt closest to observed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    modelled : numpy.ndarray</span>
+<span class="sd">        Basin-integrated melt at each dT in ``delta_t_grid``, Gt yr-1</span>
+
+<span class="sd">    observed : float</span>
+<span class="sd">        The observed basin-integrated melt, Gt yr-1</span>
+
+<span class="sd">    delta_t_grid : numpy.ndarray</span>
+<span class="sd">        The dT values, in K</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fit : dict</span>
+<span class="sd">        ``delta_t``, ``observed``, ``modelled_before``, ``modelled_after``</span>
+<span class="sd">        and ``residual``</span>
+<span class="sd">    """</span>
+    <span class="n">misfit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">modelled</span> <span class="o">-</span> <span class="n">observed</span><span class="p">)</span>
+    <span class="n">best</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanargmin</span><span class="p">(</span><span class="n">misfit</span><span class="p">))</span>
+    <span class="n">zero</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">delta_t_grid</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">delta_t</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">delta_t_grid</span><span class="p">[</span><span class="n">best</span><span class="p">]),</span>
+                <span class="n">observed</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">observed</span><span class="p">),</span>
+                <span class="n">modelled_before</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">modelled</span><span class="p">[</span><span class="n">zero</span><span class="p">]),</span>
+                <span class="n">modelled_after</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">modelled</span><span class="p">[</span><span class="n">best</span><span class="p">]),</span>
+                <span class="n">residual</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">misfit</span><span class="p">[</span><span class="n">best</span><span class="p">]))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check_fit</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">delta_t_grid</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Check that a fit did what it claims.</span>
+
+<span class="sd">    Fitting dT_b must never make a basin worse than dT = 0, and the fitted</span>
+<span class="sd">    values must lie within the grid.  Neither can fail by construction, so</span>
+<span class="sd">    a failure here means a sign or indexing error upstream -- which is the</span>
+<span class="sd">    kind of bug that otherwise produces plausible-looking corrections.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fit : dict</span>
+<span class="sd">        From :py:func:`fit_basins`</span>
+
+<span class="sd">    delta_t_grid : numpy.ndarray</span>
+<span class="sd">        The dT values that were searched</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If any basin got worse, or any fitted dT is off the grid</span>
+<span class="sd">    """</span>
+    <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">delta_t_grid</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span> <span class="nb">float</span><span class="p">(</span><span class="n">delta_t_grid</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="n">problems</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">basin_number</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">fit</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">before</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">'modelled_before'</span><span class="p">]</span> <span class="o">-</span> <span class="n">result</span><span class="p">[</span><span class="s1">'observed'</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">'residual'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">before</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">1.0e-12</span><span class="p">):</span>
+            <span class="n">problems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'basin </span><span class="si">{</span><span class="n">basin_number</span><span class="si">}</span><span class="s1">: residual '</span>
+                            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s2">"residual"</span><span class="p">]</span><span class="si">:</span><span class="s1">.3g</span><span class="si">}</span><span class="s1"> is worse than '</span>
+                            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">before</span><span class="si">:</span><span class="s1">.3g</span><span class="si">}</span><span class="s1"> at dT = 0'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">low</span> <span class="o">&lt;=</span> <span class="n">result</span><span class="p">[</span><span class="s1">'delta_t'</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="p">:</span>
+            <span class="n">problems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'basin </span><span class="si">{</span><span class="n">basin_number</span><span class="si">}</span><span class="s1">: dT = '</span>
+                            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s2">"delta_t"</span><span class="p">]</span><span class="si">}</span><span class="s1"> is outside '</span>
+                            <span class="sa">f</span><span class="s1">'[</span><span class="si">{</span><span class="n">low</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">high</span><span class="si">}</span><span class="s1">]'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">problems</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'The dT_b fit is inconsistent:</span><span class="se">\n</span><span class="s1">  '</span> <span class="o">+</span>
+                         <span class="s1">'</span><span class="se">\n</span><span class="s1">  '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">problems</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_report</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">,</span> <span class="n">delta_t_grid</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Log the fit per basin, and check it."""</span>
+    <span class="n">check_fit</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">delta_t_grid</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="s2">"basin"</span><span class="si">:</span><span class="s1">&gt;5s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">"dT_b (K)"</span><span class="si">:</span><span class="s1">&gt;9s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">"melt(0)"</span><span class="si">:</span><span class="s1">&gt;10s</span><span class="si">}</span><span class="s1"> '</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="s2">"melt(dT)"</span><span class="si">:</span><span class="s1">&gt;10s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">"observed"</span><span class="si">:</span><span class="s1">&gt;10s</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">"residual"</span><span class="si">:</span><span class="s1">&gt;10s</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">basin_number</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">fit</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">fit</span><span class="p">[</span><span class="n">basin_number</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">basin_number</span><span class="si">:</span><span class="s1">5d</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s2">"delta_t"</span><span class="p">]</span><span class="si">:</span><span class="s1">9.3f</span><span class="si">}</span><span class="s1"> '</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s2">"modelled_before"</span><span class="p">]</span><span class="si">:</span><span class="s1">10.1f</span><span class="si">}</span><span class="s1"> '</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s2">"modelled_after"</span><span class="p">]</span><span class="si">:</span><span class="s1">10.1f</span><span class="si">}</span><span class="s1"> '</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s2">"observed"</span><span class="p">]</span><span class="si">:</span><span class="s1">10.1f</span><span class="si">}</span><span class="s1"> '</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s2">"residual"</span><span class="p">]</span><span class="si">:</span><span class="s1">10.2f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">bound</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">delta_t_grid</span><span class="o">.</span><span class="n">min</span><span class="p">())),</span>
+                <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">delta_t_grid</span><span class="o">.</span><span class="n">max</span><span class="p">())))</span>
+    <span class="n">at_bound</span> <span class="o">=</span> <span class="p">[</span><span class="n">basin_number</span> <span class="k">for</span> <span class="n">basin_number</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">fit</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">'delta_t'</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mf">0.999</span> <span class="o">*</span> <span class="n">bound</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">at_bound</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  dT_b hit the bounds in basins </span><span class="si">{</span><span class="n">at_bound</span><span class="si">}</span><span class="s1">; the '</span>
+                       <span class="sa">f</span><span class="s1">'protocol bounds the correction deliberately, so a '</span>
+                       <span class="sa">f</span><span class="s1">'basin at the bound means the melt form cannot match '</span>
+                       <span class="sa">f</span><span class="s1">'the observed integral there.'</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_params</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">ds_masks</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Write a complete MALI melt-parameter file for one percentile.</span>
+
+<span class="sd">    It carries the basins, the fitted corrections and the melt parameter</span>
+<span class="sd">    itself, so that a projection needs only to point at it.</span>
+<span class="sd">    """</span>
+    <span class="n">basin0</span> <span class="o">=</span> <span class="n">ds_masks</span><span class="p">[</span><span class="s1">'ismip7BasinNumber'</span><span class="p">]</span>
+    <span class="n">delta_t</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">basin0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">basin_number</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">fit</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">delta_t</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">basin0</span> <span class="o">==</span> <span class="n">basin_number</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s1">'delta_t'</span><span class="p">],</span>
+                           <span class="n">delta_t</span><span class="p">)</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_basin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_masks</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_basin'</span><span class="p">]</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_deltaT'</span><span class="p">]</span> <span class="o">=</span> <span class="n">delta_t</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_deltaT'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'long_name'</span><span class="p">:</span> <span class="s1">'basin-wide thermal forcing correction'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="s1">'degC'</span><span class="p">}</span>
+    <span class="n">ds</span><span class="p">[</span><span class="n">PARAMETER_VARIABLE</span><span class="p">[</span><span class="n">melt_form</span><span class="p">]]</span> <span class="o">=</span> <span class="n">parameter</span>
+    <span class="n">ds</span><span class="p">[</span><span class="n">PARAMETER_VARIABLE</span><span class="p">[</span><span class="n">melt_form</span><span class="p">]]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'long_name'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'calibrated </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> for the </span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1"> ice-shelf '</span>
+                     <span class="sa">f</span><span class="s1">'melting method'</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">melt_form</span> <span class="o">==</span> <span class="s1">'ismip6'</span><span class="p">:</span>
+        <span class="n">ds</span><span class="p">[</span><span class="n">PARAMETER_VARIABLE</span><span class="p">[</span><span class="n">melt_form</span><span class="p">]]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'m yr^-1'</span>
+
+    <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'melt_form'</span><span class="p">]</span> <span class="o">=</span> <span class="n">melt_form</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'parameter_name'</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'parameter_value'</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameter</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'note'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">'dT_b fitted after parameter selection, per protocol Sect. 4.2.1 '</span>
+        <span class="s1">'option 2, against the IMBIE basin-integrated melt observations.'</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_summary</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">melt_form</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Write the fitted dT_b per basin and percentile, for validation."""</span>
+    <span class="n">percentiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">percentile</span> <span class="k">for</span> <span class="n">percentile</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">PERCENTILES</span><span class="p">]</span>
+    <span class="n">basins</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">basin_number</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">fit</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                     <span class="k">for</span> <span class="n">basin_number</span> <span class="ow">in</span> <span class="n">fit</span><span class="p">})</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">table</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">results</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">b</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">basins</span><span class="p">]</span>
+                         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">percentiles</span><span class="p">])</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">'percentile'</span><span class="p">:</span> <span class="n">percentiles</span><span class="p">,</span> <span class="s1">'basin'</span><span class="p">:</span> <span class="n">basins</span><span class="p">})</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'parameter'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'percentile'</span><span class="p">,</span>
+                       <span class="p">[</span><span class="n">results</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">percentiles</span><span class="p">])</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'delta_t'</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">'percentile'</span><span class="p">,</span> <span class="s1">'basin'</span><span class="p">),</span> <span class="n">table</span><span class="p">(</span><span class="s1">'delta_t'</span><span class="p">))</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'modelled_before'</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">'percentile'</span><span class="p">,</span> <span class="s1">'basin'</span><span class="p">),</span>
+                             <span class="n">table</span><span class="p">(</span><span class="s1">'modelled_before'</span><span class="p">))</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'modelled_after'</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">'percentile'</span><span class="p">,</span> <span class="s1">'basin'</span><span class="p">),</span> <span class="n">table</span><span class="p">(</span><span class="s1">'modelled_after'</span><span class="p">))</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'observed'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'basin'</span><span class="p">,</span> <span class="p">[</span><span class="n">results</span><span class="p">[</span><span class="n">percentiles</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="mi">1</span><span class="p">][</span><span class="n">b</span><span class="p">][</span><span class="s1">'observed'</span><span class="p">]</span>
+                                <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">basins</span><span class="p">])</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">'delta_t'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'degC'</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'modelled_before'</span><span class="p">,</span> <span class="s1">'modelled_after'</span><span class="p">,</span> <span class="s1">'observed'</span><span class="p">):</span>
+        <span class="n">ds</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Gt yr^-1'</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'melt_form'</span><span class="p">]</span> <span class="o">=</span> <span class="n">melt_form</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'parameter_name'</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

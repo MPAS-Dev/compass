@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip7_calibration.ais &mdash; compass 2.0.0-alpha.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../ismip7_calibration.html">compass.landice.tests.ismip7_calibration</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip7_calibration.ais</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip7_calibration.ais</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.ais.aggregate</span><span class="w"> </span><span class="kn">import</span> <span class="n">Aggregate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.ais.calibrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">Calibrate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.ais.fit_delta_t</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PERCENTILES</span><span class="p">,</span>
+    <span class="n">FitDeltaT</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.ais.make_graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">MakeGraph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.ais.remap_forcing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RemapForcing</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.ais.remap_masks</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapMasks</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.ais.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">Report</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.ais.run_state</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PARAMETER_VARIABLE</span><span class="p">,</span>
+    <span class="n">RunState</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.ais.verify_melt</span><span class="w"> </span><span class="kn">import</span> <span class="n">VerifyMelt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip7_calibration.configure</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">check_options</span><span class="p">,</span>
+    <span class="n">melt_forms</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">compare_variables</span>
+
+<span class="c1">#: the ocean state the verification and the dT_b fit use</span>
+<span class="n">REFERENCE_STATE</span> <span class="o">=</span> <span class="s1">'climatology'</span>
+
+<span class="c1">#: multiples of the reference melt parameter used to measure the linearity</span>
+<span class="c1">#: that the one-run-per-ocean-state ensemble relies on.  Only the 'ismip7'</span>
+<span class="c1">#: form is scaled: its parameter is a namelist option, while the ISMIP6</span>
+<span class="c1">#: gamma0 is read from an input file.</span>
+<span class="n">LINEARITY_SCALES</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Ais">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.Ais.html#compass.landice.tests.ismip7_calibration.ais.Ais">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Ais</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A test case that calibrates MALI's sub-shelf melt parameterization on an</span>
+<span class="sd">    Antarctic MALI mesh, following the ISMIP7 protocol.</span>
+
+<span class="sd">    The steps, in dependency order:</span>
+
+<span class="sd">    ``make_graph``</span>
+<span class="sd">        The graph partition the melt diagnostics run on, built once from the</span>
+<span class="sd">        mesh rather than required as a pre-built file alongside it.</span>
+
+<span class="sd">    ``remap_masks``</span>
+<span class="sd">        ISMIP7 basins, buttressing bins, the floating mask and the</span>
+<span class="sd">        PIG/Dotson regions, onto the MALI mesh.</span>
+
+<span class="sd">    ``remap_forcing``</span>
+<span class="sd">        The calibration thermal forcing for each ocean state, onto the MALI</span>
+<span class="sd">        mesh.</span>
+
+<span class="sd">    ``&lt;melt_form&gt;_&lt;state&gt;``</span>
+<span class="sd">        One single-timestep MALI melt diagnostic per ocean state and melt</span>
+<span class="sd">        form.  **Not** one per parameter value: melt is exactly proportional</span>
+<span class="sd">        to the melt parameter, so the parameter sweep is a scaling of one</span>
+<span class="sd">        run.  That is what makes this 28 runs per form rather than about</span>
+<span class="sd">        1300.</span>
+
+<span class="sd">    ``verify_melt``</span>
+<span class="sd">        MALI's melt against an independent Python implementation, its</span>
+<span class="sd">        vertical interpolation against an independent one, and the linearity</span>
+<span class="sd">        that the previous point relies on.</span>
+
+<span class="sd">    ``aggregate``</span>
+<span class="sd">        Melt to basins, buttressing bins and shelf regions, area-weighted.</span>
+
+<span class="sd">    ``calibrate``</span>
+<span class="sd">        The 100,000-sample parameter selection, giving the percentiles the</span>
+<span class="sd">        ISMIP7 projections need.</span>
+
+<span class="sd">    ``fit_delta_t``</span>
+<span class="sd">        The per-basin correction dT_b, fitted **after** parameter selection</span>
+<span class="sd">        per protocol Sect. 4.2.1 option 2, at each of the 5th, 50th and 95th</span>
+<span class="sd">        percentiles, giving a complete MALI parameter file for each.</span>
+
+<span class="sd">    ``report``</span>
+<span class="sd">        Plots and a summary table.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    melt_forms : list of str</span>
+<span class="sd">        The melt forms being calibrated</span>
+
+<span class="sd">    states : list of compass.landice.tests.ismip7_calibration.datasets.OceanState</span>
+<span class="sd">        The ocean states in the ensemble</span>
+<span class="sd">    """</span>  <span class="c1"># noqa: E501</span>
+
+<div class="viewcode-block" id="Ais.__init__">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.Ais.html#compass.landice.tests.ismip7_calibration.ais.Ais.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Create the test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.landice.tests.ismip7_calibration.Ismip7Calibration</span>
+<span class="sd">            The test group that this test case belongs to</span>
+<span class="sd">        """</span>  <span class="c1"># noqa: E501</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">'ais'</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">melt_forms</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="Ais.configure">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.Ais.configure.html#compass.landice.tests.ismip7_calibration.ais.Ais.configure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Add a step per ocean state and melt form, once the config is known</span>
+<span class="sd">        """</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">check_options</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="p">[</span><span class="s1">'base_path_ismip7'</span><span class="p">,</span> <span class="s1">'base_path_mali'</span><span class="p">,</span>
+                               <span class="s1">'mali_mesh_file'</span><span class="p">,</span> <span class="s1">'mali_mesh_name'</span><span class="p">])</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'ismip7_calibration'</span><span class="p">]</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'base_path_ismip7'</span><span class="p">)</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ocean_state_subset'</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">melt_forms</span> <span class="o">=</span> <span class="n">melt_forms</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">ocean_states</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="n">subset</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">MakeGraph</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">RemapMasks</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">RemapForcing</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">melt_form</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">melt_forms</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">RunState</span><span class="p">(</span>
+                    <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_name</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">melt_form</span><span class="o">=</span><span class="n">melt_form</span><span class="p">,</span>
+                    <span class="n">subdir</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span><span class="p">))</span>
+
+        <span class="c1"># extra runs of one ocean state at other melt parameters, so that the</span>
+        <span class="c1"># linearity the ensemble design relies on is measured in MALI rather</span>
+        <span class="c1"># than argued from the code</span>
+        <span class="n">verify_form</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">melt_forms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">scales</span> <span class="o">=</span> <span class="n">LINEARITY_SCALES</span> <span class="k">if</span> <span class="n">verify_form</span> <span class="o">==</span> <span class="s1">'ismip7'</span> <span class="k">else</span> <span class="p">()</span>
+        <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="n">scales</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">RunState</span><span class="p">(</span>
+                <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_name</span><span class="o">=</span><span class="n">REFERENCE_STATE</span><span class="p">,</span>
+                <span class="n">melt_form</span><span class="o">=</span><span class="n">verify_form</span><span class="p">,</span>
+                <span class="n">subdir</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">verify_form</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">REFERENCE_STATE</span><span class="si">}</span><span class="s1">_x</span><span class="si">{</span><span class="n">scale</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                <span class="n">parameter_scale</span><span class="o">=</span><span class="n">scale</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">VerifyMelt</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">melt_form</span><span class="o">=</span><span class="n">verify_form</span><span class="p">,</span>
+                                 <span class="n">state_name</span><span class="o">=</span><span class="n">REFERENCE_STATE</span><span class="p">,</span>
+                                 <span class="n">linearity_scales</span><span class="o">=</span><span class="n">scales</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Aggregate</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">melt_forms</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">melt_forms</span><span class="p">,</span>
+                                <span class="n">states</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Calibrate</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">melt_forms</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">melt_forms</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">FitDeltaT</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">melt_forms</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">melt_forms</span><span class="p">,</span>
+                                <span class="n">state_name</span><span class="o">=</span><span class="n">REFERENCE_STATE</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Report</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">melt_forms</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">melt_forms</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Ais.validate">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_calibration.ais.Ais.validate.html#compass.landice.tests.ismip7_calibration.ais.Ais.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Compare the calibration against a baseline, if one was provided</span>
+<span class="sd">        """</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'p5'</span><span class="p">,</span> <span class="s1">'median'</span><span class="p">,</span> <span class="s1">'p95'</span><span class="p">,</span> <span class="s1">'mode'</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">melt_form</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">melt_forms</span><span class="p">:</span>
+            <span class="n">compare_variables</span><span class="p">(</span>
+                <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
+                <span class="n">filename1</span><span class="o">=</span><span class="sa">f</span><span class="s1">'calibrate/calibration_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span>
+        <span class="n">compare_variables</span><span class="p">(</span>
+            <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">'modelled_shelf_area'</span><span class="p">,</span> <span class="s1">'observed_shelf_area'</span><span class="p">],</span>
+            <span class="n">filename1</span><span class="o">=</span><span class="s1">'aggregate/shelf_area.nc'</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'ismip7_calibration_delta_t'</span><span class="p">,</span>
+                                  <span class="s1">'fit_delta_t'</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">melt_form</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">melt_forms</span><span class="p">:</span>
+                <span class="n">compare_variables</span><span class="p">(</span>
+                    <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">'parameter'</span><span class="p">,</span> <span class="s1">'delta_t'</span><span class="p">,</span> <span class="s1">'modelled_after'</span><span class="p">],</span>
+                    <span class="n">filename1</span><span class="o">=</span><span class="sa">f</span><span class="s1">'fit_delta_t/delta_t_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">PERCENTILES</span><span class="p">:</span>
+                    <span class="n">compare_variables</span><span class="p">(</span>
+                        <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                        <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">'ismip6shelfMelt_deltaT'</span><span class="p">,</span>
+                                   <span class="n">PARAMETER_VARIABLE</span><span class="p">[</span><span class="n">melt_form</span><span class="p">]],</span>
+                        <span class="n">filename1</span><span class="o">=</span><span class="sa">f</span><span class="s1">'fit_delta_t/melt_params_</span><span class="si">{</span><span class="n">melt_form</span><span class="si">}</span><span class="s1">_'</span>
+                                  <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nc'</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
