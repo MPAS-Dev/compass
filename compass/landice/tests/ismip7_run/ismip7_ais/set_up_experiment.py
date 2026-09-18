@@ -396,6 +396,7 @@ class SetUpExperiment(Step):
 
         # FastIsostasy options
         if fastisostasy:
+            fastiso_res_km = section.getint('fastiso_res_km')
             options = {
                 'config_uplift_method': "'fastisostasy'",
                 'config_MALI_to_FASTISOSTASY_weights_file':
@@ -403,7 +404,9 @@ class SetUpExperiment(Step):
                 'config_FASTISOSTASY_to_MALI_weights_file':
                     "'mapfile_fastiso_to_mali.nc'",
                 'config_fastisostasy_parameter_file':
-                    "'namelist.fastisostasy'"
+                    "'namelist.fastisostasy'",
+                'config_fastisostasy_grid_resolution':
+                    str(fastiso_res_km * 1000)
             }
             self.add_namelist_options(options=options,
                                       out_name='namelist.landice')
