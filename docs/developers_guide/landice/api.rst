@@ -521,6 +521,37 @@ ismip7_forcing
    fracture.process_shelf_collapse.ProcessShelfCollapse.setup
    fracture.process_shelf_collapse.ProcessShelfCollapse.run
 
+ismip7_run
+~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.ismip7_run
+
+.. autosummary::
+   :toctree: generated/
+
+   Ismip7Run
+
+   ismip7_ais.Ismip7Ais
+   ismip7_ais.Ismip7Ais.configure
+   ismip7_ais.Ismip7Ais.run
+   ismip7_ais.set_up_experiment.SetUpExperiment
+   ismip7_ais.set_up_experiment.SetUpExperiment.setup
+   ismip7_ais.set_up_experiment.SetUpExperiment.run
+   ismip7_ais.create_slm_mapping_files.CreateSlmMappingFiles
+   ismip7_ais.create_slm_mapping_files.CreateSlmMappingFiles.setup
+   ismip7_ais.create_slm_mapping_files.CreateSlmMappingFiles.run
+   ismip7_ais.create_fastiso_mapping_files.CreateFastIsoMappingFiles
+   ismip7_ais.create_fastiso_mapping_files.CreateFastIsoMappingFiles.setup
+   ismip7_ais.create_fastiso_mapping_files.CreateFastIsoMappingFiles.run
+   ismip7_ais.create_fastiso_mapping_files.create_ismip7_grid_file
+
+   ismip7_gris.Ismip7Gris
+   ismip7_gris.Ismip7Gris.configure
+   ismip7_gris.Ismip7Gris.run
+   ismip7_gris.set_up_experiment.SetUpExperiment
+   ismip7_gris.set_up_experiment.SetUpExperiment.setup
+   ismip7_gris.set_up_experiment.SetUpExperiment.run
+
 isunnguata_sermia
 ~~~~~~~~~~~~~~~~~
 
