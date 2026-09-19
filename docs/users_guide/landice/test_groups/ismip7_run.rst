@@ -135,6 +135,13 @@ Usage
       compass setup landice/ismip7_run/ismip7_ais -f my_ismip7_ais.cfg
       # Then submit job scripts from individual experiment directories
 
+   If ``sea_level_model`` or ``fastisostasy`` is enabled, ``compass setup``
+   also adds a ``mapping_files`` and/or ``fastiso_mapping_files``
+   subdirectory (respectively). These must be run (via their job script,
+   or ``compass run`` from within that subdirectory) *before* submitting
+   any individual experiment, since the experiments' job scripts assume
+   the mapping files already exist.
+
 .. _landice_ismip7_run_config:
 
 config options
@@ -198,8 +205,24 @@ All config options should be reviewed and altered as needed.
    slm_input_others = NotAvailable
    nglv = 2048
 
+   # FastIsostasy (regional bedrock/GIA) coupling
+   fastisostasy = false
+   fastiso_earth_structure_path = NotAvailable
+   fastiso_earth_structure_filename = weak-earth.nc
+   fastiso_res_km = 8
+   icesheet = AIS
+
+.. note::
+
+   ``fastiso_res_km`` sets the resolution (in km) of the regular grid
+   FastIsostasy runs on, which should match one of the standard ISMIP7
+   grid resolutions (2, 4, 8, or 16 km for AIS). As of this writing,
+   resolutions finer than 8 km have been found to yield numerically
+   unstable results.
+
 **GrIS config** (``[ismip7_run_gris]``) is similar (including
-``reference_surface_path``) but without sea-level model options
+``reference_surface_path``) but without sea-level model or FastIsostasy
+coupling options
 
 .. _landice_ismip7_run_forcing_streams:
 
@@ -267,7 +290,8 @@ ismip7_ais
 ----------
 
 ``landice/ismip7_run/ismip7_ais`` sets up AIS experiments with 3D ocean
-thermal forcing (30 vertical layers) and optional sea-level model coupling.
+thermal forcing (30 vertical layers) and optional sea-level model and/or
+FastIsostasy coupling.
 
 .. _landice_ismip7_run_gris:
 
