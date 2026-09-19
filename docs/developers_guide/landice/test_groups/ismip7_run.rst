@@ -7,7 +7,8 @@ The ``ismip7_run`` test group
 (:py:class:`compass.landice.tests.ismip7_run`) sets up experiments from
 the ISMIP7 experimental protocol for both the Antarctic Ice Sheet (AIS)
 and the Greenland Ice Sheet (GrIS).  Optionally, the AIS test case
-supports coupled MALI–Sea Level Model (SLM) simulations.
+supports coupled MALI–Sea Level Model (SLM) simulations and/or coupled
+MALI–FastIsostasy (regional bedrock/GIA) simulations.
 (see :ref:`landice_ismip7_run`).
 
 framework
@@ -83,8 +84,15 @@ The ``setup`` method sets up the experiment directory by:
 8. Setting up the OCX experiment with reanalysis-based forcing.
 9. If SLM coupling is enabled, adding a ``CreateSlmMappingFiles`` step
    and writing the SLM namelist from the Jinja2 template.
-10. Generating a ``graph.info`` file and a SLURM job script.
-11. Symlinking the compass load script into the run directory.
+10. If FastIsostasy coupling is enabled, adding a
+    ``CreateFastIsoMappingFiles`` step; writing the FastIsostasy namelist
+    from the Jinja2 template, including ``config_fastisostasy_grid_resolution``
+    (derived from ``fastiso_res_km``, converted from km to m, so the two
+    stay in sync automatically); and symlinking the FastIsostasy mapping
+    files and the Earth-structure rheology file
+    (``fastiso_earth_structure_filename``) into the run directory.
+11. Generating a ``graph.info`` file and a SLURM job script.
+12. Symlinking the compass load script into the run directory.
 
 The ``run`` method executes MALI for the given experiment.
 
@@ -95,6 +103,31 @@ The class
 :py:class:`compass.landice.tests.ismip7_run.ismip7_ais.create_slm_mapping_files.CreateSlmMappingFiles`
 creates mapping files between the MALI mesh and the SLM grid.  This step
 is only added when sea-level model coupling is enabled.
+
+create_fastiso_mapping_files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The class
+:py:class:`compass.landice.tests.ismip7_run.ismip7_ais.create_fastiso_mapping_files.CreateFastIsoMappingFiles`
+creates mapping files between the MALI mesh and the regular grid
+FastIsostasy runs on.  This step is only added when FastIsostasy coupling
+is enabled.
+
+Its ``run`` method:
+
+1. Creates a minimal ISMIP7-standard regular grid file (x/y projected
+   coordinates only) at the requested resolution
+   (:py:func:`compass.landice.tests.ismip7_run.ismip7_ais.create_fastiso_mapping_files.create_ismip7_grid_file`),
+   using the same domain extents as the ISMIP7 standard AIS/GrIS output
+   grids.
+2. Builds SCRIP files for both the FastIsostasy grid
+   (via ``mpas_tools.scrip.from_planar``) and the MALI mesh (via
+   ``mpas_tools.scrip.from_mpas``).
+3. Generates two ``ESMF_RegridWeightGen`` mapping files: a conservative
+   MALI → FastIsostasy mapping file (used to remap ice thickness and bed
+   topography onto the FastIsostasy grid) and a bilinear
+   FastIsostasy → MALI mapping file (used to remap the updated bed
+   topography back onto the MALI mesh).
 
 ismip7_gris
 -----------

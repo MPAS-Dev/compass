@@ -1,0 +1,94 @@
+&isostasy
+    ! FastIsostasy namelist for Antarctic Ice Sheet ISMIP7 simulations
+    ! Coupled with MALI via compass test case
+    !
+    ! ========================================================================
+    ! Main Options
+    ! ========================================================================
+    heterogeneous_ssh = .true.      ! Sea level varies spatially
+    interactive_sealevel = .true.   ! Sea level interacts with solid Earth
+    include_elastic = .true.        ! Include elastic deformation
+    correct_compression = .true.    ! Account for compression effects
+    correct_distortion = .false.    ! Account for distortion
+    method          = 3             ! 3: LV-ELVA
+    dt_diagnostics  = 10.           ! [yr] Diagnostics timestep
+    pad             = 512.          ! [km] Padding to the isostasy domain
+
+    ! ========================================================================
+    ! Rheology method selection
+    ! ========================================================================
+    mantle = "rheology_file"        ! Laterally variable mantle viscosity from file
+    lithosphere = "rheology_file"   ! Laterally variable lithosphere thickness from file
+    layering    = "parallel"        ! Available options: equalized, parallel, folded
+    lumping     = "min"             ! Unused with nl=1 (nothing to lump); required key regardless
+    viscosity_scaling_method = "none"  ! No post-hoc scaling/perturbation of eta_eff
+    viscosity_scaling = 1.0         ! Required key; unused since viscosity_scaling_method="none"
+
+    ! ========================================================================
+    ! Layer / uniform-viscosity parameters
+    ! All of these are read unconditionally by isos_par_load regardless of
+    ! mantle/lithosphere choice, but are physically inert here since the
+    ! actual rheology comes from rheology_file, not these uniform values.
+    ! ========================================================================
+    nl          = 1                 ! Number of viscous layers
+    zl = 88.0                       ! [km] Layer depths
+    dl = 88.0                       ! [km] Layer spacing; required because layering="parallel"
+                                     ! (unused numerically since nl=1, but nml reader requires it)
+    viscosities = 1.0e21            ! [Pa s] Must have exactly nl=1 value; unused (rheology_file)
+    ref_viscosity = 1.0e21          ! [Pa s] Reference viscosity; required key
+    tau = 3000.0                    ! [yr] Relaxation time; only used by method=2 (ELRA), unused here
+
+    ! ========================================================================
+    ! Rheology file fields (required because mantle/lithosphere = "rheology_file")
+    ! ========================================================================
+    rheology_file = "weak-earth.nc"
+    litho_thickness_varname = "litho_thickness"
+    log10_viscosity_varname = "log10_viscosity"
+    stddev_log10_viscosity_varname = "stddev_log10_viscosity"  ! placeholder; no such field exists in
+                                                                  ! weak/strong-earth.nc, but never read
+                                                                  ! from disk since viscosity_scaling_method="none"
+    rheo_smoothing_radius = 40.0    ! [km] Smoothing radius
+    litho_thickness_scaling = 1.0   ! Lithosphere scaling
+
+    ! ========================================================================
+    ! Physical Constants
+    ! ========================================================================
+    E               = 66.0          ! [GPa] Young modulus
+    nu              = 0.28          ! [-] Poisson ratio
+    rho_ice         = 910.0         ! [kg/m^3] Ice density
+    rho_seawater    = 1028.0        ! [kg/m^3] Seawater density
+    rho_water       = 1000.0        ! [kg/m^3] Freshwater density
+    rho_uppermantle = 3400.0        ! [kg/m^3] Upper mantle density
+    rho_litho       = 3200.0        ! [kg/m^3] Lithosphere density
+    g               = 9.81          ! [m/s^2] Gravity
+    r_earth         = 6.378e3       ! [km] Earth radius
+    m_earth         = 5.972e24      ! [kg] Earth mass
+
+    ! ========================================================================
+    ! Input Files
+    ! ========================================================================
+    restart = "None"                ! Restart file (MALI overrides this at run time when restarting)
+    mask_file = "None"              ! Mask file (MALI provides)
+
+    ! ========================================================================
+    ! Time Stepping
+    ! ========================================================================
+    dt_method = "rkc"               ! Time stepping method, options: "euler", "rk4", "bs32", "tsit54", "rkc"
+    dt_init = 1.0                   ! [yr] Initial timestep
+    dt_min = 1e-10                  ! [yr] Minimum timestep
+    dt_max = 10.0                   ! [yr] Maximum timestep
+    rtol = 1e-4                     ! Relative tolerance
+    atol = 1e-2                     ! Absolute tolerance
+    q = 1.0                         ! Timestep adaptation exponent
+/
+
+&barysealevel
+    ! ========================================================================
+    ! Barystatic Sea Level
+    ! ========================================================================
+    method      = "fastiso"         ! Compute from ice mass changes
+    bsl_init    = 0.0               ! [m] Initial sea level
+    A_ocean_pd  = 3.625e14          ! [m^2] Ocean area (Goelzer et al. 2020)
+    A_ocean_path = "None"
+    restart     = "None"
+/
