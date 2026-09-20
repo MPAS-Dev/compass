@@ -411,15 +411,18 @@ class SetUpExperiment(Step):
             self.add_namelist_options(options=options,
                                       out_name='namelist.landice')
 
-            fastiso_earth_structure_path = section.get(
-                'fastiso_earth_structure_path')
+            fastiso_path = section.get('fastiso_path')
             fastiso_earth_structure_filename = section.get(
                 'fastiso_earth_structure_filename')
+            fastiso_mask_filename = section.get('fastiso_mask_filename')
+            use_mask_file = fastiso_mask_filename.lower() != 'none'
 
             template = Template(resources.read_text(
                 resource_location, 'namelist.fastisostasy.template'))
             text = template.render(
-                rheology_file=fastiso_earth_structure_filename)
+                rheology_file=fastiso_earth_structure_filename,
+                mask_file=fastiso_mask_filename if use_mask_file
+                else 'None')
 
             file_fi_nl = os.path.join(self.work_dir, 'namelist.fastisostasy')
             with open(file_fi_nl, 'w') as handle:
@@ -432,12 +435,14 @@ class SetUpExperiment(Step):
                 os.symlink(os.path.join(map_dir, map_file),
                            os.path.join(self.work_dir, map_file))
 
-            # Symlink Earth structure file
-            earth_dir = os.path.join(fastiso_earth_structure_path,
-                                     fastiso_earth_structure_filename)
-            os.symlink(earth_dir,
-                       os.path.join(self.work_dir,
-                                    fastiso_earth_structure_filename))
+            # Symlink Earth structure (and, if configured, activation
+            # mask) files, both expected to live under fastiso_path
+            fastiso_input_files = [fastiso_earth_structure_filename]
+            if use_mask_file:
+                fastiso_input_files.append(fastiso_mask_filename)
+            for fname in fastiso_input_files:
+                os.symlink(os.path.join(fastiso_path, fname),
+                           os.path.join(self.work_dir, fname))
 
         # --- Symlink restart for projections/ctrl ---
         if not is_historical:

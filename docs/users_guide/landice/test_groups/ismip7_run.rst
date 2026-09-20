@@ -207,8 +207,9 @@ All config options should be reviewed and altered as needed.
 
    # FastIsostasy (regional bedrock/GIA) coupling
    fastisostasy = false
-   fastiso_earth_structure_path = NotAvailable
+   fastiso_path = NotAvailable
    fastiso_earth_structure_filename = weak-earth.nc
+   fastiso_mask_filename = None
    fastiso_res_km = 8
    icesheet = AIS
 
@@ -219,6 +220,20 @@ All config options should be reviewed and altered as needed.
    grid resolutions (2, 4, 8, or 16 km for AIS). As of this writing,
    resolutions finer than 8 km have been found to yield numerically
    unstable results.
+
+.. note::
+
+   ``fastiso_path`` is a directory holding both the Earth-structure
+   (rheology) file named by ``fastiso_earth_structure_filename`` and,
+   optionally, an interactive-sea-level activation mask file named by
+   ``fastiso_mask_filename``. Leaving ``fastiso_mask_filename = None``
+   uses FastIsostasy's built-in fallback, which activates interactive
+   sea level only over the un-padded ice domain -- a hard cutoff at the
+   domain/padding boundary that can show up as a ring-shaped artifact in
+   bed-topography change near the edge of the ice sheet. Supplying a mask
+   file (NetCDF with dims ``x``/``y``, 1-D coordinate variables ``x``/``y``
+   in meters, and a 2-D variable ``M``) lets you activate it over a wider
+   region, e.g. the full padded domain, instead.
 
 **GrIS config** (``[ismip7_run_gris]``) is similar (including
 ``reference_surface_path``) but without sea-level model or FastIsostasy

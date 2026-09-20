@@ -68,7 +68,9 @@
     ! Input Files
     ! ========================================================================
     restart = "None"                ! Restart file (MALI overrides this at run time when restarting)
-    mask_file = "None"              ! Mask file (MALI provides)
+    mask_file = "{{ mask_file }}"   ! Interactive-sea-level activation mask; "None" means FastIsostasy
+                                     ! falls back to a hard-edged mask covering only the un-padded
+                                     ! ice domain (see fastiso_mask_filename in the test's .cfg file)
 
     ! ========================================================================
     ! Time Stepping

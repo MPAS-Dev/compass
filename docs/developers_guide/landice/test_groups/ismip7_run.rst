@@ -99,9 +99,14 @@ The ``setup`` method sets up the experiment directory by:
     ``CreateFastIsoMappingFiles`` step; writing the FastIsostasy namelist
     from the Jinja2 template, including ``config_fastisostasy_grid_resolution``
     (derived from ``fastiso_res_km``, converted from km to m, so the two
-    stay in sync automatically); and symlinking the FastIsostasy mapping
-    files and the Earth-structure rheology file
-    (``fastiso_earth_structure_filename``) into the run directory.
+    stay in sync automatically) and ``mask_file`` (rendered from
+    ``fastiso_mask_filename``, or the literal string ``"None"`` if that
+    config option is left as ``None``); and symlinking the FastIsostasy
+    mapping files, the Earth-structure rheology file
+    (``fastiso_earth_structure_filename``), and -- if configured -- the
+    interactive-sea-level activation mask file (``fastiso_mask_filename``)
+    into the run directory. Both input files are expected under the same
+    directory, ``fastiso_path``.
 12. Generating a ``graph.info`` file and a SLURM job script.
 13. Symlinking the compass load script into the run directory.
 
