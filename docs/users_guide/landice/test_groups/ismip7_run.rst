@@ -249,7 +249,6 @@ is required: if it is missing, ``compass setup`` fails with an error rather
 than silently skipping mask calving. When found, the mask is symlinked into
 the run directory and used to force calving:
 
-* ``config_calving`` is set to ``'none'``
 * ``config_apply_calving_mask`` is set to ``.true.``
 * ``config_restore_calving_front`` is set to ``.false.``
 * ``config_require_extensional_stresses_for_mask_calving`` is set to

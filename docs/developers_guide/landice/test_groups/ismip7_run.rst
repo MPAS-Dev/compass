@@ -80,7 +80,7 @@ The ``setup`` method sets up the experiment directory by:
    ``ice_shelf_collapse_mask_*.nc`` file under
    ``{forcing_basepath}/{model}_{scenario}/shelf_collapse/`` (from
    :ref:`landice_ismip7_forcing_fracture`). If found, it is symlinked in,
-   the ``streams.mask_calving`` stream is added, and ``config_calving``,
+   the ``streams.mask_calving`` stream is added, and
    ``config_apply_calving_mask``, ``config_restore_calving_front``,
    ``config_require_extensional_stresses_for_mask_calving``, and
    ``config_calving_fracture_toughness`` are set accordingly. If not
