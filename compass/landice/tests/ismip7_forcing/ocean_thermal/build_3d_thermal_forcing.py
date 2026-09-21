@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from compass.landice.tests.ismip7_forcing.ice_sheet_params import get_params
+from compass.landice.ismip7.ice_sheet_params import get_params
 from compass.landice.tests.ismip7_forcing.ocean_thermal import greenland_3d
 from compass.step import Step
 
