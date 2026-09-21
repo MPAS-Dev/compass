@@ -59,8 +59,6 @@ class SetUpExperiment(Step):
         reference_surface_path = section.get('reference_surface_path')
         reference_surface_fname = os.path.split(reference_surface_path)[-1]
         calving_method = section.get('calving_method')
-        use_calving_strain_rate_scaling = section.getboolean(
-            'use_calving_strain_rate_scaling')
         calving_strain_rate_scaling_path = section.get(
             'calving_strain_rate_scaling_path')
 
@@ -100,13 +98,16 @@ class SetUpExperiment(Step):
                    os.path.join(self.work_dir,
                                 os.path.basename(reference_surface_path)))
 
-        # Symlink calving strain rate scaling file if using it
-        if use_calving_strain_rate_scaling:
+        # Symlink calving strain rate scaling file if path is provided
+        if (calving_strain_rate_scaling_path != 'NotAvailable' and
+                os.path.exists(calving_strain_rate_scaling_path)):
             calving_strain_rate_scaling_fname = os.path.split(
                 calving_strain_rate_scaling_path)[-1]
             os.symlink(calving_strain_rate_scaling_path,
                        os.path.join(self.work_dir,
                                     calving_strain_rate_scaling_fname))
+        else:
+            calving_strain_rate_scaling_fname = None
 
         # --- Find and symlink forcing files ---
         if scenario == 'ctrl':
@@ -293,8 +294,8 @@ class SetUpExperiment(Step):
                 out_name='streams.landice',
                 template_replacements=vM_stream_replacements)
 
-        # Calving strain rate scaling options
-        if use_calving_strain_rate_scaling:
+        # Calving strain rate scaling stream
+        if calving_strain_rate_scaling_fname is not None:
             calving_scaling_stream_replacements = {
                 'input_file_calving_strain_rate_scaling':
                     calving_strain_rate_scaling_fname}

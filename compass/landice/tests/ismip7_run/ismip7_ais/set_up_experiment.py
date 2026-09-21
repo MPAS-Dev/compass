@@ -114,13 +114,16 @@ class SetUpExperiment(Step):
                    os.path.join(self.work_dir,
                                 os.path.basename(reference_surface_path)))
 
-        # Symlink damage calving threshold file if using damage calving
-        if use_damage_calving:
+        # Symlink damage calving threshold file if path is provided
+        if (damage_calving_threshold_path != 'NotAvailable' and
+                os.path.exists(damage_calving_threshold_path)):
             damage_calving_threshold_fname = os.path.split(
                 damage_calving_threshold_path)[-1]
             os.symlink(damage_calving_threshold_path,
                        os.path.join(self.work_dir,
                                     damage_calving_threshold_fname))
+        else:
+            damage_calving_threshold_fname = None
 
         # --- Find and symlink forcing files ---
         if scenario == 'ctrl':
@@ -366,8 +369,8 @@ class SetUpExperiment(Step):
             self.add_namelist_options(options=options,
                                       out_name='namelist.landice')
 
-        # Damage calving threshold options
-        if use_damage_calving:
+        # Damage calving threshold stream
+        if damage_calving_threshold_fname is not None:
             damage_stream_replacements = {
                 'input_file_damage_calving_threshold':
                     damage_calving_threshold_fname}
