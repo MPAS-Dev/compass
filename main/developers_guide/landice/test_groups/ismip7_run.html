@@ -211,6 +211,17 @@ parameters).</p></li>
 and restart frequency.</p></li>
 <li><p>Adding calving-specific streams (face melting, von Mises params) if
 configured.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">use_hydrofracture_forcing</span></code> is true and the experiment’s scenario
+is not <code class="docutils literal notranslate"><span class="pre">historical</span></code>, <code class="docutils literal notranslate"><span class="pre">ctrl</span></code>, or <code class="docutils literal notranslate"><span class="pre">ocx</span></code>, looking for a single Path C
+<code class="docutils literal notranslate"><span class="pre">ice_shelf_collapse_mask_*.nc</span></code> file under
+<code class="docutils literal notranslate"><span class="pre">{forcing_basepath}/{model}_{scenario}/shelf_collapse/</span></code> (from
+<a class="reference internal" href="../../../users_guide/landice/test_groups/ismip7_forcing.html#landice-ismip7-forcing-fracture"><span class="std std-ref">fracture</span></a>). If found, it is symlinked in,
+the <code class="docutils literal notranslate"><span class="pre">streams.mask_calving</span></code> stream is added, and
+<code class="docutils literal notranslate"><span class="pre">config_apply_calving_mask</span></code>, <code class="docutils literal notranslate"><span class="pre">config_restore_calving_front</span></code>,
+<code class="docutils literal notranslate"><span class="pre">config_require_extensional_stresses_for_mask_calving</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">config_calving_fracture_toughness</span></code> are set accordingly. If not
+found, setup fails with an error, since the mask is required whenever
+<code class="docutils literal notranslate"><span class="pre">use_hydrofracture_forcing</span></code> is true for that scenario.</p></li>
 <li><p>Creating a restart symlink for projection experiments pointing to
 the corresponding ESM’s historical restart
 (<code class="docutils literal notranslate"><span class="pre">../historical_{model}/rst.2015-01-01.nc</span></code>).</p></li>

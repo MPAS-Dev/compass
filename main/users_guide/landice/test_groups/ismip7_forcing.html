@@ -221,6 +221,9 @@ test cases, just like the ESM scenarios.</p>
 {output_base_path}/{group}/atmosphere/{mesh}_temperature_{source}_{scenario}_{years}.nc
 {output_base_path}/{group}/atmosphere/{mesh}_runoff_...  (and the two gradients)
 {output_base_path}/{group}/ocean_thermal_forcing/{mesh}_thermal_forcing_{source}_{scenario}_{years}.nc
+{output_base_path}/{group}/shelf_collapse/{mesh}_ice_shelf_collapse_mask_*.nc
+{output_base_path}/{group}/excess_melt/{mesh}_excess_melt_*.nc
+{output_base_path}/{group}/lake_properties/{mesh}_lake_properties_*.nc
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">group</span></code> directory is <code class="docutils literal notranslate"><span class="pre">{model}_{scenario}</span></code> for ESM scenarios and <code class="docutils literal notranslate"><span class="pre">OCX</span></code>
@@ -451,7 +454,7 @@ is useful when only some of the pathway source files are available.</p>
 (melt + rain after firn air content depletion), matching
 <code class="docutils literal notranslate"><span class="pre">excess_melt_*.nc</span></code>. The output variable is <code class="docutils literal notranslate"><span class="pre">ismip7ExcessMelt</span></code>
 (converted from mm w.e. yr-1 to SI units of kg m-2 s-1) and is written to
-<code class="docutils literal notranslate"><span class="pre">{output_base_path}/excess_melt/{model}_{scenario}/</span></code>. Conservative
+<code class="docutils literal notranslate"><span class="pre">{output_base_path}/{model}_{scenario}/excess_melt/</span></code>. Conservative
 remapping is used by default since this is a flux. This source file has no
 <code class="docutils literal notranslate"><span class="pre">x</span></code>/<code class="docutils literal notranslate"><span class="pre">y</span></code> coordinate variables and its array is flipped along the y axis
 relative to the other fracture files, so the step reconstructs the source
@@ -461,7 +464,7 @@ data to match) before remapping.</p></li>
 depth and area fraction from the Grau et al. (2025) parameterization,
 matching <code class="docutils literal notranslate"><span class="pre">lake_properties_*.nc</span></code>. The output variables are
 <code class="docutils literal notranslate"><span class="pre">ismip7LakeDepth</span></code> (m) and <code class="docutils literal notranslate"><span class="pre">ismip7LakeAreaFraction</span></code> (unitless), written
-to <code class="docutils literal notranslate"><span class="pre">{output_base_path}/lake_properties/{model}_{scenario}/</span></code>. Bilinear
+to <code class="docutils literal notranslate"><span class="pre">{output_base_path}/{model}_{scenario}/lake_properties/</span></code>. Bilinear
 remapping is used by default.</p></li>
 <li><p><strong>process_shelf_collapse</strong> (Path C): Remaps the annual ice shelf collapse
 mask, matching <code class="docutils literal notranslate"><span class="pre">ice_shelf_collapse_mask_*.nc</span></code>.
@@ -473,7 +476,7 @@ January 1st of each year. The remapping uses <code class="docutils literal notra
 that the 0/1 mask values are preserved, and the remapped mask is rounded to
 0/1. The output variable is <code class="docutils literal notranslate"><span class="pre">calvingMask</span></code> with an accompanying <code class="docutils literal notranslate"><span class="pre">xtime</span></code>
 variable, and the result is written to
-<code class="docutils literal notranslate"><span class="pre">{output_base_path}/shelf_collapse/{model}_{scenario}/</span></code>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">{output_base_path}/{model}_{scenario}/shelf_collapse/</span></code>.</p></li>
 </ul>
 <p>All three pathways produce continuous fields (Paths A and B) or a discrete
 mask (Path C) with an accompanying <code class="docutils literal notranslate"><span class="pre">xtime</span></code> variable. The output variable

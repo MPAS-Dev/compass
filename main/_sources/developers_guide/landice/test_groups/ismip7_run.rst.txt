@@ -75,16 +75,27 @@ The ``setup`` method sets up the experiment directory by:
    and restart frequency.
 5. Adding calving-specific streams (face melting, von Mises params) if
    configured.
-6. Creating a restart symlink for projection experiments pointing to
+6. If ``use_hydrofracture_forcing`` is true and the experiment's scenario
+   is not ``historical``, ``ctrl``, or ``ocx``, looking for a single Path C
+   ``ice_shelf_collapse_mask_*.nc`` file under
+   ``{forcing_basepath}/{model}_{scenario}/shelf_collapse/`` (from
+   :ref:`landice_ismip7_forcing_fracture`). If found, it is symlinked in,
+   the ``streams.mask_calving`` stream is added, and
+   ``config_apply_calving_mask``, ``config_restore_calving_front``,
+   ``config_require_extensional_stresses_for_mask_calving``, and
+   ``config_calving_fracture_toughness`` are set accordingly. If not
+   found, setup fails with an error, since the mask is required whenever
+   ``use_hydrofracture_forcing`` is true for that scenario.
+7. Creating a restart symlink for projection experiments pointing to
    the corresponding ESM's historical restart
    (``../historical_{model}/rst.2015-01-01.nc``).
-7. Setting up CTRL2015 experiments with constant-climate forcing
+8. Setting up CTRL2015 experiments with constant-climate forcing
    (``initial_only`` intervals).
-8. Setting up the OCX experiment with reanalysis-based forcing.
-9. If SLM coupling is enabled, adding a ``CreateSlmMappingFiles`` step
-   and writing the SLM namelist from the Jinja2 template.
-10. Generating a ``graph.info`` file and a SLURM job script.
-11. Symlinking the compass load script into the run directory.
+9. Setting up the OCX experiment with reanalysis-based forcing.
+10. If SLM coupling is enabled, adding a ``CreateSlmMappingFiles`` step
+    and writing the SLM namelist from the Jinja2 template.
+11. Generating a ``graph.info`` file and a SLURM job script.
+12. Symlinking the compass load script into the run directory.
 
 The ``run`` method executes MALI for the given experiment.
 
