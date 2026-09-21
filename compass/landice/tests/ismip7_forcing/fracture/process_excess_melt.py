@@ -145,8 +145,8 @@ class ProcessExcessMelt(Step):
                 os.remove(f)
 
         # Place output in the appropriate directory
-        output_path = os.path.join(output_base_path, "excess_melt",
-                                   f"{model}_{scenario}")
+        output_path = os.path.join(output_base_path, f"{model}_{scenario}",
+                                   "excess_melt")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 

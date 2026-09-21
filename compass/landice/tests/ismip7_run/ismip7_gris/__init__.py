@@ -59,7 +59,7 @@ EXPERIMENTS = {
         'is_historical': False},
     'ocx': {
         'scenario': 'ocx', 'model': None,
-        'start_time': '1990-01-01_00:00:00',
+        'start_time': '2007-01-01_00:00:00',
         'stop_time': '2026-01-01_00:00:00',
         'is_historical': True},
 }
