@@ -3,6 +3,7 @@ import shutil
 from mpas_tools.logging import check_call
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
+from compass.landice.tests.ismip7_run.gia_options import parse_gia_model
 from compass.step import Step
 
 
@@ -26,8 +27,7 @@ class CreateSlmMappingFiles(Step):
         """
         config = self.config
         logger = self.logger
-        section = config['ismip7_run_ais']
-        sea_level_model = section.getboolean('sea_level_model')
+        sea_level_model, _ = parse_gia_model(config)
         if sea_level_model:
             self._build_mapping_files(config, logger)
 

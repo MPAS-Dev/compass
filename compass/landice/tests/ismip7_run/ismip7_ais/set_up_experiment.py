@@ -6,6 +6,7 @@ from importlib import resources
 from jinja2 import Template
 
 from compass.job import write_job_script
+from compass.landice.tests.ismip7_run.gia_options import parse_gia_model
 from compass.load_script import symlink_load_script
 from compass.model import make_graph_file, run_model
 from compass.step import Step
@@ -67,8 +68,7 @@ class SetUpExperiment(Step):
             'use_hydrofracture_forcing')
         calving_fracture_toughness = section.get(
             'calving_fracture_toughness')
-        sea_level_model = section.getboolean('sea_level_model')
-        fastisostasy = section.getboolean('fastisostasy')
+        sea_level_model, fastisostasy = parse_gia_model(config)
 
         exp_info = self.exp_info
         scenario = exp_info['scenario']
@@ -483,8 +483,7 @@ class SetUpExperiment(Step):
         Run this step of the test case
         """
         config = self.config
-        section = config['ismip7_run_ais']
-        sea_level_model = section.getboolean('sea_level_model')
+        sea_level_model, fastisostasy = parse_gia_model(config)
         if sea_level_model:
             map_dir = os.path.join('..', 'mapping_files')
             for map_file in ('mapfile_mali_to_slm.nc',
@@ -495,7 +494,6 @@ class SetUpExperiment(Step):
                              "Please run the 'mapping_files' step "
                              "before proceeding.")
 
-        fastisostasy = section.getboolean('fastisostasy')
         if fastisostasy:
             map_dir = os.path.join('..', 'fastiso_mapping_files')
             for map_file in ('mapfile_mali_to_fastiso.nc',

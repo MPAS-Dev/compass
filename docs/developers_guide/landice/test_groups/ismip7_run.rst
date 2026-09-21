@@ -21,9 +21,27 @@ test cases:
 * :py:class:`compass.landice.tests.ismip7_run.ismip7_ais.Ismip7Ais`
 * :py:class:`compass.landice.tests.ismip7_run.ismip7_gris.Ismip7Gris`
 
-There is no shared functionality between the two test cases at present.
-Shared functions may be added in the future if the needed functionality
-can be generalized.
+There is little shared functionality between the two test cases at
+present, with one exception: GIA coupling (SLM vs. FastIsostasy vs. none)
+is selected by a single ``gia_model`` config option (``none``, ``1dSLM``,
+or ``FastIsostasy`` -- mutually exclusive by construction, since only one
+can be selected at a time) rather than two independent booleans, and this
+is parsed by
+:py:func:`compass.landice.tests.ismip7_run.gia_options.parse_gia_model`,
+which returns ``(sea_level_model, fastisostasy)`` booleans for the rest of
+the code to use. This helper is shared (rather than living inside either
+test case's own package) so both ``ismip7_ais`` and ``ismip7_gris`` can use
+it symmetrically as siblings, without one importing from the other's
+internals if/when GrIS gains GIA coupling options of its own --
+``parse_gia_model`` takes the config section name as a parameter
+(``ismip7_run_ais`` by default) for exactly this reason. It also lives in
+its own module (rather than in ``ismip7_run/__init__.py``) specifically to
+avoid a circular import: ``ismip7_ais/__init__.py`` and
+``ismip7_gris/__init__.py`` each import their own step classes
+(`CreateSlmMappingFiles`, `CreateFastIsoMappingFiles`, `SetUpExperiment`),
+and those step modules also need to call it. Other shared functions may be
+added here in the future if more needed functionality can be generalized
+across the two test cases.
 
 ismip7_ais
 ----------

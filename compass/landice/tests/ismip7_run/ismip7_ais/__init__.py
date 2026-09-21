@@ -1,5 +1,6 @@
 import os
 
+from compass.landice.tests.ismip7_run.gia_options import parse_gia_model
 from compass.landice.tests.ismip7_run.ismip7_ais.create_fastiso_mapping_files import (  # noqa
     CreateFastIsoMappingFiles,
 )
@@ -135,8 +136,7 @@ class Ismip7Ais(TestCase):
         self.steps_to_run = []
 
         # Optionally set up sea-level model mapping files
-        sea_level_model = config.getboolean('ismip7_run_ais',
-                                            'sea_level_model')
+        sea_level_model, fastisostasy = parse_gia_model(config)
         if sea_level_model:
             subdir = 'mapping_files'
             if os.path.exists(os.path.join(self.work_dir, subdir)):
@@ -149,7 +149,6 @@ class Ismip7Ais(TestCase):
                 self.steps_to_run.append('mapping_files')
 
         # Optionally set up FastIsostasy mapping files
-        fastisostasy = config.getboolean('ismip7_run_ais', 'fastisostasy')
         if fastisostasy:
             subdir = 'fastiso_mapping_files'
             if os.path.exists(os.path.join(self.work_dir, subdir)):

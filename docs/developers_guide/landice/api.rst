@@ -530,6 +530,7 @@ ismip7_run
    :toctree: generated/
 
    Ismip7Run
+   gia_options.parse_gia_model
 
    ismip7_ais.Ismip7Ais
    ismip7_ais.Ismip7Ais.configure

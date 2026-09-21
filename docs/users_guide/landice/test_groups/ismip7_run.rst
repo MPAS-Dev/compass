@@ -135,8 +135,8 @@ Usage
       compass setup landice/ismip7_run/ismip7_ais -f my_ismip7_ais.cfg
       # Then submit job scripts from individual experiment directories
 
-   If ``sea_level_model`` or ``fastisostasy`` is enabled, ``compass setup``
-   also adds a ``mapping_files`` and/or ``fastiso_mapping_files``
+   If ``gia_model`` is set to ``1dSLM`` or ``FastIsostasy``, ``compass
+   setup`` also adds a ``mapping_files`` or ``fastiso_mapping_files``
    subdirectory (respectively). These must be run (via their job script,
    or ``compass run`` from within that subdirectory) *before* submitting
    any individual experiment, since the experiments' job scripts assume
@@ -197,21 +197,22 @@ All config options should be reviewed and altered as needed.
    # Face melting
    use_face_melting = false
 
-   # Sea-level model coupling
-   sea_level_model = false
+   # Glacial isostatic adjustment (GIA) coupling: none, 1dSLM, or FastIsostasy
+   gia_model = none
+
+   # Sea-level model coupling (used if gia_model = 1dSLM)
    slm_input_ice = NotAvailable
    slm_input_earth = NotAvailable
    slm_earth_structure = prem_512.l60K2C.sum18p6.dum19p2.tz19p4.lm22
    slm_input_others = NotAvailable
    nglv = 2048
 
-   # FastIsostasy (regional bedrock/GIA) coupling
-   fastisostasy = false
+   # FastIsostasy (regional bedrock/GIA) coupling (used if
+   # gia_model = FastIsostasy)
    fastiso_path = NotAvailable
    fastiso_earth_structure_filename = weak-earth.nc
    fastiso_mask_filename = None
    fastiso_res_km = 8
-   icesheet = AIS
 
 .. note::
 

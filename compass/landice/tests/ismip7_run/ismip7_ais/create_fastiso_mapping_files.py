@@ -7,6 +7,7 @@ from mpas_tools.logging import check_call
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 from mpas_tools.scrip.from_planar import main as scrip_from_planar
 
+from compass.landice.tests.ismip7_run.gia_options import parse_gia_model
 from compass.step import Step
 
 # AIS: polar stereographic EPSG:3031, standard parallel 71S, central meridian 0
@@ -90,8 +91,7 @@ class CreateFastIsoMappingFiles(Step):
         """
         config = self.config
         logger = self.logger
-        section = config['ismip7_run_ais']
-        fastisostasy = section.getboolean('fastisostasy')
+        _, fastisostasy = parse_gia_model(config)
         if fastisostasy:
             self._build_mapping_files(config, logger)
 
@@ -105,9 +105,8 @@ class CreateFastIsoMappingFiles(Step):
         section = config['ismip7_run_ais']
         init_cond_path = section.get('init_cond_path')
         fastiso_res_km = section.getint('fastiso_res_km')
-        icesheet = section.get('icesheet')
-        section = config['parallel']
-        ntasks = section.getint('cores_per_node')
+        icesheet = 'AIS'
+        ntasks = section.getint('ntasks')
 
         mali_scripfile = 'mali_scripfile.nc'
         fastiso_scripfile = f'fastiso_{fastiso_res_km}km_scripfile.nc'
@@ -130,8 +129,10 @@ class CreateFastIsoMappingFiles(Step):
         else:
             raise ValueError(f"Unknown icesheet '{icesheet}'")
 
-        # Use mpas_tools.scrip.from_planar module directly
-        # Set up sys.argv to mimic command-line arguments
+        # scrip_from_planar is written as a command-line tool and parses
+        # its arguments from sys.argv internally rather than accepting them
+        # as function arguments, so we have to temporarily replace sys.argv
+        # to call it directly (instead of via a subprocess) from here.
         old_argv = sys.argv
         sys.argv = ['scrip_from_planar',
                     '--input', fastiso_gridfile,
