@@ -344,7 +344,6 @@ class SetUpExperiment(Step):
         # hydrofracture vulnerability (MALI PR #187)
         if useCalvingMask:
             options = {
-                'config_calving': "'none'",
                 'config_apply_calving_mask': ".true.",
                 'config_restore_calving_front': ".false.",
                 'config_require_extensional_stresses_for_mask_calving':
