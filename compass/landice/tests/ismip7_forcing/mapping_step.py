@@ -17,7 +17,7 @@ def setup_mapping_step(step):
         target=os.path.join(base_path_mali, mali_mesh_file))
 
     step.ntasks = section.getint('esmf_ntasks')
-    step.min_tasks = step.ntasks
+    step.min_tasks = 1
 
 
 def build_and_cache_mapping(step, source_file, mapping_file, method_remap):
@@ -42,7 +42,9 @@ def build_and_cache_mapping(step, source_file, mapping_file, method_remap):
 
     build_mapping_file(
         config, logger, source_file, mapping_file,
-        mali_mesh_file=mali_mesh_file, method_remap=method_remap)
+        mali_mesh_file=mali_mesh_file,
+        method_remap=method_remap,
+        ntasks=step.ntasks)
 
     if reused:
         return
