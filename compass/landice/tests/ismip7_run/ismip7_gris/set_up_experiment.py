@@ -59,6 +59,10 @@ class SetUpExperiment(Step):
         reference_surface_path = section.get('reference_surface_path')
         reference_surface_fname = os.path.split(reference_surface_path)[-1]
         calving_method = section.get('calving_method')
+        use_calving_strain_rate_scaling = section.getboolean(
+            'use_calving_strain_rate_scaling')
+        calving_strain_rate_scaling_path = section.get(
+            'calving_strain_rate_scaling_path')
 
         exp_info = self.exp_info
         scenario = exp_info['scenario']
@@ -95,6 +99,14 @@ class SetUpExperiment(Step):
         os.symlink(reference_surface_path,
                    os.path.join(self.work_dir,
                                 os.path.basename(reference_surface_path)))
+
+        # Symlink calving strain rate scaling file if using it
+        if use_calving_strain_rate_scaling:
+            calving_strain_rate_scaling_fname = os.path.split(
+                calving_strain_rate_scaling_path)[-1]
+            os.symlink(calving_strain_rate_scaling_path,
+                       os.path.join(self.work_dir,
+                                    calving_strain_rate_scaling_fname))
 
         # --- Find and symlink forcing files ---
         if scenario == 'ctrl':
@@ -280,6 +292,16 @@ class SetUpExperiment(Step):
                 resource_location, 'streams.vM_params',
                 out_name='streams.landice',
                 template_replacements=vM_stream_replacements)
+
+        # Calving strain rate scaling options
+        if use_calving_strain_rate_scaling:
+            calving_scaling_stream_replacements = {
+                'input_file_calving_strain_rate_scaling':
+                    calving_strain_rate_scaling_fname}
+            self.add_streams_file(
+                resource_location, 'streams.calving_strain_rate_scaling',
+                out_name='streams.landice',
+                template_replacements=calving_scaling_stream_replacements)
 
         # --- Symlink restart for projections/ctrl ---
         if not is_historical:

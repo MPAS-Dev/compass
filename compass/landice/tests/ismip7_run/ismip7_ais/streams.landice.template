@@ -82,7 +82,7 @@
         <var name="ismip6Runoff"/>
 </stream>
 
-<stream name="ismip7_params"
+<stream name="ismip6_melt_params"
         type="input"
         filename_template="{{ input_file_melt_params }}"
         input_interval="initial_only"
@@ -90,6 +90,15 @@
         <var name="ismip6shelfMelt_deltaT"/>
         <var name="ismip6shelfMelt_basin"/>
         <var name="ismip6shelfMelt_gamma0"/>
+</stream>
+
+<stream name="ismip7_melt_params"
+        type="input"
+        filename_template="{{ input_file_melt_params }}"
+        input_interval="initial_only"
+        runtime_format="single_file">
+        <var name="ismip7shelfMelt_K"/>
+        <var name="ismip7shelfMelt_basin"/>
 </stream>
 
 <stream name="reference_surface"
