@@ -214,7 +214,7 @@ class ProcessThermalForcing(Step):
 
         for fname in os.listdir(src_dir):
             src = os.path.join(src_dir, fname)
-            if not os.path.isfile(src):
+            if os.path.islink(src) or not os.path.isfile(src):
                 continue
             dst = os.path.join(dst_dir, fname)
             if os.path.lexists(dst):
