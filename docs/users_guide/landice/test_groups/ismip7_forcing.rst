@@ -11,20 +11,23 @@ The test group supports both the Antarctic Ice Sheet (AIS) and the Greenland
 Ice Sheet (GrIS), controlled by a single ``ice_sheet`` config option.
 
 The test group includes three test cases: ``atmosphere``, ``ocean_thermal``,
-and ``fracture``.
+and ``fracture``. Each test case begins with a ``build_mapping_file`` step that
+generates ESMF regridding weights, followed by processing steps that consume
+those weights to remap forcing data.
 
-* The ``atmosphere`` test case has five steps:
+* The ``atmosphere`` test case has six steps: ``build_mapping_file``,
   ``process_smb``, ``process_temperature``, ``process_smb_gradient``,
   ``process_temperature_gradient``, and ``process_runoff``.
 
-* The ``ocean_thermal`` test case has one step: ``process_thermal_forcing``.
-  For AIS this produces 3D thermal forcing (with 30 ocean depth layers); for
-  GrIS it produces 2D (depth-averaged) thermal forcing. The step can also
-  process the observational ocean thermal forcing climatology (Zhou et al.)
-  for AIS, controlled by the ``process_ocean_climatology`` config option.
+* The ``ocean_thermal`` test case has two steps: ``build_mapping_file`` and
+  ``process_thermal_forcing``. For AIS this produces 3D thermal forcing (with
+  30 ocean depth layers); for GrIS it produces 2D (depth-averaged) thermal
+  forcing. The processing step can also handle the observational ocean thermal
+  forcing climatology (Zhou et al.) for AIS, controlled by the
+  ``process_ocean_climatology`` config option.
 
-* The ``fracture`` test case has three steps: ``process_excess_melt``
-  (Path A), ``process_lake_properties`` (Path B), and
+* The ``fracture`` test case has four steps: ``build_mapping_file``,
+  ``process_excess_melt`` (Path A), ``process_lake_properties`` (Path B), and
   ``process_shelf_collapse`` (Path C). It processes the ISMIP7
   surface-melt-driven ice shelf collapse forcing (AIS only).
 
@@ -53,6 +56,58 @@ To use this test group, users need to:
 6. Run the ``fracture`` test case (AIS only) for each model and scenario
    combination to process the surface-melt-driven ice shelf collapse
    pathways (excess melt, lake properties, and the ice shelf collapse mask).
+
+.. _landice_ismip7_forcing_workflow_optimization:
+
+Workflow Optimization
+~~~~~~~~~~~~~~~~~~~~~
+
+Each test case separates weight-generation (``build_mapping_file`` step) from
+processing (``process_*`` steps) to enable efficient resource allocation.
+``ESMF_RegridWeightGen`` benefits from many MPI tasks (128-512) but runs for
+only 5-10 minutes, while the processing steps run efficiently on a single node
+but may take hours to remap dozens of yearly files.
+
+**Separate allocation strategy**: Run ``build_mapping_file`` on a large
+allocation, then run the processing steps on a smaller allocation:
+
+.. code-block:: bash
+
+   # Allocate 128+ tasks for weight generation (5-10 minutes)
+   compass run -s build_mapping_file
+
+   # Allocate 1 task for processing (hours)
+   compass run -s process_smb process_temperature process_smb_gradient \
+               process_temperature_gradient process_runoff
+
+This avoids wasting hundreds of node-hours by holding a large allocation during
+the long processing phase.
+
+**Weight reuse across scenarios**: Mapping files depend only on ``ice_sheet``,
+``mali_mesh_name``, and ``method_remap``—not on model or scenario. This means
+weights built for ssp585 are identical to those for ssp126 (same mesh and
+method) and can be reused via the ``mapping_files_path`` config option:
+
+.. code-block:: cfg
+
+   [ismip7]
+   # Point to a previous run's mapping_files directory
+   mapping_files_path = /path/to/output_base_path/mapping_files/
+
+When ``mapping_files_path`` is set, ``build_mapping_file`` symlinks any existing
+weight files from that directory and builds only the missing ones. Built weights
+are automatically copied to ``<output_base_path>/mapping_files/`` for reuse in
+future runs.
+
+**Typical multi-scenario workflow**:
+
+1. Process the first scenario (e.g., ssp126) normally. Built weights are saved
+   to ``<output_base_path>/mapping_files/``.
+
+2. For subsequent scenarios with the same mesh and methods, set
+   ``mapping_files_path`` to reuse the weights. The ``build_mapping_file`` step
+   completes instantly (just symlinking), and you can skip the large allocation
+   entirely.
 
 Example user config files are provided in the source tree for local testing:
 
@@ -211,6 +266,13 @@ values are:
    # Number of MPI tasks for ESMF_RegridWeightGen
    esmf_ntasks = 128
 
+   # Optional path to a directory of pre-built mapping files for reuse across runs.
+   # If provided, the test case will symlink any existing, canonically-named weight
+   # files from this directory and build only the missing ones. To reuse weights from
+   # a previous run, point this at <prior_output_base_path>/mapping_files/.
+   # If not provided or set to NotAvailable, all weight files are built from scratch.
+   mapping_files_path = NotAvailable
+
    # Whether to process time-varying ocean thermal forcing (ESM scenario data)
    process_ocean_thermal = true
 
@@ -294,6 +356,13 @@ grid to the MALI unstructured mesh.
 
 Steps:
 
+* **build_mapping_file**: Builds the ESMF regridding weights from the ISMIP7
+  atmosphere grid to the MALI mesh. This step runs ``ESMF_RegridWeightGen``
+  with ``esmf_ntasks`` MPI tasks. One mapping file is built and shared across
+  all five atmosphere variables (they use the same source grid). Built weights
+  are copied to ``<output_base_path>/mapping_files/`` for reuse across
+  scenarios.
+
 * **process_smb**: Remaps the surface mass balance (``acabf``) field. The
   output variable is ``sfcMassBal``.
 
@@ -320,17 +389,27 @@ The ``landice/ismip7_forcing/ocean_thermal`` test case processes the ISMIP7
 ocean thermal forcing (``tf``) and remaps it from the native polar
 stereographic grid to the MALI unstructured mesh.
 
-The step supports two processing modes, controlled by boolean config options
-in the ``[ismip7]`` section:
+Steps:
 
-* **Scenario (time-varying) data** (``process_ocean_thermal = true``):
-  Processes ESM-driven thermal forcing for a given model/scenario combination.
+* **build_mapping_file**: Builds the ESMF regridding weights from the ISMIP7
+  ocean grid to the MALI mesh. This step runs ``ESMF_RegridWeightGen`` with
+  ``esmf_ntasks`` MPI tasks. One mapping file is built and shared across
+  scenario and climatology processing (if both are enabled and use the same
+  remapping method). Built weights are copied to
+  ``<output_base_path>/mapping_files/`` for reuse across scenarios.
 
-* **Observational climatology** (``process_ocean_climatology = true``):
-  Processes the static Zhou et al. observational thermal forcing climatology
-  (AIS only). This is a time-invariant 3D field referenced to 1995-2024.
+* **process_thermal_forcing**: Processes the ocean thermal forcing data. This
+  step supports two processing modes, controlled by boolean config options in
+  the ``[ismip7]`` section:
 
-Both modes can be enabled simultaneously.
+  * **Scenario (time-varying) data** (``process_ocean_thermal = true``):
+    Processes ESM-driven thermal forcing for a given model/scenario combination.
+
+  * **Observational climatology** (``process_ocean_climatology = true``):
+    Processes the static Zhou et al. observational thermal forcing climatology
+    (AIS only). This is a time-invariant 3D field referenced to 1995-2024.
+
+  Both modes can be enabled simultaneously.
 
 For **AIS** scenario data, thermal forcing is 3D with 30 vertical ocean
 layers. The input files span decades (e.g., 1850-1859). The output variable
@@ -353,8 +432,9 @@ fracture
 
 The ``landice/ismip7_forcing/fracture`` test case processes the ISMIP7
 surface-melt-driven ice shelf collapse forcing (AIS only). It implements the
-three ISMIP7 pathways as separate steps, each remapping annual fields from
-the native 8km polar stereographic grid onto the MALI unstructured mesh.
+three ISMIP7 pathways as separate processing steps, each remapping annual
+fields from the native 8km polar stereographic grid onto the MALI unstructured
+mesh.
 
 All three source files are discovered from the ``fracture/{version}/``
 subdirectory of ``base_path_ismip7``.
@@ -363,6 +443,16 @@ Each pathway is run independently and can be skipped by setting its
 remapping-method config option to ``None`` in the ``[ismip7_fracture]``
 section (for example, ``method_remap_excess_melt = None`` skips Path A). This
 is useful when only some of the pathway source files are available.
+
+Steps:
+
+* **build_mapping_file**: Builds ESMF regridding weights from the ISMIP7
+  fracture grid to the MALI mesh. This step runs ``ESMF_RegridWeightGen`` with
+  ``esmf_ntasks`` MPI tasks. Up to three mapping files may be built (one per
+  enabled pathway), depending on whether the pathways use different remapping
+  methods. If all three pathways use the same method, one mapping file is built
+  and shared. Built weights are copied to ``<output_base_path>/mapping_files/``
+  for reuse across scenarios.
 
 * **process_excess_melt** (Path A): Remaps the excess meltwater field
   (melt + rain after firn air content depletion), matching

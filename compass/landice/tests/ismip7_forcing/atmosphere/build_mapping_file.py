@@ -123,7 +123,8 @@ class BuildMappingFile(Step):
         dst = os.path.join(mapping_files_dir, mapping_file)
         # Only copy if it's a real file (not a symlink we just created)
         if not os.path.islink(mapping_file):
-            logger.info(f"Copying mapping file to {mapping_files_dir} for reuse")
+            logger.info(f"Copying mapping file to {mapping_files_dir} "
+                        f"for reuse")
             shutil.copy(mapping_file, dst)
         else:
             logger.info(f"Mapping file is a symlink; not copying to "

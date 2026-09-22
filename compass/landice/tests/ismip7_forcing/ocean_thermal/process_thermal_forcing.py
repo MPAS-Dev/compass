@@ -365,7 +365,6 @@ class ProcessThermalForcing(Step):
 
         section = config["ismip7"]
         mali_mesh_name = section.get("mali_mesh_name")
-        mali_mesh_file = section.get("mali_mesh_file")
         output_base_path = section.get("output_base_path")
         ice_sheet = section.get("ice_sheet")
 

@@ -26,7 +26,8 @@ package :py:mod:`compass.landice.ismip7`, described in
 ice-sheet-specific parameters (projection, file naming prefix, grid
 resolution, data version, ocean dimensionality),
 :py:func:`compass.landice.ismip7.mapping.build_mapping_file` to create the
-SCRIP and ESMF mapping files, and the remapping helpers in
+SCRIP and ESMF mapping files (called from ``BuildMappingFile`` steps, not from
+processing steps), and the remapping helpers in
 :py:mod:`compass.landice.ismip7.remap`.
 
 When ``scenario = OCX``, ``get_params`` applies a set of OCX overrides on top
@@ -61,13 +62,27 @@ atmosphere
 ~~~~~~~~~~
 
 The :py:class:`compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere`
-test case processes the ISMIP7 atmosphere forcing fields. It contains five
-steps: SMB, temperature, their respective gradients, and runoff. Each step
-discovers input files matching the ice-sheet-specific naming pattern, builds
-or reuses a mapping file, remaps each input file with ``ncremap``, and
-combines/renames the results to MALI conventions.
+test case processes the ISMIP7 atmosphere forcing fields. It contains six
+steps: a weight-generation step followed by five processing steps (SMB,
+temperature, their respective gradients, and runoff).
+
+The weight-generation step runs ``ESMF_RegridWeightGen`` with ``esmf_ntasks``
+MPI tasks to build regridding weights from the ISMIP7 atmosphere grid to the
+MALI mesh. All five processing steps consume the same mapping file (all
+atmosphere variables share the same source grid).
+
+Each processing step discovers input files matching the ice-sheet-specific
+naming pattern, remaps each input file with ``ncremap`` using the pre-built
+mapping file, and combines/renames the results to MALI conventions. Processing
+steps run at ``ntasks=1`` (single node).
 
 Steps:
+
+* :py:class:`~compass.landice.tests.ismip7_forcing.atmosphere.build_mapping_file.BuildMappingFile` —
+  Builds one shared mapping file for all atmosphere variables. The file is
+  copied to ``<output_base_path>/mapping_files/`` for reuse across scenarios.
+  If ``mapping_files_path`` is provided in the config, symlinks any existing
+  weight file from that directory and skips the build.
 
 * :py:class:`~compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb` —
   ``acabf`` → ``sfcMassBal``
@@ -86,20 +101,39 @@ ocean_thermal
 ~~~~~~~~~~~~~
 
 The :py:class:`compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal`
-test case processes the ISMIP7 ocean thermal forcing. It contains a single step,
+test case processes the ISMIP7 ocean thermal forcing. It contains two steps: a
+weight-generation step followed by the processing step.
+
+The weight-generation step runs ``ESMF_RegridWeightGen`` with ``esmf_ntasks``
+MPI tasks to build regridding weights from the ISMIP7 ocean grid to the MALI
+mesh. One mapping file is built and shared across scenario and climatology
+processing (if both are enabled and use the same remapping method).
+
+The processing step,
 :py:class:`~compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing`,
-which handles both AIS (3D, decade-spanning files) and GrIS (2D, yearly files)
-by branching on the ``ocean_3d`` parameter from ``ice_sheet_params``.
+handles both AIS (3D, decade-spanning files) and GrIS (2D, yearly files) by
+branching on the ``ocean_3d`` parameter from ``ice_sheet_params``. It runs at
+``ntasks=1`` (single node).
 
-The ``run()`` method dispatches to two sub-methods based on the boolean config
-options ``process_ocean_thermal`` and ``process_ocean_climatology`` in the
-``[ismip7]`` section:
+Steps:
 
-* ``_run_scenario()``: Processes time-varying ESM scenario data (model +
-  scenario combination). Uses config from ``[ismip7_ocean_thermal]``.
-* ``_run_climatology()``: Processes the static observational climatology
-  (Zhou et al., AIS only). Uses config from ``[ismip7_ocean_climatology]``.
-  The TF version (currently v3) is hard-coded.
+* :py:class:`~compass.landice.tests.ismip7_forcing.ocean_thermal.build_mapping_file.BuildMappingFile` —
+  Builds one mapping file for ocean thermal forcing (shared across scenario and
+  climatology if methods match). The file is copied to
+  ``<output_base_path>/mapping_files/`` for reuse across scenarios. If
+  ``mapping_files_path`` is provided in the config, symlinks any existing
+  weight file from that directory and skips the build.
+
+* :py:class:`~compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing` —
+  The ``run()`` method dispatches to two sub-methods based on the boolean
+  config options ``process_ocean_thermal`` and ``process_ocean_climatology`` in
+  the ``[ismip7]`` section:
+
+  * ``_run_scenario()``: Processes time-varying ESM scenario data (model +
+    scenario combination). Uses config from ``[ismip7_ocean_thermal]``.
+  * ``_run_climatology()``: Processes the static observational climatology
+    (Zhou et al., AIS only). Uses config from ``[ismip7_ocean_climatology]``.
+    The TF version (currently v3) is hard-coded.
 
 For AIS scenario data, the step:
 
@@ -127,16 +161,31 @@ fracture
 
 The :py:class:`compass.landice.tests.ismip7_forcing.fracture.Fracture`
 test case processes the ISMIP7 surface-melt-driven ice shelf collapse
-forcing (AIS only). It implements the three ISMIP7 pathways as independent
-steps, each discovering its source file from the ``fracture/{version}/``
-subdirectory of ``base_path_ismip7``, building or reusing a mapping file,
-remapping with ``ncremap``, and renaming the result to MALI conventions with
-an accompanying ``xtime`` variable. Per-pathway remapping methods are set in
-the ``[ismip7_fracture]`` config section. Setting a pathway's remapping-method
-option to ``None`` causes that step to return early without processing its
-file, which is useful when only some pathway source files are available.
+forcing (AIS only). It contains four steps: a weight-generation step followed
+by three pathway processing steps.
+
+The weight-generation step runs ``ESMF_RegridWeightGen`` with ``esmf_ntasks``
+MPI tasks to build regridding weights from the ISMIP7 fracture grid to the
+MALI mesh. Up to three mapping files may be built (one per enabled pathway),
+depending on whether the pathways use different remapping methods.
+
+Each processing step discovers its source file from the ``fracture/{version}/``
+subdirectory of ``base_path_ismip7``, remaps with ``ncremap`` using the
+pre-built mapping file, and renames the result to MALI conventions with an
+accompanying ``xtime`` variable. Processing steps run at ``ntasks=1`` (single
+node). Per-pathway remapping methods are set in the ``[ismip7_fracture]``
+config section. Setting a pathway's remapping-method option to ``None`` causes
+that step to return early without processing its file, which is useful when
+only some pathway source files are available.
 
 Steps:
+
+* :py:class:`~compass.landice.tests.ismip7_forcing.fracture.build_mapping_file.BuildMappingFile` —
+  Builds up to three mapping files (one per enabled pathway with a non-None
+  remapping method). Files are copied to ``<output_base_path>/mapping_files/``
+  for reuse across scenarios. If ``mapping_files_path`` is provided in the
+  config, symlinks any existing weight files from that directory and builds
+  only the missing ones.
 
 * :py:class:`~compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt`
   (Path A) — ``excess_melt`` → ``ismip7ExcessMelt``. The excess melt file
