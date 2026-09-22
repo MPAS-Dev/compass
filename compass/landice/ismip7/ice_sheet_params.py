@@ -44,7 +44,7 @@ _OCX_OVERRIDES = {
     },
     'ais': {
         'atm_version': 'v1',
-        'ocean_version': 'v1',
+        'ocean_version': 'v2',
         'atm_model': 'RACMO2.3p2-ERA',
         'ocean_model': None,
         # AIS OCX ocean files have no model token and live in per-choice
