@@ -7,7 +7,6 @@ from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 
 from compass.landice.ismip7.ice_sheet_params import get_params
-from compass.landice.ismip7.mapping import build_mapping_file
 from compass.landice.ismip7.remap import extrapolate_source
 from compass.step import Step
 
@@ -42,10 +41,21 @@ class ProcessThermalForcing(Step):
         section = config["ismip7"]
         base_path_mali = section.get("base_path_mali")
         mali_mesh_file = section.get("mali_mesh_file")
+        mali_mesh_name = section.get("mali_mesh_name")
+        ice_sheet = section.get("ice_sheet")
+
+        section_ocean = config["ismip7_ocean_thermal"]
+        method_remap = section_ocean.get("method_remap")
 
         self.add_input_file(filename=mali_mesh_file,
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
+
+        # Add input file for the mapping file from build_mapping_file step
+        mapping_file = (f"map_ismip7_{ice_sheet}_ocean_to_"
+                        f"{mali_mesh_name}_{method_remap}.nc")
+        self.add_input_file(filename=mapping_file,
+                            target=f"../build_mapping_file/{mapping_file}")
 
     def run(self):
         """
@@ -249,7 +259,6 @@ class ProcessThermalForcing(Step):
             Base path under which output is written
         """
         logger = self.logger
-        config = self.config
 
         input_path = job['input_path']
         file_pattern = job['file_pattern']
@@ -284,13 +293,7 @@ class ProcessThermalForcing(Step):
         logger.info(f"Found {len(input_files)} ocean thermal forcing files "
                     f"overlapping years {start_year}-{end_year}")
 
-        # Build mapping file using the first input file as grid template.
-        if not os.path.exists(mapping_file):
-            logger.info("Building mapping file for ocean grid...")
-            build_mapping_file(config, logger,
-                               input_files[0], mapping_file,
-                               mali_mesh_file=mali_mesh_file,
-                               method_remap=method_remap)
+        # Mapping file is symlinked from build_mapping_file step
 
         # Remap each file
         remapped_files = []
@@ -385,16 +388,9 @@ class ProcessThermalForcing(Step):
         logger.info(f"Processing ocean TF climatology: "
                     f"{os.path.basename(input_file)}")
 
-        # Build mapping file using the climatology file as grid template.
+        # Construct mapping file name (symlinked from build_mapping_file step)
         mapping_file = (f"map_ismip7_{ice_sheet}_ocean_to_"
                         f"{mali_mesh_name}_{method_remap}.nc")
-
-        if not os.path.exists(mapping_file):
-            logger.info("Building mapping file for ocean grid...")
-            build_mapping_file(config, logger,
-                               input_file, mapping_file,
-                               mali_mesh_file=mali_mesh_file,
-                               method_remap=method_remap)
 
         # Extrapolate and remap
         basename = os.path.basename(input_file)

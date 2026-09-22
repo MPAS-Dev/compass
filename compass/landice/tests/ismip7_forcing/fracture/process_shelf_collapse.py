@@ -4,7 +4,6 @@ import shutil
 
 from mpas_tools.logging import check_call
 
-from compass.landice.ismip7.mapping import build_mapping_file
 from compass.landice.ismip7.remap import (
     add_xtime_and_write,
     open_rename_and_trim,
@@ -41,10 +40,23 @@ class ProcessShelfCollapse(Step):
         section = config["ismip7"]
         base_path_mali = section.get("base_path_mali")
         mali_mesh_file = section.get("mali_mesh_file")
+        mali_mesh_name = section.get("mali_mesh_name")
+        ice_sheet = section.get("ice_sheet")
+
+        section_frac = config["ismip7_fracture"]
+        method_remap = section_frac.get("method_remap_shelf_collapse")
 
         self.add_input_file(filename=mali_mesh_file,
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
+
+        # Add input file for the mapping file from build_mapping_file step
+        # (only if method is not None)
+        if method_remap.lower() != "none":
+            mapping_file = (f"map_ismip7_{ice_sheet}_fracture_to_"
+                            f"{mali_mesh_name}_{method_remap}.nc")
+            self.add_input_file(filename=mapping_file,
+                                target=f"../build_mapping_file/{mapping_file}")
 
     def run(self):
         """
@@ -56,7 +68,6 @@ class ProcessShelfCollapse(Step):
         section = config["ismip7"]
         base_path_ismip7 = section.get("base_path_ismip7")
         mali_mesh_name = section.get("mali_mesh_name")
-        mali_mesh_file = section.get("mali_mesh_file")
         model = section.get("model")
         scenario = section.get("scenario")
         output_base_path = section.get("output_base_path")
@@ -92,16 +103,9 @@ class ProcessShelfCollapse(Step):
         basename = os.path.basename(input_file)
         logger.info(f"Processing ice shelf collapse mask: {basename}")
 
-        # Build mapping file. neareststod preserves the 0/1 mask values.
+        # Construct mapping file name (symlinked from build_mapping_file step)
         mapping_file = (f"map_ismip7_{ice_sheet}_fracture_to_"
                         f"{mali_mesh_name}_{method_remap}.nc")
-
-        if not os.path.exists(mapping_file):
-            logger.info("Building mapping file for the collapse mask grid...")
-            build_mapping_file(config, logger,
-                               input_file, mapping_file,
-                               mali_mesh_file=mali_mesh_file,
-                               method_remap=method_remap)
 
         # Remap the collapse mask onto the MALI mesh
         remapped_file = f"remapped_{basename}"

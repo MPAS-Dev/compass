@@ -7,7 +7,6 @@ from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 
 from compass.landice.ismip7.ice_sheet_params import get_params
-from compass.landice.ismip7.mapping import build_mapping_file
 from compass.landice.ismip7.remap import extrapolate_source
 from compass.step import Step
 
@@ -38,10 +37,21 @@ class ProcessRunoff(Step):
         section = config["ismip7"]
         base_path_mali = section.get("base_path_mali")
         mali_mesh_file = section.get("mali_mesh_file")
+        mali_mesh_name = section.get("mali_mesh_name")
+        ice_sheet = section.get("ice_sheet")
+
+        section_atm = config["ismip7_atmosphere"]
+        method_remap = section_atm.get("method_remap")
 
         self.add_input_file(filename=mali_mesh_file,
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
+
+        # Add input file for the mapping file from build_mapping_file step
+        mapping_file = (f"map_ismip7_{ice_sheet}_atm_to_"
+                        f"{mali_mesh_name}_{method_remap}.nc")
+        self.add_input_file(filename=mapping_file,
+                            target=f"../build_mapping_file/{mapping_file}")
 
     def run(self):
         """
@@ -54,7 +64,6 @@ class ProcessRunoff(Step):
         section = config["ismip7"]
         base_path_ismip7 = section.get("base_path_ismip7")
         mali_mesh_name = section.get("mali_mesh_name")
-        mali_mesh_file = section.get("mali_mesh_file")
         model = section.get("model")
         scenario = section.get("scenario")
         output_base_path = section.get("output_base_path")
@@ -103,16 +112,10 @@ class ProcessRunoff(Step):
         logger.info(f"Found {len(input_files)} runoff files for years "
                     f"{start_year}-{end_year}")
 
-        # Build mapping file (reuse if already created by other atm steps)
+        # Construct the mapping file name (symlinked from
+        # build_mapping_file step)
         mapping_file = (f"map_ismip7_{ice_sheet}_atm_to_"
                         f"{mali_mesh_name}_{method_remap}.nc")
-
-        if not os.path.exists(mapping_file):
-            logger.info("Building mapping file...")
-            build_mapping_file(config, logger,
-                               input_files[0], mapping_file,
-                               mali_mesh_file=mali_mesh_file,
-                               method_remap=method_remap)
 
         # Remap each year file
         remapped_files = []
