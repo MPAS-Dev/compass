@@ -101,7 +101,8 @@ class Aggregate(Step):
         for melt_form in self.melt_forms:
             logger.info(f'Aggregating the {melt_form} ensemble')
             ds = _aggregate_form(self.states, melt_form,
-                                 reference[melt_form], static, logger)
+                                 reference[melt_form], static, config,
+                                 logger)
             write_netcdf(ds, f'aggregates_{melt_form}.nc')
 
         _report_shelf_area(static, logger)
@@ -145,7 +146,7 @@ def _melt_from_run(filename, reference):
     return fields['melt'] / reference, fields['floating']
 
 
-def _aggregate_form(states, melt_form, reference, static, logger):
+def _aggregate_form(states, melt_form, reference, static, config, logger):
     """Build the four unit aggregates for one melt form."""
     area = static['area']
     basins, bfrn = static['basins'], static['bfrn']
@@ -208,6 +209,9 @@ def _aggregate_form(states, melt_form, reference, static, logger):
         'to the parameter, so the whole parameter ensemble is these times '
         'each parameter value.')
     ds.attrs['ocean_states'] = ', '.join(sorted(by_name))
+    # Add slope configuration metadata for ISMIP7
+    if melt_form == 'ismip7':
+        ds.attrs.update(melt_model.slope_metadata(config))
     return ds
 
 

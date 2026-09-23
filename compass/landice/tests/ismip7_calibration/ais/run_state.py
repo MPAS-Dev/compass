@@ -17,7 +17,12 @@ from compass.step import Step
 REQUIRED_OPTIONS = {
     'ismip7': ['config_ismip7_melt_sin_slope', 'config_ismip7_melt_coriolis',
                'config_ismip7_melt_salinity',
-               'config_ismip7_melt_salinity_source'],
+               'config_ismip7_melt_salinity_source',
+               'config_ismip7_melt_spatially_variable_slope',
+               'config_ismip7_melt_max_slope',
+               'config_ismip7_melt_slope_smoothing_iterations',
+               'config_ismip7_melt_slope_method',
+               'config_ismip7_melt_slope_stencil_rings'],
     'ismip6': ['config_basal_mass_bal_float'],
 }
 
@@ -96,6 +101,7 @@ class RunState(Step):
         timestep = section.get('timestep')
 
         _check_namelist_options(config, self.melt_form)
+        _validate_slope_config(config)
 
         self.add_input_file(filename='mesh.nc',
                             target=os.path.join(base_path_mali,
@@ -176,14 +182,26 @@ def _melt_namelist_options(config, melt_form, parameter_scale=1.0):
     """The namelist options specific to one melt form."""
     section = config['ismip7_calibration_melt']
     if melt_form == 'ismip7':
-        return {
+        options = {
             'config_ismip7_melt_sin_slope':
                 repr(section.getfloat('sin_slope')),
             'config_ismip7_melt_coriolis':
                 repr(section.getfloat('coriolis')),
             'config_ismip7_melt_salinity_source': "'constant'",
             'config_ismip7_melt_salinity':
-                repr(section.getfloat('salinity'))}
+                repr(section.getfloat('salinity')),
+            'config_ismip7_melt_spatially_variable_slope':
+                '.true.' if section.getboolean('spatially_variable_slope')
+                else '.false.',
+            'config_ismip7_melt_max_slope':
+                repr(section.getfloat('max_slope')),
+            'config_ismip7_melt_slope_smoothing_iterations':
+                repr(section.getint('slope_smoothing_iterations')),
+            'config_ismip7_melt_slope_method':
+                f"'{section.get('slope_method')}'",
+            'config_ismip7_melt_slope_stencil_rings':
+                repr(section.getint('slope_stencil_rings'))}
+        return options
     return {}
 
 
@@ -262,3 +280,41 @@ def _check_namelist_options(config, melt_form):
             f"and produce a plausible but wrong calibration.\n"
             f"Build MALI from a branch that has the ISMIP7 melt "
             f"parameterization and point [paths] mpas_model at it.")
+
+
+def _validate_slope_config(config):
+    """
+    Validate the spatially_variable_slope configuration options.
+
+    Raises
+    ------
+    ValueError
+        If any slope config option is invalid
+    """
+    section = config['ismip7_calibration_melt']
+    if not section.getboolean('spatially_variable_slope'):
+        return  # Only validate when the feature is enabled
+
+    slope_method = section.get('slope_method')
+    if slope_method not in {'local', 'polyfit'}:
+        raise ValueError(
+            f"config slope_method must be 'local' or 'polyfit', but is "
+            f"'{slope_method}'")
+
+    max_slope = section.getfloat('max_slope')
+    if max_slope <= 0.0:
+        raise ValueError(
+            f"config max_slope must be positive, but is {max_slope}")
+
+    slope_smoothing_iterations = section.getint('slope_smoothing_iterations')
+    if slope_smoothing_iterations < 0:
+        raise ValueError(
+            f"config slope_smoothing_iterations must be non-negative, but is "
+            f"{slope_smoothing_iterations}")
+
+    if slope_method == 'polyfit':
+        slope_stencil_rings = section.getint('slope_stencil_rings')
+        if slope_stencil_rings < 1:
+            raise ValueError(
+                f"config slope_stencil_rings must be >= 1 for polyfit method, "
+                f"but is {slope_stencil_rings}")

@@ -28,8 +28,14 @@ class VerifyMelt(Step):
     Three things are checked, and they are deliberately independent:
 
     * the **melt expression**, by evaluating the Python reference on MALI's
-      *own* ``TFdraft``.  That isolates the formula from the vertical
-      interpolation that produced ``TFdraft``.
+      *own* ``TFdraft`` (and, for ISMIP7 spatial-slope mode, MALI's diagnosed
+      ``ismip7shelfMelt_shelfBaseSlope``).  That isolates the formula from the
+      vertical interpolation that produced ``TFdraft`` and (in spatial mode)
+      from the geometric slope calculation.  In spatial-slope mode this check
+      answers "given MALI's thermal forcing and MALI's diagnosed slope, does
+      MALI evaluate the quadratic correctly?" — it explicitly does **not**
+      verify "did MALI compute the geometry slope correctly?", treating slope
+      analogously to ``TFdraft``.
     * the **vertical interpolation**, by interpolating the 3-D forcing to the
       ice draft with a plain ``numpy`` implementation written from the
       protocol rather than transliterated from the Fortran, and comparing
@@ -154,6 +160,32 @@ def _check_melt_expression(melt_form, parameter, fields, config, logger):
                 f'{float(actual.where(melting).min()):.4g} .. '
                 f'{float(actual.where(melting).max()):.4g} kg/m2/yr')
     logger.info(f'  max relative difference       {relative:.3e}')
+
+    # Log slope diagnostics for ISMIP7 spatial mode
+    section = config['ismip7_calibration_melt']
+    if (melt_form == 'ismip7' and
+            section.getboolean('spatially_variable_slope')):
+        if 'shelf_base_slope' in fields:
+            slope_sin = fields['shelf_base_slope'].where(fields['floating'])
+            slope_vals = slope_sin.values[~np.isnan(slope_sin.values)]
+            if slope_vals.size > 0:
+                max_slope_cfg = section.getfloat('max_slope')
+                n_at_cap = int(np.sum(np.abs(slope_vals - max_slope_cfg) <
+                                      1e-10))
+                frac_at_cap = n_at_cap / slope_vals.size
+                logger.info('')
+                logger.info('  ISMIP7 spatial slope diagnostics (sin θ):')
+                logger.info(f'    min                         '
+                            f'{float(np.min(slope_vals)):.6f}')
+                logger.info(f'    median                      '
+                            f'{float(np.median(slope_vals)):.6f}')
+                logger.info(f'    mean                        '
+                            f'{float(np.mean(slope_vals)):.6f}')
+                logger.info(f'    max                         '
+                            f'{float(np.max(slope_vals)):.6f}')
+                logger.info(f'    cells at max_slope cap      '
+                            f'{n_at_cap} ({frac_at_cap:.1%})')
+
     return relative
 
 

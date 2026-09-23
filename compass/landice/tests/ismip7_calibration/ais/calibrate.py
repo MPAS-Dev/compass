@@ -7,6 +7,7 @@ import xarray as xr
 from mpas_tools.io import write_netcdf
 
 from compass.landice.tests.ismip7_calibration import datasets
+from compass.landice.tests.ismip7_calibration.ais import melt_model
 from compass.landice.tests.ismip7_calibration.ais.aggregate import (
     unit_aggregates,
 )
@@ -103,7 +104,7 @@ class Calibrate(Step):
                                       seed=seed)
 
             _write(result, values, melt_form, name,
-                   f'calibration_{melt_form}.nc')
+                   f'calibration_{melt_form}.nc', config)
             _report(result, melt_form, name, logger)
             _check_grid_brackets_the_distribution(result, values, melt_form,
                                                   name, logger)
@@ -136,7 +137,7 @@ def _check_grid_brackets_the_distribution(result, values, melt_form, name,
             f'[ismip7_calibration_melt] config section.')
 
 
-def _write(result, values, melt_form, name, filename):
+def _write(result, values, melt_form, name, filename, config):
     """Write one parameter distribution to a file."""
     ds = xr.Dataset()
     ds['min_p1'] = ('sample', result['min_p1'])
@@ -150,6 +151,9 @@ def _write(result, values, melt_form, name, filename):
         'parameter ensemble, so the minimised objective is not comparable '
         'between melt forms -- only between parameter values within one '
         'form.')
+    # Add slope configuration metadata for ISMIP7
+    if melt_form == 'ismip7':
+        ds.attrs.update(melt_model.slope_metadata(config))
     write_netcdf(ds, filename)
 
 

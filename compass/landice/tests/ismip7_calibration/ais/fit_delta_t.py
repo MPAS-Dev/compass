@@ -138,10 +138,11 @@ class FitDeltaT(Step):
                                      observed, delta_t_grid, config)
                     _report(fit, melt_form, delta_t_grid, logger)
                     _write_params(fit, ds_masks, melt_form, parameter, name,
-                                  f'melt_params_{melt_form}_{suffix}.nc')
+                                  f'melt_params_{melt_form}_{suffix}.nc',
+                                  config)
                     results[percentile] = (parameter, fit)
             _write_summary(results, melt_form, name,
-                           f'delta_t_{melt_form}.nc')
+                           f'delta_t_{melt_form}.nc', config)
 
 
 def load_observed_melt(base_path):
@@ -329,7 +330,8 @@ def _report(fit, melt_form, delta_t_grid, logger):
     logger.info('')
 
 
-def _write_params(fit, ds_masks, melt_form, parameter, name, filename):
+def _write_params(fit, ds_masks, melt_form, parameter, name, filename,
+                  config):
     """
     Write a complete MALI melt-parameter file for one percentile.
 
@@ -361,10 +363,13 @@ def _write_params(fit, ds_masks, melt_form, parameter, name, filename):
     ds.attrs['note'] = (
         'dT_b fitted after parameter selection, per protocol Sect. 4.2.1 '
         'option 2, against the IMBIE basin-integrated melt observations.')
+    # Add slope configuration metadata for ISMIP7
+    if melt_form == 'ismip7':
+        ds.attrs.update(melt_model.slope_metadata(config))
     write_netcdf(ds, filename)
 
 
-def _write_summary(results, melt_form, name, filename):
+def _write_summary(results, melt_form, name, filename, config):
     """Write the fitted dT_b per basin and percentile, for validation."""
     percentiles = [percentile for percentile, _ in PERCENTILES]
     basins = sorted({basin_number for _, fit in results.values()
@@ -388,4 +393,7 @@ def _write_summary(results, melt_form, name, filename):
         ds[key].attrs['units'] = 'Gt yr^-1'
     ds.attrs['melt_form'] = melt_form
     ds.attrs['parameter_name'] = name
+    # Add slope configuration metadata for ISMIP7
+    if melt_form == 'ismip7':
+        ds.attrs.update(melt_model.slope_metadata(config))
     write_netcdf(ds, filename)
