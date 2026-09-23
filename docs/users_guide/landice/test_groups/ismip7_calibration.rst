@@ -140,11 +140,24 @@ The default config options are:
     # Practical salinity at the ice draft, PSU
     salinity = 34.5
 
-    # The sin(theta) factor of the ISMIP7 quadratic
+    # The sin(theta) factor of the ISMIP7 quadratic, used when
+    # spatially_variable_slope = False
     sin_slope = 0.0051117
 
     # Magnitude of the Coriolis parameter, s^-1
     coriolis = 1.4e-4
+
+    # Use MALI's spatially varying shelf-base slope instead of the constant
+    # sin_slope above.  The two schemes give K values that are NOT
+    # interchangeable.
+    spatially_variable_slope = False
+
+    # Options below apply only when spatially_variable_slope = True; defaults
+    # match MALI's Registry
+    slope_method = local
+    slope_stencil_rings = 3
+    slope_smoothing_iterations = 1
+    max_slope = 0.5
 
     [ismip7_calibration_objective]
 
@@ -161,6 +174,20 @@ The default config options are:
 
 See ``compass/landice/tests/ismip7_calibration/ismip7_calibration.cfg`` for
 the full set with comments.
+
+**Spatially-varying slope:**
+By default (``spatially_variable_slope = False``) the calibration uses a
+constant slope ``sin_slope = 0.0051117`` (the Antarctic-mean value from
+Bedmap3 on the ISMIP 8 km grid), reproducing the published calibration.
+Setting ``spatially_variable_slope = True`` instead uses MALI's per-cell
+shelf-base slope diagnosed from ice geometry (via one of two methods:
+``'local'`` edge-based averaging or ``'polyfit'`` least-squares planar fit).
+The two produce calibrated ``K`` values that are **not interchangeable**
+— a projection must use parameters from a calibration with the same slope
+configuration.  This feature is experimental: MALI PR #195 noted stability
+issues (melting holes in shelves) under high forcing.  The slope depends
+only on geometry, not on ``K``, so the one-run-per-ocean-state design and
+linearity verification remain unchanged.
 
 The ``t4_regions`` option is worth understanding.  The published weighting
 uses Pine Island alone, which is 2 of the 18 available observations.  So
