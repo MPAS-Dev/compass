@@ -13,6 +13,10 @@ import dataclasses
 import numpy as np
 import xarray as xr
 
+from compass.landice.tests.ismip7_calibration.configure import (
+    is_ismip7,
+    uses_spatial_slope,
+)
 from compass.landice.tests.ismip7_calibration.quadratic import (
     MALI,
     angle_from_sin_slope,
@@ -212,11 +216,11 @@ def melt_from_tf(melt_form, parameter, fields, config, delta_t=None,
 
     Parameters
     ----------
-    melt_form : {'ismip7', 'ismip6'}
+    melt_form : {'ismip7_const', 'ismip7_slope', 'ismip6'}
         Which melt form to evaluate
 
     parameter : float or xarray.DataArray
-        ``K`` for ``'ismip7'`` or ``gamma0`` for ``'ismip6'``
+        ``K`` for the ISMIP7 forms or ``gamma0`` for ``'ismip6'``
 
     fields : dict
         From :py:func:`read_run`
@@ -229,7 +233,7 @@ def melt_from_tf(melt_form, parameter, fields, config, delta_t=None,
         The basin correction to apply; defaults to the field the run used
 
     mean_tf : xarray.DataArray, optional
-        Precomputed basin-mean thermal forcing, for ``'ismip6'``
+        Precomputed basin-mean thermal forcing, required for ``'ismip6'``
 
     Returns
     -------
@@ -243,11 +247,12 @@ def melt_from_tf(melt_form, parameter, fields, config, delta_t=None,
     tf_draft = fields['tf_draft']
     floating = fields['floating']
 
-    if melt_form == 'ismip7':
-        # Slope: either spatially varying from MALI's diagnosed field, or
-        # constant from config.  Both paths feed an angle (radians) into
-        # local_quadratic_melt, which applies np.sin() internally.
-        if section.getboolean('spatially_variable_slope'):
+    if is_ismip7(melt_form):
+        # Slope: either spatially varying from MALI's diagnosed field
+        # (ismip7_slope form), or constant from config (ismip7_const).
+        # Both paths feed an angle (radians) into local_quadratic_melt,
+        # which applies np.sin() internally.
+        if uses_spatial_slope(melt_form):
             slope = ismip7_slope(fields, config)  # per-cell angle
         else:
             # config gives the *sine* of the slope; convert to angle
@@ -264,7 +269,10 @@ def melt_from_tf(melt_form, parameter, fields, config, delta_t=None,
         melt = nonlocal_quadratic_melt(parameter, tf_draft, mean_tf,
                                        constants=MALI, delta_t=delta_t)
     else:
-        raise ValueError(f"melt_form must be 'ismip7' or 'ismip6', but is "
+        from compass.landice.tests.ismip7_calibration.configure import (
+            ALL_FORMS,
+        )
+        raise ValueError(f"melt_form must be one of {ALL_FORMS}, but is "
                          f"'{melt_form}'")
 
     return xr.where(floating, melt, 0.0)
@@ -371,7 +379,7 @@ def interpolate_to_draft(field_3d, z_ocean, draft, bed,
     return at_draft
 
 
-def slope_metadata(config):
+def slope_metadata(config, melt_form):
     """
     Build a dict of slope-configuration metadata for output NetCDF attributes.
 
@@ -380,17 +388,20 @@ def slope_metadata(config):
     config : compass.config.CompassConfigParser
         Configuration options
 
+    melt_form : str
+        The melt form name
+
     Returns
     -------
     attrs : dict
         Metadata dict with keys describing the slope configuration.
-        Constant-slope mode records ``spatially_variable_slope`` and
-        ``sin_slope``; spatial-slope mode records ``spatially_variable_slope``,
-        ``slope_method``, ``slope_stencil_rings``,
+        For ismip7_const: records ``spatially_variable_slope`` (False) and
+        ``sin_slope``. For ismip7_slope: records ``spatially_variable_slope``
+        (True), ``slope_method``, ``slope_stencil_rings``,
         ``slope_smoothing_iterations``, and ``max_slope``.
     """
     section = config['ismip7_calibration_melt']
-    spatial = section.getboolean('spatially_variable_slope')
+    spatial = uses_spatial_slope(melt_form)
     attrs = {'spatially_variable_slope': spatial}
     if spatial:
         attrs['slope_method'] = section.get('slope_method')

@@ -13,7 +13,10 @@ from compass.landice.tests.ismip7_calibration.ais import melt_model
 from compass.landice.tests.ismip7_calibration.ais.run_state import (
     PARAMETER_VARIABLE,
 )
-from compass.landice.tests.ismip7_calibration.configure import parameter_name
+from compass.landice.tests.ismip7_calibration.configure import (
+    is_ismip7,
+    parameter_name,
+)
 from compass.step import Step
 
 #: the percentiles of the parameter distribution a parameter file is
@@ -363,9 +366,9 @@ def _write_params(fit, ds_masks, melt_form, parameter, name, filename,
     ds.attrs['note'] = (
         'dT_b fitted after parameter selection, per protocol Sect. 4.2.1 '
         'option 2, against the IMBIE basin-integrated melt observations.')
-    # Add slope configuration metadata for ISMIP7
-    if melt_form == 'ismip7':
-        ds.attrs.update(melt_model.slope_metadata(config))
+    # Add slope configuration metadata for ISMIP7 forms
+    if is_ismip7(melt_form):
+        ds.attrs.update(melt_model.slope_metadata(config, melt_form))
     write_netcdf(ds, filename)
 
 
@@ -393,7 +396,7 @@ def _write_summary(results, melt_form, name, filename, config):
         ds[key].attrs['units'] = 'Gt yr^-1'
     ds.attrs['melt_form'] = melt_form
     ds.attrs['parameter_name'] = name
-    # Add slope configuration metadata for ISMIP7
-    if melt_form == 'ismip7':
-        ds.attrs.update(melt_model.slope_metadata(config))
+    # Add slope configuration metadata for ISMIP7 forms
+    if is_ismip7(melt_form):
+        ds.attrs.update(melt_model.slope_metadata(config, melt_form))
     write_netcdf(ds, filename)

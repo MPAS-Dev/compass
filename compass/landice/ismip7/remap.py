@@ -6,6 +6,7 @@ import os
 import netCDF4
 import numpy as np
 import xarray as xr
+from mpas_tools.io import write_netcdf
 from scipy.ndimage import distance_transform_edt
 
 
@@ -162,12 +163,5 @@ def add_xtime_and_write(ds, years, output_file):
     if vars_to_drop:
         ds = ds.drop_vars(vars_to_drop)
 
-    # Clear encoding to avoid inherited chunking/compression that would
-    # conflict with NETCDF3_64BIT_DATA
-    for variable in ds.variables.values():
-        variable.encoding = {}
-
-    # Write CDF-5 (NETCDF3_64BIT_DATA) for MALI/PIO compatibility — HDF5-based
-    # netCDF-4 is not supported by the Fortran PIO reader
-    ds.to_netcdf(output_file, format="NETCDF3_64BIT_DATA", engine="netcdf4")
+    write_netcdf(ds, output_file)
     ds.close()

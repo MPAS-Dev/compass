@@ -12,6 +12,7 @@ from compass.landice.tests.ismip7_calibration.ais.aggregate import (
     unit_aggregates,
 )
 from compass.landice.tests.ismip7_calibration.configure import (
+    is_ismip7,
     objective_options,
     parameter_name,
     parameter_values,
@@ -151,9 +152,9 @@ def _write(result, values, melt_form, name, filename, config):
         'parameter ensemble, so the minimised objective is not comparable '
         'between melt forms -- only between parameter values within one '
         'form.')
-    # Add slope configuration metadata for ISMIP7
-    if melt_form == 'ismip7':
-        ds.attrs.update(melt_model.slope_metadata(config))
+    # Add slope configuration metadata for ISMIP7 forms
+    if is_ismip7(melt_form):
+        ds.attrs.update(melt_model.slope_metadata(config, melt_form))
     write_netcdf(ds, filename)
 
 

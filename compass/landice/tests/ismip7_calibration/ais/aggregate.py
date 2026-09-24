@@ -7,6 +7,7 @@ import xarray as xr
 from mpas_tools.io import write_netcdf
 
 from compass.landice.tests.ismip7_calibration.ais import melt_model
+from compass.landice.tests.ismip7_calibration.configure import is_ismip7
 from compass.landice.tests.ismip7_calibration.terms import (
     average_by_group,
     integrate_by_group,
@@ -93,19 +94,21 @@ class Aggregate(Step):
         logger = self.logger
         config = self.config
         section = config['ismip7_calibration_melt']
-        reference = {'ismip7': section.getfloat('reference_k'),
-                     'ismip6': section.getfloat('reference_gamma0')}
 
         static = _load_static(logger)
 
         for melt_form in self.melt_forms:
             logger.info(f'Aggregating the {melt_form} ensemble')
+            if is_ismip7(melt_form):
+                reference_value = section.getfloat('reference_k')
+            else:
+                reference_value = section.getfloat('reference_gamma0')
             ds = _aggregate_form(self.states, melt_form,
-                                 reference[melt_form], static, config,
+                                 reference_value, static, config,
                                  logger)
             write_netcdf(ds, f'aggregates_{melt_form}.nc')
 
-        _report_shelf_area(static, logger)
+        _report_shelf_area(static, self.melt_forms, logger)
 
 
 def _load_static(logger):
@@ -209,20 +212,22 @@ def _aggregate_form(states, melt_form, reference, static, config, logger):
         'to the parameter, so the whole parameter ensemble is these times '
         'each parameter value.')
     ds.attrs['ocean_states'] = ', '.join(sorted(by_name))
-    # Add slope configuration metadata for ISMIP7
-    if melt_form == 'ismip7':
-        ds.attrs.update(melt_model.slope_metadata(config))
+    # Add slope configuration metadata for ISMIP7 forms
+    if is_ismip7(melt_form):
+        ds.attrs.update(melt_model.slope_metadata(config, melt_form))
     return ds
 
 
-def _report_shelf_area(static, logger):
+def _report_shelf_area(static, melt_forms, logger):
     """Report MALI's per-basin shelf area against the observed extent."""
     area = static['area']
     basins = static['basins']
     observed = static['observed_floating']
 
+    # Try to find any climatology melt output file from the active forms
+    candidate_names = [f'melt_{form}_climatology.nc' for form in melt_forms]
     modelled_file = None
-    for name in ('melt_ismip7_climatology.nc', 'melt_ismip6_climatology.nc'):
+    for name in candidate_names:
         try:
             modelled = melt_model.read_run(name, 'mesh.nc')['floating']
             modelled_file = name
