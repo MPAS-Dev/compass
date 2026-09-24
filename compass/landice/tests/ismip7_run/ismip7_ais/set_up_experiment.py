@@ -6,6 +6,7 @@ from importlib import resources
 from jinja2 import Template
 
 from compass.job import write_job_script
+from compass.landice.tests.ismip7_run.gia_options import parse_gia_model
 from compass.load_script import symlink_load_script
 from compass.model import make_graph_file, run_model
 from compass.step import Step
@@ -67,7 +68,7 @@ class SetUpExperiment(Step):
             'use_hydrofracture_forcing')
         calving_fracture_toughness = section.get(
             'calving_fracture_toughness')
-        sea_level_model = section.getboolean('sea_level_model')
+        sea_level_model, fastisostasy = parse_gia_model(config)
 
         exp_info = self.exp_info
         scenario = exp_info['scenario']
@@ -393,6 +394,56 @@ class SetUpExperiment(Step):
                 os.symlink(os.path.join(map_dir, map_file),
                            os.path.join(self.work_dir, map_file))
 
+        # FastIsostasy options
+        if fastisostasy:
+            fastiso_res_km = section.getint('fastiso_res_km')
+            options = {
+                'config_uplift_method': "'fastisostasy'",
+                'config_MALI_to_FASTISOSTASY_weights_file':
+                    "'mapfile_mali_to_fastiso.nc'",
+                'config_FASTISOSTASY_to_MALI_weights_file':
+                    "'mapfile_fastiso_to_mali.nc'",
+                'config_fastisostasy_parameter_file':
+                    "'namelist.fastisostasy'",
+                'config_fastisostasy_grid_resolution':
+                    str(fastiso_res_km * 1000)
+            }
+            self.add_namelist_options(options=options,
+                                      out_name='namelist.landice')
+
+            fastiso_path = section.get('fastiso_path')
+            fastiso_earth_structure_filename = section.get(
+                'fastiso_earth_structure_filename')
+            fastiso_mask_filename = section.get('fastiso_mask_filename')
+            use_mask_file = fastiso_mask_filename.lower() != 'none'
+
+            template = Template(resources.read_text(
+                resource_location, 'namelist.fastisostasy.template'))
+            text = template.render(
+                rheology_file=fastiso_earth_structure_filename,
+                mask_file=fastiso_mask_filename if use_mask_file
+                else 'None')
+
+            file_fi_nl = os.path.join(self.work_dir, 'namelist.fastisostasy')
+            with open(file_fi_nl, 'w') as handle:
+                handle.write(text)
+
+            # Symlink mapping files
+            map_dir = os.path.join('..', 'fastiso_mapping_files')
+            for map_file in ('mapfile_mali_to_fastiso.nc',
+                             'mapfile_fastiso_to_mali.nc'):
+                os.symlink(os.path.join(map_dir, map_file),
+                           os.path.join(self.work_dir, map_file))
+
+            # Symlink Earth structure (and, if configured, activation
+            # mask) files, both expected to live under fastiso_path
+            fastiso_input_files = [fastiso_earth_structure_filename]
+            if use_mask_file:
+                fastiso_input_files.append(fastiso_mask_filename)
+            for fname in fastiso_input_files:
+                os.symlink(os.path.join(fastiso_path, fname),
+                           os.path.join(self.work_dir, fname))
+
         # --- Symlink restart for projections/ctrl ---
         if not is_historical:
             hist_exp = f"historical_{model}"
@@ -432,8 +483,7 @@ class SetUpExperiment(Step):
         Run this step of the test case
         """
         config = self.config
-        section = config['ismip7_run_ais']
-        sea_level_model = section.getboolean('sea_level_model')
+        sea_level_model, fastisostasy = parse_gia_model(config)
         if sea_level_model:
             map_dir = os.path.join('..', 'mapping_files')
             for map_file in ('mapfile_mali_to_slm.nc',
@@ -442,6 +492,16 @@ class SetUpExperiment(Step):
                     sys.exit(f"ERROR: 'mapping_files/{map_file}' "
                              "does not exist in workdir. "
                              "Please run the 'mapping_files' step "
+                             "before proceeding.")
+
+        if fastisostasy:
+            map_dir = os.path.join('..', 'fastiso_mapping_files')
+            for map_file in ('mapfile_mali_to_fastiso.nc',
+                             'mapfile_fastiso_to_mali.nc'):
+                if not os.path.isfile(os.path.join(map_dir, map_file)):
+                    sys.exit(f"ERROR: 'fastiso_mapping_files/{map_file}' "
+                             "does not exist in workdir. "
+                             "Please run the 'fastiso_mapping_files' step "
                              "before proceeding.")
 
         run_model(step=self, namelist='namelist.landice',
