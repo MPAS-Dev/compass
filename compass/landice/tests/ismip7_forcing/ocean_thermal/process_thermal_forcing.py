@@ -210,6 +210,17 @@ class ProcessThermalForcing(Step):
 
         dst_dir = os.path.join(output_base_path, choice_forcing_group,
                                "atmosphere")
+
+        # Guard against destination directory resolving to source directory
+        # (e.g., if choice_forcing_group is a symlink to atm_forcing_group)
+        if os.path.realpath(dst_dir) == os.path.realpath(src_dir):
+            logger.warning(
+                f"Skipping atmosphere mirror for {choice_forcing_group}: "
+                f"destination directory {dst_dir} resolves to source "
+                f"directory {src_dir}. Relinking would overwrite the "
+                f"original files.")
+            return
+
         os.makedirs(dst_dir, exist_ok=True)
 
         for fname in os.listdir(src_dir):
@@ -217,6 +228,15 @@ class ProcessThermalForcing(Step):
             if os.path.islink(src) or not os.path.isfile(src):
                 continue
             dst = os.path.join(dst_dir, fname)
+
+            # Guard against destination file resolving to source file
+            if os.path.realpath(dst) == os.path.realpath(src):
+                logger.warning(
+                    f"Skipping {fname}: destination {dst} resolves to "
+                    f"source {src}. Relinking would overwrite the "
+                    f"original.")
+                continue
+
             if os.path.lexists(dst):
                 os.remove(dst)
             os.symlink(src, dst)
