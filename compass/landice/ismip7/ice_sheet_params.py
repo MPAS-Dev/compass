@@ -7,10 +7,6 @@ _PARAMS = {
     'ais': {
         'projection': 'ais-bedmap2',
         'prefix': 'AIS',
-        'atm_resolution': '2000m',
-        'atm_version': 'v2',
-        'ocean_version': 'v3',
-        'ocean_grid': 'ocean',
         'ocean_3d': True,
         'ocean_temporal': 'decade',
         'atm_model': None,
@@ -19,10 +15,6 @@ _PARAMS = {
     'gis': {
         'projection': 'gis-bamber',
         'prefix': 'GrIS',
-        'atm_resolution': '1000m',
-        'atm_version': 'v2',
-        'ocean_version': 'v2',
-        'ocean_grid': 'ocean',
         'ocean_3d': False,
         'ocean_temporal': 'yearly',
         'atm_model': None,
@@ -32,19 +24,14 @@ _PARAMS = {
 
 # Overrides applied for the OCX (reanalysis) scenario. OCX has no distinct
 # ESM model: it uses fixed reanalysis products (RACMO for the atmosphere and
-# EN4 for the ocean) at data version v1. When scenario is 'OCX' the [ismip7]
-# model option is ignored and these sources are used instead.
+# EN4 for the ocean). When scenario is 'OCX' the [ismip7] model option is
+# ignored and these sources are used instead.
 _OCX_OVERRIDES = {
     'gis': {
-        'atm_version': 'v1',
-        'ocean_version': 'v1',
-        'ocean_grid': 'ocean-1000m',
         'atm_model': 'RACMO2.3p2-ERA',
         'ocean_model': 'EN4',
     },
     'ais': {
-        'atm_version': 'v1',
-        'ocean_version': 'v1',
         'atm_model': 'RACMO2.3p2-ERA',
         'ocean_model': None,
         # AIS OCX ocean files have no model token and live in per-choice

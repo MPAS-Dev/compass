@@ -27,6 +27,12 @@ ISMIP7 framework
    :toctree: generated/
 
    ice_sheet_params.get_params
+   archive.ForcingSource
+   archive.resolve_atmosphere_source
+   archive.resolve_ocean_source
+   archive.resolve_fracture_source
+   archive.resolve_version_directory
+   archive.mapping_file_name
    mapping.build_mapping_file
    remap.extrapolate_source
    remap.open_rename_and_trim

@@ -1,9 +1,12 @@
-import glob
 import os
 import shutil
 
 from mpas_tools.logging import check_call
 
+from compass.landice.ismip7.archive import (
+    mapping_file_name,
+    resolve_fracture_source,
+)
 from compass.landice.ismip7.mapping import build_mapping_file
 from compass.landice.ismip7.remap import (
     add_xtime_and_write,
@@ -67,17 +70,14 @@ class ProcessLakeProperties(Step):
         config = self.config
 
         section = config["ismip7"]
-        base_path_ismip7 = section.get("base_path_ismip7")
         mali_mesh_name = section.get("mali_mesh_name")
         mali_mesh_file = section.get("mali_mesh_file")
         model = section.get("model")
         scenario = section.get("scenario")
         output_base_path = section.get("output_base_path")
-        ice_sheet = section.get("ice_sheet")
 
         section = config["ismip7_fracture"]
         method_remap = section.get("method_remap_lake_properties")
-        version = section.get("version")
         start_year = section.getint("start_year")
         end_year = section.getint("end_year")
 
@@ -88,14 +88,9 @@ class ProcessLakeProperties(Step):
             return
 
         # Discover the lake properties file
-        input_path = os.path.join(base_path_ismip7, "fracture", version)
         file_pattern = "lake_properties_*.nc"
-        all_files = sorted(glob.glob(os.path.join(input_path, file_pattern)))
-
-        if not all_files:
-            raise FileNotFoundError(
-                f"No lake properties file found matching pattern:\n"
-                f"  {os.path.join(input_path, file_pattern)}")
+        source = resolve_fracture_source(config, file_pattern)
+        all_files = source.files
         if len(all_files) > 1:
             raise ValueError(
                 f"Expected a single lake properties file but found "
@@ -107,8 +102,8 @@ class ProcessLakeProperties(Step):
 
         # Build mapping file. Lake properties are continuous fields, so
         # bilinear remapping is appropriate by default.
-        mapping_file = (f"map_ismip7_{ice_sheet}_fracture_to_"
-                        f"{mali_mesh_name}_{method_remap}.nc")
+        mapping_file = mapping_file_name(
+            config, "fracture", source.source_grid, method_remap)
 
         if not os.path.exists(mapping_file):
             logger.info("Building mapping file for the lake properties "

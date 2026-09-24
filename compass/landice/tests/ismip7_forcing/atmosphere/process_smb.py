@@ -1,4 +1,3 @@
-import glob
 import os
 import shutil
 
@@ -6,7 +5,10 @@ import xarray as xr
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 
-from compass.landice.ismip7.ice_sheet_params import get_params
+from compass.landice.ismip7.archive import (
+    mapping_file_name,
+    resolve_atmosphere_source,
+)
 from compass.landice.ismip7.mapping import build_mapping_file
 from compass.landice.ismip7.remap import extrapolate_source
 from compass.step import Step
@@ -49,13 +51,9 @@ class ProcessSmb(Step):
         """
         logger = self.logger
         config = self.config
-        params = get_params(config)
-
         section = config["ismip7"]
-        base_path_ismip7 = section.get("base_path_ismip7")
         mali_mesh_name = section.get("mali_mesh_name")
         mali_mesh_file = section.get("mali_mesh_file")
-        model = section.get("model")
         scenario = section.get("scenario")
         output_base_path = section.get("output_base_path")
 
@@ -64,24 +62,11 @@ class ProcessSmb(Step):
         start_year = section.getint("start_year")
         end_year = section.getint("end_year")
 
-        # Discover input files
-        prefix = params['prefix']
-        resolution = params['atm_resolution']
-        version = params['atm_version']
-        if params['atm_model'] is not None:
-            forcing_group = scenario
-            model = params['atm_model']
-        else:
-            forcing_group = f"{model}_{scenario}"
-        input_path = os.path.join(base_path_ismip7, "acabf", version)
-        file_pattern = (f"acabf_{prefix}_{model}_{scenario}_"
-                        f"SDBN1-{resolution}_{version}_*.nc")
-        all_files = sorted(glob.glob(os.path.join(input_path, file_pattern)))
-
-        if not all_files:
-            raise FileNotFoundError(
-                f"No SMB files found matching pattern:\n"
-                f"  {os.path.join(input_path, file_pattern)}")
+        source = resolve_atmosphere_source(config, "acabf")
+        all_files = source.files
+        model = source.model
+        forcing_group = source.forcing_group
+        logger.info(f"Using atmosphere source {source.directory}")
 
         # Filter to requested year range
         input_files = []
@@ -103,9 +88,8 @@ class ProcessSmb(Step):
                     f"{start_year}-{end_year}")
 
         # Build mapping file using the first input file as the grid template
-        ice_sheet = config.get("ismip7", "ice_sheet")
-        mapping_file = (f"map_ismip7_{ice_sheet}_atm_to_"
-                        f"{mali_mesh_name}_{method_remap}.nc")
+        mapping_file = mapping_file_name(
+            config, "atm", source.source_grid, method_remap)
 
         if not os.path.exists(mapping_file):
             logger.info("Building mapping file...")

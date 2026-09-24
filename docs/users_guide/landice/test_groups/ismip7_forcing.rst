@@ -44,7 +44,8 @@ To use this test group, users need to:
 
 2. Set the ``ice_sheet`` config option to either ``ais`` or ``gis``.
 
-3. Provide the path to the ISMIP7 forcing data (``base_path_ismip7``).
+3. Set ``base_path_ismip7`` to the root of the native ISMIP7 archive, which
+   contains the ``AIS`` and ``GIS`` directories.
 
 4. Run the ``atmosphere`` test case for each model and scenario combination.
 
@@ -110,73 +111,43 @@ expects exactly one file per forcing field there.
 Input Data
 ----------
 
-ISMIP7 forcing data is organized by variable and version. The expected
-directory structure under ``base_path_ismip7`` is:
-
-For AIS atmosphere (2km, polar stereographic EPSG:3031):
+``base_path_ismip7`` is the unmodified archive root. The resolver selects
+files from these native layouts:
 
 .. code-block:: none
 
-   acabf/v2/acabf_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
-   ts/v2/ts_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
-   dacabfdz/v2/dacabfdz_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
-   dtsdz/v2/dtsdz_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
-   mrro/v2/mrro_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
+   {root}/{AIS|GIS}/{model}/{scenario}/{product}-{resolution}/{variable}/{version}/*.nc
+   {root}/AIS/{model}/{scenario}/ocean/tf/{version}/*.nc
+   {root}/GIS/{model}/{scenario}/ocean-{resolution}/tf/{version}/*.nc
+   {root}/AIS/{model}/{scenario}/fracture/{version}/*.nc
+   {root}/AIS/OCX/RACMO2.3p2-ERA/SDBN1-{resolution}/{variable}/{version}/*.nc
+   {root}/GIS/OCX/RACMO2.3p2-ERA/SDBN1-{resolution}/{variable}/{version}/*.nc
+   {root}/AIS/OCX/ocean/{choice}/{version}/*.nc
+   {root}/GIS/OCX/EN4/ocean-{resolution}/tf/{version}/*.nc
 
-For AIS ocean thermal (8km, 30 depth levels, decade files):
+The atmosphere ``product`` and atmosphere and GrIS ocean ``resolution`` are
+configurable. ``auto`` selects the primary product for the requested model
+and the finest available resolution. Set an explicit value to use another
+archive product or grid.
 
-.. code-block:: none
+Versions default to ``latest`` and are compared numerically, including dotted
+versions such as ``v2.1``. Atmosphere versions are resolved separately for
+each variable because the archive does not version all fields in lockstep.
+An explicit section-wide version may be set for reproducibility; an option
+such as ``acabf_version = v2`` overrides it for one atmosphere variable. The
+newest directory must contain matching files, so an incomplete transfer is
+reported rather than silently replaced with an older version.
 
-   ocean/tf/v3/tf_AIS_{model}_{scenario}_ocean_v3_{start_year}-{end_year}.nc
-
-For AIS ocean thermal climatology (8km, 30 depth levels, static):
-
-.. code-block:: none
-
-   {base_path_climatology}/tf/v3/tf_AIS_obs_ocean_climatology_*.nc
-
-For AIS fracture / ice shelf collapse mask (8km, annual, Path C):
-
-.. code-block:: none
-
-   fracture/v2/ice_shelf_collapse_mask_*.nc
-
-For GrIS atmosphere (1km, polar stereographic EPSG:3413):
-
-.. code-block:: none
-
-   acabf/v2/acabf_GrIS_{model}_{scenario}_SDBN1-1000m_v2_{year}.nc
-   ts/v2/ts_GrIS_{model}_{scenario}_SDBN1-1000m_v2_{year}.nc
-   dacabfdz/v2/dacabfdz_GrIS_{model}_{scenario}_SDBN1-1000m_v2_{year}.nc
-   dtsdz/v2/dtsdz_GrIS_{model}_{scenario}_SDBN1-1000m_v2_{year}.nc
-   mrro/v2/mrro_GrIS_{model}_{scenario}_SDBN1-1000m_v2_{year}.nc
-
-For GrIS ocean thermal (same 1km grid, 2D, yearly files):
-
-.. code-block:: none
-
-   ocean/tf/v2/tf_GrIS_{model}_{scenario}_ocean_v2_{year}.nc
-
-The OCX (reanalysis) scenario follows the same directory layout as the ESM
-scenarios, but uses fixed reanalysis sources, data version ``v1``, and a
-named grid resolution in the ocean file names. For GrIS OCX the atmosphere
-source is ``RACMO2.3p2-ERA`` and the ocean source is ``EN4``:
-
-.. code-block:: none
-
-   acabf/v1/acabf_GrIS_RACMO2.3p2-ERA_OCX_SDBN1-1000m_v1_{year}.nc
-   ocean/tf/v1/tf_GrIS_EN4_OCX_ocean-1000m_v1_{year}.nc
-
-Set ``base_path_ismip7`` to the ``OCX`` directory and ``scenario = OCX``.
-The sources, version, and ocean grid token are selected automatically for
-OCX, and the ``[ismip7] model`` option is ignored (set it to ``None``).
+The observational climatology remains configured separately with
+``base_path_climatology``. Its version also defaults to ``latest`` below the
+``tf`` directory.
 
 .. _landice_ismip7_forcing_config:
 
 config options
 --------------
 
-The ``ismip7_forcing`` test group uses four config sections. The default
+The ``ismip7_forcing`` test group uses five config sections. The default
 values are:
 
 .. code-block:: cfg
@@ -187,7 +158,7 @@ values are:
    # Ice sheet: ais (Antarctic) or gis (Greenland)
    ice_sheet = NotAvailable
 
-   # Base path to the input ISMIP7 forcing files
+   # Root of the native archive (the directory containing AIS/ and GIS/)
    base_path_ismip7 = NotAvailable
 
    # Base path to the MALI mesh
@@ -220,6 +191,13 @@ values are:
    # config options for ismip7 atmosphere forcing
    [ismip7_atmosphere]
 
+   # Product and source resolution
+   product = auto
+   resolution = auto
+
+   # Resolve separately for each variable; explicit versions are also valid
+   version = latest
+
    # Remapping method: bilinear, neareststod, conserve
    method_remap = conserve
 
@@ -232,8 +210,15 @@ values are:
    # config options for ismip7 ocean thermal forcing
    [ismip7_ocean_thermal]
 
+   # GrIS source resolution and dataset version
+   resolution = auto
+   version = latest
+
    # Remapping method: bilinear, neareststod, conserve
    method_remap = bilinear
+
+   # Dataset version
+   version = latest
 
    # Start year for processing
    start_year = 1850
@@ -267,7 +252,7 @@ values are:
    method_remap_lake_properties = bilinear
 
    # Version subdirectory of the fracture forcing data
-   version = v2
+   version = latest
 
    # Start year for processing
    start_year = 1850
@@ -356,8 +341,8 @@ surface-melt-driven ice shelf collapse forcing (AIS only). It implements the
 three ISMIP7 pathways as separate steps, each remapping annual fields from
 the native 8km polar stereographic grid onto the MALI unstructured mesh.
 
-All three source files are discovered from the ``fracture/{version}/``
-subdirectory of ``base_path_ismip7``.
+All three source files are discovered from
+``AIS/{model}/{scenario}/fracture/{version}/`` below ``base_path_ismip7``.
 
 Each pathway is run independently and can be skipped by setting its
 remapping-method config option to ``None`` in the ``[ismip7_fracture]``
