@@ -276,3 +276,20 @@ The class :py:class:`compass.ocean.tests.hurricane.analysis.Analysis`
 defines a step to generate validation plots comparing sea surface height
 timeseries between modeled and observed data at several different stations.
 Both NOAA and USGS observations are plotted.
+
+.. _dev_ocean_hurricane_files_for_e3sm:
+
+files for e3sm test case
+^^^^^^^^^^^^^^^^^^^^^^^^
+The ``files_for_e3sm`` test case builds the domain files and data atmosphere
+regridding files needed to run MPAS-Ocean hurricane configurations in E3SM.
+
+forcing maps
+""""""""""""
+The class :py:class:`compass.ocean.tests.hurricane.files_for_e3sm.forcing_maps.ForcingMaps`
+builds the regridding files between the ocean mesh and the data atmosphere grid.
+
+domain files
+""""""""""""
+The class :py:class:`compass.ocean.tests.hurricane.files_for_e3sm.domain_files.DomainFiles`
+builds the domain files needed to run MPAS-Ocean hurricane configurations in E3SM.
