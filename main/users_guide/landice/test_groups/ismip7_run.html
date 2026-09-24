@@ -289,6 +289,12 @@ for <code class="docutils literal notranslate"><span class="pre">ssp*</span></co
 <span class="c1"># Then submit job scripts from individual experiment directories</span>
 </pre></div>
 </div>
+<p>If <code class="docutils literal notranslate"><span class="pre">gia_model</span></code> is set to <code class="docutils literal notranslate"><span class="pre">1dSLM</span></code> or <code class="docutils literal notranslate"><span class="pre">FastIsostasy</span></code>, <code class="docutils literal notranslate"><span class="pre">compass</span>
+<span class="pre">setup</span></code> also adds a <code class="docutils literal notranslate"><span class="pre">mapping_files</span></code> or <code class="docutils literal notranslate"><span class="pre">fastiso_mapping_files</span></code>
+subdirectory (respectively). These must be run (via their job script,
+or <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> from within that subdirectory) <em>before</em> submitting
+any individual experiment, since the experiments’ job scripts assume
+the mapping files already exist.</p>
 </li>
 </ol>
 </section>
@@ -340,17 +346,49 @@ for <code class="docutils literal notranslate"><span class="pre">ssp*</span></co
 <span class="c1"># Face melting</span>
 <span class="na">use_face_melting</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
 
-<span class="c1"># Sea-level model coupling</span>
-<span class="na">sea_level_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
+<span class="c1"># Glacial isostatic adjustment (GIA) coupling: none, 1dSLM, or FastIsostasy</span>
+<span class="na">gia_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">none</span>
+
+<span class="c1"># Sea-level model coupling (used if gia_model = 1dSLM)</span>
 <span class="na">slm_input_ice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
 <span class="na">slm_input_earth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
 <span class="na">slm_earth_structure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">prem_512.l60K2C.sum18p6.dum19p2.tz19p4.lm22</span>
 <span class="na">slm_input_others</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
 <span class="na">nglv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2048</span>
+
+<span class="c1"># FastIsostasy (regional bedrock/GIA) coupling (used if</span>
+<span class="c1"># gia_model = FastIsostasy)</span>
+<span class="na">fastiso_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
+<span class="na">fastiso_earth_structure_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">weak-earth.nc</span>
+<span class="na">fastiso_mask_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+<span class="na">fastiso_res_km</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span>
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">fastiso_res_km</span></code> sets the resolution (in km) of the regular grid
+FastIsostasy runs on, which should match one of the standard ISMIP7
+grid resolutions (2, 4, 8, or 16 km for AIS). As of this writing,
+resolutions finer than 8 km have been found to yield numerically
+unstable results.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">fastiso_path</span></code> is a directory holding both the Earth-structure
+(rheology) file named by <code class="docutils literal notranslate"><span class="pre">fastiso_earth_structure_filename</span></code> and,
+optionally, an interactive-sea-level activation mask file named by
+<code class="docutils literal notranslate"><span class="pre">fastiso_mask_filename</span></code>. Leaving <code class="docutils literal notranslate"><span class="pre">fastiso_mask_filename</span> <span class="pre">=</span> <span class="pre">None</span></code>
+uses FastIsostasy’s built-in fallback, which activates interactive
+sea level only over the un-padded ice domain – a hard cutoff at the
+domain/padding boundary that can show up as a ring-shaped artifact in
+bed-topography change near the edge of the ice sheet. Supplying a mask
+file (NetCDF with dims <code class="docutils literal notranslate"><span class="pre">x</span></code>/<code class="docutils literal notranslate"><span class="pre">y</span></code>, 1-D coordinate variables <code class="docutils literal notranslate"><span class="pre">x</span></code>/<code class="docutils literal notranslate"><span class="pre">y</span></code>
+in meters, and a 2-D variable <code class="docutils literal notranslate"><span class="pre">M</span></code>) lets you activate it over a wider
+region, e.g. the full padded domain, instead.</p>
+</div>
 <p><strong>GrIS config</strong> (<code class="docutils literal notranslate"><span class="pre">[ismip7_run_gris]</span></code>) is similar (including
-<code class="docutils literal notranslate"><span class="pre">reference_surface_path</span></code>) but without sea-level model options</p>
+<code class="docutils literal notranslate"><span class="pre">reference_surface_path</span></code>) but without sea-level model or FastIsostasy
+coupling options</p>
 </section>
 <section id="forcing-streams">
 <span id="landice-ismip7-run-forcing-streams"></span><h2>Forcing Streams<a class="headerlink" href="#forcing-streams" title="Link to this heading"></a></h2>
@@ -407,7 +445,8 @@ hydrofracture gating entirely; experiments then use their normal
 <section id="ismip7-ais">
 <span id="landice-ismip7-run-ais"></span><h2>ismip7_ais<a class="headerlink" href="#ismip7-ais" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/ismip7_run/ismip7_ais</span></code> sets up AIS experiments with 3D ocean
-thermal forcing (30 vertical layers) and optional sea-level model coupling.</p>
+thermal forcing (30 vertical layers) and optional sea-level model and/or
+FastIsostasy coupling.</p>
 </section>
 <section id="ismip7-gris">
 <span id="landice-ismip7-run-gris"></span><h2>ismip7_gris<a class="headerlink" href="#ismip7-gris" title="Link to this heading"></a></h2>
