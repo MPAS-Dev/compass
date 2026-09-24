@@ -85,12 +85,26 @@ class BuildMappingFile(Step):
 
         # Use any atmosphere file as the grid template for building the
         # mapping file. We'll use the first year's acabf (SMB) file.
-        prefix = params['prefix']
-        resolution = params['atm_resolution']
-        version = params['atm_version']
-        model = (section.get("model") if params['atm_model'] is None
-                 else params['atm_model'])
-        scenario = section.get("scenario")
+        ismip7_section = config["ismip7"]
+        base_path_ismip7 = ismip7_section.get("base_path_ismip7")
+        mali_mesh_name = ismip7_section.get("mali_mesh_name")
+        mali_mesh_file = ismip7_section.get("mali_mesh_file")
+        ice_sheet = ismip7_section.get("ice_sheet")
+        output_base_path = ismip7_section.get("output_base_path")
+        mapping_files_path = ismip7_section.get("mapping_files_path")
+
+        atmosphere_section = config["ismip7_atmosphere"]
+        method_remap = atmosphere_section.get("method_remap")
+
+        prefix = params["prefix"]
+        resolution = params["atm_resolution"]
+        version = params["atm_version"]
+
+        model = (ismip7_section.get("model")
+                 if params["atm_model"] is None
+                 else params["atm_model"])
+
+        scenario = ismip7_section.get("scenario")
 
         input_path = os.path.join(base_path_ismip7, "acabf", version)
         # Use a simple pattern that will match the first available file

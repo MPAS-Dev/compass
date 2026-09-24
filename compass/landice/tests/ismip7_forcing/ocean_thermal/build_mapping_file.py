@@ -98,8 +98,8 @@ OceanThermal
             # Use 'main' as the default choice for building the mapping file
             ocean_choice = 'main'
             input_path = os.path.join(
-                base_path_ismip7, "thermal_forcing", version, ocean_choice)
-            file_pattern = (f"thermal_forcing_{prefix}_{ocean_grid}_"
+                base_path_ismip7, "ocean", ocean_choice, version)
+            file_pattern = (f"tf_{prefix}_OCX_{ocean_grid}_{ocean_choice}_"
                             f"{version}_*.nc")
         else:
             # Standard ESM scenario or GrIS OCX
@@ -107,14 +107,14 @@ OceanThermal
                 # OCX (GrIS): use the ocean_model token
                 ocean_model = params['ocean_model']
                 input_path = os.path.join(
-                    base_path_ismip7, "thermal_forcing", version)
-                file_pattern = (f"thermal_forcing_{prefix}_{ocean_model}_"
+                    base_path_ismip7, "ocean", "tf", version)
+                file_pattern = (f"tf_{prefix}_{ocean_model}_"
                                 f"{ocean_grid}_{version}_*.nc")
             else:
                 # Standard ESM scenario
                 input_path = os.path.join(
-                    base_path_ismip7, "thermal_forcing", version)
-                file_pattern = (f"thermal_forcing_{prefix}_{model}_"
+                    base_path_ismip7, "ocean", version)
+                file_pattern = (f"tf_{prefix}_{model}_"
                                 f"{scenario}_{ocean_grid}_{version}_*.nc")
 
         ismip7_grid_files = sorted(
