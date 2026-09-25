@@ -233,16 +233,32 @@ class SetUpExperiment(Step):
                     tf_base = os.path.split(tf_path)[-1]
                     os.symlink(tf_path,
                                os.path.join(self.work_dir, tf_base))
-                start_years = sorted(
-                    int(re.search(r'_(\d{4})\.nc$',
-                                  os.path.split(f)[-1]).group(1))
-                    for f in tf_list)
+                start_years = []
+                for f in tf_list:
+                    match = re.search(r'_(\d{4})\.nc$',
+                                      os.path.split(f)[-1])
+                    if not match:
+                        sys.exit(
+                            f"ERROR: 3D thermal forcing file does not match "
+                            f"expected pattern *_YYYY.nc: {f}")
+                    start_years.append(int(match.group(1)))
+                start_years = sorted(start_years)
                 tf_first_year = start_years[0]
                 tf_reference_time = f"{tf_first_year:04d}-01-01_00:00:00"
                 sample = os.path.split(tf_list[0])[-1]
                 tf_fname = re.sub(r'_\d{4}\.nc$', '_$Y.nc', sample)
                 if len(start_years) > 1:
                     interval_years = start_years[1] - start_years[0]
+                    # Validate uniform spacing across all chunks
+                    for i in range(2, len(start_years)):
+                        spacing = start_years[i] - start_years[i - 1]
+                        if spacing != interval_years:
+                            sys.exit(
+                                f"ERROR: 3D thermal forcing chunk years are "
+                                f"not uniformly spaced. Expected interval "
+                                f"{interval_years} years, but chunks "
+                                f"{start_years[i - 1]} and {start_years[i]} "
+                                f"are {spacing} years apart.")
                     tf_filename_interval = \
                         f"{interval_years:04d}-00-00_00:00:00"
             else:
