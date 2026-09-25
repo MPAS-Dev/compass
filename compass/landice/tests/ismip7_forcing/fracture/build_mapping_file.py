@@ -26,13 +26,13 @@ class BuildMappingFile(Step):
             section.get('method_remap_excess_melt'),
             section.get('method_remap_lake_properties'),
         }
-        if all(method.lower() == 'none' for method in methods):
+        if all(method is None or method.lower() == 'none' for method in methods):
             self.logger.info('No fracture mappings requested; skipping.')
             return
         source = _resolve_grid_source(config)
 
         for method_remap in sorted(methods):
-            if method_remap.lower() == 'none':
+            if method_remap is None or method_remap.lower() == 'none':
                 continue
             mapping_file = mapping_file_name(
                 config, 'fracture', source.source_grid, method_remap)
