@@ -21,7 +21,7 @@ def _step(tmp_path, mapping_files_path):
         'output_base_path': str(tmp_path / 'output'),
         'mali_mesh_file': 'mesh.nc',
     }
-    return SimpleNamespace(config=config, logger=_Logger())
+    return SimpleNamespace(config=config, logger=_Logger(), ntasks=16)
 
 
 def test_mapping_step_reuses_cached_file(tmp_path, monkeypatch):
