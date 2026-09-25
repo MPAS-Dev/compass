@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from compass.landice.ismip7.ice_sheet_params import get_params
+from compass.landice.ismip7.archive import resolve_ocean_source
 from compass.landice.tests.ismip7_forcing.ocean_thermal import greenland_3d
 from compass.step import Step
 
@@ -51,19 +51,16 @@ class BuildGreenland3dThermalForcing(Step):
         base_path_mali = section.get("base_path_mali")
         mali_mesh_file = section.get("mali_mesh_file")
         mali_mesh_name = section.get("mali_mesh_name")
-        model = section.get("model")
         scenario = section.get("scenario")
         output_base_path = section.get("output_base_path")
 
-        # Mirror ProcessThermalForcing._run_scenario forcing_group and ocean
-        # source so we find the 2-D forcing it just wrote.
-        params = get_params(config)
-        if params["ocean_model"] is not None:
-            forcing_group = scenario
-            source = params["ocean_model"]
-        else:
-            forcing_group = f"{model}_{scenario}"
-            source = model
+        # Resolve the ocean source using the #997 archive resolver. This
+        # gives us the same forcing_group and label that
+        # ProcessThermalForcing._run_scenario used, so we find the 2-D
+        # forcing it wrote.
+        source = resolve_ocean_source(config)
+        forcing_group = source.forcing_group
+        label = source.label
 
         ocean_section = config["ismip7_ocean_thermal"]
         start_year = ocean_section.getint("start_year")
@@ -73,11 +70,11 @@ class BuildGreenland3dThermalForcing(Step):
                                  "ocean_thermal_forcing")
         forcing_2d = os.path.join(
             ocean_dir,
-            f"{mali_mesh_name}_2dThermalForcing_{source}_{scenario}_"
+            f"{mali_mesh_name}_2dThermalForcing_{label}_"
             f"{start_year}-{end_year}.nc")
         output_file = os.path.join(
             ocean_dir,
-            f"{mali_mesh_name}_3dThermalForcing_{source}_{scenario}_"
+            f"{mali_mesh_name}_3dThermalForcing_{label}_"
             f"{start_year}-{end_year}.nc")
 
         # DeltaT/gamma0/basin are calibrated once against OCX and held fixed
