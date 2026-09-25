@@ -462,8 +462,10 @@ ismip7_calibration
    ais.melt_model.initial_draft
    ais.melt_model.integrate_by_basin
    ais.melt_model.interpolate_to_draft
+   ais.melt_model.ismip7_slope
    ais.melt_model.melt_from_tf
    ais.melt_model.read_run
+   ais.melt_model.slope_metadata
    ais.remap_forcing.RemapForcing
    ais.remap_forcing.RemapForcing.setup
    ais.remap_forcing.RemapForcing.run

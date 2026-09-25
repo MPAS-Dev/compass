@@ -7,6 +7,10 @@ import xarray as xr
 from mpas_tools.io import write_netcdf
 
 from compass.landice.tests.ismip7_calibration.ais import melt_model
+from compass.landice.tests.ismip7_calibration.configure import (
+    is_ismip7,
+    uses_spatial_slope,
+)
 from compass.step import Step
 
 #: the melt expression should agree to round-off
@@ -28,8 +32,16 @@ class VerifyMelt(Step):
     Three things are checked, and they are deliberately independent:
 
     * the **melt expression**, by evaluating the Python reference on MALI's
-      *own* ``TFdraft``.  That isolates the formula from the vertical
-      interpolation that produced ``TFdraft``.
+      *own* ``TFdraft`` (and, for the ismip7_slope form, MALI's diagnosed
+      ``ismip7shelfMelt_shelfBaseSlope``).  That isolates the formula from the
+      vertical interpolation that produced ``TFdraft`` and (for ismip7_slope)
+      from the geometric slope calculation.  For the ismip7_slope form this
+      check answers "given MALI's thermal forcing and MALI's diagnosed slope,
+      does MALI evaluate the quadratic correctly?" — it explicitly does **not**
+      verify "did MALI compute the geometry slope correctly?", treating slope
+      analogously to ``TFdraft``.  (A future enhancement could independently
+      verify the ``local`` slope method from ``lowerSurface`` and the mesh,
+      but that is not implemented here.)
     * the **vertical interpolation**, by interpolating the 3-D forcing to the
       ice draft with a plain ``numpy`` implementation written from the
       protocol rather than transliterated from the Fortran, and comparing
@@ -61,7 +73,7 @@ class VerifyMelt(Step):
         test_case : compass.landice.tests.ismip7_calibration.ais.Ais
             The test case this step belongs to
 
-        melt_form : {'ismip7', 'ismip6'}
+        melt_form : {'ismip7_const', 'ismip7_slope', 'ismip6'}
             The melt form to verify
 
         state_name : str
@@ -71,7 +83,8 @@ class VerifyMelt(Step):
             Multiples of the reference melt parameter that extra MALI runs
             were done at, for the linearity check
         """
-        super().__init__(test_case=test_case, name='verify_melt')
+        super().__init__(test_case=test_case,
+                         name=f'verify_melt_{melt_form}')
         self.melt_form = melt_form
         self.state_name = state_name
         self.linearity_scales = tuple(linearity_scales)
@@ -107,15 +120,17 @@ class VerifyMelt(Step):
         logger = self.logger
         config = self.config
         section = config['ismip7_calibration_melt']
-        reference = {'ismip7': section.getfloat('reference_k'),
-                     'ismip6': section.getfloat('reference_gamma0')}
+        if is_ismip7(self.melt_form):
+            reference_value = section.getfloat('reference_k')
+        else:
+            reference_value = section.getfloat('reference_gamma0')
 
         fields = melt_model.read_run('output_melt.nc',
                                      'mesh.nc')
         results = {}
 
         results['melt'] = _check_melt_expression(
-            self.melt_form, reference[self.melt_form], fields, config,
+            self.melt_form, reference_value, fields, config,
             logger)
         results['interpolation'] = _check_interpolation(fields, logger)
         results['linearity'] = _check_linearity(
@@ -154,6 +169,31 @@ def _check_melt_expression(melt_form, parameter, fields, config, logger):
                 f'{float(actual.where(melting).min()):.4g} .. '
                 f'{float(actual.where(melting).max()):.4g} kg/m2/yr')
     logger.info(f'  max relative difference       {relative:.3e}')
+
+    # Log slope diagnostics for the ismip7_slope form
+    section = config['ismip7_calibration_melt']
+    if uses_spatial_slope(melt_form):
+        if 'shelf_base_slope' in fields:
+            slope_sin = fields['shelf_base_slope'].where(fields['floating'])
+            slope_vals = slope_sin.values[~np.isnan(slope_sin.values)]
+            if slope_vals.size > 0:
+                max_slope_cfg = section.getfloat('max_slope')
+                n_at_cap = int(np.sum(np.abs(slope_vals - max_slope_cfg) <
+                                      1e-10))
+                frac_at_cap = n_at_cap / slope_vals.size
+                logger.info('')
+                logger.info('  ISMIP7 spatial slope diagnostics (sin θ):')
+                logger.info(f'    min                         '
+                            f'{float(np.min(slope_vals)):.6f}')
+                logger.info(f'    median                      '
+                            f'{float(np.median(slope_vals)):.6f}')
+                logger.info(f'    mean                        '
+                            f'{float(np.mean(slope_vals)):.6f}')
+                logger.info(f'    max                         '
+                            f'{float(np.max(slope_vals)):.6f}')
+                logger.info(f'    cells at max_slope cap      '
+                            f'{n_at_cap} ({frac_at_cap:.1%})')
+
     return relative
 
 
