@@ -58,14 +58,15 @@ def resolve_atmosphere_source(config, variable):
         forcing_group = scenario
         base_path = os.path.join(_ice_sheet_path(config), scenario, model)
 
-    section = 'ismip7_atmosphere'
-    product = config.get(section, 'product', fallback='auto')
-    resolution = config.get(section, 'resolution', fallback='auto')
+    section_name = 'ismip7_atmosphere'
+    section = config[section_name]
+    product = section.get('product', fallback='auto')
+    resolution = section.get('resolution', fallback='auto')
     grid_name, product, resolution = _resolve_atmosphere_grid(
         base_path, model, product, resolution)
 
     variable_path = os.path.join(base_path, grid_name, variable)
-    version = _requested_version(config, section, variable)
+    version = _requested_version(config, section_name, variable)
     version_path, version, files = resolve_version_directory(
         variable_path, version, f'{variable}_*.nc')
 
@@ -89,8 +90,9 @@ def resolve_ocean_source(config, choice=None):
     ice_sheet = config.get('ismip7', 'ice_sheet')
     scenario = config.get('ismip7', 'scenario')
     configured_model = config.get('ismip7', 'model')
-    section = 'ismip7_ocean_thermal'
-    requested_version = config.get(section, 'version', fallback='latest')
+    section_name = 'ismip7_ocean_thermal'
+    section = config[section_name]
+    requested_version = section.get('version', fallback='latest')
 
     if params.get('ocean_choice_layout', False):
         if choice is None:
@@ -118,8 +120,8 @@ def resolve_ocean_source(config, choice=None):
             grid_name = 'ocean'
             resolution = None
         else:
-            requested_resolution = config.get(
-                section, 'resolution', fallback='auto')
+            requested_resolution = section.get(
+                'resolution', fallback='auto')
             grid_name, resolution = _resolve_ocean_grid(
                 base_path, requested_resolution)
         base_path = os.path.join(base_path, grid_name, 'tf')
@@ -234,7 +236,7 @@ def _requested_version(config, section, variable):
     option = f'{variable}_version'
     if config.has_option(section, option):
         return config.get(section, option)
-    return config.get(section, 'version', fallback='latest')
+    return config[section].get('version', fallback='latest')
 
 
 def _resolve_atmosphere_grid(base_path, model, requested_product,
