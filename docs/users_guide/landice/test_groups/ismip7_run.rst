@@ -251,9 +251,10 @@ When ``use_3d_thermal_forcing`` is ``false`` (the default), GrIS looks for
 ``*2dThermalForcing_*.nc`` and reads ``ismip6_2dThermalForcing`` at monthly
 intervals. When ``true``, it instead looks for ``*3dThermalForcing_*.nc`` and
 reads ``ismip6shelfMelt_3dThermalForcing`` and ``ismip6shelfMelt_zOcean`` at
-annual intervals, plus ``ismip6shelfMelt_deltaT``, ``ismip6shelfMelt_basin``,
-and ``ismip6shelfMelt_gamma0`` from the file at ``melt_params_path`` (which
-must be supplied in that case), matching the AIS convention.
+monthly intervals (the 3D forcing is split across multiple year-block files
+addressed via a ``$Y`` template), plus ``ismip6shelfMelt_deltaT``,
+``ismip6shelfMelt_basin``, and ``ismip6shelfMelt_gamma0`` from the file at
+``melt_params_path`` (which must be supplied in that case).
 
 .. _landice_ismip7_run_forcing_streams:
 
