@@ -11,20 +11,22 @@ The test group supports both the Antarctic Ice Sheet (AIS) and the Greenland
 Ice Sheet (GrIS), controlled by a single ``ice_sheet`` config option.
 
 The test group includes three test cases: ``atmosphere``, ``ocean_thermal``,
-and ``fracture``.
+and ``fracture``. Each begins with a ``build_mapping_file`` step that runs
+ESMF with a separate resource allocation.
 
-* The ``atmosphere`` test case has five steps:
+* The ``atmosphere`` test case has six steps: ``build_mapping_file``,
   ``process_smb``, ``process_temperature``, ``process_smb_gradient``,
   ``process_temperature_gradient``, and ``process_runoff``.
 
-* The ``ocean_thermal`` test case has one step: ``process_thermal_forcing``.
+* The ``ocean_thermal`` test case has two steps: ``build_mapping_file`` and
+  ``process_thermal_forcing``.
   For AIS this produces 3D thermal forcing (with 30 ocean depth layers); for
   GrIS it produces 2D (depth-averaged) thermal forcing. The step can also
   process the observational ocean thermal forcing climatology (Zhou et al.)
   for AIS, controlled by the ``process_ocean_climatology`` config option.
 
-* The ``fracture`` test case has three steps: ``process_excess_melt``
-  (Path A), ``process_lake_properties`` (Path B), and
+* The ``fracture`` test case has four steps: ``build_mapping_file``,
+  ``process_excess_melt`` (Path A), ``process_lake_properties`` (Path B), and
   ``process_shelf_collapse`` (Path C). It processes the ISMIP7
   surface-melt-driven ice shelf collapse forcing (AIS only).
 
@@ -54,6 +56,12 @@ To use this test group, users need to:
 6. Run the ``fracture`` test case (AIS only) for each model and scenario
    combination to process the surface-melt-driven ice shelf collapse
    pathways (excess melt, lake properties, and the ice shelf collapse mask).
+
+The mapping step can be run first on a large allocation, followed by the
+processing steps on a single node. Newly built weights are saved in
+``{output_base_path}/mapping_files``. Set ``mapping_files_path`` to that
+directory in later runs to reuse weights for the same source grid, MALI mesh,
+and remapping method.
 
 Example user config files are provided in the source tree for local testing:
 
@@ -182,6 +190,9 @@ values are:
    # Number of MPI tasks for ESMF_RegridWeightGen
    esmf_ntasks = 128
 
+   # Optional directory containing compatible mapping files from another run
+   mapping_files_path = NotAvailable
+
    # Whether to process time-varying ocean thermal forcing (ESM scenario data)
    process_ocean_thermal = true
 
@@ -217,9 +228,6 @@ values are:
    # Remapping method: bilinear, neareststod, conserve
    method_remap = bilinear
 
-   # Dataset version
-   version = latest
-
    # Start year for processing
    start_year = 1850
 
@@ -231,6 +239,9 @@ values are:
 
    # Remapping method: bilinear, neareststod, conserve
    method_remap = bilinear
+
+   # Dataset version
+   version = latest
 
    # Base path to observational climatology data
    base_path_climatology = /path/to/ISMIP7/forcing/AIS/obs/zhou_annual_06_nov
@@ -279,6 +290,10 @@ grid to the MALI unstructured mesh.
 
 Steps:
 
+* **build_mapping_file**: Builds and caches weights for the selected
+  atmosphere product and resolution. All five processing steps share these
+  weights.
+
 * **process_smb**: Remaps the surface mass balance (``acabf``) field. The
   output variable is ``sfcMassBal``.
 
@@ -304,6 +319,10 @@ ocean_thermal
 The ``landice/ismip7_forcing/ocean_thermal`` test case processes the ISMIP7
 ocean thermal forcing (``tf``) and remaps it from the native polar
 stereographic grid to the MALI unstructured mesh.
+
+The **build_mapping_file** step builds and caches mappings for each enabled
+source grid. Scenario and climatology mappings are distinct when their source
+grids differ. The **process_thermal_forcing** step consumes those mappings.
 
 The step supports two processing modes, controlled by boolean config options
 in the ``[ismip7]`` section:
@@ -348,6 +367,10 @@ Each pathway is run independently and can be skipped by setting its
 remapping-method config option to ``None`` in the ``[ismip7_fracture]``
 section (for example, ``method_remap_excess_melt = None`` skips Path A). This
 is useful when only some of the pathway source files are available.
+
+The **build_mapping_file** step uses a fracture file with native ``x``/``y``
+coordinates as the common grid template and creates one mapping file per
+unique enabled remapping method.
 
 * **process_excess_melt** (Path A): Remaps the excess meltwater field
   (melt + rain after firn air content depletion), matching

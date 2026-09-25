@@ -9,7 +9,6 @@ from compass.landice.ismip7.archive import (
     mapping_file_name,
     resolve_atmosphere_source,
 )
-from compass.landice.ismip7.mapping import build_mapping_file
 from compass.landice.ismip7.remap import extrapolate_source
 from compass.step import Step
 
@@ -46,6 +45,14 @@ class ProcessSmbGradient(Step):
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
 
+        method_remap = config.get('ismip7_atmosphere', 'method_remap')
+        source = resolve_atmosphere_source(config, 'dacabfdz')
+        mapping_file = mapping_file_name(
+            config, 'atm', source.source_grid, method_remap)
+        self.add_input_file(
+            filename=mapping_file,
+            target=f'../build_mapping_file/{mapping_file}')
+
     def run(self):
         """
         Run this step of the test case
@@ -54,7 +61,6 @@ class ProcessSmbGradient(Step):
         config = self.config
         section = config["ismip7"]
         mali_mesh_name = section.get("mali_mesh_name")
-        mali_mesh_file = section.get("mali_mesh_file")
         scenario = section.get("scenario")
         output_base_path = section.get("output_base_path")
 
@@ -88,16 +94,9 @@ class ProcessSmbGradient(Step):
         logger.info(f"Found {len(input_files)} SMB gradient files for years "
                     f"{start_year}-{end_year}")
 
-        # Build mapping file (reuse if already created by process_smb)
+        # The mapping file is supplied by the build_mapping_file step.
         mapping_file = mapping_file_name(
             config, "atm", source.source_grid, method_remap)
-
-        if not os.path.exists(mapping_file):
-            logger.info("Building mapping file...")
-            build_mapping_file(config, logger,
-                               input_files[0], mapping_file,
-                               mali_mesh_file=mali_mesh_file,
-                               method_remap=method_remap)
 
         # Remap each year file
         remapped_files = []

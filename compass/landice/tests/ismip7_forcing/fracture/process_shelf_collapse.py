@@ -7,7 +7,6 @@ from compass.landice.ismip7.archive import (
     mapping_file_name,
     resolve_fracture_source,
 )
-from compass.landice.ismip7.mapping import build_mapping_file
 from compass.landice.ismip7.remap import (
     add_xtime_and_write,
     open_rename_and_trim,
@@ -49,6 +48,15 @@ class ProcessShelfCollapse(Step):
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
 
+        method_remap = config.get(
+            'ismip7_fracture', 'method_remap_shelf_collapse')
+        if method_remap.lower() != 'none':
+            mapping_file = mapping_file_name(
+                config, 'fracture', 'fracture', method_remap)
+            self.add_input_file(
+                filename=mapping_file,
+                target=f'../build_mapping_file/{mapping_file}')
+
     def run(self):
         """
         Run this step of the test case
@@ -58,7 +66,6 @@ class ProcessShelfCollapse(Step):
 
         section = config["ismip7"]
         mali_mesh_name = section.get("mali_mesh_name")
-        mali_mesh_file = section.get("mali_mesh_file")
         model = section.get("model")
         scenario = section.get("scenario")
         output_base_path = section.get("output_base_path")
@@ -87,16 +94,9 @@ class ProcessShelfCollapse(Step):
         basename = os.path.basename(input_file)
         logger.info(f"Processing ice shelf collapse mask: {basename}")
 
-        # Build mapping file. neareststod preserves the 0/1 mask values.
+        # The mapping file is supplied by the build_mapping_file step.
         mapping_file = mapping_file_name(
             config, "fracture", source.source_grid, method_remap)
-
-        if not os.path.exists(mapping_file):
-            logger.info("Building mapping file for the collapse mask grid...")
-            build_mapping_file(config, logger,
-                               input_file, mapping_file,
-                               mali_mesh_file=mali_mesh_file,
-                               method_remap=method_remap)
 
         # Remap the collapse mask onto the MALI mesh
         remapped_file = f"remapped_{basename}"

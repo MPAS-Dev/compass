@@ -129,6 +129,42 @@ def test_gis_ocean_resolution_and_version(tmp_path):
     assert source.files == (str(expected),)
 
 
+def test_gis_ocx_atmosphere_layout(tmp_path):
+    """GrIS OCX atmosphere uses the RACMO product below the OCX tree."""
+    base = 'GIS/OCX/RACMO2.3p2-ERA'
+    expected = _forcing_file(
+        tmp_path, f'{base}/SDBN1-1000m/ts/v2/ts_2000.nc')
+    _forcing_file(
+        tmp_path, f'{base}/SDBN1-4000m/ts/v3/ts_2000.nc')
+    config = _config(
+        tmp_path, ice_sheet='gis', model='None', scenario='OCX')
+
+    source = resolve_atmosphere_source(config, 'ts')
+
+    assert source.model == 'RACMO2.3p2-ERA'
+    assert source.resolution == '1000m'
+    assert source.version == 'v2'
+    assert source.files == (str(expected),)
+
+
+def test_gis_ocx_ocean_layout(tmp_path):
+    """GrIS OCX ocean uses EN4 and the selected native resolution."""
+    base = 'GIS/OCX/EN4'
+    expected = _forcing_file(
+        tmp_path, f'{base}/ocean-1000m/tf/v1/tf_2000.nc')
+    _forcing_file(
+        tmp_path, f'{base}/ocean-4000m/tf/v2/tf_2000.nc')
+    config = _config(
+        tmp_path, ice_sheet='gis', model='None', scenario='OCX')
+
+    source = resolve_ocean_source(config)
+
+    assert source.model == 'EN4'
+    assert source.resolution == '1000m'
+    assert source.version == 'v1'
+    assert source.files == (str(expected),)
+
+
 def test_ais_ocx_ocean_choice_layout(tmp_path):
     """AIS OCX choices resolve below OCX/ocean rather than a variable dir."""
     expected = _forcing_file(
