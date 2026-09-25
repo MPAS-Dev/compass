@@ -188,9 +188,11 @@ set_up_experiment (GrIS)
 The class
 :py:class:`compass.landice.tests.ismip7_run.ismip7_gris.set_up_experiment.SetUpExperiment`
 follows the same logic as the AIS version, with the differences noted
-above (no SLM support). The ``ismip7_TF`` stream's variable list, filename
-glob pattern (``*2dThermalForcing_*.nc`` vs ``*3dThermalForcing_*.nc``), and
-input interval (monthly vs annual) are all conditioned on
-``use_3d_thermal_forcing`` via the templated ``streams.landice.template``;
-when 3D forcing is enabled, ``config_use_3d_thermal_forcing_for_face_melt``
-is also set to ``.true.`` in the namelist.
+above (no SLM support). The ``ismip7_TF`` stream's variable list and filename
+glob pattern (``*2dThermalForcing_*.nc`` vs ``*3dThermalForcing_*.nc``) are
+conditioned on ``use_3d_thermal_forcing`` via the templated
+``streams.landice.template``; both 2D and 3D GrIS thermal forcing use monthly
+input intervals (the 3D forcing is chunked across year-block files addressed
+with a ``$Y`` template and ``filename_interval``). When 3D forcing is enabled,
+``config_use_3d_thermal_forcing_for_face_melt`` is also set to ``.true.`` in
+the namelist.
