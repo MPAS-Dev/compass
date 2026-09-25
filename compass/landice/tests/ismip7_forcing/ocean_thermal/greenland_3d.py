@@ -239,14 +239,24 @@ class Config:
                 f"{sorted(EN4_BIAS_CORRECTIONS)}"
             )
 
+        # Default EN4 source-region GeoJSON to the bundled Greenland
+        # continental shelf extent if not explicitly provided
+        default_geojson = (
+            Path(__file__).parent / "gis_contShelfExtent_EPSG4326.geojson"
+        )
+        en4_geojson_raw = files.get("en4_source_region_geojson")
+        en4_geojson = (
+            _as_path(en4_geojson_raw, base)
+            if en4_geojson_raw is not None
+            else default_geojson
+        )
+
         cfg = cls(
             mesh_file=resolved("mesh_file", "mesh"),
             region_mask_file=_as_path(_required(files, "region_masks"), base),
             forcing_2d_file=resolved("forcing_2d_file", "forcing_2d"),
             en4_directory=_as_path(_required(files, "en4_directory"), base),
-            en4_source_region_geojson=_as_path(
-                _required(files, "en4_source_region_geojson"), base
-            ),
+            en4_source_region_geojson=en4_geojson,
             output_file=resolved("output_file", "output"),
             melt_params_file=resolved("melt_params_file", "melt_params"),
             diagnostics_directory=resolved(
