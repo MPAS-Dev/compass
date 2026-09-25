@@ -32,12 +32,14 @@ the remapping helpers in
 :py:mod:`compass.landice.ismip7.remap`.
 
 When ``scenario = OCX``, ``get_params`` supplies the fixed reanalysis sources
-(``atm_model`` = ``RACMO2.3p2-ERA`` and ``ocean_model`` = ``EN4``). The
-archive resolver discovers their native paths, selected resolutions, and
-versions. The processing steps use
-``atm_model`` / ``ocean_model`` in place of the ``[ismip7] model`` option when
-they are set, so the OCX ``model`` option is ignored. This keeps OCX handling
-centralized and lets a single config file drive both test cases.
+(``atm_model`` = ``RACMO2.3p2-ERA`` for both ice sheets and ``ocean_model`` =
+``EN4`` for GrIS). For AIS OCX, ``ocean_model`` remains unset and the archive
+resolver uses per-choice ocean directories (main/cold/warm/vary). The archive
+resolver discovers native paths, selected resolutions, and versions. The
+processing steps use ``atm_model`` / ``ocean_model`` in place of the
+``[ismip7] model`` option when they are set, so the OCX ``model`` option is
+ignored. This keeps OCX handling centralized and lets a single config file drive
+both test cases.
 
 configure
 ~~~~~~~~~
