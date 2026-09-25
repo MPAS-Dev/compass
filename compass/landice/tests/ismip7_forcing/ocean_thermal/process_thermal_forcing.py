@@ -391,6 +391,7 @@ class ProcessThermalForcing(Step):
 
         # Rename to MALI conventions
         logger.info("Renaming variables to MALI conventions...")
+        version = os.path.basename(os.path.dirname(input_file))
         output_file = (f"{mali_mesh_name}_thermal_forcing_climatology_"
                        f"{version}.nc")
 
