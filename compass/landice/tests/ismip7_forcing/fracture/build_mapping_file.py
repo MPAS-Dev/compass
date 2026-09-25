@@ -26,7 +26,8 @@ class BuildMappingFile(Step):
             section.get('method_remap_excess_melt'),
             section.get('method_remap_lake_properties'),
         }
-        if all(method is None or method.lower() == 'none' for method in methods):
+        if all(method is None or method.lower() == 'none'
+               for method in methods):
             self.logger.info('No fracture mappings requested; skipping.')
             return
         source = _resolve_grid_source(config)
