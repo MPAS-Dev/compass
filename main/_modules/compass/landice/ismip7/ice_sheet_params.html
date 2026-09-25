@@ -117,10 +117,6 @@
     <span class="s1">'ais'</span><span class="p">:</span> <span class="p">{</span>
         <span class="s1">'projection'</span><span class="p">:</span> <span class="s1">'ais-bedmap2'</span><span class="p">,</span>
         <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'AIS'</span><span class="p">,</span>
-        <span class="s1">'atm_resolution'</span><span class="p">:</span> <span class="s1">'2000m'</span><span class="p">,</span>
-        <span class="s1">'atm_version'</span><span class="p">:</span> <span class="s1">'v2'</span><span class="p">,</span>
-        <span class="s1">'ocean_version'</span><span class="p">:</span> <span class="s1">'v3'</span><span class="p">,</span>
-        <span class="s1">'ocean_grid'</span><span class="p">:</span> <span class="s1">'ocean'</span><span class="p">,</span>
         <span class="s1">'ocean_3d'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="s1">'ocean_temporal'</span><span class="p">:</span> <span class="s1">'decade'</span><span class="p">,</span>
         <span class="s1">'atm_model'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -129,10 +125,6 @@
     <span class="s1">'gis'</span><span class="p">:</span> <span class="p">{</span>
         <span class="s1">'projection'</span><span class="p">:</span> <span class="s1">'gis-bamber'</span><span class="p">,</span>
         <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'GrIS'</span><span class="p">,</span>
-        <span class="s1">'atm_resolution'</span><span class="p">:</span> <span class="s1">'1000m'</span><span class="p">,</span>
-        <span class="s1">'atm_version'</span><span class="p">:</span> <span class="s1">'v2'</span><span class="p">,</span>
-        <span class="s1">'ocean_version'</span><span class="p">:</span> <span class="s1">'v2'</span><span class="p">,</span>
-        <span class="s1">'ocean_grid'</span><span class="p">:</span> <span class="s1">'ocean'</span><span class="p">,</span>
         <span class="s1">'ocean_3d'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s1">'ocean_temporal'</span><span class="p">:</span> <span class="s1">'yearly'</span><span class="p">,</span>
         <span class="s1">'atm_model'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -142,19 +134,14 @@
 
 <span class="c1"># Overrides applied for the OCX (reanalysis) scenario. OCX has no distinct</span>
 <span class="c1"># ESM model: it uses fixed reanalysis products (RACMO for the atmosphere and</span>
-<span class="c1"># EN4 for the ocean) at data version v1. When scenario is 'OCX' the [ismip7]</span>
-<span class="c1"># model option is ignored and these sources are used instead.</span>
+<span class="c1"># EN4 for the ocean in GrIS). When scenario is 'OCX' the [ismip7] model option</span>
+<span class="c1"># is ignored and these sources are used instead.</span>
 <span class="n">_OCX_OVERRIDES</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">'gis'</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">'atm_version'</span><span class="p">:</span> <span class="s1">'v1'</span><span class="p">,</span>
-        <span class="s1">'ocean_version'</span><span class="p">:</span> <span class="s1">'v1'</span><span class="p">,</span>
-        <span class="s1">'ocean_grid'</span><span class="p">:</span> <span class="s1">'ocean-1000m'</span><span class="p">,</span>
         <span class="s1">'atm_model'</span><span class="p">:</span> <span class="s1">'RACMO2.3p2-ERA'</span><span class="p">,</span>
         <span class="s1">'ocean_model'</span><span class="p">:</span> <span class="s1">'EN4'</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="s1">'ais'</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">'atm_version'</span><span class="p">:</span> <span class="s1">'v1'</span><span class="p">,</span>
-        <span class="s1">'ocean_version'</span><span class="p">:</span> <span class="s1">'v1'</span><span class="p">,</span>
         <span class="s1">'atm_model'</span><span class="p">:</span> <span class="s1">'RACMO2.3p2-ERA'</span><span class="p">,</span>
         <span class="s1">'ocean_model'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
         <span class="c1"># AIS OCX ocean files have no model token and live in per-choice</span>

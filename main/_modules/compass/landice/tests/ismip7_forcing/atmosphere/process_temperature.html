@@ -110,16 +110,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.ismip7_forcing.atmosphere.process_temperature</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.ismip7.ice_sheet_params</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_params</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.ismip7.mapping</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_mapping_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.ismip7.archive</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">mapping_file_name</span><span class="p">,</span>
+    <span class="n">resolve_atmosphere_source</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.ismip7.remap</span><span class="w"> </span><span class="kn">import</span> <span class="n">extrapolate_source</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
@@ -160,7 +161,15 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
                             <span class="n">target</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_mali</span><span class="p">,</span>
-                                                <span class="n">mali_mesh_file</span><span class="p">))</span></div>
+                                                <span class="n">mali_mesh_file</span><span class="p">))</span>
+
+        <span class="n">method_remap</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ismip7_atmosphere'</span><span class="p">,</span> <span class="s1">'method_remap'</span><span class="p">)</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">resolve_atmosphere_source</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">'ts'</span><span class="p">)</span>
+        <span class="n">mapping_file</span> <span class="o">=</span> <span class="n">mapping_file_name</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span> <span class="s1">'atm'</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">source_grid</span><span class="p">,</span> <span class="n">method_remap</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">mapping_file</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">'../build_mapping_file/</span><span class="si">{</span><span class="n">mapping_file</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProcessTemperature.run">
@@ -171,13 +180,8 @@
 <span class="sd">        """</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">params</span> <span class="o">=</span> <span class="n">get_params</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-
         <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">"ismip7"</span><span class="p">]</span>
-        <span class="n">base_path_ismip7</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"base_path_ismip7"</span><span class="p">)</span>
         <span class="n">mali_mesh_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_name"</span><span class="p">)</span>
-        <span class="n">mali_mesh_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mali_mesh_file"</span><span class="p">)</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model"</span><span class="p">)</span>
         <span class="n">scenario</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"scenario"</span><span class="p">)</span>
         <span class="n">output_base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_base_path"</span><span class="p">)</span>
 
@@ -186,24 +190,11 @@
         <span class="n">start_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">"start_year"</span><span class="p">)</span>
         <span class="n">end_year</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">"end_year"</span><span class="p">)</span>
 
-        <span class="c1"># Discover input files</span>
-        <span class="n">prefix</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'prefix'</span><span class="p">]</span>
-        <span class="n">resolution</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'atm_resolution'</span><span class="p">]</span>
-        <span class="n">version</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'atm_version'</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">'atm_model'</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">forcing_group</span> <span class="o">=</span> <span class="n">scenario</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'atm_model'</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">forcing_group</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">"</span>
-        <span class="n">input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_ismip7</span><span class="p">,</span> <span class="s2">"ts"</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
-        <span class="n">file_pattern</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"ts_</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">_"</span>
-                        <span class="sa">f</span><span class="s2">"SDBN1-</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">_*.nc"</span><span class="p">)</span>
-        <span class="n">all_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">file_pattern</span><span class="p">)))</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">all_files</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"No temperature files found matching pattern:</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span><span class="w"> </span><span class="n">file_pattern</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">resolve_atmosphere_source</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s2">"ts"</span><span class="p">)</span>
+        <span class="n">all_files</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">files</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">model</span>
+        <span class="n">forcing_group</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">forcing_group</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Using atmosphere source </span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">directory</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Filter to requested year range</span>
         <span class="n">input_files</span> <span class="o">=</span> <span class="p">[]</span>
@@ -224,17 +215,9 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">input_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> temperature files for years "</span>
                     <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="c1"># Build mapping file (reuse if already created by process_smb)</span>
-        <span class="n">ice_sheet</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ismip7"</span><span class="p">,</span> <span class="s2">"ice_sheet"</span><span class="p">)</span>
-        <span class="n">mapping_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"map_ismip7_</span><span class="si">{</span><span class="n">ice_sheet</span><span class="si">}</span><span class="s2">_atm_to_"</span>
-                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Building mapping file..."</span><span class="p">)</span>
-            <span class="n">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
-                               <span class="n">input_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mapping_file</span><span class="p">,</span>
-                               <span class="n">mali_mesh_file</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
-                               <span class="n">method_remap</span><span class="o">=</span><span class="n">method_remap</span><span class="p">)</span>
+        <span class="c1"># The mapping file is supplied by the build_mapping_file step.</span>
+        <span class="n">mapping_file</span> <span class="o">=</span> <span class="n">mapping_file_name</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span> <span class="s2">"atm"</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">source_grid</span><span class="p">,</span> <span class="n">method_remap</span><span class="p">)</span>
 
         <span class="c1"># Remap each year file</span>
         <span class="n">remapped_files</span> <span class="o">=</span> <span class="p">[]</span>

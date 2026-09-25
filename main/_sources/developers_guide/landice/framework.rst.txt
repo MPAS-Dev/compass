@@ -29,8 +29,14 @@ rather than in any one test group.
 
 :py:func:`compass.landice.ismip7.ice_sheet_params.get_params()` returns the
 parameters that differ between the Antarctic and Greenland ice sheets: the
-projection, the filename prefix, dataset versions and resolutions, and whether
-the ocean forcing is 3-D.
+projection, fixed OCX sources, and whether the ocean forcing is 3-D.
+
+:py:mod:`compass.landice.ismip7.archive` resolves atmosphere, ocean, and
+fracture files from the native archive hierarchy. It selects products and
+resolutions from config, compares dotted version numbers numerically, and
+resolves ``latest`` separately for datasets that are versioned independently.
+Mapping filenames include the selected source grid to prevent reuse across
+different resolutions.
 
 :py:func:`compass.landice.ismip7.mapping.build_mapping_file()` builds an ESMF
 mapping file from an ISMIP7 polar stereographic grid to a MALI mesh, using

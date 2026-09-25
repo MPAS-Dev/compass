@@ -145,8 +145,13 @@ stereographic grid onto a MALI mesh, so the helpers to do that live here
 rather than in any one test group.</p>
 <p><a class="reference internal" href="generated/compass.landice.ismip7.ice_sheet_params.get_params.html#compass.landice.ismip7.ice_sheet_params.get_params" title="compass.landice.ismip7.ice_sheet_params.get_params"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.ismip7.ice_sheet_params.get_params()</span></code></a> returns the
 parameters that differ between the Antarctic and Greenland ice sheets: the
-projection, the filename prefix, dataset versions and resolutions, and whether
-the ocean forcing is 3-D.</p>
+projection, fixed OCX sources, and whether the ocean forcing is 3-D.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.ismip7.archive</span></code> resolves atmosphere, ocean, and
+fracture files from the native archive hierarchy. It selects products and
+resolutions from config, compares dotted version numbers numerically, and
+resolves <code class="docutils literal notranslate"><span class="pre">latest</span></code> separately for datasets that are versioned independently.
+Mapping filenames include the selected source grid to prevent reuse across
+different resolutions.</p>
 <p><a class="reference internal" href="generated/compass.landice.ismip7.mapping.build_mapping_file.html#compass.landice.ismip7.mapping.build_mapping_file" title="compass.landice.ismip7.mapping.build_mapping_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.ismip7.mapping.build_mapping_file()</span></code></a> builds an ESMF
 mapping file from an ISMIP7 polar stereographic grid to a MALI mesh, using
 <code class="docutils literal notranslate"><span class="pre">mpas_tools.scrip.from_mpas</span></code> and <code class="docutils literal notranslate"><span class="pre">ESMF_RegridWeightGen</span></code>.</p>
