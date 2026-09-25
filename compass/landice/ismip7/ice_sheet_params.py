@@ -24,8 +24,8 @@ _PARAMS = {
 
 # Overrides applied for the OCX (reanalysis) scenario. OCX has no distinct
 # ESM model: it uses fixed reanalysis products (RACMO for the atmosphere and
-# EN4 for the ocean). When scenario is 'OCX' the [ismip7] model option is
-# ignored and these sources are used instead.
+# EN4 for the ocean in GrIS). When scenario is 'OCX' the [ismip7] model option
+# is ignored and these sources are used instead.
 _OCX_OVERRIDES = {
     'gis': {
         'atm_model': 'RACMO2.3p2-ERA',
