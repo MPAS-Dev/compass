@@ -1,10 +1,12 @@
-import glob
 import os
 import shutil
 
 from mpas_tools.logging import check_call
 
-from compass.landice.ismip7.mapping import build_mapping_file
+from compass.landice.ismip7.archive import (
+    mapping_file_name,
+    resolve_fracture_source,
+)
 from compass.landice.ismip7.remap import (
     add_xtime_and_write,
     open_rename_and_trim,
@@ -46,6 +48,15 @@ class ProcessShelfCollapse(Step):
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
 
+        method_remap = config.get(
+            'ismip7_fracture', 'method_remap_shelf_collapse')
+        if method_remap.lower() != 'none':
+            mapping_file = mapping_file_name(
+                config, 'fracture', 'fracture', method_remap)
+            self.add_input_file(
+                filename=mapping_file,
+                target=f'../build_mapping_file/{mapping_file}')
+
     def run(self):
         """
         Run this step of the test case
@@ -54,17 +65,13 @@ class ProcessShelfCollapse(Step):
         config = self.config
 
         section = config["ismip7"]
-        base_path_ismip7 = section.get("base_path_ismip7")
         mali_mesh_name = section.get("mali_mesh_name")
-        mali_mesh_file = section.get("mali_mesh_file")
         model = section.get("model")
         scenario = section.get("scenario")
         output_base_path = section.get("output_base_path")
-        ice_sheet = section.get("ice_sheet")
 
         section = config["ismip7_fracture"]
         method_remap = section.get("method_remap_shelf_collapse")
-        version = section.get("version")
         start_year = section.getint("start_year")
         end_year = section.getint("end_year")
 
@@ -75,14 +82,9 @@ class ProcessShelfCollapse(Step):
             return
 
         # Discover the ice shelf collapse mask file
-        input_path = os.path.join(base_path_ismip7, "fracture", version)
         file_pattern = "ice_shelf_collapse_mask_*.nc"
-        all_files = sorted(glob.glob(os.path.join(input_path, file_pattern)))
-
-        if not all_files:
-            raise FileNotFoundError(
-                f"No ice shelf collapse mask file found matching pattern:\n"
-                f"  {os.path.join(input_path, file_pattern)}")
+        source = resolve_fracture_source(config, file_pattern)
+        all_files = source.files
         if len(all_files) > 1:
             raise ValueError(
                 f"Expected a single ice shelf collapse mask file but found "
@@ -92,16 +94,9 @@ class ProcessShelfCollapse(Step):
         basename = os.path.basename(input_file)
         logger.info(f"Processing ice shelf collapse mask: {basename}")
 
-        # Build mapping file. neareststod preserves the 0/1 mask values.
-        mapping_file = (f"map_ismip7_{ice_sheet}_fracture_to_"
-                        f"{mali_mesh_name}_{method_remap}.nc")
-
-        if not os.path.exists(mapping_file):
-            logger.info("Building mapping file for the collapse mask grid...")
-            build_mapping_file(config, logger,
-                               input_file, mapping_file,
-                               mali_mesh_file=mali_mesh_file,
-                               method_remap=method_remap)
+        # The mapping file is supplied by the build_mapping_file step.
+        mapping_file = mapping_file_name(
+            config, "fracture", source.source_grid, method_remap)
 
         # Remap the collapse mask onto the MALI mesh
         remapped_file = f"remapped_{basename}"

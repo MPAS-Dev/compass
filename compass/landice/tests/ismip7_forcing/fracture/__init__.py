@@ -1,6 +1,9 @@
 from compass.landice.tests.ismip7_forcing.configure import (
     configure as configure_testgroup,
 )
+from compass.landice.tests.ismip7_forcing.fracture.build_mapping_file import (
+    BuildMappingFile,
+)
 from compass.landice.tests.ismip7_forcing.fracture.process_excess_melt import (
     ProcessExcessMelt,
 )
@@ -40,6 +43,7 @@ class Fracture(TestCase):
         subdir = name
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
+        self.add_step(BuildMappingFile(test_case=self))
         self.add_step(ProcessExcessMelt(test_case=self))
         self.add_step(ProcessLakeProperties(test_case=self))
         self.add_step(ProcessShelfCollapse(test_case=self))

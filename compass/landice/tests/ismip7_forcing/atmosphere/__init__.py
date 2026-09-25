@@ -1,3 +1,6 @@
+from compass.landice.tests.ismip7_forcing.atmosphere.build_mapping_file import (  # noqa: E501
+    BuildMappingFile,
+)
 from compass.landice.tests.ismip7_forcing.atmosphere.process_runoff import (
     ProcessRunoff,
 )
@@ -40,6 +43,7 @@ class Atmosphere(TestCase):
         subdir = name
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
+        self.add_step(BuildMappingFile(test_case=self))
         self.add_step(ProcessSmb(test_case=self))
         self.add_step(ProcessTemperature(test_case=self))
         self.add_step(ProcessSmbGradient(test_case=self))

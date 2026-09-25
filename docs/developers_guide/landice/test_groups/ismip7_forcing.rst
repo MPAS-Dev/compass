@@ -22,20 +22,24 @@ in :ref:`landice_ismip7_forcing` in the User's Guide.
 Code shared with the other ISMIP7 test groups lives in the landice framework
 package :py:mod:`compass.landice.ismip7`, described in
 :ref:`dev_landice_framework`.  This test group uses
-:py:func:`compass.landice.ismip7.ice_sheet_params.get_params` for the
-ice-sheet-specific parameters (projection, file naming prefix, grid
-resolution, data version, ocean dimensionality),
+:py:func:`compass.landice.ismip7.ice_sheet_params.get_params` for invariant
+ice-sheet-specific parameters (projection, file naming prefix, and ocean
+dimensionality), :py:mod:`compass.landice.ismip7.archive` for native archive
+path, resolution, and version discovery,
 :py:func:`compass.landice.ismip7.mapping.build_mapping_file` to create the
-SCRIP and ESMF mapping files, and the remapping helpers in
+SCRIP and ESMF mapping files from dedicated ``BuildMappingFile`` steps, and
+the remapping helpers in
 :py:mod:`compass.landice.ismip7.remap`.
 
-When ``scenario = OCX``, ``get_params`` applies a set of OCX overrides on top
-of the ice-sheet defaults: data version ``v1``, the ocean file-name grid token
-(e.g. ``ocean-1000m``), and the fixed reanalysis sources (``atm_model`` =
-``RACMO2.3p2-ERA`` and ``ocean_model`` = ``EN4``). The processing steps use
-``atm_model`` / ``ocean_model`` in place of the ``[ismip7] model`` option when
-they are set, so the OCX ``model`` option is ignored. This keeps OCX handling
-centralized and lets a single config file drive both test cases.
+When ``scenario = OCX``, ``get_params`` supplies the fixed reanalysis sources
+(``atm_model`` = ``RACMO2.3p2-ERA`` for both ice sheets and ``ocean_model`` =
+``EN4`` for GrIS). For AIS OCX, ``ocean_model`` remains unset and the archive
+resolver uses per-choice ocean directories (main/cold/warm/vary). The archive
+resolver discovers native paths, selected resolutions, and versions. The
+processing steps use ``atm_model`` / ``ocean_model`` in place of the
+``[ismip7] model`` option when they are set, so the OCX ``model`` option is
+ignored. This keeps OCX handling centralized and lets a single config file drive
+both test cases.
 
 configure
 ~~~~~~~~~
@@ -61,14 +65,18 @@ atmosphere
 ~~~~~~~~~~
 
 The :py:class:`compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere`
-test case processes the ISMIP7 atmosphere forcing fields. It contains five
-steps: SMB, temperature, their respective gradients, and runoff. Each step
-discovers input files matching the ice-sheet-specific naming pattern, builds
-or reuses a mapping file, remaps each input file with ``ncremap``, and
-combines/renames the results to MALI conventions.
+test case processes the ISMIP7 atmosphere forcing fields. It contains a
+mapping step followed by five processing steps for SMB, temperature, their
+respective gradients, and runoff. The mapping step uses the archive resolver
+to select the configured source grid and runs with ``esmf_ntasks``. Each
+processing step consumes those weights and remaps its input files with
+``ncremap``. ``latest`` is resolved per variable because atmosphere datasets
+can have different current versions.
 
 Steps:
 
+* :py:class:`~compass.landice.tests.ismip7_forcing.atmosphere.build_mapping_file.BuildMappingFile` —
+  builds and caches the shared atmosphere mapping file
 * :py:class:`~compass.landice.tests.ismip7_forcing.atmosphere.process_smb.ProcessSmb` —
   ``acabf`` → ``sfcMassBal``
 * :py:class:`~compass.landice.tests.ismip7_forcing.atmosphere.process_temperature.ProcessTemperature` —
@@ -86,10 +94,13 @@ ocean_thermal
 ~~~~~~~~~~~~~
 
 The :py:class:`compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal`
-test case processes the ISMIP7 ocean thermal forcing. It contains a single step,
+test case processes the ISMIP7 ocean thermal forcing. It contains a mapping
+step followed by the processing step,
 :py:class:`~compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing`,
 which handles both AIS (3D, decade-spanning files) and GrIS (2D, yearly files)
-by branching on the ``ocean_3d`` parameter from ``ice_sheet_params``.
+by branching on the ``ocean_3d`` parameter from ``ice_sheet_params``. The
+mapping step builds each enabled scenario or climatology mapping with
+``esmf_ntasks``.
 
 The ``run()`` method dispatches to two sub-methods based on the boolean config
 options ``process_ocean_thermal`` and ``process_ocean_climatology`` in the
@@ -99,7 +110,6 @@ options ``process_ocean_thermal`` and ``process_ocean_climatology`` in the
   scenario combination). Uses config from ``[ismip7_ocean_thermal]``.
 * ``_run_climatology()``: Processes the static observational climatology
   (Zhou et al., AIS only). Uses config from ``[ismip7_ocean_climatology]``.
-  The TF version (currently v3) is hard-coded.
 
 For AIS scenario data, the step:
 
@@ -127,17 +137,21 @@ fracture
 
 The :py:class:`compass.landice.tests.ismip7_forcing.fracture.Fracture`
 test case processes the ISMIP7 surface-melt-driven ice shelf collapse
-forcing (AIS only). It implements the three ISMIP7 pathways as independent
-steps, each discovering its source file from the ``fracture/{version}/``
-subdirectory of ``base_path_ismip7``, building or reusing a mapping file,
-remapping with ``ncremap``, and renaming the result to MALI conventions with
-an accompanying ``xtime`` variable. Per-pathway remapping methods are set in
+forcing (AIS only). It contains a mapping step followed by three independent
+pathway-processing steps. The mapping step uses a lake-properties or
+shelf-collapse file with native ``x``/``y`` coordinates and builds one file
+per unique enabled remapping method. Each processing step discovers its source
+file from the native ``AIS/{model}/{scenario}/fracture/{version}/`` hierarchy,
+remaps with ``ncremap``, and renames the result to MALI conventions with an
+accompanying ``xtime`` variable. Per-pathway remapping methods are set in
 the ``[ismip7_fracture]`` config section. Setting a pathway's remapping-method
 option to ``None`` causes that step to return early without processing its
 file, which is useful when only some pathway source files are available.
 
 Steps:
 
+* :py:class:`~compass.landice.tests.ismip7_forcing.fracture.build_mapping_file.BuildMappingFile`
+  — builds and caches the enabled fracture mapping files
 * :py:class:`~compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt`
   (Path A) — ``excess_melt`` → ``ismip7ExcessMelt``. The excess melt file
   lacks ``x``/``y`` coordinate variables and its array is flipped along the

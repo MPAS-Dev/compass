@@ -27,6 +27,12 @@ ISMIP7 framework
    :toctree: generated/
 
    ice_sheet_params.get_params
+   archive.ForcingSource
+   archive.resolve_atmosphere_source
+   archive.resolve_ocean_source
+   archive.resolve_fracture_source
+   archive.resolve_version_directory
+   archive.mapping_file_name
    mapping.build_mapping_file
    remap.extrapolate_source
    remap.open_rename_and_trim
@@ -487,6 +493,9 @@ ismip7_forcing
 
    atmosphere.Atmosphere
    atmosphere.Atmosphere.configure
+   atmosphere.build_mapping_file.BuildMappingFile
+   atmosphere.build_mapping_file.BuildMappingFile.setup
+   atmosphere.build_mapping_file.BuildMappingFile.run
    atmosphere.process_smb.ProcessSmb
    atmosphere.process_smb.ProcessSmb.setup
    atmosphere.process_smb.ProcessSmb.run
@@ -505,12 +514,18 @@ ismip7_forcing
 
    ocean_thermal.OceanThermal
    ocean_thermal.OceanThermal.configure
+   ocean_thermal.build_mapping_file.BuildMappingFile
+   ocean_thermal.build_mapping_file.BuildMappingFile.setup
+   ocean_thermal.build_mapping_file.BuildMappingFile.run
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run
 
    fracture.Fracture
    fracture.Fracture.configure
+   fracture.build_mapping_file.BuildMappingFile
+   fracture.build_mapping_file.BuildMappingFile.setup
+   fracture.build_mapping_file.BuildMappingFile.run
    fracture.process_excess_melt.ProcessExcessMelt
    fracture.process_excess_melt.ProcessExcessMelt.setup
    fracture.process_excess_melt.ProcessExcessMelt.run
