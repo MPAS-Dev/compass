@@ -57,11 +57,15 @@ class SetUpExperiment(Step):
         forcing_basepath = section.get('forcing_basepath')
         init_cond_path = section.get('init_cond_path')
         init_cond_fname = os.path.split(init_cond_path)[-1]
-        # Extract mesh name from init cond filename (e.g., AIS_2to20km_r03_20260922)
+        # Extract mesh name from init cond filename
+        # (e.g., AIS_2to20km_r03_20260922)
         # Typical format: AIS_<resolution>_<version>_<date>_<something>.nc
-        # Strip .nc extension first, then take first 4 underscore-separated parts
-        mesh_name = '_'.join(init_cond_fname.replace('.nc', '').split('_')[:4])
-        print(f"    Extracted mesh name: {mesh_name} from init cond: {init_cond_fname}")
+        # Strip .nc extension first, then take first 4 underscore-separated
+        # parts
+        base = init_cond_fname.replace('.nc', '')
+        mesh_name = '_'.join(base.split('_')[:4])
+        print(f"    Extracted mesh name: {mesh_name} from init cond: "
+              f"{init_cond_fname}")
         melt_params_path = section.get('melt_params_path')
         melt_params_fname = os.path.split(melt_params_path)[-1]
         region_mask_path = section.get('region_mask_path')
@@ -74,7 +78,6 @@ class SetUpExperiment(Step):
         calving_fracture_toughness = section.get(
             'calving_fracture_toughness')
         sea_level_model, fastisostasy = parse_gia_model(config)
-        use_damage_calving = section.getboolean('use_damage_calving')
         damage_calving_threshold_path = section.get(
             'damage_calving_threshold_path')
         sea_level_model = section.getboolean('sea_level_model')
@@ -149,8 +152,9 @@ class SetUpExperiment(Step):
                 os.symlink(smb_files[0],
                            os.path.join(self.work_dir, smb_fname))
             else:
-                sys.exit(f"ERROR: Expected 1 SMB climatology file matching mesh "
-                         f"{mesh_name} in {ctrl_atm_path}, found {len(smb_files)}")
+                sys.exit(f"ERROR: Expected 1 SMB climatology file matching "
+                         f"mesh {mesh_name} in {ctrl_atm_path}, found "
+                         f"{len(smb_files)}")
 
             temp_files = glob.glob(
                 os.path.join(ctrl_atm_path, '*temperature*.nc'))
@@ -207,17 +211,20 @@ class SetUpExperiment(Step):
             smb_list = glob.glob(smb_search)
             print(f"    Found {len(smb_list)} SMB files before filtering")
             smb_list = [f for f in smb_list if 'gradient' not in f]
-            print(f"    Found {len(smb_list)} SMB files after removing gradients")
+            print(f"    Found {len(smb_list)} SMB files after removing "
+                  f"gradients")
             # Filter by mesh name to handle directories with multiple meshes
             smb_list = [f for f in smb_list if mesh_name in f]
-            print(f"    Found {len(smb_list)} SMB files after mesh filter: {smb_list}")
+            print(f"    Found {len(smb_list)} SMB files after mesh filter: "
+                  f"{smb_list}")
             if len(smb_list) == 1:
                 smb_fname = os.path.split(smb_list[0])[-1]
                 os.symlink(smb_list[0],
                            os.path.join(self.work_dir, smb_fname))
             else:
-                sys.exit(f"ERROR: Expected 1 SMB file matching mesh {mesh_name} "
-                         f"at {smb_search}, found {len(smb_list)}: {smb_list}")
+                sys.exit(f"ERROR: Expected 1 SMB file matching mesh "
+                         f"{mesh_name} at {smb_search}, found "
+                         f"{len(smb_list)}: {smb_list}")
 
             # Temperature forcing
             temp_search = os.path.join(atm_dir, '*temperature_*.nc')
@@ -231,7 +238,8 @@ class SetUpExperiment(Step):
                            os.path.join(self.work_dir, temp_fname))
             else:
                 sys.exit(f"ERROR: Expected 1 temperature file matching mesh "
-                         f"{mesh_name} at {temp_search}, found {len(temp_list)}")
+                         f"{mesh_name} at {temp_search}, found "
+                         f"{len(temp_list)}")
 
             # Runoff forcing (optional — may not exist for all experiments)
             runoff_search = os.path.join(atm_dir, '*runoff_*.nc')
@@ -277,8 +285,9 @@ class SetUpExperiment(Step):
                 os.symlink(tf_list[0],
                            os.path.join(self.work_dir, tf_fname))
             else:
-                sys.exit(f"ERROR: Expected 1 TF file matching mesh {mesh_name} "
-                         f"at {tf_search}, found {len(tf_list)}: {tf_list}")
+                sys.exit(f"ERROR: Expected 1 TF file matching mesh "
+                         f"{mesh_name} at {tf_search}, found "
+                         f"{len(tf_list)}: {tf_list}")
 
         # --- Find shelf collapse (calving) mask from ismip7_forcing
         # fracture Path C, if requested ---
