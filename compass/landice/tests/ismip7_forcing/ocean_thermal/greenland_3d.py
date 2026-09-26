@@ -129,7 +129,6 @@ class Config:
     en4_max_mesh_distance_km: float
     en4_latitude_min: float
     en4_latitude_max: float
-    gamma0_m_per_yr: float
     regional_melt_targets_m_per_yr: np.ndarray
     calibrate_deltaT: bool
     rho_ice: float
@@ -280,7 +279,6 @@ class Config:
             ),
             en4_latitude_min=float(en4.get("latitude_min", 55.0)),
             en4_latitude_max=float(en4.get("latitude_max", 90.0)),
-            gamma0_m_per_yr=float(calibration.get("gamma0_m_per_yr", 14500.0)),
             regional_melt_targets_m_per_yr=targets,
             calibrate_deltaT=bool(calibration.get("calibrate_deltaT", False)),
             rho_ice=float(physical.get("rho_ice", 910.0)),
@@ -334,8 +332,6 @@ class Config:
             )
         if self.source_max_depth_m <= 0.0:
             raise ValueError("source_max_depth_m must be positive")
-        if self.gamma0_m_per_yr <= 0.0:
-            raise ValueError("gamma0_m_per_yr must be positive")
         if self.output_years_per_file < 1:
             raise ValueError("output_years_per_file must be at least 1")
         if self.seasons_per_year < 1 or 12 % self.seasons_per_year != 0:
@@ -1975,7 +1971,7 @@ def write_diagnostics(
     # and have no achieved-melt/calibration-TF statistics to report.
     if achieved_melt is not None and calibration_monthly_tf is not None:
         calibration_summary = {
-            "gamma0_m_per_yr": cfg.gamma0_m_per_yr,
+            "gamma0_m_per_yr": gamma0,
             "calibration_period": [
                 cfg.calibration_start_year,
                 cfg.calibration_end_year,
