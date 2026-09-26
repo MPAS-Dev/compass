@@ -78,8 +78,6 @@ class SetUpExperiment(Step):
         calving_fracture_toughness = section.get(
             'calving_fracture_toughness')
         sea_level_model, fastisostasy = parse_gia_model(config)
-        damage_calving_threshold_path = section.get(
-            'damage_calving_threshold_path')
         sea_level_model = section.getboolean('sea_level_model')
 
         exp_info = self.exp_info
@@ -121,17 +119,6 @@ class SetUpExperiment(Step):
         os.symlink(reference_surface_path,
                    os.path.join(self.work_dir,
                                 os.path.basename(reference_surface_path)))
-
-        # Symlink damage calving threshold file if path is provided
-        if (damage_calving_threshold_path != 'NotAvailable' and
-                os.path.exists(damage_calving_threshold_path)):
-            damage_calving_threshold_fname = os.path.split(
-                damage_calving_threshold_path)[-1]
-            os.symlink(damage_calving_threshold_path,
-                       os.path.join(self.work_dir,
-                                    damage_calving_threshold_fname))
-        else:
-            damage_calving_threshold_fname = None
 
         # --- Find and symlink forcing files ---
         if scenario == 'ctrl':
@@ -410,16 +397,6 @@ class SetUpExperiment(Step):
                 f'{calving_fracture_toughness}'}
             self.add_namelist_options(options=options,
                                       out_name='namelist.landice')
-
-        # Damage calving threshold stream
-        if damage_calving_threshold_fname is not None:
-            damage_stream_replacements = {
-                'input_file_damage_calving_threshold':
-                    damage_calving_threshold_fname}
-            self.add_streams_file(
-                resource_location, 'streams.damage_calving_threshold',
-                out_name='streams.landice',
-                template_replacements=damage_stream_replacements)
 
         # Sea-level model options
         if sea_level_model:
