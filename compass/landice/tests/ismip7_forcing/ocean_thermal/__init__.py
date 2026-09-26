@@ -1,6 +1,9 @@
 from compass.landice.tests.ismip7_forcing.configure import (
     configure as configure_testgroup,
 )
+from compass.landice.tests.ismip7_forcing.ocean_thermal.build_3d_thermal_forcing import (  # noqa: E501
+    BuildGreenland3dThermalForcing,
+)
 from compass.landice.tests.ismip7_forcing.ocean_thermal.build_mapping_file import (  # noqa: E501
     BuildMappingFile,
 )
@@ -34,6 +37,7 @@ class OceanThermal(TestCase):
 
         self.add_step(BuildMappingFile(test_case=self))
         self.add_step(ProcessThermalForcing(test_case=self))
+        self.add_step(BuildGreenland3dThermalForcing(test_case=self))
 
     def configure(self):
         """

@@ -1,5 +1,6 @@
 import glob
 import os
+import re
 import sys
 
 from compass.job import write_job_script
@@ -59,6 +60,11 @@ class SetUpExperiment(Step):
         reference_surface_path = section.get('reference_surface_path')
         reference_surface_fname = os.path.split(reference_surface_path)[-1]
         calving_method = section.get('calving_method')
+        use_3d_thermal_forcing = section.getboolean('use_3d_thermal_forcing')
+        if use_3d_thermal_forcing and melt_params_path == 'NotAvailable':
+            raise ValueError(
+                "melt_params_path must be supplied when "
+                "use_3d_thermal_forcing is true")
 
         exp_info = self.exp_info
         scenario = exp_info['scenario']
@@ -70,6 +76,11 @@ class SetUpExperiment(Step):
         resource_location = 'compass.landice.tests.ismip7_run.ismip7_gris'
 
         use_vM_calving = (calving_method == 'von_mises')
+
+        # Thermal-forcing stream defaults; the 3D chunked case overrides them
+        # below to address the ..._<YYYY>.nc series with a $Y template.
+        tf_reference_time = '2000-01-01_00:00:00'
+        tf_filename_interval = 'none'
 
         # --- Determine forcing file paths ---
         if scenario == 'ocx':
@@ -200,24 +211,76 @@ class SetUpExperiment(Step):
                 os.symlink(temp_grad_list[0],
                            os.path.join(self.work_dir, temp_grad_fname))
 
-            # GrIS uses 2D thermal forcing
-            tf_search = os.path.join(ocean_dir, '*thermal_forcing_*.nc')
-            tf_list = glob.glob(tf_search)
-            if len(tf_list) == 1:
+            # GrIS thermal forcing: 2D by default, or 3D when
+            # use_3d_thermal_forcing is true (see build_3d_thermal_forcing
+            # in landice/ismip7_forcing/ocean_thermal)
+            if use_3d_thermal_forcing:
+                tf_pattern = '*3dThermalForcing_*.nc'
+            else:
+                tf_pattern = '*2dThermalForcing_*.nc'
+            tf_search = os.path.join(ocean_dir, tf_pattern)
+            tf_list = sorted(glob.glob(tf_search))
+            if len(tf_list) == 0:
+                sys.exit(f"ERROR: Expected at least 1 TF file at "
+                         f"{tf_search}, found 0")
+
+            if use_3d_thermal_forcing:
+                # 3D TF is written one file per N-year block, named by the
+                # block start year (..._<YYYY>.nc). Symlink the whole series
+                # and address it with a $Y filename_template plus a
+                # filename_interval so MALI advances across chunk files.
+                for tf_path in tf_list:
+                    tf_base = os.path.split(tf_path)[-1]
+                    os.symlink(tf_path,
+                               os.path.join(self.work_dir, tf_base))
+                start_years = []
+                for f in tf_list:
+                    match = re.search(r'_(\d{4})\.nc$',
+                                      os.path.split(f)[-1])
+                    if not match:
+                        sys.exit(
+                            f"ERROR: 3D thermal forcing file does not match "
+                            f"expected pattern *_YYYY.nc: {f}")
+                    start_years.append(int(match.group(1)))
+                start_years = sorted(start_years)
+                tf_first_year = start_years[0]
+                tf_reference_time = f"{tf_first_year:04d}-01-01_00:00:00"
+                sample = os.path.split(tf_list[0])[-1]
+                tf_fname = re.sub(r'_\d{4}\.nc$', '_$Y.nc', sample)
+                if len(start_years) > 1:
+                    interval_years = start_years[1] - start_years[0]
+                    # Validate uniform spacing across all chunks
+                    for i in range(2, len(start_years)):
+                        spacing = start_years[i] - start_years[i - 1]
+                        if spacing != interval_years:
+                            sys.exit(
+                                f"ERROR: 3D thermal forcing chunk years are "
+                                f"not uniformly spaced. Expected interval "
+                                f"{interval_years} years, but chunks "
+                                f"{start_years[i - 1]} and {start_years[i]} "
+                                f"are {spacing} years apart.")
+                    tf_filename_interval = \
+                        f"{interval_years:04d}-00-00_00:00:00"
+            else:
+                if len(tf_list) != 1:
+                    sys.exit(f"ERROR: Expected 1 TF file at {tf_search}, "
+                             f"found {len(tf_list)}")
                 tf_fname = os.path.split(tf_list[0])[-1]
                 os.symlink(tf_list[0],
                            os.path.join(self.work_dir, tf_fname))
-            else:
-                sys.exit(f"ERROR: Expected 1 TF file at {tf_search}, "
-                         f"found {len(tf_list)}")
 
         # --- Set up streams ---
         if scenario == 'ctrl':
             forcing_interval_monthly = 'initial_only'
             forcing_interval_annual = 'initial_only'
+            forcing_interval_TF = 'initial_only'
         else:
             forcing_interval_monthly = '0000-01-00_00:00:00'
             forcing_interval_annual = '0001-00-00_00:00:00'
+            # GrIS thermal forcing (2D and 3D) is monthly. The annual
+            # cadence only applies to Antarctica, whose ISMIP7 3D forcing is
+            # provided annually.
+            forcing_interval_TF = forcing_interval_monthly
 
         stream_replacements = {
             'input_file_init_cond': init_cond_fname if is_historical
@@ -234,6 +297,10 @@ class SetUpExperiment(Step):
             'input_file_temperature_gradient_forcing': temp_grad_fname,
             'forcing_interval_monthly': forcing_interval_monthly,
             'forcing_interval_annual': forcing_interval_annual,
+            'forcing_interval_TF': forcing_interval_TF,
+            'tf_reference_time': tf_reference_time,
+            'tf_filename_interval': tf_filename_interval,
+            'use_3d_thermal_forcing': use_3d_thermal_forcing,
         }
 
         self.add_streams_file(
@@ -254,6 +321,11 @@ class SetUpExperiment(Step):
                    'config_pio_num_iotasks': f'{io_tasks}'}
         self.add_namelist_options(options=options,
                                   out_name='namelist.landice')
+
+        if use_3d_thermal_forcing:
+            options = {'config_use_3d_thermal_forcing_for_face_melt': ".true."}
+            self.add_namelist_options(options=options,
+                                      out_name='namelist.landice')
 
         if is_historical:
             options = {'config_do_restart': ".false.",
