@@ -373,7 +373,6 @@ class SetUpExperiment(Step):
                 out_name='streams.landice',
                 template_replacements=vM_stream_replacements)
 
-
         # Sea-level model options
         if sea_level_model:
             slm_input_ice = section.get('slm_input_ice')
