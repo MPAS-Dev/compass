@@ -176,6 +176,15 @@
         <span class="n">forcing_basepath</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'forcing_basepath'</span><span class="p">)</span>
         <span class="n">init_cond_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'init_cond_path'</span><span class="p">)</span>
         <span class="n">init_cond_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">init_cond_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Extract mesh name from init cond filename</span>
+        <span class="c1"># (e.g., AIS_2to20km_r03_20260922)</span>
+        <span class="c1"># Typical format: AIS_&lt;resolution&gt;_&lt;version&gt;_&lt;date&gt;_&lt;something&gt;.nc</span>
+        <span class="c1"># Strip .nc extension first, then take first 4 underscore-separated</span>
+        <span class="c1"># parts</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">init_cond_fname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'.nc'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+        <span class="n">mesh_name</span> <span class="o">=</span> <span class="s1">'_'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'_'</span><span class="p">)[:</span><span class="mi">4</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Extracted mesh name: </span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s2"> from init cond: "</span>
+              <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">init_cond_fname</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">melt_params_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'melt_params_path'</span><span class="p">)</span>
         <span class="n">melt_params_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">melt_params_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">region_mask_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'region_mask_path'</span><span class="p">)</span>
@@ -183,11 +192,8 @@
         <span class="n">reference_surface_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'reference_surface_path'</span><span class="p">)</span>
         <span class="n">reference_surface_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reference_surface_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">calving_method</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'calving_method'</span><span class="p">)</span>
-        <span class="n">use_hydrofracture_forcing</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span>
-            <span class="s1">'use_hydrofracture_forcing'</span><span class="p">)</span>
-        <span class="n">calving_fracture_toughness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="s1">'calving_fracture_toughness'</span><span class="p">)</span>
         <span class="n">sea_level_model</span><span class="p">,</span> <span class="n">fastisostasy</span> <span class="o">=</span> <span class="n">parse_gia_model</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">sea_level_model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'sea_level_model'</span><span class="p">)</span>
 
         <span class="n">exp_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_info</span>
         <span class="n">scenario</span> <span class="o">=</span> <span class="n">exp_info</span><span class="p">[</span><span class="s1">'scenario'</span><span class="p">]</span>
@@ -241,27 +247,35 @@
             <span class="c1"># Find atmosphere climatology files</span>
             <span class="n">smb_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctrl_atm_path</span><span class="p">,</span> <span class="s1">'*SMB*.nc'</span><span class="p">))</span>
             <span class="n">smb_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">smb_files</span> <span class="k">if</span> <span class="s1">'gradient'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+            <span class="c1"># Filter by mesh name to handle directories with multiple meshes</span>
+            <span class="n">smb_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">smb_files</span> <span class="k">if</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">smb_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">smb_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">smb_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">smb_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">smb_fname</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: Expected 1 SMB climatology file in "</span>
-                         <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ctrl_atm_path</span><span class="si">}</span><span class="s2">, found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">smb_files</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: Expected 1 SMB climatology file matching "</span>
+                         <span class="sa">f</span><span class="s2">"mesh </span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">ctrl_atm_path</span><span class="si">}</span><span class="s2">, found "</span>
+                         <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">smb_files</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
             <span class="n">temp_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctrl_atm_path</span><span class="p">,</span> <span class="s1">'*temperature*.nc'</span><span class="p">))</span>
             <span class="n">temp_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">temp_files</span> <span class="k">if</span> <span class="s1">'gradient'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+            <span class="c1"># Filter by mesh name to handle directories with multiple meshes</span>
+            <span class="n">temp_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">temp_files</span> <span class="k">if</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">temp_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">temp_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">temp_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">temp_fname</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: Expected 1 temperature climatology file in "</span>
-                         <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ctrl_atm_path</span><span class="si">}</span><span class="s2">, found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">temp_files</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: Expected 1 temperature climatology file "</span>
+                         <span class="sa">f</span><span class="s2">"matching mesh </span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">ctrl_atm_path</span><span class="si">}</span><span class="s2">, "</span>
+                         <span class="sa">f</span><span class="s2">"found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">temp_files</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
             <span class="n">runoff_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctrl_atm_path</span><span class="p">,</span> <span class="s1">'*runoff*.nc'</span><span class="p">))</span>
+            <span class="c1"># Filter by mesh name to handle directories with multiple meshes</span>
+            <span class="n">runoff_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">runoff_files</span> <span class="k">if</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">runoff_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">runoff_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">runoff_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">runoff_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -271,6 +285,8 @@
 
             <span class="n">smb_grad_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctrl_atm_path</span><span class="p">,</span> <span class="s1">'*SMB_gradient*.nc'</span><span class="p">))</span>
+            <span class="c1"># Filter by mesh name to handle directories with multiple meshes</span>
+            <span class="n">smb_grad_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">smb_grad_files</span> <span class="k">if</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
             <span class="n">smb_grad_fname</span> <span class="o">=</span> <span class="s1">''</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">smb_grad_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">smb_grad_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">smb_grad_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -279,6 +295,8 @@
 
             <span class="n">temp_grad_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctrl_atm_path</span><span class="p">,</span> <span class="s1">'*temperature_gradient*.nc'</span><span class="p">))</span>
+            <span class="c1"># Filter by mesh name to handle directories with multiple meshes</span>
+            <span class="n">temp_grad_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">temp_grad_files</span> <span class="k">if</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
             <span class="n">temp_grad_fname</span> <span class="o">=</span> <span class="s1">''</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp_grad_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">temp_grad_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">temp_grad_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -293,30 +311,43 @@
             <span class="c1"># SMB forcing</span>
             <span class="n">smb_search</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">atm_dir</span><span class="p">,</span> <span class="s1">'*SMB_*.nc'</span><span class="p">)</span>
             <span class="n">smb_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">smb_search</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">smb_list</span><span class="p">)</span><span class="si">}</span><span class="s2"> SMB files before filtering"</span><span class="p">)</span>
             <span class="n">smb_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">smb_list</span> <span class="k">if</span> <span class="s1">'gradient'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">smb_list</span><span class="p">)</span><span class="si">}</span><span class="s2"> SMB files after removing "</span>
+                  <span class="sa">f</span><span class="s2">"gradients"</span><span class="p">)</span>
+            <span class="c1"># Filter by mesh name to handle directories with multiple meshes</span>
+            <span class="n">smb_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">smb_list</span> <span class="k">if</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">smb_list</span><span class="p">)</span><span class="si">}</span><span class="s2"> SMB files after mesh filter: "</span>
+                  <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">smb_list</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">smb_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">smb_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">smb_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">smb_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">smb_fname</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: Expected 1 SMB file at </span><span class="si">{</span><span class="n">smb_search</span><span class="si">}</span><span class="s2">, "</span>
-                         <span class="sa">f</span><span class="s2">"found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">smb_list</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">smb_list</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: Expected 1 SMB file matching mesh "</span>
+                         <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">smb_search</span><span class="si">}</span><span class="s2">, found "</span>
+                         <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">smb_list</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">smb_list</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
             <span class="c1"># Temperature forcing</span>
             <span class="n">temp_search</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">atm_dir</span><span class="p">,</span> <span class="s1">'*temperature_*.nc'</span><span class="p">)</span>
             <span class="n">temp_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">temp_search</span><span class="p">)</span>
             <span class="n">temp_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">temp_list</span> <span class="k">if</span> <span class="s1">'gradient'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+            <span class="c1"># Filter by mesh name to handle directories with multiple meshes</span>
+            <span class="n">temp_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">temp_list</span> <span class="k">if</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">temp_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">temp_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">temp_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">temp_fname</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: Expected 1 temperature file at "</span>
-                         <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">temp_search</span><span class="si">}</span><span class="s2">, found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">temp_list</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: Expected 1 temperature file matching mesh "</span>
+                         <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">temp_search</span><span class="si">}</span><span class="s2">, found "</span>
+                         <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">temp_list</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
             <span class="c1"># Runoff forcing (optional — may not exist for all experiments)</span>
             <span class="n">runoff_search</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">atm_dir</span><span class="p">,</span> <span class="s1">'*runoff_*.nc'</span><span class="p">)</span>
             <span class="n">runoff_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">runoff_search</span><span class="p">)</span>
+            <span class="c1"># Filter by mesh name to handle directories with multiple meshes</span>
+            <span class="n">runoff_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">runoff_list</span> <span class="k">if</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
             <span class="n">runoff_fname</span> <span class="o">=</span> <span class="s1">''</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">runoff_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">runoff_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">runoff_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -326,6 +357,8 @@
             <span class="c1"># SMB gradient (lapse rate)</span>
             <span class="n">smb_grad_search</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">atm_dir</span><span class="p">,</span> <span class="s1">'*SMB_gradient_*.nc'</span><span class="p">)</span>
             <span class="n">smb_grad_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">smb_grad_search</span><span class="p">)</span>
+            <span class="c1"># Filter by mesh name to handle directories with multiple meshes</span>
+            <span class="n">smb_grad_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">smb_grad_list</span> <span class="k">if</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
             <span class="n">smb_grad_fname</span> <span class="o">=</span> <span class="s1">''</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">smb_grad_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">smb_grad_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">smb_grad_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -336,6 +369,8 @@
             <span class="n">temp_grad_search</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">atm_dir</span><span class="p">,</span>
                                             <span class="s1">'*temperature_gradient_*.nc'</span><span class="p">)</span>
             <span class="n">temp_grad_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">temp_grad_search</span><span class="p">)</span>
+            <span class="c1"># Filter by mesh name to handle directories with multiple meshes</span>
+            <span class="n">temp_grad_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">temp_grad_list</span> <span class="k">if</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
             <span class="n">temp_grad_fname</span> <span class="o">=</span> <span class="s1">''</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp_grad_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">temp_grad_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">temp_grad_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -345,34 +380,38 @@
             <span class="c1"># Thermal forcing</span>
             <span class="n">tf_search</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ocean_dir</span><span class="p">,</span> <span class="s1">'*thermal_forcing_*.nc'</span><span class="p">)</span>
             <span class="n">tf_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">tf_search</span><span class="p">)</span>
+            <span class="c1"># Filter by mesh name to handle directories with multiple meshes</span>
+            <span class="n">tf_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">tf_list</span> <span class="k">if</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tf_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">tf_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">tf_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">tf_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">tf_fname</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: Expected 1 TF file at </span><span class="si">{</span><span class="n">tf_search</span><span class="si">}</span><span class="s2">, "</span>
-                         <span class="sa">f</span><span class="s2">"found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tf_list</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">tf_list</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: Expected 1 TF file matching mesh "</span>
+                         <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">tf_search</span><span class="si">}</span><span class="s2">, found "</span>
+                         <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tf_list</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">tf_list</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># --- Find shelf collapse (calving) mask from ismip7_forcing</span>
-        <span class="c1"># fracture Path C, if requested ---</span>
-        <span class="c1"># historical, ctrl, and ocx experiments never use hydrofracture</span>
-        <span class="c1"># forcing, regardless of use_hydrofracture_forcing.</span>
-        <span class="n">useCalvingMask</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">use_hydrofracture_forcing</span> <span class="ow">and</span>
-                <span class="n">scenario</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'historical'</span><span class="p">,</span> <span class="s1">'ctrl'</span><span class="p">,</span> <span class="s1">'ocx'</span><span class="p">)):</span>
+        <span class="c1"># fracture Path C ---</span>
+        <span class="c1"># historical, ctrl, and ocx experiments do not use hydrofracture</span>
+        <span class="c1"># forcing.</span>
+        <span class="k">if</span> <span class="n">scenario</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'historical'</span><span class="p">,</span> <span class="s1">'ctrl'</span><span class="p">,</span> <span class="s1">'ocx'</span><span class="p">):</span>
             <span class="n">mask_search</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forcing_dir</span><span class="p">,</span> <span class="s1">'shelf_collapse'</span><span class="p">,</span>
                                        <span class="s1">'*ice_shelf_collapse_mask_*.nc'</span><span class="p">)</span>
             <span class="n">mask_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">mask_search</span><span class="p">)</span>
+            <span class="c1"># Filter by mesh name to handle directories with multiple meshes</span>
+            <span class="n">mask_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">mask_list</span> <span class="k">if</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mask_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">mask_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">mask_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">mask_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">mask_fname</span><span class="p">))</span>
-                <span class="n">useCalvingMask</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">"ERROR: use_hydrofracture_forcing is True but did not "</span>
-                    <span class="sa">f</span><span class="s2">"find exactly 1 shelf collapse mask file at "</span>
-                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mask_search</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">mask_list</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                    <span class="sa">f</span><span class="s2">"ERROR: Did not find exactly 1 shelf collapse mask file "</span>
+                    <span class="sa">f</span><span class="s2">"matching mesh </span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">mask_search</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">mask_list</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># For historical/ctrl/ocx, set to empty - stream won't be used</span>
+            <span class="n">mask_fname</span> <span class="o">=</span> <span class="s1">''</span>
 
         <span class="c1"># --- Set up streams ---</span>
         <span class="c1"># Determine forcing interval</span>
@@ -401,6 +440,7 @@
             <span class="s1">'input_file_runoff_forcing'</span><span class="p">:</span> <span class="n">runoff_fname</span><span class="p">,</span>
             <span class="s1">'input_file_smb_gradient_forcing'</span><span class="p">:</span> <span class="n">smb_grad_fname</span><span class="p">,</span>
             <span class="s1">'input_file_temperature_gradient_forcing'</span><span class="p">:</span> <span class="n">temp_grad_fname</span><span class="p">,</span>
+            <span class="s1">'input_file_calving_mask_forcing'</span><span class="p">:</span> <span class="n">mask_fname</span><span class="p">,</span>
             <span class="s1">'forcing_interval_monthly'</span><span class="p">:</span> <span class="n">forcing_interval_monthly</span><span class="p">,</span>
             <span class="s1">'forcing_interval_annual'</span><span class="p">:</span> <span class="n">forcing_interval_annual</span><span class="p">,</span>
         <span class="p">}</span>
@@ -410,14 +450,6 @@
             <span class="s1">'streams.landice.template'</span><span class="p">,</span>
             <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.landice'</span><span class="p">,</span>
             <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">useCalvingMask</span><span class="p">:</span>
-            <span class="n">mask_stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">'input_file_calving_mask_forcing_name'</span><span class="p">:</span> <span class="n">mask_fname</span><span class="p">}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-                <span class="n">resource_location</span><span class="p">,</span> <span class="s1">'streams.mask_calving'</span><span class="p">,</span>
-                <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.landice'</span><span class="p">,</span>
-                <span class="n">template_replacements</span><span class="o">=</span><span class="n">mask_stream_replacements</span><span class="p">)</span>
 
         <span class="c1"># --- Set up namelist ---</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
@@ -459,19 +491,6 @@
                 <span class="n">resource_location</span><span class="p">,</span> <span class="s1">'streams.vM_params'</span><span class="p">,</span>
                 <span class="n">out_name</span><span class="o">=</span><span class="s1">'streams.landice'</span><span class="p">,</span>
                 <span class="n">template_replacements</span><span class="o">=</span><span class="n">vM_stream_replacements</span><span class="p">)</span>
-
-        <span class="c1"># Mask calving options (ismip7_forcing fracture Path C), gated by</span>
-        <span class="c1"># hydrofracture vulnerability (MALI PR #187)</span>
-        <span class="k">if</span> <span class="n">useCalvingMask</span><span class="p">:</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">'config_apply_calving_mask'</span><span class="p">:</span> <span class="s2">".true."</span><span class="p">,</span>
-                <span class="s1">'config_restore_calving_front'</span><span class="p">:</span> <span class="s2">".false."</span><span class="p">,</span>
-                <span class="s1">'config_require_extensional_stresses_for_mask_calving'</span><span class="p">:</span>
-                <span class="s2">".true."</span><span class="p">,</span>
-                <span class="s1">'config_calving_fracture_toughness'</span><span class="p">:</span>
-                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">calving_fracture_toughness</span><span class="si">}</span><span class="s1">'</span><span class="p">}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
-                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">'namelist.landice'</span><span class="p">)</span>
 
         <span class="c1"># Sea-level model options</span>
         <span class="k">if</span> <span class="n">sea_level_model</span><span class="p">:</span>
