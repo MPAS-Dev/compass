@@ -73,10 +73,6 @@ class SetUpExperiment(Step):
         reference_surface_path = section.get('reference_surface_path')
         reference_surface_fname = os.path.split(reference_surface_path)[-1]
         calving_method = section.get('calving_method')
-        use_hydrofracture_forcing = section.getboolean(
-            'use_hydrofracture_forcing')
-        calving_fracture_toughness = section.get(
-            'calving_fracture_toughness')
         sea_level_model, fastisostasy = parse_gia_model(config)
         sea_level_model = section.getboolean('sea_level_model')
 
@@ -277,12 +273,10 @@ class SetUpExperiment(Step):
                          f"{len(tf_list)}: {tf_list}")
 
         # --- Find shelf collapse (calving) mask from ismip7_forcing
-        # fracture Path C, if requested ---
-        # historical, ctrl, and ocx experiments never use hydrofracture
-        # forcing, regardless of use_hydrofracture_forcing.
-        useCalvingMask = False
-        if (use_hydrofracture_forcing and
-                scenario not in ('historical', 'ctrl', 'ocx')):
+        # fracture Path C ---
+        # historical, ctrl, and ocx experiments do not use hydrofracture
+        # forcing.
+        if scenario not in ('historical', 'ctrl', 'ocx'):
             mask_search = os.path.join(forcing_dir, 'shelf_collapse',
                                        '*ice_shelf_collapse_mask_*.nc')
             mask_list = glob.glob(mask_search)
@@ -292,12 +286,13 @@ class SetUpExperiment(Step):
                 mask_fname = os.path.split(mask_list[0])[-1]
                 os.symlink(mask_list[0],
                            os.path.join(self.work_dir, mask_fname))
-                useCalvingMask = True
             else:
                 sys.exit(
-                    f"ERROR: use_hydrofracture_forcing is True but did not "
-                    f"find exactly 1 shelf collapse mask file matching mesh "
-                    f"{mesh_name} at {mask_search}: {mask_list}")
+                    f"ERROR: Did not find exactly 1 shelf collapse mask file "
+                    f"matching mesh {mesh_name} at {mask_search}: {mask_list}")
+        else:
+            # For historical/ctrl/ocx, set to empty - stream won't be used
+            mask_fname = ''
 
         # --- Set up streams ---
         # Determine forcing interval
@@ -326,6 +321,7 @@ class SetUpExperiment(Step):
             'input_file_runoff_forcing': runoff_fname,
             'input_file_smb_gradient_forcing': smb_grad_fname,
             'input_file_temperature_gradient_forcing': temp_grad_fname,
+            'input_file_calving_mask_forcing': mask_fname,
             'forcing_interval_monthly': forcing_interval_monthly,
             'forcing_interval_annual': forcing_interval_annual,
         }
@@ -335,14 +331,6 @@ class SetUpExperiment(Step):
             'streams.landice.template',
             out_name='streams.landice',
             template_replacements=stream_replacements)
-
-        if useCalvingMask:
-            mask_stream_replacements = {
-                'input_file_calving_mask_forcing_name': mask_fname}
-            self.add_streams_file(
-                resource_location, 'streams.mask_calving',
-                out_name='streams.landice',
-                template_replacements=mask_stream_replacements)
 
         # --- Set up namelist ---
         self.add_namelist_file(
@@ -385,18 +373,6 @@ class SetUpExperiment(Step):
                 out_name='streams.landice',
                 template_replacements=vM_stream_replacements)
 
-        # Mask calving options (ismip7_forcing fracture Path C), gated by
-        # hydrofracture vulnerability (MALI PR #187)
-        if useCalvingMask:
-            options = {
-                'config_apply_calving_mask': ".true.",
-                'config_restore_calving_front': ".false.",
-                'config_require_extensional_stresses_for_mask_calving':
-                ".true.",
-                'config_calving_fracture_toughness':
-                f'{calving_fracture_toughness}'}
-            self.add_namelist_options(options=options,
-                                      out_name='namelist.landice')
 
         # Sea-level model options
         if sea_level_model:
