@@ -106,6 +106,7 @@ Processed forcing is written under ``output_base_path`` in a layout that the
    {output_base_path}/{group}/lake_properties/{mesh}_lake_properties_*.nc
    {output_base_path}/{group}/ocean_thermal_forcing/{mesh}_2dThermalForcing_{source}_{scenario}_{years}.nc  (GrIS)
    {output_base_path}/{group}/ocean_thermal_forcing/{mesh}_3dThermalForcing_{source}_{scenario}_{years}.nc  (AIS; optional GrIS 3-D)
+   {output_base_path}/{group}/ocean_thermal_forcing/{mesh}_meltParams_OCX.nc  (GrIS 3-D calibration)
 
 The ``group`` directory is ``{model}_{scenario}`` for ESM scenarios and ``OCX``
 for GrIS OCX. AIS OCX writes one group per selected ocean product,
@@ -370,7 +371,9 @@ build_3d_thermal_forcing (GrIS 3-D)
 
 The optional ``build_3d_thermal_forcing`` step (GrIS only, gated by
 ``process_ocean_thermal_3d = true``) converts the GrIS 2D thermal forcing into
-a 30-level 3D field for MALI's nonlocal (Jourdain et al. 2020) melt scheme. It
+a configurable-level 3D field for MALI's nonlocal (Jourdain et al. 2020) melt
+scheme (default 20 levels; configurable via ``ocean_vertical_grid.number_of_levels``
+in the JSON). It
 auto-chains from the 2D forcing the ``process_thermal_forcing`` step just
 wrote, builds seven regional vertical profiles from monthly EN4 objective
 analyses, anchors each cell's profile to the effective seafloor to match the

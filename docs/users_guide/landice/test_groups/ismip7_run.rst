@@ -112,9 +112,10 @@ Usage
       {forcing_basepath}/
       ├── CESM2-WACCM_historical/
       │   ├── atmosphere/
-      │   │   └── {mesh}_smb_CESM2-WACCM_historical_*.nc
+      │   │   └── {mesh}_SMB_CESM2-WACCM_historical_*.nc
       │   ├── ocean_thermal_forcing/
-      │   │   └── {mesh}_thermal_forcing_CESM2-WACCM_historical_*.nc
+      │   │   └── {mesh}_2dThermalForcing_*.nc  (GrIS)
+      │   │   └── {mesh}_3dThermalForcing_*.nc  (AIS; optional for GrIS)
       │   └── shelf_collapse/
       │       └── {mesh}_ice_shelf_collapse_mask_*.nc
       ├── CESM2-WACCM_ssp585/
@@ -270,13 +271,15 @@ ISMIP7 uses more forcing fields than ISMIP6, at mixed temporal resolutions:
 * ``surfaceAirTemperature`` — surface air temperature
 * ``ismip6Runoff`` — ice sheet runoff
 * ``ismip6_2dThermalForcing`` (GrIS, always) — 2D ocean thermal forcing
-* ``ismip6shelfMelt_3dThermalForcing`` (AIS, always; GrIS when
+* ``ismip6shelfMelt_3dThermalForcing`` (GrIS when
   ``use_3d_thermal_forcing = true``) — 3D ocean thermal forcing
 
 **Annual forcing** (``input_interval = 0001-00-00_00:00:00``):
 
 * ``sfcMassBalLapseRate`` — SMB elevation lapse rate
 * ``surfaceAirTemperatureLapseRate`` — temperature lapse rate
+* ``ismip6shelfMelt_3dThermalForcing`` (AIS, always) — 3D ocean thermal
+  forcing
 
 **Static** (``input_interval = initial_only``):
 

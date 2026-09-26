@@ -67,7 +67,7 @@ MONTH_ABBR = (
 )
 
 
-def season_index(month: int, seasons_per_year: int) -> int:
+def _season_index(month: int, seasons_per_year: int) -> int:
     """Zero-based season for a 1-based calendar month.
 
     Months are partitioned into ``seasons_per_year`` equal blocks, e.g. with
@@ -76,14 +76,14 @@ def season_index(month: int, seasons_per_year: int) -> int:
     return (month - 1) // (12 // seasons_per_year)
 
 
-def season_label(season: int, seasons_per_year: int) -> str:
+def _season_label(season: int, seasons_per_year: int) -> str:
     months_per_season = 12 // seasons_per_year
     start = season * months_per_season
     end = start + months_per_season - 1
     return f"{MONTH_ABBR[start]}-{MONTH_ABBR[end]}"
 
 
-def require_xarray():
+def _require_xarray():
     """Import xarray late so mathematical unit tests need no NetCDF stack."""
     try:
         import xarray as xr
@@ -198,7 +198,7 @@ class Config:
                     "ocean_vertical_grid.number_of_levels must be at least 2"
                 )
             levels = np.linspace(surface_m, bottom_m, number_of_levels)
-        validate_ocean_levels(levels)
+        _validate_ocean_levels(levels)
 
         targets_raw = calibration.get("regional_melt_targets_m_per_yr", 20.0)
         if isinstance(targets_raw, dict):
@@ -355,7 +355,7 @@ class Config:
 
 
 @dataclass
-class MeshData:
+class _MeshData:
     bed: np.ndarray
     thickness: np.ndarray
     area: np.ndarray
@@ -364,7 +364,7 @@ class MeshData:
 
 
 @dataclass
-class RegionalProfiles:
+class _RegionalProfiles:
     source_z_m: np.ndarray
     output_z_m: np.ndarray
     monthly_dates: list[str]
@@ -392,7 +392,7 @@ class RegionalProfiles:
     mapped_distances_km: np.ndarray
 
 
-def validate_ocean_levels(levels: np.ndarray) -> None:
+def _validate_ocean_levels(levels: np.ndarray) -> None:
     if levels.ndim != 1 or levels.size < 2:
         raise ValueError("ocean_levels_m must contain at least two values")
     if not np.all(np.isfinite(levels)):
@@ -407,7 +407,7 @@ def validate_ocean_levels(levels: np.ndarray) -> None:
         )
 
 
-def decode_char_rows(values: np.ndarray) -> list[str]:
+def _decode_char_rows(values: np.ndarray) -> list[str]:
     """Decode either raw S1 character rows or xarray-concatenated strings."""
     arr = np.asarray(values)
     if arr.ndim == 0:
@@ -435,11 +435,12 @@ def decode_char_rows(values: np.ndarray) -> list[str]:
     return result
 
 
-def decode_region_names(values: np.ndarray) -> tuple[str, ...]:
-    return tuple(decode_char_rows(values))
+def _decode_region_names(values: np.ndarray) -> tuple[str, ...]:
+    return tuple(_decode_char_rows(values))
 
 
-def radians_or_degrees_to_degrees(values: np.ndarray, kind: str) -> np.ndarray:
+def _radians_or_degrees_to_degrees(values: np.ndarray,
+                                   kind: str) -> np.ndarray:
     values = np.asarray(values, dtype=float)
     limit = math.pi / 2 + 1e-6 if kind == "latitude" else 2 * math.pi + 1e-6
     if np.nanmax(np.abs(values)) <= limit:
@@ -447,7 +448,11 @@ def radians_or_degrees_to_degrees(values: np.ndarray, kind: str) -> np.ndarray:
     return values
 
 
-def build_basin_ids(region_masks: np.ndarray) -> np.ndarray:
+def _build_basin_ids(region_masks: np.ndarray,
+                     cell_lat_deg: np.ndarray,
+                     cell_lon_deg: np.ndarray) -> np.ndarray:
+    from scipy.spatial import cKDTree
+
     masks = np.asarray(region_masks)
     if masks.ndim != 2 or masks.shape[1] != len(REGION_NAMES):
         raise ValueError(
@@ -461,17 +466,46 @@ def build_basin_ids(region_masks: np.ndarray) -> np.ndarray:
     if overlapping.size:
         print(
             f"{overlapping.size} cells belong to multiple regions; first "
-            f"indices: {overlapping[:10].tolist()}"
+            f"indices: {overlapping[:10].tolist()}. Assigning each to the "
+            "first matching region."
         )
     if unassigned.size:
         print(
             f"{unassigned.size} cells have no region; first indices: "
-            f"{unassigned[:10].tolist()}"
+            f"{unassigned[:10].tolist()}. Assigning each to the nearest "
+            "region by great-circle distance."
         )
-    return np.argmax(membership, axis=1).astype(np.int32) + 1
+
+    # Start with argmax logic (works for clean membership; for overlaps picks
+    # first; for unassigned gives 0→basin 1, which we'll override next)
+    basin_ids = np.argmax(membership, axis=1).astype(np.int32) + 1
+
+    # For unassigned cells, find the nearest region by great-circle distance
+    if unassigned.size:
+        cell_xyz = _unit_sphere_xyz(cell_lat_deg, cell_lon_deg)
+        # Build one KD-tree per region, query each unassigned cell against
+        # all 7, pick the region with minimum distance
+        for unassigned_idx in unassigned:
+            best_region = None
+            best_distance = np.inf
+            for region_idx in range(len(REGION_NAMES)):
+                region_cells = np.flatnonzero(membership[:, region_idx])
+                if region_cells.size == 0:
+                    continue  # skip empty regions
+                tree = cKDTree(cell_xyz[region_cells])
+                distance, _ = tree.query(cell_xyz[unassigned_idx], k=1)
+                if distance < best_distance:
+                    best_distance = distance
+                    best_region = region_idx
+            if best_region is not None:
+                basin_ids[unassigned_idx] = best_region + 1
+            # else: all regions are empty (degenerate), leave basin_ids[...]=1
+        print(f"Assigned {unassigned.size} unassigned cells to their "
+              "nearest region.")
+    return basin_ids
 
 
-def unit_sphere_xyz(lat_deg: np.ndarray, lon_deg: np.ndarray) -> np.ndarray:
+def _unit_sphere_xyz(lat_deg: np.ndarray, lon_deg: np.ndarray) -> np.ndarray:
     lat = np.deg2rad(np.asarray(lat_deg, dtype=float))
     lon = np.deg2rad(np.asarray(lon_deg, dtype=float))
     cos_lat = np.cos(lat)
@@ -480,7 +514,7 @@ def unit_sphere_xyz(lat_deg: np.ndarray, lon_deg: np.ndarray) -> np.ndarray:
     )
 
 
-def chord_to_arc_km(
+def _chord_to_arc_km(
     chord: np.ndarray, radius_km: float = 6371.0
 ) -> np.ndarray:
     return 2.0 * radius_km * np.arcsin(
@@ -488,7 +522,7 @@ def chord_to_arc_km(
     )
 
 
-def freezing_temperature(
+def _freezing_temperature(
     salinity: np.ndarray,
     z_m: np.ndarray,
     a: float = -0.0575,
@@ -498,7 +532,7 @@ def freezing_temperature(
     return a * np.asarray(salinity) + b + c * np.asarray(z_m)
 
 
-def interpolate_profile(
+def _interpolate_profile(
     z_source: np.ndarray, values: np.ndarray, z_target: np.ndarray
 ) -> np.ndarray:
     """Linearly interpolate with constant endpoint extension."""
@@ -516,7 +550,7 @@ def interpolate_profile(
                      right=y[-1])
 
 
-def profiles_at_cell_depths(
+def _profiles_at_cell_depths(
     regional_profiles: np.ndarray,
     z_levels: np.ndarray,
     basin_ids: np.ndarray,
@@ -530,13 +564,13 @@ def profiles_at_cell_depths(
     for region in range(len(REGION_NAMES)):
         mask = basin_ids == region + 1
         if np.any(mask):
-            result[mask] = interpolate_profile(
+            result[mask] = _interpolate_profile(
                 z_levels, regional_profiles[region], cell_depths[mask]
             )
     return result
 
 
-def floating_mask_and_draft(
+def _floating_mask_and_draft(
     bed: np.ndarray,
     thickness: np.ndarray,
     rho_ice: float,
@@ -559,7 +593,7 @@ def floating_mask_and_draft(
     return floating, draft
 
 
-def nonlocal_mean_melt(
+def _nonlocal_mean_melt(
     delta_t: float,
     monthly_mean_tf: np.ndarray,
     gamma0_m_per_yr: float,
@@ -572,7 +606,7 @@ def nonlocal_mean_melt(
     )
 
 
-def calibrate_gamma0(
+def _calibrate_gamma0(
     regional_monthly_tf: np.ndarray,
     regional_targets_m_per_yr: np.ndarray,
     coefficient: float,
@@ -627,7 +661,8 @@ def calibrate_gamma0(
             monthly_tf = active_tf[:, region_idx]
             target = active_targets[region_idx]
             # deltaT = 0 for gamma0 calibration
-            achieved = nonlocal_mean_melt(0.0, monthly_tf, gamma0, coefficient)
+            achieved = _nonlocal_mean_melt(0.0, monthly_tf, gamma0,
+                                           coefficient)
             errors.append(achieved - target)
         return float(np.mean(np.array(errors) ** 2))
 
@@ -650,7 +685,7 @@ def calibrate_gamma0(
     return float(result.x)
 
 
-def calibrate_delta_t(
+def _calibrate_delta_t(
     monthly_mean_tf: np.ndarray,
     target_melt_m_per_yr: float,
     gamma0_m_per_yr: float,
@@ -665,7 +700,7 @@ def calibrate_delta_t(
 
     def residual(delta: float) -> float:
         return (
-            nonlocal_mean_melt(delta, values, gamma0_m_per_yr, coefficient) -
+            _nonlocal_mean_melt(delta, values, gamma0_m_per_yr, coefficient) -
             target_melt_m_per_yr
         )
 
@@ -683,7 +718,7 @@ def calibrate_delta_t(
     return float(brentq(residual, lower, upper, xtol=1e-12, rtol=1e-12))
 
 
-def parse_yyyymm_from_name(path: Path) -> tuple[int, int]:
+def _parse_yyyymm_from_name(path: Path) -> tuple[int, int]:
     matches = DATE_RE.findall(path.name)
     valid = [(int(y), int(m)) for y, m in matches if 1 <= int(m) <= 12]
     if not valid:
@@ -691,7 +726,7 @@ def parse_yyyymm_from_name(path: Path) -> tuple[int, int]:
     return valid[-1]
 
 
-def discover_en4_files(cfg: Config) -> list[Path]:
+def _discover_en4_files(cfg: Config) -> list[Path]:
     candidates = sorted(cfg.en4_directory.glob(cfg.en4_file_glob))
     selected: dict[tuple[int, int], Path] = {}
     for path in candidates:
@@ -705,7 +740,7 @@ def discover_en4_files(cfg: Config) -> list[Path]:
                 f".{cfg.en4_bias_correction}." not in name_lower):
             continue
         try:
-            year, month = parse_yyyymm_from_name(path)
+            year, month = _parse_yyyymm_from_name(path)
         except ValueError:
             continue
         if not (cfg.profile_start_year <= year <= cfg.profile_end_year):
@@ -776,7 +811,7 @@ def _temperature_to_deg_c(values: np.ndarray, units: str) -> np.ndarray:
     raise ValueError(f"Unsupported EN4 temperature units: {units!r}")
 
 
-def points_in_geojson(
+def _points_in_geojson(
     longitude_deg: np.ndarray,
     latitude_deg: np.ndarray,
     geojson_path: Path,
@@ -831,8 +866,8 @@ def points_in_geojson(
     )
 
 
-def load_mesh_and_basins(cfg: Config) -> tuple[MeshData, np.ndarray]:
-    xr = require_xarray()
+def _load_mesh_and_basins(cfg: Config) -> tuple[_MeshData, np.ndarray]:
+    xr = _require_xarray()
     with xr.open_dataset(
         cfg.mesh_file, decode_times=False, concat_characters=False
     ) as ds:
@@ -849,14 +884,14 @@ def load_mesh_and_basins(cfg: Config) -> tuple[MeshData, np.ndarray]:
         area = _array_with_nan(_find_variable(ds, "areaCell").values)
         lat = _array_with_nan(_find_variable(ds, "latCell").values)
         lon = _array_with_nan(_find_variable(ds, "lonCell").values)
-    lat_deg = radians_or_degrees_to_degrees(lat, "latitude")
-    lon_deg = radians_or_degrees_to_degrees(lon, "longitude")
+    lat_deg = _radians_or_degrees_to_degrees(lat, "latitude")
+    lon_deg = _radians_or_degrees_to_degrees(lon, "longitude")
 
     with xr.open_dataset(
         cfg.region_mask_file, decode_times=False, concat_characters=False
     ) as ds:
         masks = np.asarray(_find_variable(ds, "regionCellMasks").values)
-        names = decode_region_names(_find_variable(ds, "regionNames").values)
+        names = _decode_region_names(_find_variable(ds, "regionNames").values)
     if names != REGION_NAMES:
         details = "\n".join(
             f"  {index + 1}: found={found!r}, expected={expected!r}"
@@ -866,7 +901,7 @@ def load_mesh_and_basins(cfg: Config) -> tuple[MeshData, np.ndarray]:
             f"Region names/order do not match the configured convention:\n"
             f"{details}"
         )
-    basin_ids = build_basin_ids(masks)
+    basin_ids = _build_basin_ids(masks, lat_deg, lon_deg)
 
     n_cells = bed.size
     for name, values in (
@@ -880,12 +915,12 @@ def load_mesh_and_basins(cfg: Config) -> tuple[MeshData, np.ndarray]:
                 f"Mesh variable {name} has {values.size} cells, expected "
                 f"{n_cells}"
             )
-    return MeshData(bed, thickness, area, lat_deg, lon_deg), basin_ids
+    return _MeshData(bed, thickness, area, lat_deg, lon_deg), basin_ids
 
 
 def _prepare_en4_mapping(
     dataset: Any,
-    mesh: MeshData,
+    mesh: _MeshData,
     basin_ids: np.ndarray,
     cfg: Config,
 ) -> dict[str, np.ndarray]:
@@ -901,7 +936,7 @@ def _prepare_en4_mapping(
     lat_flat = lat_grid.ravel()
     lon_flat = lon_grid.ravel()
     display_lon_flat = (lon_flat + 180.0) % 360.0 - 180.0
-    source_region_ok = points_in_geojson(
+    source_region_ok = _points_in_geojson(
         display_lon_flat, lat_flat, cfg.en4_source_region_geojson
     )
     latitude_ok = (
@@ -909,12 +944,12 @@ def _prepare_en4_mapping(
     )
     candidate_flat = np.flatnonzero(latitude_ok & source_region_ok)
 
-    tree = cKDTree(unit_sphere_xyz(mesh.lat_deg, mesh.lon_deg))
+    tree = cKDTree(_unit_sphere_xyz(mesh.lat_deg, mesh.lon_deg))
     chord, nearest = tree.query(
-        unit_sphere_xyz(lat_flat[candidate_flat], lon_flat[candidate_flat]),
+        _unit_sphere_xyz(lat_flat[candidate_flat], lon_flat[candidate_flat]),
         k=1,
     )
-    distance_km = chord_to_arc_km(chord)
+    distance_km = _chord_to_arc_km(chord)
     keep = distance_km <= cfg.en4_max_mesh_distance_km
     selected_flat = candidate_flat[keep]
     if selected_flat.size == 0:
@@ -937,11 +972,11 @@ def _prepare_en4_mapping(
     }
 
 
-def build_regional_profiles(
-    cfg: Config, mesh: MeshData, basin_ids: np.ndarray, logger
-) -> RegionalProfiles:
-    xr = require_xarray()
-    files = discover_en4_files(cfg)
+def _build_regional_profiles(
+    cfg: Config, mesh: _MeshData, basin_ids: np.ndarray, logger
+) -> _RegionalProfiles:
+    xr = _require_xarray()
+    files = _discover_en4_files(cfg)
     logger.info(
         f"Found {len(files)} EN4 monthly analyses for regional profiles"
     )
@@ -957,7 +992,7 @@ def build_regional_profiles(
     dates: list[str] = []
 
     for index, path in enumerate(files):
-        year, month = parse_yyyymm_from_name(path)
+        year, month = _parse_yyyymm_from_name(path)
         with xr.open_dataset(
             path,
             decode_times=False,
@@ -1017,7 +1052,7 @@ def build_regional_profiles(
         sal_influence_selected = sal_influence.reshape(
             n_depth, -1
         )[:, flat_indices]
-        tf_selected = temp_selected - freezing_temperature(
+        tf_selected = temp_selected - _freezing_temperature(
             sal_selected,
             z[:, None],
             cfg.freezing_a,
@@ -1092,13 +1127,13 @@ def build_regional_profiles(
         mean_temp = np.nanmean(month_temp_array, axis=0)
         mean_sal = np.nanmean(month_sal_array, axis=0)
         mean_tf = np.nanmean(month_tf_array, axis=0)
-    mean_freeze = freezing_temperature(
+    mean_freeze = _freezing_temperature(
         mean_sal, source_z[None, :], cfg.freezing_a, cfg.freezing_b,
         cfg.freezing_c
     )
     output_tf = np.vstack(
         [
-            interpolate_profile(source_z, mean_tf[region], cfg.ocean_levels_m)
+            _interpolate_profile(source_z, mean_tf[region], cfg.ocean_levels_m)
             for region in range(len(REGION_NAMES))
         ]
     )
@@ -1110,7 +1145,7 @@ def build_regional_profiles(
     n_seasons = cfg.seasons_per_year
     n_source = source_z.size
     season_of_month = np.array(
-        [season_index(int(date[5:7]), n_seasons) for date in dates]
+        [_season_index(int(date[5:7]), n_seasons) for date in dates]
     )
     seasonal_temp = np.full(
         (n_seasons, len(REGION_NAMES), n_source), np.nan
@@ -1124,7 +1159,7 @@ def build_regional_profiles(
             if members.size == 0:
                 raise ValueError(
                     f"No EN4 months fall in season "
-                    f"{season_label(season, n_seasons)}; cannot build a "
+                    f"{_season_label(season, n_seasons)}; cannot build a "
                     "seasonal profile"
                 )
             seasonal_temp[season] = np.nanmean(
@@ -1140,7 +1175,7 @@ def build_regional_profiles(
         [
             np.vstack(
                 [
-                    interpolate_profile(
+                    _interpolate_profile(
                         source_z, seasonal_tf[season, region],
                         cfg.ocean_levels_m
                     )
@@ -1151,10 +1186,10 @@ def build_regional_profiles(
         ]
     )
     season_labels = tuple(
-        season_label(season, n_seasons) for season in range(n_seasons)
+        _season_label(season, n_seasons) for season in range(n_seasons)
     )
 
-    return RegionalProfiles(
+    return _RegionalProfiles(
         source_z_m=source_z,
         output_z_m=cfg.ocean_levels_m,
         monthly_dates=dates,
@@ -1183,20 +1218,20 @@ def build_regional_profiles(
     )
 
 
-def forcing_times(dataset: Any) -> list[str]:
+def _forcing_times(dataset: Any) -> list[str]:
     if "xtime" not in dataset.variables:
         raise KeyError("2-D forcing file must contain xtime(Time, StrLen)")
-    return decode_char_rows(dataset["xtime"].values)
+    return _decode_char_rows(dataset["xtime"].values)
 
 
-def year_from_xtime(value: str) -> int:
+def _year_from_xtime(value: str) -> int:
     match = re.match(r"\s*(\d{4})", value)
     if match is None:
         raise ValueError(f"Could not parse year from xtime value {value!r}")
     return int(match.group(1))
 
 
-def month_from_xtime(value: str) -> int:
+def _month_from_xtime(value: str) -> int:
     match = re.match(r"\s*\d{4}-(\d{2})", value)
     if match is None:
         raise ValueError(
@@ -1205,10 +1240,10 @@ def month_from_xtime(value: str) -> int:
     return int(match.group(1))
 
 
-def calibration_time_indices(
+def _calibration_time_indices(
     times: Sequence[str], start_year: int, end_year: int
 ) -> np.ndarray:
-    years = np.asarray([year_from_xtime(value) for value in times])
+    years = np.asarray([_year_from_xtime(value) for value in times])
     result = np.flatnonzero((years >= start_year) & (years <= end_year))
     if result.size == 0:
         raise ValueError(
@@ -1218,7 +1253,7 @@ def calibration_time_indices(
     return result
 
 
-def validate_forcing_schema(dataset: Any, cfg: Config, n_cells: int) -> Any:
+def _validate_forcing_schema(dataset: Any, cfg: Config, n_cells: int) -> Any:
     if cfg.forcing_variable not in dataset.variables:
         raise KeyError(
             f"2-D forcing variable {cfg.forcing_variable!r} is missing"
@@ -1232,11 +1267,11 @@ def validate_forcing_schema(dataset: Any, cfg: Config, n_cells: int) -> Any:
     return variable
 
 
-def compute_regional_monthly_means(
+def _compute_regional_monthly_means(
     cfg: Config,
-    mesh: MeshData,
+    mesh: _MeshData,
     basin_ids: np.ndarray,
-    profiles: RegionalProfiles,
+    profiles: _RegionalProfiles,
 ) -> tuple[np.ndarray, set[int]]:
     """Compute monthly mean thermal forcing at ice draft for each region.
 
@@ -1248,8 +1283,8 @@ def compute_regional_monthly_means(
     empty_regions : set[int]
         Zero-based indices of regions with no floating ice.
     """
-    xr = require_xarray()
-    floating, draft = floating_mask_and_draft(
+    xr = _require_xarray()
+    floating, draft = _floating_mask_and_draft(
         mesh.bed,
         mesh.thickness,
         cfg.rho_ice,
@@ -1264,7 +1299,7 @@ def compute_regional_monthly_means(
     n_seasons = seasonal_out.shape[0]
     base_at_anchor_seasonal = np.stack(
         [
-            profiles_at_cell_depths(
+            _profiles_at_cell_depths(
                 seasonal_out[season], cfg.ocean_levels_m, basin_ids, anchor
             )
             for season in range(n_seasons)
@@ -1272,7 +1307,7 @@ def compute_regional_monthly_means(
     )
     base_at_draft_seasonal = np.stack(
         [
-            profiles_at_cell_depths(
+            _profiles_at_cell_depths(
                 seasonal_out[season], cfg.ocean_levels_m, basin_ids, draft
             )
             for season in range(n_seasons)
@@ -1301,9 +1336,9 @@ def compute_regional_monthly_means(
         mask_and_scale=True,
         concat_characters=False,
     ) as ds:
-        forcing_var = validate_forcing_schema(ds, cfg, mesh.bed.size)
-        times = forcing_times(ds)
-        indices = calibration_time_indices(
+        forcing_var = _validate_forcing_schema(ds, cfg, mesh.bed.size)
+        times = _forcing_times(ds)
+        indices = _calibration_time_indices(
             times, cfg.calibration_start_year, cfg.calibration_end_year
         )
         monthly_means = np.full((indices.size, len(REGION_NAMES)), np.nan)
@@ -1311,8 +1346,8 @@ def compute_regional_monthly_means(
             forcing = _array_with_nan(
                 forcing_var.isel(Time=int(time_index)).values
             )
-            season = season_index(
-                month_from_xtime(times[time_index]), n_seasons
+            season = _season_index(
+                _month_from_xtime(times[time_index]), n_seasons
             )
             offset = forcing - base_at_anchor_seasonal[season]
             tf_draft = base_at_draft_seasonal[season] + offset
@@ -1336,11 +1371,11 @@ def compute_regional_monthly_means(
     return monthly_means, empty_regions
 
 
-def calibrate_parameters(
+def _calibrate_parameters(
     cfg: Config,
-    mesh: MeshData,
+    mesh: _MeshData,
     basin_ids: np.ndarray,
-    profiles: RegionalProfiles,
+    profiles: _RegionalProfiles,
 ) -> tuple[float, np.ndarray, np.ndarray, np.ndarray]:
     """Two-stage calibration: gamma0 first, then optionally deltaT.
 
@@ -1364,7 +1399,7 @@ def calibrate_parameters(
         Shape (n_months, n_regions). Monthly thermal forcing means used for
         calibration.
     """
-    monthly_means, empty_regions = compute_regional_monthly_means(
+    monthly_means, empty_regions = _compute_regional_monthly_means(
         cfg, mesh, basin_ids, profiles
     )
 
@@ -1374,8 +1409,13 @@ def calibrate_parameters(
 
     # Stage 1: Calibrate gamma0 with deltaT=0 using only non-NaN targets
     print("\n=== Stage 1: Calibrating global gamma0 (with deltaT=0) ===")
-    gamma0 = calibrate_gamma0(
-        monthly_means, cfg.regional_melt_targets_m_per_yr, coefficient
+    # Mask empty regions out of the target array so active_regions in
+    # _calibrate_gamma0 excludes both NaN targets (user's "no constraint")
+    # and empty regions (geometry has no floating ice)
+    targets_for_calibration = cfg.regional_melt_targets_m_per_yr.copy()
+    targets_for_calibration[list(empty_regions)] = np.nan
+    gamma0 = _calibrate_gamma0(
+        monthly_means, targets_for_calibration, coefficient
     )
     print(f"Calibrated gamma0 = {gamma0:.1f} m/yr")
 
@@ -1399,7 +1439,7 @@ def calibrate_parameters(
                     f"  {REGION_KEYS[region]}: no target specified, deltaT=0"
                 )
                 continue
-            delta_t[region] = calibrate_delta_t(
+            delta_t[region] = _calibrate_delta_t(
                 monthly_means[:, region],
                 target,
                 gamma0,
@@ -1420,14 +1460,14 @@ def calibrate_parameters(
     for region in range(len(REGION_NAMES)):
         if region in empty_regions:
             continue
-        achieved[region] = nonlocal_mean_melt(
+        achieved[region] = _nonlocal_mean_melt(
             delta_t[region], monthly_means[:, region], gamma0, coefficient
         )
 
     return gamma0, delta_t, achieved, monthly_means
 
 
-def write_melt_params(
+def _write_melt_params(
     cfg: Config,
     basin_ids: np.ndarray,
     gamma0: float,
@@ -1440,7 +1480,7 @@ def write_melt_params(
     every ESM scenario can reuse the same OCX-calibrated values unchanged
     (see ``Config.should_calibrate``).
     """
-    xr = require_xarray()
+    xr = _require_xarray()
     output = cfg.melt_params_file
     output.parent.mkdir(parents=True, exist_ok=True)
     if output.exists() and not cfg.overwrite:
@@ -1521,7 +1561,7 @@ def write_melt_params(
         raise
 
 
-def read_melt_params(
+def _read_melt_params(
     cfg: Config,
     basin_ids: np.ndarray,
     logger,
@@ -1539,7 +1579,7 @@ def read_melt_params(
     regional_delta_t : np.ndarray
         Shape (n_regions,). Calibrated deltaT for each region in K
     """
-    xr = require_xarray()
+    xr = _require_xarray()
     path = cfg.melt_params_file
     with xr.open_dataset(
         path, decode_times=False, mask_and_scale=False
@@ -1567,7 +1607,7 @@ def read_melt_params(
     return gamma0, regional_delta_t
 
 
-def year_chunks(
+def _year_chunks(
     years: np.ndarray, years_per_file: int
 ) -> "list[tuple[np.ndarray, int, int]]":
     """Group record indices into consecutive blocks of whole years.
@@ -1587,7 +1627,7 @@ def year_chunks(
     return chunks
 
 
-def chunk_output_path(output_file: Path, start_year: int) -> Path:
+def _chunk_output_path(output_file: Path, start_year: int) -> Path:
     """Name a per-chunk file by its block start year (MALI ``$Y`` template).
 
     Any trailing ``_YYYY-YYYY`` range in ``output_file`` is replaced with the
@@ -1629,7 +1669,7 @@ def _write_forcing_chunk(
     logger,
     dask,
 ) -> None:
-    xr = require_xarray()
+    xr = _require_xarray()
     if output_path.exists() and not cfg.overwrite:
         logger.info(
             f"Forcing chunk already exists; skipping (set overwrite=true to "
@@ -1733,15 +1773,15 @@ def _write_forcing_chunk(
             hdf5_temporary.unlink()
 
 
-def write_output(
+def _write_output(
     cfg: Config,
-    mesh: MeshData,
+    mesh: _MeshData,
     basin_ids: np.ndarray,
-    profiles: RegionalProfiles,
+    profiles: _RegionalProfiles,
     regional_delta_t: np.ndarray,
     logger,
 ) -> None:
-    xr = require_xarray()
+    xr = _require_xarray()
     try:
         import dask
         import dask.array as darray
@@ -1762,7 +1802,7 @@ def write_output(
     base_by_cell_seasonal = seasonal_out[:, basin_ids - 1, :]
     base_at_anchor_seasonal = np.stack(
         [
-            profiles_at_cell_depths(
+            _profiles_at_cell_depths(
                 seasonal_out[season], cfg.ocean_levels_m, basin_ids, anchor
             )
             for season in range(n_seasons)
@@ -1779,11 +1819,11 @@ def write_output(
         concat_characters=False,
         chunks={"Time": 1},
     ) as source:
-        forcing_var = validate_forcing_schema(source, cfg, mesh.bed.size)
-        times = forcing_times(source)
-        years = np.asarray([year_from_xtime(value) for value in times])
+        forcing_var = _validate_forcing_schema(source, cfg, mesh.bed.size)
+        times = _forcing_times(source)
+        years = np.asarray([_year_from_xtime(value) for value in times])
         season_of_time = np.asarray(
-            [season_index(month_from_xtime(t), n_seasons) for t in times]
+            [_season_index(_month_from_xtime(t), n_seasons) for t in times]
         )
         # Fail before initiating a multi-gigabyte write if any source value
         # is absent. This reduction stays lazy until compute() and does not
@@ -1818,13 +1858,13 @@ def write_output(
             "melt method",
         )
 
-        chunks = year_chunks(years, cfg.output_years_per_file)
+        chunks = _year_chunks(years, cfg.output_years_per_file)
         logger.info(
             f"Writing {len(times)} monthly records to {len(chunks)} file(s) "
             f"of up to {cfg.output_years_per_file} year(s) each"
         )
         for indices, start_year, last_year in chunks:
-            output_path = chunk_output_path(cfg.output_file, start_year)
+            output_path = _chunk_output_path(cfg.output_file, start_year)
             _write_forcing_chunk(
                 cfg,
                 forcing_3d.isel(Time=indices),
@@ -1838,11 +1878,11 @@ def write_output(
             )
 
 
-def write_diagnostics(
+def _write_diagnostics(
     cfg: Config,
-    mesh: MeshData,
+    mesh: _MeshData,
     basin_ids: np.ndarray,
-    profiles: RegionalProfiles,
+    profiles: _RegionalProfiles,
     gamma0: float,
     regional_delta_t: np.ndarray,
     achieved_melt: np.ndarray | None,
@@ -1874,7 +1914,7 @@ def write_diagnostics(
             ]
         )
         for season in range(profiles.seasons_per_year):
-            season_freeze = freezing_temperature(
+            season_freeze = _freezing_temperature(
                 profiles.seasonal_salinity[season],
                 profiles.source_z_m[None, :],
                 cfg.freezing_a, cfg.freezing_b, cfg.freezing_c,
@@ -1949,7 +1989,7 @@ def write_diagnostics(
                         ]
                     )
 
-    floating, _ = floating_mask_and_draft(
+    floating, _ = _floating_mask_and_draft(
         mesh.bed,
         mesh.thickness,
         cfg.rho_ice,
@@ -2039,29 +2079,29 @@ def write_diagnostics(
 
     # Validate the profile translation at the effective seafloor and map one
     # representative monthly field at all output depths.
-    xr = require_xarray()
+    xr = _require_xarray()
     with xr.open_dataset(
         cfg.forcing_2d_file,
         decode_times=False,
         mask_and_scale=True,
         concat_characters=False,
     ) as source:
-        times = forcing_times(source)
-        indices = calibration_time_indices(
+        times = _forcing_times(source)
+        indices = _calibration_time_indices(
             times, cfg.calibration_start_year, cfg.calibration_end_year
         )
         time_index = int(indices[0])
         forcing_2d = _array_with_nan(
-            validate_forcing_schema(source, cfg, mesh.bed.size)
+            _validate_forcing_schema(source, cfg, mesh.bed.size)
             .isel(Time=time_index)
             .values
         )
-    rep_season = season_index(
-        month_from_xtime(times[time_index]), profiles.seasons_per_year
+    rep_season = _season_index(
+        _month_from_xtime(times[time_index]), profiles.seasons_per_year
     )
     seasonal_out = profiles.seasonal_output_thermal_forcing_degC[rep_season]
     anchor = np.clip(mesh.bed, -cfg.source_max_depth_m, 0.0)
-    base_at_anchor = profiles_at_cell_depths(
+    base_at_anchor = _profiles_at_cell_depths(
         seasonal_out,
         cfg.ocean_levels_m,
         basin_ids,
@@ -2159,7 +2199,7 @@ def write_diagnostics(
                 linewidth=2,
                 label=profiles.season_labels[season],
             )
-            selected_temp = interpolate_profile(
+            selected_temp = _interpolate_profile(
                 profiles.source_z_m,
                 profiles.seasonal_temperature_degC[season, region],
                 profiles.output_z_m,
@@ -2211,7 +2251,7 @@ def write_diagnostics(
         plt.close(fig)
 
 
-def print_summary(
+def _print_summary(
     cfg: Config,
     gamma0: float,
     regional_delta_t: np.ndarray,
@@ -2256,11 +2296,11 @@ def print_summary(
 _BOTTOM_GRADIENT_THRESHOLD_C_PER_M = 5.0e-4
 
 
-def warn_if_seafloor_below_max_depth(
+def _warn_if_seafloor_below_max_depth(
     cfg: Config,
-    mesh: MeshData,
+    mesh: _MeshData,
     basin_ids: np.ndarray,
-    profiles: RegionalProfiles,
+    profiles: _RegionalProfiles,
     logger,
 ) -> None:
     """Warn when marine ice sits below the clamped anchor depth.
@@ -2320,15 +2360,15 @@ def warn_if_seafloor_below_max_depth(
 
 
 def run(cfg: Config, logger, prepare_only: bool = False) -> None:
-    mesh, basin_ids = load_mesh_and_basins(cfg)
-    profiles = build_regional_profiles(cfg, mesh, basin_ids, logger)
-    warn_if_seafloor_below_max_depth(cfg, mesh, basin_ids, profiles, logger)
+    mesh, basin_ids = _load_mesh_and_basins(cfg)
+    profiles = _build_regional_profiles(cfg, mesh, basin_ids, logger)
+    _warn_if_seafloor_below_max_depth(cfg, mesh, basin_ids, profiles, logger)
     if cfg.should_calibrate:
         # OCX scenario: calibrate gamma0 and optionally deltaT
         gamma0, delta_t, achieved, calibration_monthly_tf = (
-            calibrate_parameters(cfg, mesh, basin_ids, profiles)
+            _calibrate_parameters(cfg, mesh, basin_ids, profiles)
         )
-        write_melt_params(cfg, basin_ids, gamma0, delta_t, logger)
+        _write_melt_params(cfg, basin_ids, gamma0, delta_t, logger)
     else:
         # ESM scenario: reuse OCX-calibrated gamma0 and deltaT
         logger.info(
@@ -2336,15 +2376,15 @@ def run(cfg: Config, logger, prepare_only: bool = False) -> None:
             f"gamma0/deltaT from {cfg.melt_params_file} instead of "
             "recalibrating"
         )
-        gamma0, delta_t = read_melt_params(cfg, basin_ids, logger)
+        gamma0, delta_t = _read_melt_params(cfg, basin_ids, logger)
         achieved, calibration_monthly_tf = None, None
-    print_summary(cfg, gamma0, delta_t, achieved, logger)
-    write_diagnostics(
+    _print_summary(cfg, gamma0, delta_t, achieved, logger)
+    _write_diagnostics(
         cfg, mesh, basin_ids, profiles, gamma0, delta_t, achieved,
         calibration_monthly_tf
     )
     if not prepare_only:
-        write_output(cfg, mesh, basin_ids, profiles, delta_t, logger)
+        _write_output(cfg, mesh, basin_ids, profiles, delta_t, logger)
     else:
         logger.info(
             "Preparation-only run complete; the multi-gigabyte forcing file "
