@@ -614,7 +614,7 @@ def _calibrate_gamma0(
     """Calibrate a single global gamma0 using regions with finite targets.
 
     All deltaT values are held at zero during gamma0 calibration. The
-    objective is the mean squared error across all regions with non-NaN
+    objective is the mean absolute error across all regions with non-NaN
     targets.
 
     Parameters
@@ -655,7 +655,7 @@ def _calibrate_gamma0(
         )
 
     def residual(gamma0: float) -> float:
-        """Mean squared error across active regions."""
+        """Mean absolute error across active regions."""
         errors = []
         for region_idx in range(active_tf.shape[1]):
             monthly_tf = active_tf[:, region_idx]
@@ -664,7 +664,7 @@ def _calibrate_gamma0(
             achieved = _nonlocal_mean_melt(0.0, monthly_tf, gamma0,
                                            coefficient)
             errors.append(achieved - target)
-        return float(np.mean(np.array(errors) ** 2))
+        return float(np.mean(np.abs(np.array(errors))))
 
     # Use scipy.optimize.minimize_scalar to find gamma0
     from scipy.optimize import minimize_scalar
