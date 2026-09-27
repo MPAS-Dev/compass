@@ -2253,6 +2253,8 @@ def _write_diagnostics(
 
 def _print_summary(
     cfg: Config,
+    mesh: _MeshData,
+    basin_ids: np.ndarray,
     gamma0: float,
     regional_delta_t: np.ndarray,
     achieved_melt: np.ndarray | None,
@@ -2269,11 +2271,28 @@ def _print_summary(
         for region, key in enumerate(REGION_KEYS):
             logger.info(f"{key:15s} {regional_delta_t[region]:9.5f}")
         return
-    # OCX scenario: show targets and achieved melt rates for all regions
+    # OCX scenario: show targets and achieved melt rates for all regions.
+    # Per-region floating area lets the reader judge whether a high mean melt
+    # rate applies to a large area (big total melt) or just a few cells.
+    floating, _ = _floating_mask_and_draft(
+        mesh.bed,
+        mesh.thickness,
+        cfg.rho_ice,
+        cfg.rho_seawater,
+        cfg.flotation_tolerance_m,
+        cfg.minimum_ice_thickness_m,
+    )
+    floating_areas_km2 = [
+        float(np.sum(mesh.area[floating & (basin_ids == region + 1)]) / 1.0e6)
+        for region in range(len(REGION_NAMES))
+    ]
     status = 'enabled' if cfg.calibrate_deltaT else 'disabled'
     logger.info(f"\nDeltaT calibration: {status}")
     logger.info("\nRegional melt rates:")
-    logger.info("region          target_m/yr  achieved_m/yr  deltaT_K")
+    logger.info(
+        "region          target_m/yr  achieved_m/yr  deltaT_K"
+        "     area_km2   melt_Gt/yr"
+    )
     for region, key in enumerate(REGION_KEYS):
         target = cfg.regional_melt_targets_m_per_yr[region]
         target_str = (
@@ -2284,9 +2303,20 @@ def _print_summary(
             if np.isfinite(achieved_melt[region])
             else "          (none)"
         )
+        area_km2 = floating_areas_km2[region]
+        # Ice-mass flux: mean rate (m/yr) x area (m^2) x rho_ice / 1e12 Gt.
+        # Exact because achieved_melt is the area-weighted mean over the same
+        # floating cells whose area is summed here.
+        if np.isfinite(achieved_melt[region]):
+            volume_gt = (
+                achieved_melt[region] * area_km2 * 1.0e6 * cfg.rho_ice / 1.0e12
+            )
+            volume_str = f"{volume_gt:12.5f}"
+        else:
+            volume_str = "      (none)"
         logger.info(
             f"{key:15s} {target_str} {achieved_str} "
-            f"{regional_delta_t[region]:9.5f}"
+            f"{regional_delta_t[region]:9.5f} {area_km2:11.3f} {volume_str}"
         )
     logger.info("=" * 70 + "\n")
 
@@ -2378,7 +2408,7 @@ def run(cfg: Config, logger, prepare_only: bool = False) -> None:
         )
         gamma0, delta_t = _read_melt_params(cfg, basin_ids, logger)
         achieved, calibration_monthly_tf = None, None
-    _print_summary(cfg, gamma0, delta_t, achieved, logger)
+    _print_summary(cfg, mesh, basin_ids, gamma0, delta_t, achieved, logger)
     _write_diagnostics(
         cfg, mesh, basin_ids, profiles, gamma0, delta_t, achieved,
         calibration_monthly_tf
