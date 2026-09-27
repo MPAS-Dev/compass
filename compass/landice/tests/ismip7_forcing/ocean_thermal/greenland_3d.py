@@ -609,13 +609,15 @@ def _nonlocal_mean_melt(
 def _calibrate_gamma0(
     regional_monthly_tf: np.ndarray,
     regional_targets_m_per_yr: np.ndarray,
+    regional_areas_m2: np.ndarray,
     coefficient: float,
 ) -> float:
-    """Calibrate a single global gamma0 using regions with finite targets.
+    """Calibrate a single global gamma0 using an area-weighted aggregate.
 
-    All deltaT values are held at zero during gamma0 calibration. The
-    objective is the mean absolute error across all regions with non-NaN
-    targets.
+    All deltaT values are held at zero during gamma0 calibration. Solves for
+    gamma0 so the area-weighted mean melt across regions with finite targets
+    matches the area-weighted mean of those targets (closed form, no
+    optimizer).
 
     Parameters
     ----------
@@ -625,6 +627,9 @@ def _calibrate_gamma0(
     regional_targets_m_per_yr : np.ndarray
         Shape (n_regions,). Target melt rate for each region. NaN values
         indicate regions to exclude from calibration.
+    regional_areas_m2 : np.ndarray
+        Shape (n_regions,). Floating ice area for each region in m^2. Zero
+        for empty regions.
     coefficient : float
         Physical coefficient: rho_sw * c_p / (rho_ice * L)
 
@@ -635,17 +640,19 @@ def _calibrate_gamma0(
     """
     regional_monthly_tf = np.asarray(regional_monthly_tf, dtype=float)
     regional_targets = np.asarray(regional_targets_m_per_yr, dtype=float)
+    regional_areas = np.asarray(regional_areas_m2, dtype=float)
 
-    # Identify regions with finite (non-NaN) targets
-    active_regions = np.isfinite(regional_targets)
+    # Identify regions with finite (non-NaN) targets and nonzero area
+    active_regions = np.isfinite(regional_targets) & (regional_areas > 0.0)
     if not np.any(active_regions):
         raise ValueError(
-            "At least one region must have a finite target melt rate for "
-            "gamma0 calibration"
+            "At least one region must have a finite target melt rate and "
+            "nonzero floating area for gamma0 calibration"
         )
 
     active_tf = regional_monthly_tf[:, active_regions]
     active_targets = regional_targets[active_regions]
+    active_areas = regional_areas[active_regions]
 
     # Check that all monthly values are finite for active regions
     if not np.all(np.isfinite(active_tf)):
@@ -654,35 +661,24 @@ def _calibrate_gamma0(
             "thermal forcing values"
         )
 
-    def residual(gamma0: float) -> float:
-        """Mean absolute error across active regions."""
-        errors = []
-        for region_idx in range(active_tf.shape[1]):
-            monthly_tf = active_tf[:, region_idx]
-            target = active_targets[region_idx]
-            # deltaT = 0 for gamma0 calibration
-            achieved = _nonlocal_mean_melt(0.0, monthly_tf, gamma0,
-                                           coefficient)
-            errors.append(achieved - target)
-        return float(np.mean(np.abs(np.array(errors))))
+    # Closed-form solve: achieved_i = gamma0 · coefficient² · M_i, where
+    # M_i = mean_months(TF_i · |TF_i|). Area-weight both sides:
+    # gamma0 = Σ(target_i · area_i) / (coefficient² · Σ(M_i · area_i))
+    m_values = np.array([
+        np.mean(active_tf[:, i] * np.abs(active_tf[:, i]))
+        for i in range(active_tf.shape[1])
+    ])
 
-    # Use scipy.optimize.minimize_scalar to find gamma0
-    from scipy.optimize import minimize_scalar
+    numerator = np.sum(active_targets * active_areas)
+    denominator = coefficient**2 * np.sum(m_values * active_areas)
 
-    # Reasonable bounds: gamma0 typically in range [1000, 50000] m/yr
-    result = minimize_scalar(
-        residual,
-        bounds=(100.0, 100000.0),
-        method='bounded',
-        options={'xatol': 1e-3}
-    )
-
-    if not result.success:
-        raise RuntimeError(
-            f"Gamma0 calibration failed: {result.message}"
+    if denominator <= 0.0:
+        raise ValueError(
+            "Thermal forcing denominator is non-positive; cannot calibrate "
+            "gamma0"
         )
 
-    return float(result.x)
+    return float(numerator / denominator)
 
 
 def _calibrate_delta_t(
@@ -1407,7 +1403,21 @@ def _calibrate_parameters(
         cfg.rho_ice * cfg.latent_heat_ice
     )
 
-    # Stage 1: Calibrate gamma0 with deltaT=0 using only non-NaN targets
+    # Compute per-region floating ice areas for area-weighted calibration
+    floating, _ = _floating_mask_and_draft(
+        mesh.bed,
+        mesh.thickness,
+        cfg.rho_ice,
+        cfg.rho_seawater,
+        cfg.flotation_tolerance_m,
+        cfg.minimum_ice_thickness_m,
+    )
+    regional_areas_m2 = np.array([
+        float(np.sum(mesh.area[floating & (basin_ids == region + 1)]))
+        for region in range(len(REGION_NAMES))
+    ])
+
+    # Stage 1: Calibrate gamma0 with deltaT=0 using area-weighted aggregate
     print("\n=== Stage 1: Calibrating global gamma0 (with deltaT=0) ===")
     # Mask empty regions out of the target array so active_regions in
     # _calibrate_gamma0 excludes both NaN targets (user's "no constraint")
@@ -1415,7 +1425,7 @@ def _calibrate_parameters(
     targets_for_calibration = cfg.regional_melt_targets_m_per_yr.copy()
     targets_for_calibration[list(empty_regions)] = np.nan
     gamma0 = _calibrate_gamma0(
-        monthly_means, targets_for_calibration, coefficient
+        monthly_means, targets_for_calibration, regional_areas_m2, coefficient
     )
     print(f"Calibrated gamma0 = {gamma0:.1f} m/yr")
 
