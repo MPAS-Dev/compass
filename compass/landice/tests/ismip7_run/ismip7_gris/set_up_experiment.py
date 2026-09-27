@@ -339,11 +339,6 @@ class SetUpExperiment(Step):
         self.add_namelist_options(options=options,
                                   out_name='namelist.landice')
 
-        if use_3d_thermal_forcing:
-            options = {'config_use_3d_thermal_forcing_for_face_melt': ".true."}
-            self.add_namelist_options(options=options,
-                                      out_name='namelist.landice')
-
         if is_historical:
             options = {'config_do_restart': ".false.",
                        'config_start_time': f"'{start_time}'",

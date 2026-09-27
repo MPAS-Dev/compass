@@ -196,6 +196,6 @@ additionally globs ``*3dThermalForcing_*.nc`` (a chunked series), symlinks the
 whole series, and adds an ``ismip7_TF_3d`` stream to read
 ``ismip6shelfMelt_3dThermalForcing`` + ``ismip6shelfMelt_zOcean`` via a ``$Y``
 template and ``filename_interval``. Both 2D and 3D GrIS thermal forcing use
-monthly input intervals. When 3D forcing is enabled,
-``config_use_3d_thermal_forcing_for_face_melt`` is also set to ``.true.`` in
-the namelist.
+monthly input intervals. When 3D forcing is enabled, the facemelting routine
+still uses the ismip6_2dThermalForcing field to avoid any artificats introduced
+by constructing the 3d fields.
