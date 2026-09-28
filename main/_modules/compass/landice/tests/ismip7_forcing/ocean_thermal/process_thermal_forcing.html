@@ -431,7 +431,8 @@
 
         <span class="c1"># Combine remapped files and rename to MALI conventions</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Combining remapped files and renaming variables..."</span><span class="p">)</span>
-        <span class="n">output_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_thermal_forcing_</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">_"</span>
+        <span class="n">tf_label</span> <span class="o">=</span> <span class="s2">"3dThermalForcing"</span> <span class="k">if</span> <span class="n">ocean_3d</span> <span class="k">else</span> <span class="s2">"2dThermalForcing"</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">tf_label</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">_"</span>
                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ocean_3d</span><span class="p">:</span>

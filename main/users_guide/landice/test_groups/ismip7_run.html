@@ -266,9 +266,10 @@ corresponding ESM’s historical run (e.g.,
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>{forcing_basepath}/
 ├── CESM2-WACCM_historical/
 │   ├── atmosphere/
-│   │   └── {mesh}_smb_CESM2-WACCM_historical_*.nc
+│   │   └── {mesh}_SMB_CESM2-WACCM_historical_*.nc
 │   ├── ocean_thermal_forcing/
-│   │   └── {mesh}_thermal_forcing_CESM2-WACCM_historical_*.nc
+│   │   └── {mesh}_2dThermalForcing_*.nc  (GrIS)
+│   │   └── {mesh}_3dThermalForcing_*.nc  (AIS; optional for GrIS)
 │   └── shelf_collapse/
 │       └── {mesh}_ice_shelf_collapse_mask_*.nc
 ├── CESM2-WACCM_ssp585/
@@ -388,7 +389,22 @@ region, e.g. the full padded domain, instead.</p>
 </div>
 <p><strong>GrIS config</strong> (<code class="docutils literal notranslate"><span class="pre">[ismip7_run_gris]</span></code>) is similar (including
 <code class="docutils literal notranslate"><span class="pre">reference_surface_path</span></code>) but without sea-level model or FastIsostasy
-coupling options</p>
+coupling options, and adds <code class="docutils literal notranslate"><span class="pre">use_3d_thermal_forcing</span></code> (default <code class="docutils literal notranslate"><span class="pre">false</span></code>):</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Whether to additionally force with 3D ocean thermal forcing (built by</span>
+<span class="c1"># the build_3d_thermal_forcing step of landice/ismip7_forcing/ocean_thermal)</span>
+<span class="c1"># alongside the 2D forcing. Requires melt_params_path.</span>
+<span class="na">use_3d_thermal_forcing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
+</pre></div>
+</div>
+<p>GrIS always reads <code class="docutils literal notranslate"><span class="pre">ismip6_2dThermalForcing</span></code> (the authoritative ISMIP7 2D
+ocean forcing) from <code class="docutils literal notranslate"><span class="pre">*2dThermalForcing_*.nc</span></code> at monthly intervals. When
+<code class="docutils literal notranslate"><span class="pre">use_3d_thermal_forcing</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code>, it additionally reads
+<code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_3dThermalForcing</span></code> and <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_zOcean</span></code> from
+<code class="docutils literal notranslate"><span class="pre">*3dThermalForcing_*.nc</span></code> at monthly intervals (the 3D forcing is split
+across multiple year-block files addressed via a <code class="docutils literal notranslate"><span class="pre">$Y</span></code> template), plus
+<code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_deltaT</span></code>, <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_basin</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_gamma0</span></code> from the file at <code class="docutils literal notranslate"><span class="pre">melt_params_path</span></code> (which must
+be supplied in that case).</p>
 </section>
 <section id="forcing-streams">
 <span id="landice-ismip7-run-forcing-streams"></span><h2>Forcing Streams<a class="headerlink" href="#forcing-streams" title="Link to this heading"></a></h2>
@@ -398,17 +414,21 @@ coupling options</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">sfcMassBal</span></code> — surface mass balance</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">surfaceAirTemperature</span></code> — surface air temperature</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ismip6Runoff</span></code> — ice sheet runoff</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ismip6_2dThermalForcing</span></code> (GrIS) — ocean thermal forcing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ismip6_2dThermalForcing</span></code> (GrIS, always) — 2D ocean thermal forcing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_3dThermalForcing</span></code> (GrIS when
+<code class="docutils literal notranslate"><span class="pre">use_3d_thermal_forcing</span> <span class="pre">=</span> <span class="pre">true</span></code>) — 3D ocean thermal forcing</p></li>
 </ul>
 <p><strong>Annual forcing</strong> (<code class="docutils literal notranslate"><span class="pre">input_interval</span> <span class="pre">=</span> <span class="pre">0001-00-00_00:00:00</span></code>):</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">sfcMassBalLapseRate</span></code> — SMB elevation lapse rate</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">surfaceAirTemperatureLapseRate</span></code> — temperature lapse rate</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_3dThermalForcing</span></code> (AIS)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_3dThermalForcing</span></code> (AIS, always) — 3D ocean thermal
+forcing</p></li>
 </ul>
 <p><strong>Static</strong> (<code class="docutils literal notranslate"><span class="pre">input_interval</span> <span class="pre">=</span> <span class="pre">initial_only</span></code>):</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_zOcean</span></code> — ocean depth coordinates (AIS only)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_zOcean</span></code> — ocean depth coordinates (AIS; GrIS when
+<code class="docutils literal notranslate"><span class="pre">use_3d_thermal_forcing</span> <span class="pre">=</span> <span class="pre">true</span></code>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_deltaT</span></code>, <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_basin</span></code>,
 <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_gamma0</span></code> — melt parameterization coefficients</p></li>
 </ul>
@@ -451,8 +471,13 @@ FastIsostasy coupling.</p>
 <section id="ismip7-gris">
 <span id="landice-ismip7-run-gris"></span><h2>ismip7_gris<a class="headerlink" href="#ismip7-gris" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/ismip7_run/ismip7_gris</span></code> sets up GrIS experiments with 2D
-(depth-averaged) ocean thermal forcing. Sea-level model coupling is not
-currently supported for GrIS. Crevasse-depth calving is the default.</p>
+(depth-averaged) ocean thermal forcing (always), plus optional 3D forcing
+(matching the AIS convention) when <code class="docutils literal notranslate"><span class="pre">use_3d_thermal_forcing</span> <span class="pre">=</span> <span class="pre">true</span></code> and the
+GrIS <code class="docutils literal notranslate"><span class="pre">build_3d_thermal_forcing</span></code> step (see
+<a class="reference internal" href="ismip7_forcing.html#landice-ismip7-forcing-ocean-thermal"><span class="std std-ref">ocean_thermal</span></a>) has been run. Both the 2D and 3D
+forcings are delivered to MALI simultaneously when 3D is enabled. Sea-level
+model coupling is not currently supported for GrIS. Crevasse-depth calving is
+the default.</p>
 </section>
 </section>
 

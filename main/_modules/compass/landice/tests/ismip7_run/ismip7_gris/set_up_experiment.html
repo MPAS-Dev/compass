@@ -112,6 +112,7 @@
   <h1>Source code for compass.landice.tests.ismip7_run.ismip7_gris.set_up_experiment</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_job_script</span>
@@ -178,6 +179,11 @@
         <span class="n">reference_surface_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'reference_surface_path'</span><span class="p">)</span>
         <span class="n">reference_surface_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reference_surface_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">calving_method</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'calving_method'</span><span class="p">)</span>
+        <span class="n">use_3d_thermal_forcing</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'use_3d_thermal_forcing'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">use_3d_thermal_forcing</span> <span class="ow">and</span> <span class="n">melt_params_path</span> <span class="o">==</span> <span class="s1">'NotAvailable'</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"melt_params_path must be supplied when "</span>
+                <span class="s2">"use_3d_thermal_forcing is true"</span><span class="p">)</span>
 
         <span class="n">exp_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_info</span>
         <span class="n">scenario</span> <span class="o">=</span> <span class="n">exp_info</span><span class="p">[</span><span class="s1">'scenario'</span><span class="p">]</span>
@@ -189,6 +195,10 @@
         <span class="n">resource_location</span> <span class="o">=</span> <span class="s1">'compass.landice.tests.ismip7_run.ismip7_gris'</span>
 
         <span class="n">use_vM_calving</span> <span class="o">=</span> <span class="p">(</span><span class="n">calving_method</span> <span class="o">==</span> <span class="s1">'von_mises'</span><span class="p">)</span>
+
+        <span class="c1"># 3D thermal-forcing filename_interval default; the chunked case</span>
+        <span class="c1"># overrides it below when deriving the interval from chunk spacing.</span>
+        <span class="n">tf_3d_filename_interval</span> <span class="o">=</span> <span class="s1">'none'</span>
 
         <span class="c1"># --- Determine forcing file paths ---</span>
         <span class="k">if</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s1">'ocx'</span><span class="p">:</span>
@@ -222,6 +232,20 @@
             <span class="n">tf_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">ctrl_tf_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">ctrl_tf_path</span><span class="p">,</span>
                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">tf_fname</span><span class="p">))</span>
+
+            <span class="c1"># 3D climatology TF (optional, only with use_3d_thermal_forcing)</span>
+            <span class="k">if</span> <span class="n">use_3d_thermal_forcing</span><span class="p">:</span>
+                <span class="n">ctrl_tf_3d_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s1">'ctrl_tf_3d_climatology_path'</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">ctrl_tf_3d_path</span> <span class="o">==</span> <span class="s1">'NotAvailable'</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">"ctrl_tf_3d_climatology_path must be supplied when "</span>
+                        <span class="s2">"use_3d_thermal_forcing is true for a CTRL run"</span><span class="p">)</span>
+                <span class="n">tf_3d_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">ctrl_tf_3d_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">ctrl_tf_3d_path</span><span class="p">,</span>
+                           <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">tf_3d_fname</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tf_3d_fname</span> <span class="o">=</span> <span class="s1">''</span>
 
             <span class="n">smb_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctrl_atm_path</span><span class="p">,</span> <span class="s1">'*SMB*.nc'</span><span class="p">))</span>
             <span class="n">smb_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">smb_files</span> <span class="k">if</span> <span class="s1">'gradient'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
@@ -319,24 +343,80 @@
                 <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">temp_grad_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">temp_grad_fname</span><span class="p">))</span>
 
-            <span class="c1"># GrIS uses 2D thermal forcing</span>
-            <span class="n">tf_search</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ocean_dir</span><span class="p">,</span> <span class="s1">'*thermal_forcing_*.nc'</span><span class="p">)</span>
-            <span class="n">tf_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">tf_search</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tf_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">tf_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">tf_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">tf_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                           <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">tf_fname</span><span class="p">))</span>
+            <span class="c1"># GrIS thermal forcing: always 2D, plus 3D when</span>
+            <span class="c1"># use_3d_thermal_forcing is true (see build_3d_thermal_forcing</span>
+            <span class="c1"># in landice/ismip7_forcing/ocean_thermal)</span>
+
+            <span class="c1"># 2D thermal forcing (always)</span>
+            <span class="n">tf_2d_search</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ocean_dir</span><span class="p">,</span>
+                                        <span class="s1">'*2dThermalForcing_*.nc'</span><span class="p">)</span>
+            <span class="n">tf_2d_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">tf_2d_search</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tf_2d_list</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: Expected 1 2D TF file at </span><span class="si">{</span><span class="n">tf_2d_search</span><span class="si">}</span><span class="s2">, "</span>
+                         <span class="sa">f</span><span class="s2">"found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tf_2d_list</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">tf_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">tf_2d_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">tf_2d_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                       <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">tf_fname</span><span class="p">))</span>
+
+            <span class="c1"># 3D thermal forcing (optional, only with</span>
+            <span class="c1"># use_3d_thermal_forcing)</span>
+            <span class="k">if</span> <span class="n">use_3d_thermal_forcing</span><span class="p">:</span>
+                <span class="n">tf_3d_search</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ocean_dir</span><span class="p">,</span>
+                                            <span class="s1">'*3dThermalForcing_*.nc'</span><span class="p">)</span>
+                <span class="n">tf_3d_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">tf_3d_search</span><span class="p">))</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tf_3d_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: Expected at least 1 3D TF file at "</span>
+                             <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">tf_3d_search</span><span class="si">}</span><span class="s2">, found 0"</span><span class="p">)</span>
+                <span class="c1"># 3D TF is written one file per N-year block, named by the</span>
+                <span class="c1"># block start year (..._&lt;YYYY&gt;.nc). Symlink the whole</span>
+                <span class="c1"># series and address it with a $Y filename_template plus a</span>
+                <span class="c1"># filename_interval so MALI advances across chunk files.</span>
+                <span class="k">for</span> <span class="n">tf_path</span> <span class="ow">in</span> <span class="n">tf_3d_list</span><span class="p">:</span>
+                    <span class="n">tf_base</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">tf_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">tf_path</span><span class="p">,</span>
+                               <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">tf_base</span><span class="p">))</span>
+                <span class="n">start_years</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">tf_3d_list</span><span class="p">:</span>
+                    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">'_(\d</span><span class="si">{4}</span><span class="s1">)\.nc$'</span><span class="p">,</span>
+                                      <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">f</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+                        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">"ERROR: 3D thermal forcing file does not "</span>
+                            <span class="sa">f</span><span class="s2">"match expected pattern *_YYYY.nc: </span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                    <span class="n">start_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+                <span class="n">start_years</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">start_years</span><span class="p">)</span>
+                <span class="n">sample</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">tf_3d_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">tf_3d_fname</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'_\d</span><span class="si">{4}</span><span class="s1">\.nc$'</span><span class="p">,</span> <span class="s1">'_$Y.nc'</span><span class="p">,</span> <span class="n">sample</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">start_years</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">interval_years</span> <span class="o">=</span> <span class="n">start_years</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">start_years</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="c1"># Validate uniform spacing across all chunks</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">start_years</span><span class="p">)):</span>
+                        <span class="n">spacing</span> <span class="o">=</span> <span class="n">start_years</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">start_years</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">spacing</span> <span class="o">!=</span> <span class="n">interval_years</span><span class="p">:</span>
+                            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">"ERROR: 3D thermal forcing chunk years "</span>
+                                <span class="sa">f</span><span class="s2">"are not uniformly spaced. Expected "</span>
+                                <span class="sa">f</span><span class="s2">"interval </span><span class="si">{</span><span class="n">interval_years</span><span class="si">}</span><span class="s2"> years, but "</span>
+                                <span class="sa">f</span><span class="s2">"chunks </span><span class="si">{</span><span class="n">start_years</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> and "</span>
+                                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">start_years</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> are </span><span class="si">{</span><span class="n">spacing</span><span class="si">}</span><span class="s2"> years "</span>
+                                <span class="sa">f</span><span class="s2">"apart."</span><span class="p">)</span>
+                    <span class="n">tf_3d_filename_interval</span> <span class="o">=</span> \
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">interval_years</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">-00-00_00:00:00"</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: Expected 1 TF file at </span><span class="si">{</span><span class="n">tf_search</span><span class="si">}</span><span class="s2">, "</span>
-                         <span class="sa">f</span><span class="s2">"found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tf_list</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="n">tf_3d_fname</span> <span class="o">=</span> <span class="s1">''</span>
 
         <span class="c1"># --- Set up streams ---</span>
         <span class="k">if</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s1">'ctrl'</span><span class="p">:</span>
             <span class="n">forcing_interval_monthly</span> <span class="o">=</span> <span class="s1">'initial_only'</span>
             <span class="n">forcing_interval_annual</span> <span class="o">=</span> <span class="s1">'initial_only'</span>
+            <span class="n">forcing_interval_TF</span> <span class="o">=</span> <span class="s1">'initial_only'</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">forcing_interval_monthly</span> <span class="o">=</span> <span class="s1">'0000-01-00_00:00:00'</span>
             <span class="n">forcing_interval_annual</span> <span class="o">=</span> <span class="s1">'0001-00-00_00:00:00'</span>
+            <span class="c1"># GrIS thermal forcing (2D and 3D) is monthly. The annual</span>
+            <span class="c1"># cadence only applies to Antarctica, whose ISMIP7 3D forcing is</span>
+            <span class="c1"># provided annually.</span>
+            <span class="n">forcing_interval_TF</span> <span class="o">=</span> <span class="n">forcing_interval_monthly</span>
 
         <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">'input_file_init_cond'</span><span class="p">:</span> <span class="n">init_cond_fname</span> <span class="k">if</span> <span class="n">is_historical</span>
@@ -348,11 +428,15 @@
             <span class="s1">'input_file_SMB_forcing'</span><span class="p">:</span> <span class="n">smb_fname</span><span class="p">,</span>
             <span class="s1">'input_file_temperature_forcing'</span><span class="p">:</span> <span class="n">temp_fname</span><span class="p">,</span>
             <span class="s1">'input_file_TF_forcing'</span><span class="p">:</span> <span class="n">tf_fname</span><span class="p">,</span>
+            <span class="s1">'input_file_TF_3d_forcing'</span><span class="p">:</span> <span class="n">tf_3d_fname</span><span class="p">,</span>
             <span class="s1">'input_file_runoff_forcing'</span><span class="p">:</span> <span class="n">runoff_fname</span><span class="p">,</span>
             <span class="s1">'input_file_smb_gradient_forcing'</span><span class="p">:</span> <span class="n">smb_grad_fname</span><span class="p">,</span>
             <span class="s1">'input_file_temperature_gradient_forcing'</span><span class="p">:</span> <span class="n">temp_grad_fname</span><span class="p">,</span>
             <span class="s1">'forcing_interval_monthly'</span><span class="p">:</span> <span class="n">forcing_interval_monthly</span><span class="p">,</span>
             <span class="s1">'forcing_interval_annual'</span><span class="p">:</span> <span class="n">forcing_interval_annual</span><span class="p">,</span>
+            <span class="s1">'forcing_interval_TF'</span><span class="p">:</span> <span class="n">forcing_interval_TF</span><span class="p">,</span>
+            <span class="s1">'tf_3d_filename_interval'</span><span class="p">:</span> <span class="n">tf_3d_filename_interval</span><span class="p">,</span>
+            <span class="s1">'use_3d_thermal_forcing'</span><span class="p">:</span> <span class="n">use_3d_thermal_forcing</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>

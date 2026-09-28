@@ -166,12 +166,14 @@ ESMF with a separate resource allocation.</p>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code> test case has six steps: <code class="docutils literal notranslate"><span class="pre">build_mapping_file</span></code>,
 <code class="docutils literal notranslate"><span class="pre">process_smb</span></code>, <code class="docutils literal notranslate"><span class="pre">process_temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">process_smb_gradient</span></code>,
 <code class="docutils literal notranslate"><span class="pre">process_temperature_gradient</span></code>, and <code class="docutils literal notranslate"><span class="pre">process_runoff</span></code>.</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code> test case has two steps: <code class="docutils literal notranslate"><span class="pre">build_mapping_file</span></code> and
-<code class="docutils literal notranslate"><span class="pre">process_thermal_forcing</span></code>.
-For AIS this produces 3D thermal forcing (with 30 ocean depth layers); for
-GrIS it produces 2D (depth-averaged) thermal forcing. The step can also
-process the observational ocean thermal forcing climatology (Zhou et al.)
-for AIS, controlled by the <code class="docutils literal notranslate"><span class="pre">process_ocean_climatology</span></code> config option.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code> test case has three steps: <code class="docutils literal notranslate"><span class="pre">build_mapping_file</span></code>,
+<code class="docutils literal notranslate"><span class="pre">process_thermal_forcing</span></code>, and <code class="docutils literal notranslate"><span class="pre">build_3d_thermal_forcing</span></code>.
+<code class="docutils literal notranslate"><span class="pre">process_thermal_forcing</span></code> produces, for AIS, 3D thermal forcing (with 30
+ocean depth layers) and, for GrIS, 2D (depth-averaged) thermal forcing. It
+can also process the observational ocean thermal forcing climatology (Zhou
+et al.) for AIS, controlled by the <code class="docutils literal notranslate"><span class="pre">process_ocean_climatology</span></code> config
+option. <code class="docutils literal notranslate"><span class="pre">build_3d_thermal_forcing</span></code> optionally converts the GrIS 2D forcing
+into a 3D field (GrIS only, controlled by <code class="docutils literal notranslate"><span class="pre">process_ocean_thermal_3d</span></code>).</p></li>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">fracture</span></code> test case has four steps: <code class="docutils literal notranslate"><span class="pre">build_mapping_file</span></code>,
 <code class="docutils literal notranslate"><span class="pre">process_excess_melt</span></code> (Path A), <code class="docutils literal notranslate"><span class="pre">process_lake_properties</span></code> (Path B), and
 <code class="docutils literal notranslate"><span class="pre">process_shelf_collapse</span></code> (Path C). It processes the ISMIP7
@@ -228,10 +230,12 @@ test cases, just like the ESM scenarios.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{output_base_path}/{group}/atmosphere/{mesh}_SMB_{source}_{scenario}_{years}.nc
 {output_base_path}/{group}/atmosphere/{mesh}_temperature_{source}_{scenario}_{years}.nc
 {output_base_path}/{group}/atmosphere/{mesh}_runoff_...  (and the two gradients)
-{output_base_path}/{group}/ocean_thermal_forcing/{mesh}_thermal_forcing_{source}_{scenario}_{years}.nc
 {output_base_path}/{group}/shelf_collapse/{mesh}_ice_shelf_collapse_mask_*.nc
 {output_base_path}/{group}/excess_melt/{mesh}_excess_melt_*.nc
 {output_base_path}/{group}/lake_properties/{mesh}_lake_properties_*.nc
+{output_base_path}/{group}/ocean_thermal_forcing/{mesh}_2dThermalForcing_{source}_{scenario}_{years}.nc  (GrIS)
+{output_base_path}/{group}/ocean_thermal_forcing/{mesh}_3dThermalForcing_{source}_{scenario}_{years}.nc  (AIS; optional GrIS 3-D)
+{output_base_path}/{group}/ocean_thermal_forcing/{mesh}_meltParams_OCX.nc  (GrIS 3-D calibration)
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">group</span></code> directory is <code class="docutils literal notranslate"><span class="pre">{model}_{scenario}</span></code> for ESM scenarios and <code class="docutils literal notranslate"><span class="pre">OCX</span></code>
@@ -315,6 +319,10 @@ values are:</p>
 <span class="c1"># Whether to process observational ocean thermal forcing climatology</span>
 <span class="na">process_ocean_climatology</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
 
+<span class="c1"># Whether to build regional 3-D Greenland ocean thermal forcing from the</span>
+<span class="c1"># 2-D forcing (GrIS only; Antarctica already produces 3-D forcing)</span>
+<span class="na">process_ocean_thermal_3d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
+
 <span class="c1"># config options for ismip7 atmosphere forcing</span>
 <span class="k">[ismip7_atmosphere]</span>
 
@@ -361,6 +369,14 @@ values are:</p>
 
 <span class="c1"># Base path to observational climatology data</span>
 <span class="na">base_path_climatology</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/path/to/ISMIP7/forcing/AIS/obs/zhou_annual_06_nov</span>
+
+<span class="c1"># config options for building 3-D Greenland ocean thermal forcing</span>
+<span class="k">[ismip7_ocean_thermal_3d]</span>
+
+<span class="c1"># Path to the JSON config with the 3-D-specific parameters (EN4 directory,</span>
+<span class="c1"># region-mask file, source-region GeoJSON, calibration, vertical grid).</span>
+<span class="c1"># User must supply when process_ocean_thermal_3d is true.</span>
+<span class="na">config_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
 
 <span class="c1"># config options for ismip7 fracture (Path C, ice shelf collapse) forcing</span>
 <span class="k">[ismip7_fracture]</span>
@@ -448,6 +464,28 @@ but without a Time dimension, producing a single static file.</p>
 <p>For <strong>GrIS</strong>, thermal forcing is 2D (depth-averaged), with monthly temporal
 resolution and yearly input files. The output variable is
 <code class="docutils literal notranslate"><span class="pre">ismip6_2dThermalForcing</span></code>.</p>
+<section id="build-3d-thermal-forcing-gris-3-d">
+<h3>build_3d_thermal_forcing (GrIS 3-D)<a class="headerlink" href="#build-3d-thermal-forcing-gris-3-d" title="Link to this heading"></a></h3>
+<p>The optional <code class="docutils literal notranslate"><span class="pre">build_3d_thermal_forcing</span></code> step (GrIS only, gated by
+<code class="docutils literal notranslate"><span class="pre">process_ocean_thermal_3d</span> <span class="pre">=</span> <span class="pre">true</span></code>) converts the GrIS 2D thermal forcing into
+a configurable-level 3D field for MALI’s nonlocal (Jourdain et al. 2020) melt
+scheme (default 20 levels; configurable via <code class="docutils literal notranslate"><span class="pre">ocean_vertical_grid.number_of_levels</span></code>
+in the JSON). It
+auto-chains from the 2D forcing the <code class="docutils literal notranslate"><span class="pre">process_thermal_forcing</span></code> step just
+wrote, builds seven regional vertical profiles from monthly EN4 objective
+analyses, anchors each cell’s profile to the effective seafloor to match the
+2D forcing, and calibrates one <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_deltaT</span></code> per region while
+holding <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_gamma0</span></code> fixed.</p>
+<p>The 3-D-specific parameters (EN4 directory, region-mask file, source-region
+GeoJSON, calibration targets, vertical grid, physical constants) are supplied
+through a JSON config file referenced by the <code class="docutils literal notranslate"><span class="pre">[ismip7_ocean_thermal_3d]</span></code>
+<code class="docutils literal notranslate"><span class="pre">config_file</span></code> option; the mesh, 2D forcing, output, and diagnostics paths
+are injected automatically. The output supplements (does not replace) the 2D
+forcing and uses the variables <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_3dThermalForcing</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_deltaT</span></code>, <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_gamma0</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_zOcean</span></code>, and <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_basin</span></code>, matching the AIS
+3D convention.</p>
+</section>
 </section>
 <section id="fracture">
 <span id="landice-ismip7-forcing-fracture"></span><h2>fracture<a class="headerlink" href="#fracture" title="Link to this heading"></a></h2>

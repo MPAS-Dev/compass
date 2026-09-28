@@ -223,11 +223,15 @@ builds and caches the shared atmosphere mapping file</p></li>
 <section id="ocean-thermal">
 <span id="dev-landice-ismip7-forcing-ocean-thermal"></span><h3>ocean_thermal<a class="headerlink" href="#ocean-thermal" title="Link to this heading"></a></h3>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal.html#compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal" title="compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_forcing.ocean_thermal.OceanThermal</span></code></a>
-test case processes the ISMIP7 ocean thermal forcing. It contains a mapping
-step followed by the processing step,
-<a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.html#compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing" title="compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessThermalForcing</span></code></a>,
+test case processes the ISMIP7 ocean thermal forcing. It contains three steps:
+a mapping step
+(<a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.ocean_thermal.build_mapping_file.BuildMappingFile.html#compass.landice.tests.ismip7_forcing.ocean_thermal.build_mapping_file.BuildMappingFile" title="compass.landice.tests.ismip7_forcing.ocean_thermal.build_mapping_file.BuildMappingFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">BuildMappingFile</span></code></a>),
+the processing step
+(<a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.html#compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing" title="compass.landice.tests.ismip7_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessThermalForcing</span></code></a>,
 which handles both AIS (3D, decade-spanning files) and GrIS (2D, yearly files)
-by branching on the <code class="docutils literal notranslate"><span class="pre">ocean_3d</span></code> parameter from <code class="docutils literal notranslate"><span class="pre">ice_sheet_params</span></code>. The
+by branching on the <code class="docutils literal notranslate"><span class="pre">ocean_3d</span></code> parameter from <code class="docutils literal notranslate"><span class="pre">ice_sheet_params</span></code>), and
+<a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.ocean_thermal.build_3d_thermal_forcing.BuildGreenland3dThermalForcing.html#compass.landice.tests.ismip7_forcing.ocean_thermal.build_3d_thermal_forcing.BuildGreenland3dThermalForcing" title="compass.landice.tests.ismip7_forcing.ocean_thermal.build_3d_thermal_forcing.BuildGreenland3dThermalForcing"><code class="xref py py-class docutils literal notranslate"><span class="pre">BuildGreenland3dThermalForcing</span></code></a>,
+which optionally builds a 3D GrIS field from the 2D forcing (see below). The
 mapping step builds each enabled scenario or climatology mapping with
 <code class="docutils literal notranslate"><span class="pre">esmf_ntasks</span></code>.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">run()</span></code> method dispatches to two sub-methods based on the boolean config
@@ -258,6 +262,29 @@ nISMIP6OceanLayers) — no Time dimension</p></li>
 <li><p>Remaps 2D monthly thermal forcing</p></li>
 <li><p>Produces <code class="docutils literal notranslate"><span class="pre">ismip6_2dThermalForcing</span></code> (dims: Time × nCells)</p></li>
 </ul>
+<section id="build-3d-thermal-forcing-gris-3-d">
+<h4>build_3d_thermal_forcing (GrIS 3-D)<a class="headerlink" href="#build-3d-thermal-forcing-gris-3-d" title="Link to this heading"></a></h4>
+<p>The
+<a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.ocean_thermal.build_3d_thermal_forcing.BuildGreenland3dThermalForcing.html#compass.landice.tests.ismip7_forcing.ocean_thermal.build_3d_thermal_forcing.BuildGreenland3dThermalForcing" title="compass.landice.tests.ismip7_forcing.ocean_thermal.build_3d_thermal_forcing.BuildGreenland3dThermalForcing"><code class="xref py py-class docutils literal notranslate"><span class="pre">BuildGreenland3dThermalForcing</span></code></a>
+step (GrIS only, gated by <code class="docutils literal notranslate"><span class="pre">process_ocean_thermal_3d</span></code>) converts the GrIS 2D
+thermal forcing into a configurable-level 3D field for MALI’s nonlocal (Jourdain et al.
+2020) melt scheme. Its <code class="docutils literal notranslate"><span class="pre">run()</span></code> reconstructs the 2D output path that
+<code class="docutils literal notranslate"><span class="pre">ProcessThermalForcing._run_scenario</span></code> wrote (mirroring the <code class="docutils literal notranslate"><span class="pre">forcing_group</span></code>
+and ocean-source logic), injects the compass-derived mesh / 2D-forcing /
+output / diagnostics paths into a
+<a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.ocean_thermal.greenland_3d.Config.html#compass.landice.tests.ismip7_forcing.ocean_thermal.greenland_3d.Config" title="compass.landice.tests.ismip7_forcing.ocean_thermal.greenland_3d.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">Config</span></code></a>
+built from the JSON <code class="docutils literal notranslate"><span class="pre">config_file</span></code>, and calls
+<a class="reference internal" href="../generated/compass.landice.tests.ismip7_forcing.ocean_thermal.greenland_3d.run.html#compass.landice.tests.ismip7_forcing.ocean_thermal.greenland_3d.run" title="compass.landice.tests.ismip7_forcing.ocean_thermal.greenland_3d.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a>.
+The ported science lives in
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_forcing.ocean_thermal.greenland_3d</span></code>:
+seven regional EN4 profiles, seafloor anchoring to the 2D forcing, and
+per-region <code class="docutils literal notranslate"><span class="pre">deltaT</span></code> calibration. The output supplements the 2D file with
+<code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_3dThermalForcing</span></code>, <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_deltaT</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_gamma0</span></code>, <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_zOcean</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_basin</span></code>. The multi-gigabyte field is streamed record by
+record (dask, <code class="docutils literal notranslate"><span class="pre">netCDF4</span></code> engine → <code class="docutils literal notranslate"><span class="pre">nccopy</span> <span class="pre">-k</span> <span class="pre">nc6</span></code> for CDF-2,
+<code class="docutils literal notranslate"><span class="pre">.partial</span></code>-then-rename).</p>
+</section>
 </section>
 <section id="fracture">
 <span id="dev-landice-ismip7-forcing-fracture"></span><h3>fracture<a class="headerlink" href="#fracture" title="Link to this heading"></a></h3>
