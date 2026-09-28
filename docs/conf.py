@@ -175,11 +175,11 @@ texinfo_documents = [
 intersphinx_mapping = {
     'python': ('https://docs.python.org/', None),
     'numpy': ('https://numpy.org/doc/stable/', None),
-    'xarray': ('http://xarray.pydata.org/en/stable/', None),
+    'xarray': ('https://docs.xarray.dev/en/stable/', None),
     'geometric_features':
-        ('http://mpas-dev.github.io/geometric_features/main/', None),
+        ('https://mpas-dev.github.io/geometric_features/main/', None),
     'mpas_tools':
-        ('http://mpas-dev.github.io/MPAS-Tools/master/', None)}
+        ('https://mpas-dev.github.io/MPAS-Tools/master/', None)}
 
 
 github_doc_root = 'https://github.com/rtfd/recommonmark/tree/master/doc/'

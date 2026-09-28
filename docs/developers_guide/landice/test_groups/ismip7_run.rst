@@ -171,7 +171,14 @@ test case mirrors ``ismip7_ais`` but for the Greenland Ice Sheet.
 
 Key differences from the AIS test case:
 
-* Ocean thermal forcing is 2D (depth-averaged) rather than 3D.
+* Ocean thermal forcing is always 2D (depth-averaged) ``ismip6_2dThermalForcing``;
+  setting ``use_3d_thermal_forcing = true`` in ``[ismip7_run_gris]`` additionally
+  enables the AIS-style 3D convention (``ismip6shelfMelt_3dThermalForcing`` +
+  ``ismip6shelfMelt_zOcean``, plus the ``ismip7_params`` stream for
+  ``ismip6shelfMelt_deltaT``/``_basin``/``_gamma0`` read from
+  ``melt_params_path``), consuming the output of the ``build_3d_thermal_forcing``
+  step in ``landice/ismip7_forcing/ocean_thermal``. Both 2D and 3D forcings are
+  delivered to MALI simultaneously when 3D is enabled.
 * No sea-level model coupling.
 * Default calving method is ``crevasse_depth``.
 * Config section is ``[ismip7_run_gris]``.
@@ -182,4 +189,13 @@ set_up_experiment (GrIS)
 The class
 :py:class:`compass.landice.tests.ismip7_run.ismip7_gris.set_up_experiment.SetUpExperiment`
 follows the same logic as the AIS version, with the differences noted
-above (2D TF stream, no SLM support).
+above (no SLM support). The setup always globs for ``*2dThermalForcing_*.nc``
+(a single file) and symlinks it for the ``ismip7_TF`` stream to read
+``ismip6_2dThermalForcing``. When ``use_3d_thermal_forcing`` is true, it
+additionally globs ``*3dThermalForcing_*.nc`` (a chunked series), symlinks the
+whole series, and adds an ``ismip7_TF_3d`` stream to read
+``ismip6shelfMelt_3dThermalForcing`` + ``ismip6shelfMelt_zOcean`` via a ``$Y``
+template and ``filename_interval``. Both 2D and 3D GrIS thermal forcing use
+monthly input intervals. When 3D forcing is enabled, the facemelting routine
+still uses the ismip6_2dThermalForcing field to avoid any artificats introduced
+by constructing the 3d fields.

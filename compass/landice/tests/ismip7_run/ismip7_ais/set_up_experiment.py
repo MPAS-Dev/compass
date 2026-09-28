@@ -259,7 +259,7 @@ class SetUpExperiment(Step):
                            os.path.join(self.work_dir, temp_grad_fname))
 
             # Thermal forcing
-            tf_search = os.path.join(ocean_dir, '*thermal_forcing_*.nc')
+            tf_search = os.path.join(ocean_dir, '*3dThermalForcing_*.nc')
             tf_list = glob.glob(tf_search)
             # Filter by mesh name to handle directories with multiple meshes
             tf_list = [f for f in tf_list if mesh_name in f]
