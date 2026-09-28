@@ -103,7 +103,7 @@ def interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction, thin_film_present):
     x, y, x_cell, y_cell, ocean_fraction = _get_geom_fields(
         ds_geom, ds_mesh, thin_film_present)
 
-    ds_out = xarray.Dataset(ds_mesh)
+    ds_out = ds_mesh.copy()
     ds_out.attrs = ds_mesh.attrs
 
     ds_geom['oceanFraction'] = ocean_fraction
