@@ -149,8 +149,8 @@ def resolve_fracture_source(config, file_pattern):
     scenario = config.get('ismip7', 'scenario')
     base_path = os.path.join(
         _ice_sheet_path(config), model, scenario, 'fracture')
-    requested_version = config.get(
-        'ismip7_fracture', 'version', fallback='latest')
+    requested_version = config['ismip7_fracture'].get(
+        'version', fallback='latest')
     version_path, version, files = resolve_version_directory(
         base_path, requested_version, file_pattern)
 
