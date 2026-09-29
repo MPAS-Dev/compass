@@ -9,6 +9,7 @@ from compass.landice.ismip7.archive import (
 )
 from compass.landice.ismip7.remap import (
     add_xtime_and_write,
+    netcdf_file_is_valid,
     open_rename_and_trim,
 )
 from compass.step import Step
@@ -109,7 +110,12 @@ class ProcessShelfCollapse(Step):
 
         # Remap the collapse mask onto the MALI mesh
         remapped_file = f"remapped_{basename}"
-        if not os.path.exists(remapped_file):
+        if not netcdf_file_is_valid(remapped_file, "mask",
+                                    require_time=True, logger=logger):
+            if os.path.exists(remapped_file):
+                logger.info(f"Reprocessing incomplete remapped file: "
+                            f"{basename}")
+                os.remove(remapped_file)
             logger.info(f"Remapping: {basename}")
             args = ["ncremap",
                     "-i", input_file,

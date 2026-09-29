@@ -11,7 +11,10 @@ from compass.landice.ismip7.archive import (
     resolve_version_directory,
 )
 from compass.landice.ismip7.ice_sheet_params import get_params
-from compass.landice.ismip7.remap import extrapolate_source
+from compass.landice.ismip7.remap import (
+    extrapolate_source,
+    netcdf_file_is_valid,
+)
 from compass.step import Step
 
 
@@ -294,16 +297,24 @@ class ProcessThermalForcing(Step):
             remapped_file = f"remapped_{basename}"
             remapped_files.append(remapped_file)
 
-            if os.path.exists(remapped_file):
+            if netcdf_file_is_valid(remapped_file, "tf", require_time=True,
+                                    logger=logger):
                 logger.info(f"  Remapped file exists, skipping: {basename}")
                 continue
+            # Incomplete remapped file from an interrupted run: drop and
+            # redo
+            if os.path.exists(remapped_file):
+                logger.info(f"  Reprocessing incomplete remapped file: "
+                            f"{basename}")
+                os.remove(remapped_file)
 
             # Extrapolate fill values on source grid before remapping
             # so they don't pollute neighboring cells during interpolation
             extrap_file = f"extrap_{basename}"
-            if not os.path.exists(extrap_file):
-                extrapolate_source(input_file, extrap_file, "tf",
-                                   logger)
+            if not netcdf_file_is_valid(extrap_file, "tf", logger=logger):
+                if os.path.exists(extrap_file):
+                    os.remove(extrap_file)
+                extrapolate_source(input_file, extrap_file, "tf", logger)
 
             logger.info(f"  Remapping: {basename}")
             args = ["ncremap",
@@ -387,11 +398,15 @@ class ProcessThermalForcing(Step):
         basename = os.path.basename(input_file)
         remapped_file = f"remapped_{basename}"
 
-        if not os.path.exists(remapped_file):
+        if not netcdf_file_is_valid(remapped_file, "tf",
+                                    require_time=False, logger=logger):
+            if os.path.exists(remapped_file):
+                os.remove(remapped_file)
             extrap_file = f"extrap_{basename}"
-            if not os.path.exists(extrap_file):
-                extrapolate_source(input_file, extrap_file, "tf",
-                                   logger)
+            if not netcdf_file_is_valid(extrap_file, "tf", logger=logger):
+                if os.path.exists(extrap_file):
+                    os.remove(extrap_file)
+                extrapolate_source(input_file, extrap_file, "tf", logger)
 
             logger.info(f"  Remapping: {basename}")
             args = ["ncremap",

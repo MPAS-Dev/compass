@@ -9,7 +9,10 @@ from compass.landice.ismip7.archive import (
     mapping_file_name,
     resolve_atmosphere_source,
 )
-from compass.landice.ismip7.remap import extrapolate_source
+from compass.landice.ismip7.remap import (
+    extrapolate_source,
+    netcdf_file_is_valid,
+)
 from compass.step import Step
 
 
@@ -116,14 +119,24 @@ class ProcessTemperatureGradient(Step):
             remapped_file = f"remapped_{basename}"
             remapped_files.append(remapped_file)
 
-            if os.path.exists(remapped_file):
+            if netcdf_file_is_valid(remapped_file, "dtsdz",
+                                    require_time=True, logger=logger):
                 logger.info(f"  Remapped file exists, skipping: {basename}")
                 continue
+            # Incomplete remapped file from an interrupted run: drop and
+            # redo
+            if os.path.exists(remapped_file):
+                logger.info(f"  Reprocessing incomplete remapped file: "
+                            f"{basename}")
+                os.remove(remapped_file)
 
             # Extrapolate fill values on source grid before remapping
             # so they don't pollute neighboring cells during interpolation
             extrap_file = f"extrap_{basename}"
-            if not os.path.exists(extrap_file):
+            if not netcdf_file_is_valid(extrap_file, "dtsdz",
+                                        logger=logger):
+                if os.path.exists(extrap_file):
+                    os.remove(extrap_file)
                 extrapolate_source(input_file, extrap_file, "dtsdz", logger)
 
             logger.info(f"  Remapping: {basename}")

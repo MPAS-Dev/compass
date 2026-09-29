@@ -10,6 +10,60 @@ from mpas_tools.io import write_netcdf
 from scipy.ndimage import distance_transform_edt
 
 
+def netcdf_file_is_valid(path, varname=None, require_time=False,
+                         logger=None):
+    """
+    Return True if ``path`` exists, opens cleanly, contains ``varname`` and
+    (optionally) a ``time`` coordinate, and its last time record can
+    actually be read. Used to detect incomplete intermediate files left by
+    an interrupted (timed-out) run so they can be regenerated instead of
+    silently reused. The last-record read catches a file whose header is
+    complete but whose data section was truncated mid-write (which opens
+    cleanly but fails later at concatenation).
+
+    Parameters
+    ----------
+    path : str
+        Path to the NetCDF file to check
+
+    varname : str, optional
+        Variable name to verify is present; if None, only checks file opens
+
+    require_time : bool, optional
+        Whether to require a ``time`` coordinate/variable
+
+    logger : logging.Logger, optional
+        Logger for status messages (logs incomplete-file info if provided)
+
+    Returns
+    -------
+    bool
+        True if the file is valid and complete; False otherwise
+    """
+    if not os.path.exists(path):
+        return False
+    try:
+        with xr.open_dataset(path, decode_times=False) as ds:
+            if varname is not None and varname not in ds.variables:
+                return False
+            if require_time and "time" not in ds.variables:
+                return False
+            # Force-read the last record to detect a truncated data
+            # section (header OK, but bytes cut off mid-file).
+            if varname is not None:
+                var = ds[varname]
+                if "time" in var.dims:
+                    var.isel(time=-1).load()
+                else:
+                    var.load()
+    except Exception as exc:
+        if logger is not None:
+            logger.info(f"    Ignoring incomplete/unreadable file "
+                        f"{os.path.basename(path)}: {exc}")
+        return False
+    return True
+
+
 def extrapolate_source(input_file, output_file, varnames, logger):
     """
     Extrapolate fill/missing values on the source polar stereographic grid
