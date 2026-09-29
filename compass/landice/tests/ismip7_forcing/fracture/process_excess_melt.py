@@ -104,6 +104,15 @@ class ProcessExcessMelt(Step):
         basename = os.path.basename(input_file)
         logger.info(f"Processing excess melt: {basename}")
 
+        # Check if final output already exists; skip if so
+        output_file = f"{mali_mesh_name}_{basename}"
+        output_path = os.path.join(output_base_path, f"{model}_{scenario}",
+                                   "excess_melt")
+        dst = os.path.join(output_path, output_file)
+        if os.path.exists(dst):
+            logger.info(f"Output already exists, skipping: {dst}")
+            return
+
         # Build a source file with x/y coordinates and correct orientation
         gridded_file = f"gridded_{basename}"
         self._prepare_source_grid(input_file, input_path, gridded_file,
@@ -131,7 +140,6 @@ class ProcessExcessMelt(Step):
 
         # Rename to MALI conventions
         logger.info("Renaming variables to MALI conventions...")
-        output_file = f"{mali_mesh_name}_{basename}"
         self._rename_to_mali_vars(remapped_file, output_file,
                                   start_year, end_year)
 
@@ -141,12 +149,9 @@ class ProcessExcessMelt(Step):
                 os.remove(f)
 
         # Place output in the appropriate directory
-        output_path = os.path.join(output_base_path, f"{model}_{scenario}",
-                                   "excess_melt")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
-        dst = os.path.join(output_path, output_file)
         shutil.copy(output_file, dst)
 
         logger.info(f"Done. Output: {dst}")

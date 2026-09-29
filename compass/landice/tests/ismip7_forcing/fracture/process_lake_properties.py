@@ -107,6 +107,15 @@ class ProcessLakeProperties(Step):
         basename = os.path.basename(input_file)
         logger.info(f"Processing lake properties: {basename}")
 
+        # Check if final output already exists; skip if so
+        output_file = f"{mali_mesh_name}_{basename}"
+        output_path = os.path.join(output_base_path, f"{model}_{scenario}",
+                                   "lake_properties")
+        dst = os.path.join(output_path, output_file)
+        if os.path.exists(dst):
+            logger.info(f"Output already exists, skipping: {dst}")
+            return
+
         # The mapping file is supplied by the build_mapping_file step.
         mapping_file = mapping_file_name(
             config, "fracture", source.source_grid, method_remap)
@@ -130,7 +139,6 @@ class ProcessLakeProperties(Step):
 
         # Rename to MALI conventions
         logger.info("Renaming variables to MALI conventions...")
-        output_file = f"{mali_mesh_name}_{basename}"
         self._rename_to_mali_vars(remapped_file, output_file,
                                   start_year, end_year)
 
@@ -140,12 +148,9 @@ class ProcessLakeProperties(Step):
                 os.remove(f)
 
         # Place output in the appropriate directory
-        output_path = os.path.join(output_base_path, f"{model}_{scenario}",
-                                   "lake_properties")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
-        dst = os.path.join(output_path, output_file)
         shutil.copy(output_file, dst)
 
         logger.info(f"Done. Output: {dst}")

@@ -94,6 +94,16 @@ class ProcessSmbGradient(Step):
         logger.info(f"Found {len(input_files)} SMB gradient files for years "
                     f"{start_year}-{end_year}")
 
+        # Check if final output already exists; skip if so
+        output_file = (f"{mali_mesh_name}_SMB_gradient_{model}_{scenario}_"
+                       f"{start_year}-{end_year}.nc")
+        output_path = os.path.join(output_base_path, forcing_group,
+                                   "atmosphere")
+        dst = os.path.join(output_path, output_file)
+        if os.path.exists(dst):
+            logger.info(f"Output already exists, skipping: {dst}")
+            return
+
         # The mapping file is supplied by the build_mapping_file step.
         mapping_file = mapping_file_name(
             config, "atm", source.source_grid, method_remap)
@@ -130,9 +140,6 @@ class ProcessSmbGradient(Step):
 
         # Combine remapped files and rename to MALI conventions
         logger.info("Combining remapped files and renaming variables...")
-        output_file = (f"{mali_mesh_name}_SMB_gradient_{model}_{scenario}_"
-                       f"{start_year}-{end_year}.nc")
-
         self._combine_and_rename(remapped_files, output_file)
 
         # Clean up remapped files
@@ -142,12 +149,9 @@ class ProcessSmbGradient(Step):
                 os.remove(f)
 
         # Place output in appropriate directory
-        output_path = os.path.join(output_base_path, forcing_group,
-                                   "atmosphere")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
-        dst = os.path.join(output_path, output_file)
         shutil.copy(output_file, dst)
 
         logger.info(f"Done. Output: {dst}")

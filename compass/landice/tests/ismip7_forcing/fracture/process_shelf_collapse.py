@@ -94,6 +94,15 @@ class ProcessShelfCollapse(Step):
         basename = os.path.basename(input_file)
         logger.info(f"Processing ice shelf collapse mask: {basename}")
 
+        # Check if final output already exists; skip if so
+        output_file = f"{mali_mesh_name}_{basename}"
+        output_path = os.path.join(output_base_path, f"{model}_{scenario}",
+                                   "shelf_collapse")
+        dst = os.path.join(output_path, output_file)
+        if os.path.exists(dst):
+            logger.info(f"Output already exists, skipping: {dst}")
+            return
+
         # The mapping file is supplied by the build_mapping_file step.
         mapping_file = mapping_file_name(
             config, "fracture", source.source_grid, method_remap)
@@ -111,7 +120,6 @@ class ProcessShelfCollapse(Step):
 
         # Combine time slice and rename to MALI conventions
         logger.info("Renaming variables to MALI conventions...")
-        output_file = f"{mali_mesh_name}_{basename}"
         self._rename_to_mali_vars(remapped_file, output_file,
                                   start_year, end_year)
 
@@ -120,12 +128,9 @@ class ProcessShelfCollapse(Step):
             os.remove(remapped_file)
 
         # Place output in the appropriate directory
-        output_path = os.path.join(output_base_path, f"{model}_{scenario}",
-                                   "shelf_collapse")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
-        dst = os.path.join(output_path, output_file)
         shutil.copy(output_file, dst)
 
         logger.info(f"Done. Output: {dst}")

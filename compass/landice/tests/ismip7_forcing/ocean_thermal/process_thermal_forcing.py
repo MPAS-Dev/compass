@@ -255,6 +255,17 @@ class ProcessThermalForcing(Step):
         label = job.label
         all_files = job.files
 
+        # Check if final output already exists; skip if so
+        tf_label = "3dThermalForcing" if ocean_3d else "2dThermalForcing"
+        output_file = (f"{mali_mesh_name}_{tf_label}_{label}_"
+                       f"{start_year}-{end_year}.nc")
+        output_path = os.path.join(output_base_path, forcing_group,
+                                   "ocean_thermal_forcing")
+        dst = os.path.join(output_path, output_file)
+        if os.path.exists(dst):
+            logger.info(f"Output already exists, skipping: {dst}")
+            return
+
         # Filter to files that overlap with the requested year range.
         # AIS files are named with decade or multi-decade ranges (e.g.,
         # 1850-1859, 1950-2025). GrIS files are named with single years.
@@ -308,10 +319,6 @@ class ProcessThermalForcing(Step):
 
         # Combine remapped files and rename to MALI conventions
         logger.info("Combining remapped files and renaming variables...")
-        tf_label = "3dThermalForcing" if ocean_3d else "2dThermalForcing"
-        output_file = (f"{mali_mesh_name}_{tf_label}_{label}_"
-                       f"{start_year}-{end_year}.nc")
-
         if ocean_3d:
             self._combine_and_rename_3d(remapped_files, output_file,
                                         start_year, end_year)
@@ -326,12 +333,9 @@ class ProcessThermalForcing(Step):
                 os.remove(f)
 
         # Place output in appropriate directory
-        output_path = os.path.join(output_base_path, forcing_group,
-                                   "ocean_thermal_forcing")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
-        dst = os.path.join(output_path, output_file)
         shutil.copy(output_file, dst)
 
         logger.info(f"Done. Output: {dst}")
@@ -364,6 +368,17 @@ class ProcessThermalForcing(Step):
         logger.info(f"Processing ocean TF climatology: "
                     f"{os.path.basename(input_file)}")
 
+        # Check if final output already exists; skip if so
+        version = os.path.basename(os.path.dirname(input_file))
+        output_file = (f"{mali_mesh_name}_thermal_forcing_climatology_"
+                       f"{version}.nc")
+        output_path = os.path.join(output_base_path,
+                                   "ocean_thermal_forcing", "climatology")
+        dst = os.path.join(output_path, output_file)
+        if os.path.exists(dst):
+            logger.info(f"Output already exists, skipping: {dst}")
+            return
+
         # The mapping file is supplied by the build_mapping_file step.
         mapping_file = mapping_file_name(
             config, "ocean", "climatology", method_remap)
@@ -392,10 +407,6 @@ class ProcessThermalForcing(Step):
 
         # Rename to MALI conventions
         logger.info("Renaming variables to MALI conventions...")
-        version = os.path.basename(os.path.dirname(input_file))
-        output_file = (f"{mali_mesh_name}_thermal_forcing_climatology_"
-                       f"{version}.nc")
-
         self._rename_climatology_3d(remapped_file, output_file)
 
         # Clean up remapped file
@@ -403,12 +414,9 @@ class ProcessThermalForcing(Step):
             os.remove(remapped_file)
 
         # Place output in appropriate directory
-        output_path = os.path.join(output_base_path, "ocean_thermal_forcing",
-                                   "climatology")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
-        dst = os.path.join(output_path, output_file)
         shutil.copy(output_file, dst)
 
         logger.info(f"Done. Output: {dst}")

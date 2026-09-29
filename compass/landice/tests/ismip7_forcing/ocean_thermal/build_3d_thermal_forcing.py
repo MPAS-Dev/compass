@@ -77,6 +77,11 @@ class BuildGreenland3dThermalForcing(Step):
             f"{mali_mesh_name}_3dThermalForcing_{label}_"
             f"{start_year}-{end_year}.nc")
 
+        # Check if final output already exists; skip if so
+        if os.path.exists(output_file):
+            logger.info(f"Output already exists, skipping: {output_file}")
+            return
+
         # DeltaT/gamma0/basin are calibrated once against OCX and held fixed
         # for every ESM (see Config.calibrate_delta_t), so they always live
         # under the OCX output directory regardless of which scenario this
