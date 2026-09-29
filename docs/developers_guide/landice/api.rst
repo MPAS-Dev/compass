@@ -34,6 +34,7 @@ ISMIP7 framework
    archive.resolve_version_directory
    archive.mapping_file_name
    mapping.build_mapping_file
+   remap.netcdf_file_is_valid
    remap.extrapolate_source
    remap.open_rename_and_trim
    remap.add_xtime_and_write

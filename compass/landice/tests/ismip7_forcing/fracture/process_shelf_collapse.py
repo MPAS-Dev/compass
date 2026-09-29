@@ -96,7 +96,8 @@ class ProcessShelfCollapse(Step):
         logger.info(f"Processing ice shelf collapse mask: {basename}")
 
         # Check if final output already exists; skip if so
-        output_file = f"{mali_mesh_name}_{basename}"
+        stem, ext = os.path.splitext(basename)
+        output_file = f"{mali_mesh_name}_{stem}_{source.version}{ext}"
         output_path = os.path.join(output_base_path, f"{model}_{scenario}",
                                    "shelf_collapse")
         dst = os.path.join(output_path, output_file)

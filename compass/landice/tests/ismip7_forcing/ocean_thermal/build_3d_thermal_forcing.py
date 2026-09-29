@@ -71,22 +71,11 @@ class BuildGreenland3dThermalForcing(Step):
         forcing_2d = os.path.join(
             ocean_dir,
             f"{mali_mesh_name}_2dThermalForcing_{label}_"
-            f"{start_year}-{end_year}.nc")
+            f"{source.version}_{start_year}-{end_year}.nc")
         output_file = os.path.join(
             ocean_dir,
             f"{mali_mesh_name}_3dThermalForcing_{label}_"
-            f"{start_year}-{end_year}.nc")
-
-        # Check if output already exists; greenland_3d.run writes per-chunk
-        # files named by start year, not the full range, so check first chunk
-        first_chunk = os.path.join(
-            ocean_dir,
-            f"{mali_mesh_name}_3dThermalForcing_{label}_"
-            f"{start_year}.nc")
-        if os.path.exists(first_chunk):
-            logger.info(f"Output already exists (first chunk found), "
-                        f"skipping: {first_chunk}")
-            return
+            f"{source.version}_{start_year}-{end_year}.nc")
 
         # DeltaT/gamma0/basin are calibrated once against OCX and held fixed
         # for every ESM (see Config.calibrate_delta_t), so they always live

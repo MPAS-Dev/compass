@@ -100,7 +100,8 @@ class ProcessTemperatureGradient(Step):
 
         # Check if final output already exists; skip if so
         output_file = (f"{mali_mesh_name}_temperature_gradient_{model}_"
-                       f"{scenario}_{start_year}-{end_year}.nc")
+                       f"{scenario}_{source.version}_"
+                       f"{start_year}-{end_year}.nc")
         output_path = os.path.join(output_base_path, forcing_group,
                                    "atmosphere")
         dst = os.path.join(output_path, output_file)

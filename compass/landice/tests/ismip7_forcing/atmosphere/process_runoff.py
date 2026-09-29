@@ -98,7 +98,7 @@ class ProcessRunoff(Step):
 
         # Check if final output already exists; skip if so
         output_file = (f"{mali_mesh_name}_runoff_{model}_{scenario}_"
-                       f"{start_year}-{end_year}.nc")
+                       f"{source.version}_{start_year}-{end_year}.nc")
         output_path = os.path.join(output_base_path, forcing_group,
                                    "atmosphere")
         dst = os.path.join(output_path, output_file)

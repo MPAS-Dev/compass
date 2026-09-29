@@ -261,7 +261,7 @@ class ProcessThermalForcing(Step):
         # Check if final output already exists; skip if so
         tf_label = "3dThermalForcing" if ocean_3d else "2dThermalForcing"
         output_file = (f"{mali_mesh_name}_{tf_label}_{label}_"
-                       f"{start_year}-{end_year}.nc")
+                       f"{job.version}_{start_year}-{end_year}.nc")
         output_path = os.path.join(output_base_path, forcing_group,
                                    "ocean_thermal_forcing")
         dst = os.path.join(output_path, output_file)
