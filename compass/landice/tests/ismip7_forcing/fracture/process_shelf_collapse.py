@@ -9,6 +9,7 @@ from compass.landice.ismip7.archive import (
 )
 from compass.landice.ismip7.remap import (
     add_xtime_and_write,
+    netcdf_file_is_valid,
     open_rename_and_trim,
 )
 from compass.step import Step
@@ -94,13 +95,28 @@ class ProcessShelfCollapse(Step):
         basename = os.path.basename(input_file)
         logger.info(f"Processing ice shelf collapse mask: {basename}")
 
+        # Check if final output already exists; skip if so
+        stem, ext = os.path.splitext(basename)
+        output_file = f"{mali_mesh_name}_{stem}_{source.version}{ext}"
+        output_path = os.path.join(output_base_path, f"{model}_{scenario}",
+                                   "shelf_collapse")
+        dst = os.path.join(output_path, output_file)
+        if os.path.exists(dst):
+            logger.info(f"Output already exists, skipping: {dst}")
+            return
+
         # The mapping file is supplied by the build_mapping_file step.
         mapping_file = mapping_file_name(
             config, "fracture", source.source_grid, method_remap)
 
         # Remap the collapse mask onto the MALI mesh
         remapped_file = f"remapped_{basename}"
-        if not os.path.exists(remapped_file):
+        if not netcdf_file_is_valid(remapped_file, "mask",
+                                    require_time=True, logger=logger):
+            if os.path.exists(remapped_file):
+                logger.info(f"Reprocessing incomplete remapped file: "
+                            f"{basename}")
+                os.remove(remapped_file)
             logger.info(f"Remapping: {basename}")
             args = ["ncremap",
                     "-i", input_file,
@@ -111,7 +127,6 @@ class ProcessShelfCollapse(Step):
 
         # Combine time slice and rename to MALI conventions
         logger.info("Renaming variables to MALI conventions...")
-        output_file = f"{mali_mesh_name}_{basename}"
         self._rename_to_mali_vars(remapped_file, output_file,
                                   start_year, end_year)
 
@@ -120,12 +135,9 @@ class ProcessShelfCollapse(Step):
             os.remove(remapped_file)
 
         # Place output in the appropriate directory
-        output_path = os.path.join(output_base_path, f"{model}_{scenario}",
-                                   "shelf_collapse")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
-        dst = os.path.join(output_path, output_file)
         shutil.copy(output_file, dst)
 
         logger.info(f"Done. Output: {dst}")

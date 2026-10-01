@@ -71,11 +71,11 @@ class BuildGreenland3dThermalForcing(Step):
         forcing_2d = os.path.join(
             ocean_dir,
             f"{mali_mesh_name}_2dThermalForcing_{label}_"
-            f"{start_year}-{end_year}.nc")
+            f"{source.version}_{start_year}-{end_year}.nc")
         output_file = os.path.join(
             ocean_dir,
             f"{mali_mesh_name}_3dThermalForcing_{label}_"
-            f"{start_year}-{end_year}.nc")
+            f"{source.version}_{start_year}-{end_year}.nc")
 
         # DeltaT/gamma0/basin are calibrated once against OCX and held fixed
         # for every ESM (see Config.calibrate_delta_t), so they always live

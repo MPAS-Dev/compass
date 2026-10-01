@@ -1500,11 +1500,6 @@ def _write_melt_params(
         )
         return
     temporary = output.with_name(output.name + ".partial")
-    if temporary.exists():
-        raise FileExistsError(
-            f"Partial melt-parameters output already exists: {temporary}. "
-            "Remove or rename it after inspecting it."
-        )
     delta_t_by_cell = regional_delta_t[basin_ids - 1]
     target = xr.Dataset(
         data_vars={
@@ -1687,11 +1682,6 @@ def _write_forcing_chunk(
         )
         return
     temporary = output_path.with_name(output_path.name + ".partial")
-    if temporary.exists():
-        raise FileExistsError(
-            f"Partial output already exists: {temporary}. Remove or rename "
-            "it after inspecting it."
-        )
     hdf5_temporary = output_path.with_name(output_path.name + ".h5.partial")
     target = xr.Dataset(
         data_vars={
@@ -2400,6 +2390,17 @@ def _warn_if_seafloor_below_max_depth(
 
 
 def run(cfg: Config, logger, prepare_only: bool = False) -> None:
+    # Remove any leftover .partial files from a previous interrupted run.
+    # These are incomplete temps; the real outputs are named differently.
+    seen = set()
+    for d in (cfg.output_file.parent, cfg.melt_params_file.parent):
+        if d in seen:
+            continue
+        seen.add(d)
+        for stale in sorted(d.glob("*.partial")):
+            logger.info(f"Removing stale partial file: {stale}")
+            stale.unlink()
+
     mesh, basin_ids = _load_mesh_and_basins(cfg)
     profiles = _build_regional_profiles(cfg, mesh, basin_ids, logger)
     _warn_if_seafloor_below_max_depth(cfg, mesh, basin_ids, profiles, logger)

@@ -9,7 +9,10 @@ from compass.landice.ismip7.archive import (
     mapping_file_name,
     resolve_atmosphere_source,
 )
-from compass.landice.ismip7.remap import extrapolate_source
+from compass.landice.ismip7.remap import (
+    extrapolate_source,
+    netcdf_file_is_valid,
+)
 from compass.step import Step
 
 
@@ -93,6 +96,16 @@ class ProcessSmb(Step):
         logger.info(f"Found {len(input_files)} SMB files for years "
                     f"{start_year}-{end_year}")
 
+        # Check if final output already exists; skip if so
+        output_file = (f"{mali_mesh_name}_SMB_{model}_{scenario}_"
+                       f"{source.version}_{start_year}-{end_year}.nc")
+        output_path = os.path.join(output_base_path, forcing_group,
+                                   "atmosphere")
+        dst = os.path.join(output_path, output_file)
+        if os.path.exists(dst):
+            logger.info(f"Output already exists, skipping: {dst}")
+            return
+
         # The mapping file is supplied by the build_mapping_file step.
         mapping_file = mapping_file_name(
             config, "atm", source.source_grid, method_remap)
@@ -104,14 +117,24 @@ class ProcessSmb(Step):
             remapped_file = f"remapped_{basename}"
             remapped_files.append(remapped_file)
 
-            if os.path.exists(remapped_file):
+            if netcdf_file_is_valid(remapped_file, "acabf",
+                                    require_time=True, logger=logger):
                 logger.info(f"  Remapped file exists, skipping: {basename}")
                 continue
+            # Incomplete remapped file from an interrupted run: drop and
+            # redo
+            if os.path.exists(remapped_file):
+                logger.info(f"  Reprocessing incomplete remapped file: "
+                            f"{basename}")
+                os.remove(remapped_file)
 
             # Extrapolate fill values on source grid before remapping
             # so they don't pollute neighboring cells during interpolation
             extrap_file = f"extrap_{basename}"
-            if not os.path.exists(extrap_file):
+            if not netcdf_file_is_valid(extrap_file, "acabf",
+                                        logger=logger):
+                if os.path.exists(extrap_file):
+                    os.remove(extrap_file)
                 extrapolate_source(input_file, extrap_file, "acabf", logger)
 
             logger.info(f"  Remapping: {basename}")
@@ -128,9 +151,6 @@ class ProcessSmb(Step):
 
         # Combine remapped files and rename to MALI conventions
         logger.info("Combining remapped files and renaming variables...")
-        output_file = (f"{mali_mesh_name}_SMB_{model}_{scenario}_"
-                       f"{start_year}-{end_year}.nc")
-
         self._combine_and_rename(remapped_files, output_file)
 
         # Clean up remapped files
@@ -140,12 +160,9 @@ class ProcessSmb(Step):
                 os.remove(f)
 
         # Place output in appropriate directory
-        output_path = os.path.join(output_base_path, forcing_group,
-                                   "atmosphere")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
-        dst = os.path.join(output_path, output_file)
         shutil.copy(output_file, dst)
 
         logger.info(f"Done. Output: {dst}")
