@@ -125,8 +125,7 @@ class ProcessLakeProperties(Step):
         # they don't pollute neighboring cells during interpolation
         extrap_file = f"extrap_{basename}"
         extrapolate_source(input_file, extrap_file,
-                           list(self._variables.keys()), logger,
-                           decode_times=False)
+                           list(self._variables.keys()), logger)
 
         # Remap both lake property variables onto the MALI mesh
         remapped_file = f"remapped_{basename}"

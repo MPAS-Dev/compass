@@ -126,8 +126,7 @@ class ProcessExcessMelt(Step):
         # Extrapolate fill values on the source grid before remapping so
         # they don't pollute neighboring cells during interpolation
         extrap_file = f"extrap_{basename}"
-        extrapolate_source(gridded_file, extrap_file, "excess_melt",
-                           logger, decode_times=False)
+        extrapolate_source(gridded_file, extrap_file, "excess_melt", logger)
 
         # Remap the excess melt onto the MALI mesh
         remapped_file = f"remapped_{basename}"
