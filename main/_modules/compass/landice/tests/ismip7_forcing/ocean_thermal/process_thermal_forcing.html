@@ -123,7 +123,10 @@
     <span class="n">resolve_version_directory</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.ismip7.ice_sheet_params</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_params</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.ismip7.remap</span><span class="w"> </span><span class="kn">import</span> <span class="n">extrapolate_source</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.ismip7.remap</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">extrapolate_source</span><span class="p">,</span>
+    <span class="n">netcdf_file_is_valid</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -378,6 +381,17 @@
         <span class="n">label</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">label</span>
         <span class="n">all_files</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">files</span>
 
+        <span class="c1"># Check if final output already exists; skip if so</span>
+        <span class="n">tf_label</span> <span class="o">=</span> <span class="s2">"3dThermalForcing"</span> <span class="k">if</span> <span class="n">ocean_3d</span> <span class="k">else</span> <span class="s2">"2dThermalForcing"</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">tf_label</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">_"</span>
+                       <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="n">forcing_group</span><span class="p">,</span>
+                                   <span class="s2">"ocean_thermal_forcing"</span><span class="p">)</span>
+        <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dst</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Output already exists, skipping: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">return</span>
+
         <span class="c1"># Filter to files that overlap with the requested year range.</span>
         <span class="c1"># AIS files are named with decade or multi-decade ranges (e.g.,</span>
         <span class="c1"># 1850-1859, 1950-2025). GrIS files are named with single years.</span>
@@ -406,16 +420,24 @@
             <span class="n">remapped_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"remapped_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
             <span class="n">remapped_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">netcdf_file_is_valid</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span> <span class="n">require_time</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Remapped file exists, skipping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                 <span class="k">continue</span>
+            <span class="c1"># Incomplete remapped file from an interrupted run: drop and</span>
+            <span class="c1"># redo</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Reprocessing incomplete remapped file: "</span>
+                            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">)</span>
 
             <span class="c1"># Extrapolate fill values on source grid before remapping</span>
             <span class="c1"># so they don't pollute neighboring cells during interpolation</span>
             <span class="n">extrap_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"extrap_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">):</span>
-                <span class="n">extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span>
-                                   <span class="n">logger</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">netcdf_file_is_valid</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">)</span>
+                <span class="n">extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Remapping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncremap"</span><span class="p">,</span>
@@ -431,10 +453,6 @@
 
         <span class="c1"># Combine remapped files and rename to MALI conventions</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Combining remapped files and renaming variables..."</span><span class="p">)</span>
-        <span class="n">tf_label</span> <span class="o">=</span> <span class="s2">"3dThermalForcing"</span> <span class="k">if</span> <span class="n">ocean_3d</span> <span class="k">else</span> <span class="s2">"2dThermalForcing"</span>
-        <span class="n">output_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">tf_label</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">_"</span>
-                       <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="n">ocean_3d</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_combine_and_rename_3d</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
                                         <span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span><span class="p">)</span>
@@ -449,12 +467,9 @@
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
         <span class="c1"># Place output in appropriate directory</span>
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="n">forcing_group</span><span class="p">,</span>
-                                   <span class="s2">"ocean_thermal_forcing"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
 
-        <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done. Output: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -487,6 +502,17 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Processing ocean TF climatology: "</span>
                     <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
+        <span class="c1"># Check if final output already exists; skip if so</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">input_file</span><span class="p">))</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_thermal_forcing_climatology_"</span>
+                       <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span>
+                                   <span class="s2">"ocean_thermal_forcing"</span><span class="p">,</span> <span class="s2">"climatology"</span><span class="p">)</span>
+        <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dst</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Output already exists, skipping: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">return</span>
+
         <span class="c1"># The mapping file is supplied by the build_mapping_file step.</span>
         <span class="n">mapping_file</span> <span class="o">=</span> <span class="n">mapping_file_name</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span> <span class="s2">"ocean"</span><span class="p">,</span> <span class="s2">"climatology"</span><span class="p">,</span> <span class="n">method_remap</span><span class="p">)</span>
@@ -495,11 +521,15 @@
         <span class="n">basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
         <span class="n">remapped_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"remapped_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">netcdf_file_is_valid</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span>
+                                    <span class="n">require_time</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">)</span>
             <span class="n">extrap_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"extrap_</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">):</span>
-                <span class="n">extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span>
-                                   <span class="n">logger</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">netcdf_file_is_valid</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">extrap_file</span><span class="p">)</span>
+                <span class="n">extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">extrap_file</span><span class="p">,</span> <span class="s2">"tf"</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Remapping: </span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ncremap"</span><span class="p">,</span>
@@ -515,10 +545,6 @@
 
         <span class="c1"># Rename to MALI conventions</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Renaming variables to MALI conventions..."</span><span class="p">)</span>
-        <span class="n">version</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">input_file</span><span class="p">))</span>
-        <span class="n">output_file</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_thermal_forcing_climatology_"</span>
-                       <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">.nc"</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">_rename_climatology_3d</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
 
         <span class="c1"># Clean up remapped file</span>
@@ -526,12 +552,9 @@
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">remapped_file</span><span class="p">)</span>
 
         <span class="c1"># Place output in appropriate directory</span>
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_base_path</span><span class="p">,</span> <span class="s2">"ocean_thermal_forcing"</span><span class="p">,</span>
-                                   <span class="s2">"climatology"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
 
-        <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done. Output: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>

@@ -1615,11 +1615,6 @@
         <span class="p">)</span>
         <span class="k">return</span>
     <span class="n">temporary</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">".partial"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">temporary</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"Partial melt-parameters output already exists: </span><span class="si">{</span><span class="n">temporary</span><span class="si">}</span><span class="s2">. "</span>
-            <span class="s2">"Remove or rename it after inspecting it."</span>
-        <span class="p">)</span>
     <span class="n">delta_t_by_cell</span> <span class="o">=</span> <span class="n">regional_delta_t</span><span class="p">[</span><span class="n">basin_ids</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
     <span class="n">target</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span>
         <span class="n">data_vars</span><span class="o">=</span><span class="p">{</span>
@@ -1802,11 +1797,6 @@
         <span class="p">)</span>
         <span class="k">return</span>
     <span class="n">temporary</span> <span class="o">=</span> <span class="n">output_path</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">output_path</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">".partial"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">temporary</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"Partial output already exists: </span><span class="si">{</span><span class="n">temporary</span><span class="si">}</span><span class="s2">. Remove or rename "</span>
-            <span class="s2">"it after inspecting it."</span>
-        <span class="p">)</span>
     <span class="n">hdf5_temporary</span> <span class="o">=</span> <span class="n">output_path</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">output_path</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">".h5.partial"</span><span class="p">)</span>
     <span class="n">target</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span>
         <span class="n">data_vars</span><span class="o">=</span><span class="p">{</span>
@@ -2517,6 +2507,17 @@
 <div class="viewcode-block" id="run">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip7_forcing.ocean_thermal.greenland_3d.run.html#compass.landice.tests.ismip7_forcing.ocean_thermal.greenland_3d.run">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">prepare_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># Remove any leftover .partial files from a previous interrupted run.</span>
+    <span class="c1"># These are incomplete temps; the real outputs are named differently.</span>
+    <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">output_file</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">melt_params_file</span><span class="o">.</span><span class="n">parent</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">stale</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*.partial"</span><span class="p">)):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Removing stale partial file: </span><span class="si">{</span><span class="n">stale</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">stale</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+
     <span class="n">mesh</span><span class="p">,</span> <span class="n">basin_ids</span> <span class="o">=</span> <span class="n">_load_mesh_and_basins</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
     <span class="n">profiles</span> <span class="o">=</span> <span class="n">_build_regional_profiles</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">basin_ids</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
     <span class="n">_warn_if_seafloor_below_max_depth</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">basin_ids</span><span class="p">,</span> <span class="n">profiles</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>

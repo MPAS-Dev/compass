@@ -120,6 +120,63 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">distance_transform_edt</span>
 
 
+<div class="viewcode-block" id="netcdf_file_is_valid">
+<a class="viewcode-back" href="../../../../developers_guide/landice/generated/compass.landice.ismip7.remap.netcdf_file_is_valid.html#compass.landice.ismip7.remap.netcdf_file_is_valid">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">netcdf_file_is_valid</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">varname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">require_time</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                         <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Return True if ``path`` exists, opens cleanly, contains ``varname`` and</span>
+<span class="sd">    (optionally) a ``time`` coordinate, and its last time record can</span>
+<span class="sd">    actually be read. Used to detect incomplete intermediate files left by</span>
+<span class="sd">    an interrupted (timed-out) run so they can be regenerated instead of</span>
+<span class="sd">    silently reused. The last-record read catches a file whose header is</span>
+<span class="sd">    complete but whose data section was truncated mid-write (which opens</span>
+<span class="sd">    cleanly but fails later at concatenation).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        Path to the NetCDF file to check</span>
+
+<span class="sd">    varname : str, optional</span>
+<span class="sd">        Variable name to verify is present; if None, only checks file opens</span>
+
+<span class="sd">    require_time : bool, optional</span>
+<span class="sd">        Whether to require a ``time`` coordinate/variable</span>
+
+<span class="sd">    logger : logging.Logger, optional</span>
+<span class="sd">        Logger for status messages (logs incomplete-file info if provided)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the file is valid and complete; False otherwise</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">varname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">varname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">require_time</span> <span class="ow">and</span> <span class="s2">"time"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="c1"># Force-read the last record to detect a truncated data</span>
+            <span class="c1"># section (header OK, but bytes cut off mid-file).</span>
+            <span class="k">if</span> <span class="n">varname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">var</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s2">"time"</span> <span class="ow">in</span> <span class="n">var</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+                    <span class="n">var</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">var</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Ignoring incomplete/unreadable file "</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+
 <div class="viewcode-block" id="extrapolate_source">
 <a class="viewcode-back" href="../../../../developers_guide/landice/generated/compass.landice.ismip7.remap.extrapolate_source.html#compass.landice.ismip7.remap.extrapolate_source">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">extrapolate_source</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">varnames</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
