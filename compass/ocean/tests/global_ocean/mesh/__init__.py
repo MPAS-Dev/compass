@@ -175,7 +175,7 @@ class Mesh(TestCase):
                 mesh_name=mesh_name,
                 smoothing=False,
                 mali_ais_topo=mali_ais_topo,
-                ocean_includes_grounded=False)
+                ocean_includes_grounded=True)
 
             self.add_step(unsmoothed_topo)
 
@@ -187,7 +187,7 @@ class Mesh(TestCase):
                 smoothing=True,
                 unsmoothed_topo=unsmoothed_topo,
                 mali_ais_topo=mali_ais_topo,
-                ocean_includes_grounded=False)
+                ocean_includes_grounded=True)
 
             self.add_step(smoothed_topo)
 

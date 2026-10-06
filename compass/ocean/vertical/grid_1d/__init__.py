@@ -139,7 +139,9 @@ def add_1d_grid(config, ds):
     """
 
     interfaces = generate_1d_grid(config=config)
-
+    plot_1d_grid = config.get('vertical_grid', 'plot_1d_grid')
+    if plot_1d_grid:
+        write_1d_grid(interfaces=interfaces, out_filename='vertical_grid.nc')
     ds['refTopDepth'] = ('nVertLevels', interfaces[0:-1])
     ds['refZMid'] = ('nVertLevels', -0.5 * (interfaces[1:] + interfaces[0:-1]))
     ds['refBottomDepth'] = ('nVertLevels', interfaces[1:])
