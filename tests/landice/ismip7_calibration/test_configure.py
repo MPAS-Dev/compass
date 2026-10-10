@@ -7,11 +7,16 @@ import pytest
 
 from compass.config import CompassConfigParser
 from compass.landice.tests.ismip7_calibration.configure import (
+    ALL_FORMS,
+    ISMIP7_FORMS,
     check_options,
+    is_ismip7,
+    mali_melt_method,
     melt_forms,
     objective_options,
     parameter_name,
     parameter_values,
+    uses_spatial_slope,
     weighting,
 )
 
@@ -42,10 +47,11 @@ def test_check_options_accepts_a_supplied_path():
 
 def test_parameter_grid_matches_the_published_k_values():
     """
-    The default K grid must be the 120 values the protocol's worked example
-    samples, or the replicated percentiles land on different grid points.
+    The default K grid for ismip7_const must be the 120 values the protocol's
+    worked example samples, or the replicated percentiles land on different
+    grid points.
     """
-    values = parameter_values(_config(), 'ismip7')
+    values = parameter_values(_config(), 'ismip7_const')
 
     assert values[0] == pytest.approx(0.25e-5)
     assert values[-1] == pytest.approx(3.0e-4)
@@ -66,35 +72,28 @@ def test_parameter_grid_for_the_nonlocal_form():
 
 
 def test_parameter_values_rejects_an_unknown_form():
-    with pytest.raises(ValueError, match="must be 'ismip7' or 'ismip6'"):
+    with pytest.raises(ValueError, match='pico'):
         parameter_values(_config(), 'pico')
-
-
-def test_parameter_name_per_form():
-    """The two forms calibrate different parameters."""
-    assert parameter_name('ismip7') == 'K'
-    assert parameter_name('ismip6') == 'gamma0'
-    with pytest.raises(ValueError):
-        parameter_name('pico')
 
 
 def test_melt_forms_parses_a_comma_separated_list():
     config = _config()
-    config.set('ismip7_calibration', 'melt_forms', 'ismip7, ismip6')
+    config.set('ismip7_calibration', 'melt_forms',
+               'ismip7_const, ismip6')
 
-    assert melt_forms(config) == ['ismip7', 'ismip6']
+    assert melt_forms(config) == ['ismip7_const', 'ismip6']
 
 
 def test_melt_forms_accepts_a_single_form():
     config = _config()
-    config.set('ismip7_calibration', 'melt_forms', 'ismip7')
+    config.set('ismip7_calibration', 'melt_forms', 'ismip7_const')
 
-    assert melt_forms(config) == ['ismip7']
+    assert melt_forms(config) == ['ismip7_const']
 
 
 def test_melt_forms_rejects_an_unknown_form():
     config = _config()
-    config.set('ismip7_calibration', 'melt_forms', 'ismip7, pico')
+    config.set('ismip7_calibration', 'melt_forms', 'ismip7_const, pico')
 
     with pytest.raises(ValueError, match='pico'):
         melt_forms(config)
@@ -160,3 +159,76 @@ def test_objective_options_allows_no_seed():
     _, seed = objective_options(config)
 
     assert seed is None
+
+
+def test_parameter_grid_for_ismip7_slope():
+    """
+    The ismip7_slope form uses a finer K grid than ismip7_const, since the
+    spatial-slope p5-to-p95 span is narrower.
+    """
+    config = _config()
+    values = parameter_values(config, 'ismip7_slope')
+
+    assert values[0] == pytest.approx(0.05e-5)
+    assert values[-1] == pytest.approx(1.0e-4)
+    assert len(values) == 200  # (1.0e-4 - 0.05e-5) / 0.05e-5 + 1 = 199.5 + 1
+    np.testing.assert_allclose(np.diff(values), 0.05e-5, rtol=1.0e-9)
+
+
+def test_parameter_name_for_all_forms():
+    """Both ISMIP7 forms return 'K', ISMIP6 returns 'gamma0'."""
+    assert parameter_name('ismip7_const') == 'K'
+    assert parameter_name('ismip7_slope') == 'K'
+    assert parameter_name('ismip6') == 'gamma0'
+
+
+def test_parameter_name_rejects_unknown_form():
+    with pytest.raises(ValueError, match='pico'):
+        parameter_name('pico')
+
+
+def test_is_ismip7_helper():
+    """is_ismip7 returns True for both ISMIP7 forms."""
+    assert is_ismip7('ismip7_const')
+    assert is_ismip7('ismip7_slope')
+    assert not is_ismip7('ismip6')
+
+
+def test_uses_spatial_slope_helper():
+    """uses_spatial_slope returns True only for ismip7_slope."""
+    assert not uses_spatial_slope('ismip7_const')
+    assert uses_spatial_slope('ismip7_slope')
+    assert not uses_spatial_slope('ismip6')
+
+
+def test_mali_melt_method_helper():
+    """
+    mali_melt_method maps form names to MALI's config_basal_mass_bal_float
+    value. Both ISMIP7 forms map to 'ismip7'.
+    """
+    assert mali_melt_method('ismip7_const') == 'ismip7'
+    assert mali_melt_method('ismip7_slope') == 'ismip7'
+    assert mali_melt_method('ismip6') == 'ismip6'
+
+
+def test_melt_forms_accepts_all_three_forms():
+    """The three valid forms can be listed in any combination."""
+    config = _config()
+    config.set('ismip7_calibration', 'melt_forms',
+               'ismip7_const, ismip7_slope, ismip6')
+    forms = melt_forms(config)
+    assert forms == ['ismip7_const', 'ismip7_slope', 'ismip6']
+
+    config.set('ismip7_calibration', 'melt_forms', 'ismip7_slope')
+    forms = melt_forms(config)
+    assert forms == ['ismip7_slope']
+
+
+def test_constants_match_helpers():
+    """The ISMIP7_FORMS and ALL_FORMS constants are consistent."""
+    assert ISMIP7_FORMS == ('ismip7_const', 'ismip7_slope')
+    assert ALL_FORMS == ('ismip7_const', 'ismip7_slope', 'ismip6')
+    for form in ISMIP7_FORMS:
+        assert is_ismip7(form)
+    for form in ALL_FORMS:
+        assert form in ALL_FORMS

@@ -245,7 +245,9 @@ def _to_mali_form(remapped_file, state, output_file, filled):
             f'everywhere: {int((~finite).sum())} of {finite.size} values are '
             f'missing.  MALI would produce invalid melt in those cells.')
 
-    # Time must be UNLIMITED or MALI's reader mishandles the file, so this
-    # is written with xarray directly rather than through write_netcdf
-    ds_out.to_netcdf(output_file, unlimited_dims=['Time'])
+    # Time must be UNLIMITED or MALI's reader mishandles the file. Write CDF-5
+    # (NETCDF3_64BIT_DATA) for MALI/PIO compatibility — HDF5-based netCDF-4
+    # is not supported by the Fortran PIO reader.
+    ds_out.to_netcdf(output_file, format="NETCDF3_64BIT_DATA",
+                     engine="netcdf4", unlimited_dims=['Time'])
     ds.close()

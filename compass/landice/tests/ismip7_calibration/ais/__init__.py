@@ -18,6 +18,7 @@ from compass.landice.tests.ismip7_calibration.ais.run_state import (
 from compass.landice.tests.ismip7_calibration.ais.verify_melt import VerifyMelt
 from compass.landice.tests.ismip7_calibration.configure import (
     check_options,
+    is_ismip7,
     melt_forms,
 )
 from compass.testcase import TestCase
@@ -27,9 +28,9 @@ from compass.validate import compare_variables
 REFERENCE_STATE = 'climatology'
 
 #: multiples of the reference melt parameter used to measure the linearity
-#: that the one-run-per-ocean-state ensemble relies on.  Only the 'ismip7'
-#: form is scaled: its parameter is a namelist option, while the ISMIP6
-#: gamma0 is read from an input file.
+#: that the one-run-per-ocean-state ensemble relies on.  Each ISMIP7 form is
+#: scaled (their parameter is a namelist option); the ISMIP6 gamma0 is read
+#: from an input file and is not scaled.
 LINEARITY_SCALES = (0.5, 2.0)
 
 
@@ -130,19 +131,18 @@ class Ais(TestCase):
 
         # extra runs of one ocean state at other melt parameters, so that the
         # linearity the ensemble design relies on is measured in MALI rather
-        # than argued from the code
-        verify_form = self.melt_forms[0]
-        scales = LINEARITY_SCALES if verify_form == 'ismip7' else ()
-        for scale in scales:
-            self.add_step(RunState(
-                test_case=self, state_name=REFERENCE_STATE,
-                melt_form=verify_form,
-                subdir=f'{verify_form}_{REFERENCE_STATE}_x{scale:g}',
-                parameter_scale=scale))
-
-        self.add_step(VerifyMelt(test_case=self, melt_form=verify_form,
-                                 state_name=REFERENCE_STATE,
-                                 linearity_scales=scales))
+        # than argued from the code. Each ISMIP7 form is verified (including
+        # linearity); ISMIP6 gamma0 is file-read and not scaled.
+        for verify_form in [f for f in self.melt_forms if is_ismip7(f)]:
+            for scale in LINEARITY_SCALES:
+                self.add_step(RunState(
+                    test_case=self, state_name=REFERENCE_STATE,
+                    melt_form=verify_form,
+                    subdir=f'{verify_form}_{REFERENCE_STATE}_x{scale:g}',
+                    parameter_scale=scale))
+            self.add_step(VerifyMelt(test_case=self, melt_form=verify_form,
+                                     state_name=REFERENCE_STATE,
+                                     linearity_scales=LINEARITY_SCALES))
         self.add_step(Aggregate(test_case=self, melt_forms=self.melt_forms,
                                 states=self.states))
         self.add_step(Calibrate(test_case=self, melt_forms=self.melt_forms))

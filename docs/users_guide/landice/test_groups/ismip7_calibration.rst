@@ -123,8 +123,9 @@ The default config options are:
     #   all         - 28 states, everything ISMIP7 distributes
     ocean_state_subset = all
 
-    # Which melt forms to calibrate, comma separated
-    melt_forms = ismip7, ismip6
+    # Which melt forms to calibrate, comma separated.
+    # Options: ismip7_const, ismip7_slope (requires MALI PR #195), ismip6
+    melt_forms = ismip7_const, ismip6
 
     # Number of MPI tasks for ESMF_RegridWeightGen
     esmf_ntasks = 128
@@ -140,11 +141,27 @@ The default config options are:
     # Practical salinity at the ice draft, PSU
     salinity = 34.5
 
-    # The sin(theta) factor of the ISMIP7 quadratic
+    # The sin(theta) factor of the ISMIP7 quadratic, used by ismip7_const
     sin_slope = 0.0051117
 
     # Magnitude of the Coriolis parameter, s^-1
     coriolis = 1.4e-4
+
+    # Slope options for the ismip7_slope form; defaults match MALI's Registry
+    slope_method = local
+    slope_stencil_rings = 3
+    slope_smoothing_iterations = 1
+    max_slope = 0.5
+
+    # K grid for ismip7_const (matches published calibration)
+    k_min = 0.25e-5
+    k_max = 3.0e-4
+    k_step = 0.25e-5
+
+    # K grid for ismip7_slope (finer step for narrower p5-p95 span)
+    slope_k_min = 0.05e-5
+    slope_k_max = 1.0e-4
+    slope_k_step = 0.05e-5
 
     [ismip7_calibration_objective]
 
@@ -161,6 +178,26 @@ The default config options are:
 
 See ``compass/landice/tests/ismip7_calibration/ismip7_calibration.cfg`` for
 the full set with comments.
+
+**Melt forms and slope:**
+Three melt forms can be calibrated:
+
+- ``ismip7_const``: constant Antarctic-mean slope (``sin_slope = 0.0051117``
+  from Bedmap3 on the ISMIP 8 km grid), reproducing the published calibration.
+  Runs on MALI builds with or without PR #195.
+- ``ismip7_slope``: MALI's per-cell shelf-base slope diagnosed from ice
+  geometry (via ``'local'`` edge-based averaging or ``'polyfit'`` least-squares
+  planar fit). Requires MALI PR #195. Uses a finer K grid (``slope_k_min/max/step``)
+  since the p5-to-p95 span is narrower.
+- ``ismip6``: the ISMIP6 non-local quadratic, calibrating ``gamma0``.
+
+The two ISMIP7 forms produce calibrated ``K`` values that are **not
+interchangeable** — a projection must use parameters from a calibration with
+the same slope configuration. The default is ``melt_forms = ismip7_const, ismip6``.
+Add ``ismip7_slope`` to calibrate both slope variants side by side. The slope
+feature is experimental: MALI PR #195 noted stability issues (melting holes in
+shelves) under high forcing. The slope depends only on geometry, not on ``K``,
+so the one-run-per-ocean-state design and linearity verification remain unchanged.
 
 The ``t4_regions`` option is worth understanding.  The published weighting
 uses Pine Island alone, which is 2 of the 18 available observations.  So
