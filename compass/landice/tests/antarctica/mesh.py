@@ -89,7 +89,8 @@ class Mesh(Step):
             build_cell_width(
                 self, section_name=section_name,
                 gridded_dataset=bm_updated_gridded_dataset,
-                flood_fill_start=[nx // 2, ny // 2])
+                flood_fill_start=[nx // 2, ny // 2],
+                projection='ais-bedmap2')
 
         # Now build the base mesh and perform the standard interpolation
         build_mali_mesh(
