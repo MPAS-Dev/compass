@@ -39,6 +39,11 @@ jobs:
             ~/.pixi/bin
           key: ${{ runner.os }}-${{ env.PYTHON_VERSION }}-pixi-${{ env.CACHE_NUMBER }}-${{ hashFiles('deploy.py', 'deploy/**', 'pyproject.toml') }}
 
+      - name: Cache JIGSAW build
+        uses: ./.github/actions/cache-jigsaw
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
       - name: Install compass
         run: |
           git config --global url."https://github.com/".insteadOf "git@github.com:"
