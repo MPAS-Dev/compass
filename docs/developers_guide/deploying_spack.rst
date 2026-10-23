@@ -101,8 +101,10 @@ If you need a non-default temporary directory for Spack builds, set
 
 Where login nodes limit each user's memory, set ``spack_build_jobs`` in the
 ``[deploy]`` section of the machine config file to limit the number of
-parallel Spack build jobs.  Perlmutter uses 8 on pm-cpu and 4 on pm-gpu,
-where Albany's CUDA build needs more memory.
+parallel Spack build jobs.  It is ignored inside a Slurm job, where the
+deployment has a whole node's memory.  Perlmutter uses 8 on pm-cpu and 4 on
+pm-gpu, where Albany's CUDA build needs more memory (see
+:ref:`dev_deploying_spack_albany`).
 
 Testing against a mache branch
 ------------------------------
@@ -120,6 +122,8 @@ and branch explicitly:
 This keeps the Compass deployment workflow the same while swapping in the
 requested ``mache`` branch during bootstrap and deployment.
 
+.. _dev_deploying_spack_albany:
+
 Albany deployments
 ------------------
 
@@ -134,6 +138,20 @@ If you are testing MALI workflows that require Albany, add
 
 Albany support is restricted to the machine/compiler/MPI combinations allowed
 by the deployment hooks and machine configuration.
+
+.. important::
+
+    On Perlmutter, deploy Albany-enabled Spack environments for ``pm-gpu``
+    from a compute node.  Login nodes cap each user's memory at 30 GiB, and
+    Albany's CUDA build only fits with 4 parallel build jobs, which takes
+    hours.  An interactive allocation usually starts within minutes:
+
+    .. code-block:: bash
+
+        salloc -A e3sm -q interactive -C cpu -N 1 -t 4:00:00 \
+            srun -N 1 -n 1 -c 128 ./deploy.py --machine pm-gpu \
+            --compiler gnugpu --mpi mpich --with-albany --deploy-spack \
+            --spack-path ${SCRATCH_SPACK}
 
 Validating the deployment
 =========================

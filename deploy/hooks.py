@@ -266,6 +266,9 @@ def _maybe_exclude_e3sm_hdf5_netcdf(
 
 
 def _get_spack_build_jobs(machine_config) -> int | None:
+    # the limit is for login nodes; a Slurm job has the node's memory
+    if os.environ.get('SLURM_JOB_ID'):
+        return None
     if not machine_config.has_section('deploy'):
         return None
     value = machine_config.get(
