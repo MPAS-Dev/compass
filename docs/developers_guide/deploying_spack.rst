@@ -144,10 +144,13 @@ by the deployment hooks and machine configuration.
     On Perlmutter, deploy Albany-enabled Spack environments for ``pm-gpu``
     from a compute node.  Login nodes cap each user's memory at 30 GiB, and
     Albany's CUDA build only fits with 4 parallel build jobs, which takes
-    hours.  An interactive allocation usually starts within minutes:
+    hours.  An interactive allocation usually starts within minutes.  Point
+    pixi's cache at ``$SCRATCH`` first, since pixi cannot lock files in its
+    default cache in your home directory from a compute node:
 
     .. code-block:: bash
 
+        export PIXI_CACHE_DIR=${SCRATCH}/pixi-cache
         salloc -A e3sm -q interactive -C cpu -N 1 -t 4:00:00 \
             srun -N 1 -n 1 -c 128 ./deploy.py --machine pm-gpu \
             --compiler gnugpu --mpi mpich --with-albany --deploy-spack \
