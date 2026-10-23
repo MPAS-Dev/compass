@@ -58,9 +58,6 @@ These instructions apply to the whole repository unless a deeper
   make later edits show up as reflowed paragraphs in the diff.
 - Start with a paragraph summarizing what the pull request or issue is
   about, then use sections for the detail.
-- Keep the description in a file at the root of the worktree for the
-  branch it describes, and never commit it. It is a draft to paste into
-  GitHub, not part of the branch's content.
 - Follow `.github/pull_request_template.md`: the description goes at
   the top, keep only the checklist lines that apply, and use closing
   keywords for any issue the pull request fixes.

@@ -1,6 +1,6 @@
 ---
 name: pr-descriptions
-description: Write or update a pull request description, including drafting pr_description.md before opening a PR. Use when opening a pull request or editing its body.
+description: Write or update a pull request description. Use when opening a pull request or editing its body.
 ---
 
 # Pull request descriptions
