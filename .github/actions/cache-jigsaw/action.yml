@@ -1,0 +1,34 @@
+name: Cache JIGSAW build
+description: >-
+  Restore and save the JIGSAW build that mache caches under
+  .mache_cache/jigsaw, so ./deploy.py does not rebuild it on every run.
+
+inputs:
+  python-version:
+    description: The Python version passed to ./deploy.py
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Get JIGSAW cache key inputs
+      id: key_inputs
+      shell: bash
+      run: |
+        # hashFiles cannot see a submodule commit, but rev-parse can read it
+        # from the tree before the submodule is initialised
+        echo "jigsaw_sha=$(git rev-parse HEAD:jigsaw-python)" >> "$GITHUB_OUTPUT"
+        echo "mache_version=$(sed -n 's/^mache *= *//p' deploy/pins.cfg)" >> "$GITHUB_OUTPUT"
+
+    - name: Cache JIGSAW build
+      uses: actions/cache@v6
+      with:
+        # The glob has to list the children of .mache_cache/jigsaw for the
+        # exclusion to apply. The shared tools are only needed to build.
+        # The key carries the mache version because mache's own cache key
+        # includes its build recipe: without it, a primary-key hit on a
+        # stale slot would rebuild on every run and never save.
+        path: |
+          .mache_cache/jigsaw/*
+          !.mache_cache/jigsaw/tools
+        key: jigsaw-${{ runner.os }}-py${{ inputs.python-version }}-${{ steps.key_inputs.outputs.jigsaw_sha }}-mache${{ steps.key_inputs.outputs.mache_version }}
