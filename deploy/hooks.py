@@ -41,6 +41,9 @@ def pre_spack(ctx: DeployContext) -> dict[str, Any] | None:
         updates['spack'] = {'spack_path': spack_path}
     if exclude_packages:
         updates.setdefault('spack', {})['exclude_packages'] = exclude_packages
+    build_jobs = _get_spack_build_jobs(ctx.machine_config)
+    if build_jobs is not None:
+        updates.setdefault('spack', {})['build_jobs'] = build_jobs
 
     if _with_albany(ctx):
         _check_albany_support(ctx.machine, toolchain_pairs)
@@ -260,6 +263,17 @@ def _maybe_exclude_e3sm_hdf5_netcdf(
 
     if not use_bundle and 'hdf5_netcdf' not in exclude_packages:
         exclude_packages.append('hdf5_netcdf')
+
+
+def _get_spack_build_jobs(machine_config) -> int | None:
+    if not machine_config.has_section('deploy'):
+        return None
+    value = machine_config.get(
+        'deploy', 'spack_build_jobs', fallback=''
+    ).strip()
+    if not value:
+        return None
+    return int(value)
 
 
 def _maybe_exclude_cmake(

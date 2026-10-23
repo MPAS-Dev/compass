@@ -99,6 +99,10 @@ Useful flags
 If you need a non-default temporary directory for Spack builds, set
 ``spack.tmpdir`` in ``deploy/config.yaml.j2`` before running deployment.
 
+Where login nodes limit each user's memory, set ``spack_build_jobs`` in the
+``[deploy]`` section of the machine config file to limit the number of
+parallel Spack build jobs.  Perlmutter uses 8.
+
 Testing against a mache branch
 ------------------------------
 
