@@ -95,6 +95,10 @@ jobs:
           testDir=$root/gis_mesh_gen
           compass setup -w $testDir -t landice/greenland/mesh_gen -f system.cfg
 
+          # Some runners have an Azure (MANA) RDMA device that UCX cannot
+          # open, which makes MPI_Init fail, so stick to non-RDMA transports
+          export UCX_TLS=self,sm,tcp
+
           # run the test case, printing its log if it fails
           cd $testDir
           if ! compass run; then
