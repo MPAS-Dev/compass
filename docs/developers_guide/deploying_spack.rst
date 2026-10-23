@@ -101,7 +101,8 @@ If you need a non-default temporary directory for Spack builds, set
 
 Where login nodes limit each user's memory, set ``spack_build_jobs`` in the
 ``[deploy]`` section of the machine config file to limit the number of
-parallel Spack build jobs.  Perlmutter uses 8.
+parallel Spack build jobs.  Perlmutter uses 8 on pm-cpu and 4 on pm-gpu,
+where Albany's CUDA build needs more memory.
 
 Testing against a mache branch
 ------------------------------
