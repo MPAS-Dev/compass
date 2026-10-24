@@ -3,8 +3,8 @@
 hurricane
 =========
 
-The ``ocean/hurricane`` test group defines meshes,
-initial conditions, forward simulations, and validation for global,
+The ``ocean/hurricane`` test group defines meshes, initial conditions, forward
+simulations, validation, and E3SM domain and mapping file creation for global,
 realistic ocean domains with regional refinement. These simulations
 are forced with time-varying atmospheric reanalysis data for tropical
 cyclone events and tides. The meshes contain refined regions in order
@@ -109,6 +109,16 @@ Note that meshes and test cases may modify these options, as noted below.
     analysis_runs = MPAS-O:./
 
     plot_station_dems = False
+
+
+    # config options related to regridding and domain files for E3SM configurations
+   [files_for_e3sm]
+
+   # Grid for data atmosphere (currently T382 and T574 supported)
+   atm_grid = T574
+
+   # the relative or absolute path to the `generate_domain_files_E3SM.py` utility
+   domain_files_exe = ${paths:compass_branch}/E3SM-Project/tools/generate_domain_files/generate_domain_files_E3SM.py
 
 .. _ocean_hurricane_meshes:
 
@@ -281,3 +291,26 @@ are used for the validation.
 .. image:: images/hurricane_subgrid_spatialerror.png
    :width: 800 px
    :align: center
+
+.. _ocean_hurricane_files_for_e3sm:
+
+files for e3sm test case
+^^^^^^^^^^^^^^^^^^^^^^^^
+The ``files_for_e3sm`` test case builds the domain files and data atmosphere
+regridding files needed to run MPAS-Ocean hurricane configurations in E3SM.
+The LTS3 and FB-LTS meshes are not currently supported.
+
+forcing maps step
+"""""""""""""""""
+The ``forcing_maps`` step builds the regridding files between the ocean mesh
+and the data atmosphere grid. Currently two data atmosphere grids are supported,
+T382 and T574. These correspond to the NCEP Climate Forecast System Reanalysis
+(CFSR) and Climate Forecast System Version 2 (CFSv2), respectively. The grid is
+specified in the ``[files_for_e3sm]`` config options.
+
+domain files step
+"""""""""""""""""
+The ``domain_files`` step builds the ocean and atmosphere domain files needed
+to define the ocean and data atmosphere grids in an E3SM configuration. The
+step uses the domain file creator maintained in the tools directory of the
+E3SM submodule.
