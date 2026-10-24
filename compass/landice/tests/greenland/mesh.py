@@ -1,19 +1,11 @@
 import numpy as np
 import xarray as xr
 
-from compass.landice.mesh import (
-    build_cell_width,
-    build_mali_mesh,
-    get_mesh_config_bounding_box,
-    get_optional_interp_datasets,
-    make_region_masks,
-    run_optional_interpolation,
-)
+from compass.landice import mesh as landice_mesh
 from compass.model import make_graph_file
-from compass.step import Step
 
 
-class Mesh(Step):
+class Mesh(landice_mesh.LandiceMeshStep):
     """
     A step for creating a mesh and initial condition for greenland test cases
 
@@ -32,8 +24,7 @@ class Mesh(Step):
             The test case this step belongs to
 
         """
-        super().__init__(test_case=test_case, name='mesh', cpus_per_task=128,
-                         min_cpus_per_task=1)
+        super().__init__(test_case=test_case, name='mesh')
 
         # output files
         self.mesh_filename = 'GIS.nc'
@@ -64,6 +55,7 @@ class Mesh(Step):
                             target=geojson_filename,
                             database=None)
 
+
     def run(self):
         """
         Run this step of the test case
@@ -78,8 +70,8 @@ class Mesh(Step):
         src_proj = section_gis.get("src_proj")
         geojson_filename = section_gis.get('geojson_filename')
 
-        bedmachine_dataset, measures_dataset = get_optional_interp_datasets(
-            section_gis, logger)
+        bedmachine_dataset, measures_dataset = \
+            landice_mesh.get_optional_interp_datasets(section_gis, logger)
 
         if bedmachine_dataset is not None:
             ds_bm = xr.open_dataset(bedmachine_dataset)
@@ -89,7 +81,7 @@ class Mesh(Step):
                 float(ds_bm.y1.min()),
                 float(ds_bm.y1.max())]
             ds_bm.close()
-            bounding_box = get_mesh_config_bounding_box(
+            bounding_box = landice_mesh.get_mesh_config_bounding_box(
                 section_gis, default_bounds=default_bounds)
         else:
             bounding_box = None
@@ -101,13 +93,13 @@ class Mesh(Step):
 
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodMask = \
-            build_cell_width(
+            landice_mesh.build_cell_width(
                 self, section_name=section_name,
                 gridded_dataset=source_gridded_dataset_2km,
                 flood_fill_start=[100, 700])
 
         # Now build the base mesh and perform the standard interpolation
-        build_mali_mesh(
+        landice_mesh.build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
             gridded_dataset=source_gridded_dataset_1km,
@@ -120,7 +112,7 @@ class Mesh(Step):
         interpolate_data = section_gis.getboolean(
             'interpolate_data', fallback=False)
         if interpolate_data:
-            run_optional_interpolation(
+            landice_mesh.run_optional_interpolation(
                 self, self.mesh_filename, src_proj,
                 parallel_executable, nProcs,
                 bedmachine_dataset=bedmachine_dataset,
@@ -133,23 +125,25 @@ class Mesh(Step):
 
         # create region masks
         mask_filename = f'{self.mesh_filename[:-3]}_ismip6_regionMasks.nc'
-        make_region_masks(self, self.mesh_filename, mask_filename,
-                          self.cpus_per_task,
-                          tags=["Greenland", "ISMIP6", "Shelf"],
-                          component='ocean')
+        landice_mesh.make_region_masks(
+            self, self.mesh_filename, mask_filename,
+            self.cpus_per_task,
+            tags=["Greenland", "ISMIP6", "Shelf"],
+            component='ocean')
 
         mask_filename = f'{self.mesh_filename[:-3]}_zwally_regionMasks.nc'
-        make_region_masks(self, self.mesh_filename, mask_filename,
-                          self.cpus_per_task,
-                          tags=['eastCentralGreenland',
-                                'northEastGreenland',
-                                'northGreenland',
-                                'northWestGreenland',
-                                'southEastGreenland',
-                                'southGreenland',
-                                'southWestGreenland',
-                                'westCentralGreenland'],
-                          all_tags=False)
+        landice_mesh.make_region_masks(
+            self, self.mesh_filename, mask_filename,
+            self.cpus_per_task,
+            tags=['eastCentralGreenland',
+                  'northEastGreenland',
+                  'northGreenland',
+                  'northWestGreenland',
+                  'southEastGreenland',
+                  'southGreenland',
+                  'southWestGreenland',
+                  'westCentralGreenland'],
+            all_tags=False)
 
         # Do some final validation of the mesh
         ds = xr.open_dataset(self.mesh_filename)
