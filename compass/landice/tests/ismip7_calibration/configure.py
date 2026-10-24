@@ -10,6 +10,63 @@ from compass.landice.tests.ismip7_calibration.datasets import (
     PUBLISHED_T4_YEARS,
 )
 
+#: The two ISMIP7 melt forms: constant slope and spatially-varying slope
+ISMIP7_FORMS = ('ismip7_const', 'ismip7_slope')
+
+#: All valid melt forms
+ALL_FORMS = ISMIP7_FORMS + ('ismip6',)
+
+
+def is_ismip7(melt_form):
+    """
+    Check if a melt form is one of the ISMIP7 family (both const and slope).
+
+    Parameters
+    ----------
+    melt_form : str
+        The melt form name
+
+    Returns
+    -------
+    bool
+        True if the form is an ISMIP7 variant (uses the K parameter)
+    """
+    return melt_form in ISMIP7_FORMS
+
+
+def uses_spatial_slope(melt_form):
+    """
+    Check if a melt form uses spatially-varying shelf-base slope.
+
+    Parameters
+    ----------
+    melt_form : str
+        The melt form name
+
+    Returns
+    -------
+    bool
+        True if the form uses MALI's diagnosed per-cell slope field
+    """
+    return melt_form == 'ismip7_slope'
+
+
+def mali_melt_method(melt_form):
+    """
+    Map a melt form name to MALI's config_basal_mass_bal_float value.
+
+    Parameters
+    ----------
+    melt_form : str
+        The melt form name
+
+    Returns
+    -------
+    str
+        The value for MALI's config_basal_mass_bal_float namelist option
+    """
+    return 'ismip7' if is_ismip7(melt_form) else 'ismip6'
+
 
 def check_options(config, options):
     """
@@ -47,9 +104,10 @@ def parameter_values(config, melt_form):
     config : compass.config.CompassConfigParser
         Configuration options for the test case
 
-    melt_form : {'ismip7', 'ismip6'}
-        Which melt form the parameter belongs to.  ``'ismip7'`` calibrates
-        ``K`` and ``'ismip6'`` calibrates ``gamma0``.
+    melt_form : {'ismip7_const', 'ismip7_slope', 'ismip6'}
+        Which melt form the parameter belongs to.  ``'ismip7_const'`` and
+        ``'ismip7_slope'`` calibrate ``K``; ``'ismip6'`` calibrates
+        ``gamma0``.
 
     Returns
     -------
@@ -57,16 +115,20 @@ def parameter_values(config, melt_form):
         The parameter grid
     """
     section = config['ismip7_calibration_melt']
-    if melt_form == 'ismip7':
+    if melt_form == 'ismip7_const':
         low = section.getfloat('k_min')
         high = section.getfloat('k_max')
         step = section.getfloat('k_step')
+    elif uses_spatial_slope(melt_form):
+        low = section.getfloat('slope_k_min')
+        high = section.getfloat('slope_k_max')
+        step = section.getfloat('slope_k_step')
     elif melt_form == 'ismip6':
         low = section.getfloat('gamma0_min')
         high = section.getfloat('gamma0_max')
         step = section.getfloat('gamma0_step')
     else:
-        raise ValueError(f"melt_form must be 'ismip7' or 'ismip6', but is "
+        raise ValueError(f"melt_form must be one of {ALL_FORMS}, but is "
                          f"'{melt_form}'")
 
     # add half a step so that ``high`` itself is included
@@ -79,19 +141,19 @@ def parameter_name(melt_form):
 
     Parameters
     ----------
-    melt_form : {'ismip7', 'ismip6'}
+    melt_form : {'ismip7_const', 'ismip7_slope', 'ismip6'}
         The melt form
 
     Returns
     -------
     name : str
-        ``'K'`` for ``'ismip7'`` and ``'gamma0'`` for ``'ismip6'``
+        ``'K'`` for the ISMIP7 forms and ``'gamma0'`` for ``'ismip6'``
     """
-    if melt_form == 'ismip7':
+    if is_ismip7(melt_form):
         return 'K'
     if melt_form == 'ismip6':
         return 'gamma0'
-    raise ValueError(f"melt_form must be 'ismip7' or 'ismip6', but is "
+    raise ValueError(f"melt_form must be one of {ALL_FORMS}, but is "
                      f"'{melt_form}'")
 
 
@@ -107,14 +169,15 @@ def melt_forms(config):
     Returns
     -------
     forms : list of str
-        Each of ``'ismip7'`` and ``'ismip6'`` that was requested
+        Each of ``'ismip7_const'``, ``'ismip7_slope'``, and ``'ismip6'``
+        that was requested
     """
     value = config.get('ismip7_calibration', 'melt_forms')
     forms = [form.strip() for form in value.split(',') if form.strip()]
     for form in forms:
-        if form not in ('ismip7', 'ismip6'):
-            raise ValueError(f"melt_forms must contain only 'ismip7' and "
-                             f"'ismip6', but contains '{form}'")
+        if form not in ALL_FORMS:
+            raise ValueError(f"melt_forms must contain only {ALL_FORMS}, "
+                             f"but contains '{form}'")
     if not forms:
         raise ValueError('melt_forms must name at least one melt form')
     return forms
