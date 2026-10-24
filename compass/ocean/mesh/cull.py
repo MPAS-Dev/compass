@@ -305,6 +305,17 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                                 geojson_filename='land_coverage.geojson',
                                 mask_filename='land_mask.nc')
 
+    # Hook point: allow modification of land mask before culling
+    # This enables regional culling and other mask modifications
+    if os.path.exists('modify_land_mask_hook.py'):
+        logger.info('Running land mask modification hook...')
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("hook", "modify_land_mask_hook.py")
+        hook = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(hook)
+        if hasattr(hook, 'modify_land_mask'):
+            hook.modify_land_mask(logger=logger)
+
     dsBaseMesh = xr.open_dataset('base_mesh.nc')
     dsLandMask = xr.open_dataset('land_mask.nc')
 
