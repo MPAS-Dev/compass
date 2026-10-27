@@ -57,15 +57,6 @@ class SetUpExperiment(Step):
         forcing_basepath = section.get('forcing_basepath')
         init_cond_path = section.get('init_cond_path')
         init_cond_fname = os.path.split(init_cond_path)[-1]
-        # Extract mesh name from init cond filename
-        # (e.g., AIS_2to20km_r03_20260922)
-        # Typical format: AIS_<resolution>_<version>_<date>_<something>.nc
-        # Strip .nc extension first, then take first 4 underscore-separated
-        # parts
-        base = init_cond_fname.replace('.nc', '')
-        mesh_name = '_'.join(base.split('_')[:4])
-        print(f"    Extracted mesh name: {mesh_name} from init cond: "
-              f"{init_cond_fname}")
         melt_params_path = section.get('melt_params_path')
         melt_params_fname = os.path.split(melt_params_path)[-1]
         region_mask_path = section.get('region_mask_path')
@@ -128,35 +119,27 @@ class SetUpExperiment(Step):
             # Find atmosphere climatology files
             smb_files = glob.glob(os.path.join(ctrl_atm_path, '*SMB*.nc'))
             smb_files = [f for f in smb_files if 'gradient' not in f]
-            # Filter by mesh name to handle directories with multiple meshes
-            smb_files = [f for f in smb_files if mesh_name in f]
             if len(smb_files) == 1:
                 smb_fname = os.path.split(smb_files[0])[-1]
                 os.symlink(smb_files[0],
                            os.path.join(self.work_dir, smb_fname))
             else:
-                sys.exit(f"ERROR: Expected 1 SMB climatology file matching "
-                         f"mesh {mesh_name} in {ctrl_atm_path}, found "
-                         f"{len(smb_files)}")
+                sys.exit(f"ERROR: Expected 1 SMB climatology file in "
+                         f"{ctrl_atm_path}, found {len(smb_files)}")
 
             temp_files = glob.glob(
                 os.path.join(ctrl_atm_path, '*temperature*.nc'))
             temp_files = [f for f in temp_files if 'gradient' not in f]
-            # Filter by mesh name to handle directories with multiple meshes
-            temp_files = [f for f in temp_files if mesh_name in f]
             if len(temp_files) == 1:
                 temp_fname = os.path.split(temp_files[0])[-1]
                 os.symlink(temp_files[0],
                            os.path.join(self.work_dir, temp_fname))
             else:
                 sys.exit(f"ERROR: Expected 1 temperature climatology file "
-                         f"matching mesh {mesh_name} in {ctrl_atm_path}, "
-                         f"found {len(temp_files)}")
+                         f"in {ctrl_atm_path}, found {len(temp_files)}")
 
             runoff_files = glob.glob(
                 os.path.join(ctrl_atm_path, '*runoff*.nc'))
-            # Filter by mesh name to handle directories with multiple meshes
-            runoff_files = [f for f in runoff_files if mesh_name in f]
             if len(runoff_files) == 1:
                 runoff_fname = os.path.split(runoff_files[0])[-1]
                 os.symlink(runoff_files[0],
@@ -166,8 +149,6 @@ class SetUpExperiment(Step):
 
             smb_grad_files = glob.glob(
                 os.path.join(ctrl_atm_path, '*SMB_gradient*.nc'))
-            # Filter by mesh name to handle directories with multiple meshes
-            smb_grad_files = [f for f in smb_grad_files if mesh_name in f]
             smb_grad_fname = ''
             if len(smb_grad_files) == 1:
                 smb_grad_fname = os.path.split(smb_grad_files[0])[-1]
@@ -176,8 +157,6 @@ class SetUpExperiment(Step):
 
             temp_grad_files = glob.glob(
                 os.path.join(ctrl_atm_path, '*temperature_gradient*.nc'))
-            # Filter by mesh name to handle directories with multiple meshes
-            temp_grad_files = [f for f in temp_grad_files if mesh_name in f]
             temp_grad_fname = ''
             if len(temp_grad_files) == 1:
                 temp_grad_fname = os.path.split(temp_grad_files[0])[-1]
@@ -195,40 +174,30 @@ class SetUpExperiment(Step):
             print(f"    Found {len(smb_list)} SMB files before filtering")
             smb_list = [f for f in smb_list if 'gradient' not in f]
             print(f"    Found {len(smb_list)} SMB files after removing "
-                  f"gradients")
-            # Filter by mesh name to handle directories with multiple meshes
-            smb_list = [f for f in smb_list if mesh_name in f]
-            print(f"    Found {len(smb_list)} SMB files after mesh filter: "
-                  f"{smb_list}")
+                  f"gradients: {smb_list}")
             if len(smb_list) == 1:
                 smb_fname = os.path.split(smb_list[0])[-1]
                 os.symlink(smb_list[0],
                            os.path.join(self.work_dir, smb_fname))
             else:
-                sys.exit(f"ERROR: Expected 1 SMB file matching mesh "
-                         f"{mesh_name} at {smb_search}, found "
-                         f"{len(smb_list)}: {smb_list}")
+                sys.exit(f"ERROR: Expected 1 SMB file at {smb_search}, "
+                         f"found {len(smb_list)}: {smb_list}")
 
             # Temperature forcing
             temp_search = os.path.join(atm_dir, '*temperature_*.nc')
             temp_list = glob.glob(temp_search)
             temp_list = [f for f in temp_list if 'gradient' not in f]
-            # Filter by mesh name to handle directories with multiple meshes
-            temp_list = [f for f in temp_list if mesh_name in f]
             if len(temp_list) == 1:
                 temp_fname = os.path.split(temp_list[0])[-1]
                 os.symlink(temp_list[0],
                            os.path.join(self.work_dir, temp_fname))
             else:
-                sys.exit(f"ERROR: Expected 1 temperature file matching mesh "
-                         f"{mesh_name} at {temp_search}, found "
-                         f"{len(temp_list)}")
+                sys.exit(f"ERROR: Expected 1 temperature file at "
+                         f"{temp_search}, found {len(temp_list)}")
 
             # Runoff forcing (optional — may not exist for all experiments)
             runoff_search = os.path.join(atm_dir, '*runoff_*.nc')
             runoff_list = glob.glob(runoff_search)
-            # Filter by mesh name to handle directories with multiple meshes
-            runoff_list = [f for f in runoff_list if mesh_name in f]
             runoff_fname = ''
             if len(runoff_list) == 1:
                 runoff_fname = os.path.split(runoff_list[0])[-1]
@@ -238,8 +207,6 @@ class SetUpExperiment(Step):
             # SMB gradient (lapse rate)
             smb_grad_search = os.path.join(atm_dir, '*SMB_gradient_*.nc')
             smb_grad_list = glob.glob(smb_grad_search)
-            # Filter by mesh name to handle directories with multiple meshes
-            smb_grad_list = [f for f in smb_grad_list if mesh_name in f]
             smb_grad_fname = ''
             if len(smb_grad_list) == 1:
                 smb_grad_fname = os.path.split(smb_grad_list[0])[-1]
@@ -250,8 +217,6 @@ class SetUpExperiment(Step):
             temp_grad_search = os.path.join(atm_dir,
                                             '*temperature_gradient_*.nc')
             temp_grad_list = glob.glob(temp_grad_search)
-            # Filter by mesh name to handle directories with multiple meshes
-            temp_grad_list = [f for f in temp_grad_list if mesh_name in f]
             temp_grad_fname = ''
             if len(temp_grad_list) == 1:
                 temp_grad_fname = os.path.split(temp_grad_list[0])[-1]
@@ -261,16 +226,13 @@ class SetUpExperiment(Step):
             # Thermal forcing
             tf_search = os.path.join(ocean_dir, '*3dThermalForcing_*.nc')
             tf_list = glob.glob(tf_search)
-            # Filter by mesh name to handle directories with multiple meshes
-            tf_list = [f for f in tf_list if mesh_name in f]
             if len(tf_list) == 1:
                 tf_fname = os.path.split(tf_list[0])[-1]
                 os.symlink(tf_list[0],
                            os.path.join(self.work_dir, tf_fname))
             else:
-                sys.exit(f"ERROR: Expected 1 TF file matching mesh "
-                         f"{mesh_name} at {tf_search}, found "
-                         f"{len(tf_list)}: {tf_list}")
+                sys.exit(f"ERROR: Expected 1 TF file at {tf_search}, "
+                         f"found {len(tf_list)}: {tf_list}")
 
         # --- Find shelf collapse (calving) mask from ismip7_forcing
         # fracture Path C ---
@@ -280,8 +242,6 @@ class SetUpExperiment(Step):
             mask_search = os.path.join(forcing_dir, 'shelf_collapse',
                                        '*ice_shelf_collapse_mask_*.nc')
             mask_list = glob.glob(mask_search)
-            # Filter by mesh name to handle directories with multiple meshes
-            mask_list = [f for f in mask_list if mesh_name in f]
             if len(mask_list) == 1:
                 mask_fname = os.path.split(mask_list[0])[-1]
                 os.symlink(mask_list[0],
@@ -289,7 +249,7 @@ class SetUpExperiment(Step):
             else:
                 sys.exit(
                     f"ERROR: Did not find exactly 1 shelf collapse mask file "
-                    f"matching mesh {mesh_name} at {mask_search}: {mask_list}")
+                    f"at {mask_search}: {mask_list}")
         else:
             # For historical/ctrl/ocx, set to empty - stream won't be used
             mask_fname = ''
