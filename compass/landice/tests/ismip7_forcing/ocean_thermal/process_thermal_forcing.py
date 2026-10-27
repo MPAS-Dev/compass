@@ -459,7 +459,8 @@ class ProcessThermalForcing(Step):
         """
         ds = xr.open_mfdataset(remapped_files, concat_dim="time",
                                combine="nested", engine="netcdf4",
-                               drop_variables="time_bnds")
+                               drop_variables="time_bnds",
+                               use_cftime=True)
 
         # Subset to requested year range
         years = ds.time.dt.year
@@ -574,7 +575,8 @@ class ProcessThermalForcing(Step):
         """
         ds = xr.open_mfdataset(remapped_files, concat_dim="time",
                                combine="nested", engine="netcdf4",
-                               drop_variables="time_bnds")
+                               drop_variables="time_bnds",
+                               use_cftime=True)
 
         # Subset to requested year range
         years = ds.time.dt.year
