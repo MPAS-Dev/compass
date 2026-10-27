@@ -1,5 +1,6 @@
 import glob
 import os
+import shutil
 import sys
 from importlib import resources
 
@@ -37,7 +38,8 @@ class SetUpExperiment(Step):
 
         exp_info : dict
             Dictionary with experiment metadata:
-            scenario, model, start_time, stop_time, is_historical
+            scenario, model, start_time, stop_time, is_historical,
+            slm_start_time (start time of the corresponding historical run)
         """
         self.exp = exp
         self.exp_info = exp_info
@@ -65,7 +67,6 @@ class SetUpExperiment(Step):
         reference_surface_fname = os.path.split(reference_surface_path)[-1]
         calving_method = section.get('calving_method')
         sea_level_model, fastisostasy = parse_gia_model(config)
-        sea_level_model = section.getboolean('sea_level_model')
 
         exp_info = self.exp_info
         scenario = exp_info['scenario']
@@ -350,10 +351,16 @@ class SetUpExperiment(Step):
             self.add_namelist_options(options=options,
                                       out_name='namelist.landice')
 
+            # The SLM start year is the start of the historical run, even for
+            # projections, because they restart with the historical SLM
+            # history.
+            slm_start_year = int(exp_info['slm_start_time'][:4])
+
             template = Template(resources.read_text(
                 resource_location, 'namelist.sealevel.template'))
             text = template.render(
-                nglv=int(nglv), slm_input_ice=slm_input_ice,
+                nglv=int(nglv), slm_start_year=slm_start_year,
+                slm_input_ice=slm_input_ice,
                 slm_input_earth=slm_input_earth,
                 slm_earth_structure=slm_earth_structure,
                 slm_input_others=slm_input_others)
@@ -472,6 +479,9 @@ class SetUpExperiment(Step):
                              "does not exist in workdir. "
                              "Please run the 'mapping_files' step "
                              "before proceeding.")
+            if not self.exp_info['is_historical']:
+                hist_exp = f"historical_{self.exp_info['model']}"
+                _copy_slm_history(os.path.join('..', hist_exp))
 
         if fastisostasy:
             map_dir = os.path.join('..', 'fastiso_mapping_files')
@@ -485,3 +495,25 @@ class SetUpExperiment(Step):
 
         run_model(step=self, namelist='namelist.landice',
                   streams='streams.landice')
+
+
+def _copy_slm_history(hist_dir):
+    """
+    Copy the SLM history from the historical run into this run, which is
+    needed for the SLM to restart correctly.  Directories that already have
+    contents are left alone so that resubmitted jobs keep their progress.
+
+    Parameters
+    ----------
+    hist_dir : str
+        The directory of the historical run this experiment restarts from
+    """
+    for name in ('OUTPUT_SLM', 'ICELOAD_SLM'):
+        if os.listdir(name):
+            continue
+        src = os.path.join(hist_dir, name)
+        if not os.path.isdir(src) or not os.listdir(src):
+            sys.exit(f"ERROR: '{src}' is missing or empty. The historical "
+                     "run must complete before this experiment can be run "
+                     "with the 1dSLM.")
+        shutil.copytree(src, name, dirs_exist_ok=True)
