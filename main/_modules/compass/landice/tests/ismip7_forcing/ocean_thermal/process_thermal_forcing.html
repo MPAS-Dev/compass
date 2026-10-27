@@ -582,7 +582,8 @@
 <span class="sd">        """</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">concat_dim</span><span class="o">=</span><span class="s2">"time"</span><span class="p">,</span>
                                <span class="n">combine</span><span class="o">=</span><span class="s2">"nested"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">,</span>
-                               <span class="n">drop_variables</span><span class="o">=</span><span class="s2">"time_bnds"</span><span class="p">)</span>
+                               <span class="n">drop_variables</span><span class="o">=</span><span class="s2">"time_bnds"</span><span class="p">,</span>
+                               <span class="n">use_cftime</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Subset to requested year range</span>
         <span class="n">years</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span>
@@ -697,7 +698,8 @@
 <span class="sd">        """</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">remapped_files</span><span class="p">,</span> <span class="n">concat_dim</span><span class="o">=</span><span class="s2">"time"</span><span class="p">,</span>
                                <span class="n">combine</span><span class="o">=</span><span class="s2">"nested"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"netcdf4"</span><span class="p">,</span>
-                               <span class="n">drop_variables</span><span class="o">=</span><span class="s2">"time_bnds"</span><span class="p">)</span>
+                               <span class="n">drop_variables</span><span class="o">=</span><span class="s2">"time_bnds"</span><span class="p">,</span>
+                               <span class="n">use_cftime</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Subset to requested year range</span>
         <span class="n">years</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span>
