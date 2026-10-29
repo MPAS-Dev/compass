@@ -41,7 +41,6 @@ jobs:
         run: |
           git config --global url."https://github.com/".insteadOf "git@github.com:"
           ./deploy.py \
-            --mache-fork xylar/mache --mache-branch add-target-software-cli-flags \
             --no-spack \
             --python 3.14 \
             --recreate
@@ -96,6 +95,13 @@ jobs:
           testDir=$root/gis_mesh_gen
           compass setup -w $testDir -t landice/greenland/mesh_gen -f system.cfg
 
-          # run the test case
+          # Some runners have an Azure (MANA) RDMA device that UCX cannot
+          # open, which makes MPI_Init fail, so stick to non-RDMA transports
+          export UCX_TLS=self,sm,tcp
+
+          # run the test case, printing its log if it fails
           cd $testDir
-          compass run
+          if ! compass run; then
+            cat case_outputs/*.log
+            exit 1
+          fi
