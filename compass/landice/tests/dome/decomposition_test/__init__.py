@@ -100,7 +100,9 @@ class DecompositionTest(TestCase):
             # validate normalVelocity
             variable = ['normalVelocity', ]
             if self.mesh_type == 'variable_resolution':
-                l1_norm = 1.0e-17
+                # FCT with RK time integration amplifies the non-BFB noise
+                # from the FO velocity solver slightly
+                l1_norm = 1.0e-16 if self.advection_type == 'fct' else 1.0e-17
                 l2_norm = 1.0e-18
                 linf_norm = 1.0e-19
             elif self.mesh_type == '2000m':

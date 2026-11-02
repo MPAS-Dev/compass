@@ -91,13 +91,23 @@ class DecompositionTest(TestCase):
         name1 = self.run_dirs[0]
         name2 = self.run_dirs[1]
         # validate thickness
+        if self.advection_type == 'fct':
+            # FCT with RK time integration amplifies the non-BFB noise
+            # from the FO velocity solver slightly
+            l1_norm = 1.0e-10
+            l2_norm = 1.0e-11
+            linf_norm = 1.0e-11
+        else:
+            l1_norm = 1.0e-11
+            l2_norm = 1.0e-11
+            linf_norm = 1.0e-12
         compare_variables(test_case=self,
                           variables=['thickness', ],
                           filename1='{}/output.nc'.format(name1),
                           filename2='{}/output.nc'.format(name2),
-                          l1_norm=1.0e-11,
-                          l2_norm=1.0e-11,
-                          linf_norm=1.0e-12,
+                          l1_norm=l1_norm,
+                          l2_norm=l2_norm,
+                          linf_norm=linf_norm,
                           quiet=False)
 
         # validate surfaceSpeed
