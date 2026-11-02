@@ -1,5 +1,8 @@
 from compass.landice.tests.thwaites.run_model import RunModel
-from compass.landice.util import calculate_decomp_core_pair
+from compass.landice.util import (
+    add_advection_namelist_options,
+    calculate_decomp_core_pair,
+)
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
@@ -33,16 +36,19 @@ class DecompositionTest(TestCase):
         test_group : compass.landice.tests.thwaites.Thwaites
             The test group that this test case belongs to
 
+        advection_type : {'fo', 'fct'}
+            The type of advection to use for thickness and tracers
+
         depth_integrated  : bool
             Whether the (FO) velocity model is depth integrated
 
         """
         if depth_integrated is True:
-            name_tmp = 'fo-depthInt_decomposition_test'
+            velo = 'fo-depthInt'
         else:
-            name_tmp = 'fo_decomposition_test'
+            velo = 'fo'
 
-        name = f'{advection_type}_{name_tmp}'
+        name = f'velo-{velo}_advec-{advection_type}_decomposition_test'
         self.advection_type = advection_type
         self.depth_integrated = depth_integrated
         self.proc_list = None
@@ -71,12 +77,8 @@ class DecompositionTest(TestCase):
             step = RunModel(test_case=self, name=name,
                             depth_integrated=self.depth_integrated,
                             ntasks=procs, min_tasks=procs, openmp_threads=1)
-            if self.advection_type == 'fct':
-                step.add_namelist_options(
-                    {'config_thickness_advection': "'fct'",
-                     'config_tracer_advection': "'fct'",
-                     'config_time_integration': "'runge_kutta'"},
-                    out_name='namelist.landice')
+            add_advection_namelist_options(step, self.advection_type,
+                                           out_name='namelist.landice')
             self.add_step(step)
 
     # no run() method is needed

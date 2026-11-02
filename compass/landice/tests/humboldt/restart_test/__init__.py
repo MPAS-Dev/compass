@@ -1,4 +1,5 @@
 from compass.landice.tests.humboldt.run_model import RunModel
+from compass.landice.util import add_advection_namelist_options
 from compass.parallel import get_available_parallel_resources
 from compass.testcase import TestCase
 from compass.validate import compare_variables
@@ -88,10 +89,11 @@ class RestartTest(TestCase):
             self.hydro = False
 
         # build dir name.  always include velo solver and calving law
-        subdir = 'mesh-{}_restart_test/velo-{}_advec-{}'.format(
-                 mesh_type, velo_solver.lower(), advection_type)
+        subdir = 'mesh-{}_restart_test/velo-{}'.format(
+                 mesh_type, velo_solver.lower())
         if velo_solver == 'FO' and depth_integrated is True:
             subdir += '-depthInt'
+        subdir += '_advec-{}'.format(advection_type)
         subdir += '_calving-{}'.format(calving_law.lower())
         # append damage and facemelt if provided
         if damage is not None:
@@ -124,12 +126,8 @@ class RestartTest(TestCase):
         step.add_namelist_file(
             'compass.landice.tests.humboldt.restart_test',
             nl1, out_name='namelist.landice')
-        if advection_type == 'fct':
-            step.add_namelist_options(
-                {'config_thickness_advection': "'fct'",
-                 'config_tracer_advection': "'fct'",
-                 'config_time_integration': "'runge_kutta'"},
-                out_name='namelist.landice')
+        add_advection_namelist_options(step, advection_type,
+                                       out_name='namelist.landice')
         step.add_streams_file(
             'compass.landice.tests.humboldt.restart_test',
             'streams.full', out_name='streams.landice')
@@ -160,12 +158,8 @@ class RestartTest(TestCase):
         step.add_namelist_file(
             'compass.landice.tests.humboldt.restart_test',
             nl1, out_name='namelist.landice')
-        if advection_type == 'fct':
-            step.add_namelist_options(
-                {'config_thickness_advection': "'fct'",
-                 'config_tracer_advection': "'fct'",
-                 'config_time_integration': "'runge_kutta'"},
-                out_name='namelist.landice')
+        add_advection_namelist_options(step, advection_type,
+                                       out_name='namelist.landice')
         step.add_streams_file(
             'compass.landice.tests.humboldt.restart_test',
             'streams.restart', out_name='streams.landice')
@@ -173,12 +167,8 @@ class RestartTest(TestCase):
         step.add_namelist_file(
             'compass.landice.tests.humboldt.restart_test',
             nl2, out_name='namelist.landice.rst')
-        if advection_type == 'fct':
-            step.add_namelist_options(
-                {'config_thickness_advection': "'fct'",
-                 'config_tracer_advection': "'fct'",
-                 'config_time_integration': "'runge_kutta'"},
-                out_name='namelist.landice.rst')
+        add_advection_namelist_options(step, advection_type,
+                                       out_name='namelist.landice.rst')
         step.add_streams_file(
             'compass.landice.tests.humboldt.restart_test',
             'streams.restart.rst', out_name='streams.landice.rst')

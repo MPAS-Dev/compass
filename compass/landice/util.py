@@ -45,3 +45,32 @@ def calculate_decomp_core_pair(config, target_max_tasks,
                     min(target_max_tasks, cores_per_node))
     low_tasks = max(1, max_tasks // 2)
     return [low_tasks, max_tasks]
+
+
+def add_advection_namelist_options(step, advection_type, out_name=None):
+    """
+    Add namelist options to a step to select the advection scheme used for
+    thickness and tracers.  Nothing is changed for the default first-order
+    upwind scheme, ``'fo'``.
+
+    Parameters
+    ----------
+    step : compass.Step
+        The step to add namelist options to
+
+    advection_type : {'fo', 'fct'}
+        The type of advection to use for thickness and tracers: first-order
+        upwind (``'fo'``) or flux-corrected transport (``'fct'``)
+
+    out_name : str, optional
+        The name of the namelist file to modify, ``namelist.landice`` by
+        default
+    """
+    if advection_type == 'fct':
+        step.add_namelist_options(
+            {'config_thickness_advection': "'fct'",
+             'config_tracer_advection': "'fct'",
+             'config_time_integration': "'runge_kutta'"},
+            out_name=out_name)
+    elif advection_type != 'fo':
+        raise ValueError(f'Unexpected advection_type {advection_type}')

@@ -1,4 +1,5 @@
 from compass.landice.tests.greenland.run_model import RunModel
+from compass.landice.util import add_advection_namelist_options
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
@@ -26,7 +27,8 @@ class RestartTest(TestCase):
             The type of advection to use for thickness and tracers
         """
         name = 'restart_test'
-        subdir = '{}_{}_{}'.format(velo_solver.lower(), advection_type, name)
+        subdir = 'velo-{}_advec-{}_{}'.format(
+            velo_solver.lower(), advection_type, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         ntasks = 36
@@ -45,12 +47,8 @@ class RestartTest(TestCase):
         step.add_namelist_file(
             'compass.landice.tests.greenland.restart_test',
             'namelist.full', out_name='namelist.landice')
-        if advection_type == 'fct':
-            step.add_namelist_options(
-                {'config_thickness_advection': "'fct'",
-                 'config_tracer_advection': "'fct'",
-                 'config_time_integration': "'runge_kutta'"},
-                out_name='namelist.landice')
+        add_advection_namelist_options(step, advection_type,
+                                       out_name='namelist.landice')
         step.add_streams_file(
             'compass.landice.tests.greenland.restart_test',
             'streams.full', out_name='streams.landice')
@@ -65,12 +63,8 @@ class RestartTest(TestCase):
         step.add_namelist_file(
             'compass.landice.tests.greenland.restart_test',
             'namelist.restart', out_name='namelist.landice')
-        if advection_type == 'fct':
-            step.add_namelist_options(
-                {'config_thickness_advection': "'fct'",
-                 'config_tracer_advection': "'fct'",
-                 'config_time_integration': "'runge_kutta'"},
-                out_name='namelist.landice')
+        add_advection_namelist_options(step, advection_type,
+                                       out_name='namelist.landice')
         step.add_streams_file(
             'compass.landice.tests.greenland.restart_test',
             'streams.restart', out_name='streams.landice')
@@ -78,12 +72,8 @@ class RestartTest(TestCase):
         step.add_namelist_file(
             'compass.landice.tests.greenland.restart_test',
             'namelist.restart.rst', out_name='namelist.landice.rst')
-        if advection_type == 'fct':
-            step.add_namelist_options(
-                {'config_thickness_advection': "'fct'",
-                 'config_tracer_advection': "'fct'",
-                 'config_time_integration': "'runge_kutta'"},
-                out_name='namelist.landice.rst')
+        add_advection_namelist_options(step, advection_type,
+                                       out_name='namelist.landice.rst')
         # same streams file for both restart stages
         step.add_streams_file(
             'compass.landice.tests.greenland.restart_test',

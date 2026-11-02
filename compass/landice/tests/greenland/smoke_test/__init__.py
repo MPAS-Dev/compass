@@ -1,4 +1,5 @@
 from compass.landice.tests.greenland.run_model import RunModel
+from compass.landice.util import add_advection_namelist_options
 from compass.testcase import TestCase
 
 
@@ -24,7 +25,8 @@ class SmokeTest(TestCase):
             The type of advection to use for thickness and tracers
         """
         name = 'smoke_test'
-        subdir = '{}_{}_{}'.format(velo_solver.lower(), advection_type, name)
+        subdir = 'velo-{}_advec-{}_{}'.format(
+            velo_solver.lower(), advection_type, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         ntasks = 36
@@ -37,12 +39,8 @@ class SmokeTest(TestCase):
 
         step = RunModel(test_case=self, velo_solver=velo_solver, ntasks=ntasks,
                         min_tasks=min_tasks, openmp_threads=1)
-        if advection_type == 'fct':
-            step.add_namelist_options(
-                {'config_thickness_advection': "'fct'",
-                 'config_tracer_advection': "'fct'",
-                 'config_time_integration': "'runge_kutta'"},
-                out_name='namelist.landice')
+        add_advection_namelist_options(step, advection_type,
+                                       out_name='namelist.landice')
         self.add_step(step)
 
     # no configure() method is needed because we will use the default dome

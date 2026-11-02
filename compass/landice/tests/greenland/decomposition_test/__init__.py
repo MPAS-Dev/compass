@@ -1,5 +1,8 @@
 from compass.landice.tests.greenland.run_model import RunModel
-from compass.landice.util import calculate_decomp_core_pair
+from compass.landice.util import (
+    add_advection_namelist_options,
+    calculate_decomp_core_pair,
+)
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
@@ -43,7 +46,8 @@ class DecompositionTest(TestCase):
         self.advection_type = advection_type
         self.proc_list = None
         self.run_dirs = None
-        subdir = '{}_{}_{}'.format(velo_solver.lower(), advection_type, name)
+        subdir = 'velo-{}_advec-{}_{}'.format(
+            velo_solver.lower(), advection_type, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
     def configure(self):
@@ -77,12 +81,8 @@ class DecompositionTest(TestCase):
                 name=name,
                 subdir=name, ntasks=procs, min_tasks=procs,
                 openmp_threads=1)
-            if self.advection_type == 'fct':
-                step.add_namelist_options(
-                    {'config_thickness_advection': "'fct'",
-                     'config_tracer_advection': "'fct'",
-                     'config_time_integration': "'runge_kutta'"},
-                    out_name='namelist.landice')
+            add_advection_namelist_options(step, self.advection_type,
+                                           out_name='namelist.landice')
             self.add_step(step)
 
     # no run() method is needed

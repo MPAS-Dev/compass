@@ -1,6 +1,7 @@
 from compass.landice.tests.dome.run_model import RunModel
 from compass.landice.tests.dome.setup_mesh import SetupMesh
 from compass.landice.tests.dome.visualize import Visualize
+from compass.landice.util import add_advection_namelist_options
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
@@ -42,8 +43,8 @@ class DecompositionTest(TestCase):
         self.mesh_type = mesh_type
         self.velo_solver = velo_solver
         self.advection_type = advection_type
-        subdir = '{}/{}_{}_{}'.format(mesh_type, velo_solver.lower(),
-                                      advection_type, name)
+        subdir = '{}/velo-{}_advec-{}_{}'.format(
+            mesh_type, velo_solver.lower(), advection_type, name)
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
@@ -55,13 +56,7 @@ class DecompositionTest(TestCase):
             step = RunModel(test_case=self, name=name, subdir=name,
                             ntasks=procs, openmp_threads=1,
                             velo_solver=velo_solver, mesh_type=mesh_type)
-
-            if advection_type == 'fct':
-                step.add_namelist_options(
-                    {'config_thickness_advection': "'fct'",
-                     'config_tracer_advection': "'fct'",
-                     'config_time_integration': "'runge_kutta'"},
-                    out_name='namelist.landice')
+            add_advection_namelist_options(step, advection_type)
             self.add_step(step)
 
             input_dir = name

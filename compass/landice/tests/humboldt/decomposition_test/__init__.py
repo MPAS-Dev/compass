@@ -1,5 +1,8 @@
 from compass.landice.tests.humboldt.run_model import RunModel
-from compass.landice.util import calculate_decomp_core_pair
+from compass.landice.util import (
+    add_advection_namelist_options,
+    calculate_decomp_core_pair,
+)
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
@@ -95,10 +98,11 @@ class DecompositionTest(TestCase):
             self.hydro = False
 
         # build dir name.  always include velo solver and calving law
-        subdir = 'mesh-{}_decomposition_test/velo-{}_advec-{}'.format(
-                 mesh_type, velo_solver.lower(), advection_type)
+        subdir = 'mesh-{}_decomposition_test/velo-{}'.format(
+                 mesh_type, velo_solver.lower())
         if velo_solver == 'FO' and depth_integrated is True:
             subdir += '-depthInt'
+        subdir += '_advec-{}'.format(advection_type)
         subdir += '_calving-{}'.format(calving_law.lower())
         # append damage and facemelt if provided
         if damage is not None:
@@ -148,12 +152,8 @@ class DecompositionTest(TestCase):
                             depth_integrated=self.depth_integrated,
                             hydro=self.hydro,
                             mesh_type=self.mesh_type)
-            if self.advection_type == 'fct':
-                step.add_namelist_options(
-                    {'config_thickness_advection': "'fct'",
-                     'config_tracer_advection': "'fct'",
-                     'config_time_integration': "'runge_kutta'"},
-                    out_name='namelist.landice')
+            add_advection_namelist_options(step, self.advection_type,
+                                           out_name='namelist.landice')
             self.add_step(step)
 
     # no run() method is needed
