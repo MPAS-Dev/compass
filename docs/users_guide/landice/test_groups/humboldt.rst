@@ -22,6 +22,17 @@ faster 3 km mesh.
 There also is a test that runs the subglacial hydrology model without any
 other physics.
 
+Test case names within the ``mesh-<resolution>_decomposition_test`` and
+``mesh-<resolution>_restart_test`` directories have the form
+``velo-<solver>_advec-<scheme>_calving-<law>[...]``.  Here ``<solver>`` is the
+velocity solver (``fo``, ``fo-depthInt`` or ``none``) and ``<scheme>`` is the
+advection scheme used for thickness and tracers: first-order upwind (``fo``)
+or flux-corrected transport (``fct``).  FCT variants also use the
+``runge_kutta`` time integration scheme.  Only the 3 km "full physics" tests
+(von Mises calving, damage threshold and face melting) have FCT variants.
+Note that the 3 km full-physics decomposition tests do not currently pass
+validation with either advection scheme.
+
 .. figure:: images/humboldt_1to10km.png
    :width: 777 px
    :align: center

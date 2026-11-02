@@ -1,4 +1,5 @@
 from compass.landice.tests.thwaites.run_model import RunModel
+from compass.landice.util import add_advection_namelist_options
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
@@ -10,7 +11,7 @@ class RestartTest(TestCase):
     test case verifies that the results of the two runs are identical.
     """
 
-    def __init__(self, test_group, depth_integrated=False):
+    def __init__(self, test_group, advection_type, depth_integrated=False):
         """
         Create the test case
 
@@ -19,16 +20,20 @@ class RestartTest(TestCase):
         test_group : compass.landice.tests.thwaites.Thwaites
             The test group that this test case belongs to
 
+        advection_type : {'fo', 'fct'}
+            The type of advection to use for thickness and tracers
+
         depth_integrated  : bool
             Whether the (FO) velocity model is depth integrated
 
         """
 
         if depth_integrated is True:
-            name = 'fo-depthInt_restart_test'
+            velo = 'fo-depthInt'
         else:
-            name = 'fo_restart_test'
+            velo = 'fo'
 
+        name = f'velo-{velo}_advec-{advection_type}_restart_test'
         super().__init__(test_group=test_group, name=name)
 
         ntasks = 36
@@ -42,6 +47,8 @@ class RestartTest(TestCase):
         step.add_namelist_file(
             'compass.landice.tests.thwaites.restart_test',
             'namelist.full', out_name='namelist.landice')
+        add_advection_namelist_options(step, advection_type,
+                                       out_name='namelist.landice')
         step.add_streams_file(
             'compass.landice.tests.thwaites.restart_test',
             'streams.full', out_name='streams.landice')
@@ -57,6 +64,8 @@ class RestartTest(TestCase):
         step.add_namelist_file(
             'compass.landice.tests.thwaites.restart_test',
             'namelist.restart', out_name='namelist.landice')
+        add_advection_namelist_options(step, advection_type,
+                                       out_name='namelist.landice')
         step.add_streams_file(
             'compass.landice.tests.thwaites.restart_test',
             'streams.restart', out_name='streams.landice')
@@ -64,6 +73,8 @@ class RestartTest(TestCase):
         step.add_namelist_file(
             'compass.landice.tests.thwaites.restart_test',
             'namelist.restart.rst', out_name='namelist.landice.rst')
+        add_advection_namelist_options(step, advection_type,
+                                       out_name='namelist.landice.rst')
         # same streams file for both restart stages
         step.add_streams_file(
             'compass.landice.tests.thwaites.restart_test',

@@ -84,10 +84,18 @@ All of these test cases share the same set of default config options:
 smoke_test
 ----------
 
-The smoke-test variants are ``landice/dome/2000m/sia_smoke_test``,
-``landice/dome/2000m/fo_smoke_test``,
-``landice/dome/variable_resolution/sia_smoke_test`` and
-``landice/dome/variable_resolution/fo_smoke_test``.  These are the default
+The test case names have the form ``velo-<solver>_advec-<scheme>_<test>``,
+where ``<solver>`` is the velocity solver (``sia`` or ``fo``) and ``<scheme>``
+is the advection scheme used for thickness and tracers: first-order upwind
+(``fo``) or flux-corrected transport (``fct``).  FCT variants also use
+the ``runge_kutta`` time integration scheme.
+
+The smoke-test variants are
+``landice/dome/2000m/velo-sia_advec-fo_smoke_test``,
+``landice/dome/2000m/velo-sia_advec-fct_smoke_test``,
+``landice/dome/2000m/velo-fo_advec-fo_smoke_test``,
+``landice/dome/2000m/velo-fo_advec-fct_smoke_test`` and the corresponding
+tests in ``landice/dome/variable_resolution``.  These are the default
 minimal example tests to set up and run.  There is optional validation
 against the analytic solution.  The SIA versions run for 200 years, while the
 FO versions are configured to run for only 2 years because the FO solver is
@@ -98,10 +106,11 @@ decomposition_test
 ------------------
 
 The decomposition-test variants are
-``landice/dome/2000m/sia_decomposition_test``,
-``landice/dome/2000m/fo_decomposition_test``,
-``landice/dome/variable_resolution/sia_decomposition_test`` and
-``landice/dome/variable_resolution/fo_decomposition_test``.  They run short
+``landice/dome/2000m/velo-sia_advec-fo_decomposition_test``,
+``landice/dome/2000m/velo-sia_advec-fct_decomposition_test``,
+``landice/dome/2000m/velo-fo_advec-fo_decomposition_test``,
+``landice/dome/2000m/velo-fo_advec-fct_decomposition_test`` and the
+corresponding tests in ``landice/dome/variable_resolution``.  They run short
 (1 year) integrations of the model forward in time on 1 (``1proc_run`` step)
 and then on 4 processors (``4proc_run`` step) to compare the resulting
 prognostic variables between the two runs.
@@ -109,10 +118,12 @@ prognostic variables between the two runs.
 restart_test
 ------------
 
-The restart-test variants are ``landice/dome/2000m/sia_restart_test``,
-``landice/dome/2000m/fo_restart_test``,
-``landice/dome/variable_resolution/sia_restart_test`` and
-``landice/dome/variable_resolution/fo_restart_test``.  Each first runs a
+The restart-test variants are
+``landice/dome/2000m/velo-sia_advec-fo_restart_test``,
+``landice/dome/2000m/velo-sia_advec-fct_restart_test``,
+``landice/dome/2000m/velo-fo_advec-fo_restart_test``,
+``landice/dome/2000m/velo-fo_advec-fct_restart_test`` and the
+corresponding tests in ``landice/dome/variable_resolution``.  Each first runs a
 short (2 year) integration of the model forward in time (``full_run`` step).
 Then, a second step (``restart_run``) performs two 1-year runs, where the
 second begins from a restart file saved by the first.  Prognostic variables

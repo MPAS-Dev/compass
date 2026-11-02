@@ -65,12 +65,12 @@ its steps:
 
 .. code-block:: none
 
-    $ compass list -t '^landice/greenland/sia_smoke_test$' -v
-        39: path:          landice/greenland/sia_smoke_test
+    $ compass list -t '^landice/greenland/velo-sia_advec-fo_smoke_test$' -v
+        39: path:          landice/greenland/velo-sia_advec-fo_smoke_test
              name:          smoke_test
              MPAS core:     landice
              test group:    greenland
-             subdir:        sia_smoke_test
+             subdir:        velo-sia_advec-fo_smoke_test
              steps:
               - run_model
 

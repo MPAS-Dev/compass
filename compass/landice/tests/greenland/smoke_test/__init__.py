@@ -1,5 +1,6 @@
-from compass.testcase import TestCase
 from compass.landice.tests.greenland.run_model import RunModel
+from compass.landice.util import add_advection_namelist_options
+from compass.testcase import TestCase
 
 
 class SmokeTest(TestCase):
@@ -8,7 +9,7 @@ class SmokeTest(TestCase):
     mesh and initial condition, then performs a short forward run on 36 cores.
     """
 
-    def __init__(self, test_group, velo_solver):
+    def __init__(self, test_group, velo_solver, advection_type):
         """
         Create the test case
 
@@ -20,9 +21,12 @@ class SmokeTest(TestCase):
         velo_solver : {'sia', 'FO'}
             The velocity solver to use for the test case
 
+        advection_type : {'fo', 'fct'}
+            The type of advection to use for thickness and tracers
         """
         name = 'smoke_test'
-        subdir = '{}_{}'.format(velo_solver.lower(), name)
+        subdir = 'velo-{}_advec-{}_{}'.format(
+            velo_solver.lower(), advection_type, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         ntasks = 36
@@ -33,9 +37,11 @@ class SmokeTest(TestCase):
         else:
             raise ValueError('Unexpected velo_solver {}'.format(velo_solver))
 
-        self.add_step(
-            RunModel(test_case=self, velo_solver=velo_solver, ntasks=ntasks,
-                     min_tasks=min_tasks, openmp_threads=1))
+        step = RunModel(test_case=self, velo_solver=velo_solver, ntasks=ntasks,
+                        min_tasks=min_tasks, openmp_threads=1)
+        add_advection_namelist_options(step, advection_type,
+                                       out_name='namelist.landice')
+        self.add_step(step)
 
     # no configure() method is needed because we will use the default dome
     # config options

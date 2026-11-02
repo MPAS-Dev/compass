@@ -29,36 +29,67 @@ it is run on different numbers of cores (``decomposition_test``).
 
 .. code-block:: none
 
-    landice/dome/2000m/sia_restart_test
-    landice/dome/2000m/sia_decomposition_test
-    landice/dome/variable_resolution/sia_restart_test
-    landice/dome/variable_resolution/sia_decomposition_test
+    landice/dome/2000m/velo-sia_advec-fo_restart_test
+    landice/dome/2000m/velo-sia_advec-fo_decomposition_test
+    landice/dome/variable_resolution/velo-sia_advec-fo_restart_test
+    landice/dome/variable_resolution/velo-sia_advec-fo_decomposition_test
     landice/enthalpy_benchmark/A
     landice/eismint2/decomposition_test
     landice/eismint2/enthalpy_decomposition_test
     landice/eismint2/restart_test
     landice/eismint2/enthalpy_restart_test
-    landice/greenland/sia_restart_test
-    landice/greenland/sia_decomposition_test
+    landice/greenland/velo-sia_advec-fo_restart_test
+    landice/greenland/velo-sia_advec-fo_decomposition_test
     landice/hydro_radial/restart_test
     landice/hydro_radial/decomposition_test
-    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-none_subglacialhydro
-    landice/humboldt/mesh-3km_restart_test/velo-none_calving-none_subglacialhydro
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_advec-fo_calving-none_subglacialhydro
+    landice/humboldt/mesh-3km_restart_test/velo-none_advec-fo_calving-none_subglacialhydro
     landice/circular_shelf/decomposition_test
     landice/mismipplus/smoke_test/2000m/regularized_coulomb
     landice/mismipplus/smoke_test/2000m/debris_friction
-    landice/dome/2000m/fo_decomposition_test
-    landice/dome/2000m/fo_restart_test
-    landice/dome/variable_resolution/fo_restart_test
-    landice/dome/variable_resolution/fo_decomposition_test
-    landice/greenland/fo_decomposition_test
-    landice/greenland/fo_restart_test
-    landice/thwaites/fo_decomposition_test
-    landice/thwaites/fo_restart_test
-    landice/thwaites/fo-depthInt_decomposition_test
-    landice/thwaites/fo-depthInt_restart_test
-    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress_damage-threshold_faceMelting
-    landice/humboldt/mesh-3km_restart_test/velo-fo-depthInt_calving-von_mises_stress_damage-threshold_faceMelting
+    landice/dome/2000m/velo-fo_advec-fo_decomposition_test
+    landice/dome/2000m/velo-fo_advec-fo_restart_test
+    landice/dome/variable_resolution/velo-fo_advec-fo_restart_test
+    landice/dome/variable_resolution/velo-fo_advec-fo_decomposition_test
+    landice/greenland/velo-fo_advec-fo_decomposition_test
+    landice/greenland/velo-fo_advec-fo_restart_test
+    landice/thwaites/velo-fo_advec-fo_decomposition_test
+    landice/thwaites/velo-fo_advec-fo_restart_test
+    landice/thwaites/velo-fo-depthInt_advec-fo_decomposition_test
+    landice/thwaites/velo-fo-depthInt_advec-fo_restart_test
+    landice/humboldt/mesh-3km_restart_test/velo-fo_advec-fo_calving-von_mises_stress_damage-threshold_faceMelting
+    landice/humboldt/mesh-3km_restart_test/velo-fo-depthInt_advec-fo_calving-von_mises_stress_damage-threshold_faceMelting
+
+.. _landice_suite_fct_integration:
+
+fct_integration test suite
+--------------------------
+
+.. code-block:: bash
+
+    compass suite -c landice -t fct_integration ...
+
+The ``fct_integration`` test suite repeats a subset of the first-order velocity
+solver tests in ``full_integration`` but with flux-corrected transport (FCT)
+advection of thickness and tracers (``advec-fct``) in place of the default
+first-order upwind advection (``advec-fo``).  FCT tests use the
+``runge_kutta`` time integration scheme.
+Note that test names have the form ``velo-<solver>_advec-<scheme>`` so that the
+velocity solver (``sia``, ``fo`` or ``none``) and the advection scheme
+(``fo`` or ``fct``) are unambiguous.
+The suite includes:
+
+.. code-block:: none
+
+    landice/dome/2000m/velo-fo_advec-fct_decomposition_test
+    landice/dome/2000m/velo-fo_advec-fct_restart_test
+    landice/dome/variable_resolution/velo-fo_advec-fct_decomposition_test
+    landice/dome/variable_resolution/velo-fo_advec-fct_restart_test
+    landice/greenland/velo-fo_advec-fct_decomposition_test
+    landice/greenland/velo-fo_advec-fct_restart_test
+    landice/thwaites/velo-fo_advec-fct_decomposition_test
+    landice/thwaites/velo-fo_advec-fct_restart_test
+    landice/humboldt/mesh-3km_restart_test/velo-fo_advec-fct_calving-von_mises_stress_damage-threshold_faceMelting
 
 .. _landice_suite_humboldt_calving_tests:
 
@@ -75,22 +106,22 @@ The suite includes:
 
 .. code-block:: none
 
-    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-none
-    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-floating
-    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-eigencalving
-    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-specified_calving_velocity
-    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-von_mises_stress
-    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-damagecalving
-    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-ismip6_retreat
-    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-von_mises_stress_damage-threshold_faceMelting
-    landice/humboldt/mesh-3km_restart_test/velo-none_calving-none
-    landice/humboldt/mesh-3km_restart_test/velo-none_calving-floating
-    landice/humboldt/mesh-3km_restart_test/velo-none_calving-eigencalving
-    landice/humboldt/mesh-3km_restart_test/velo-none_calving-specified_calving_velocity
-    landice/humboldt/mesh-3km_restart_test/velo-none_calving-von_mises_stress
-    landice/humboldt/mesh-3km_restart_test/velo-none_calving-damagecalving
-    landice/humboldt/mesh-3km_restart_test/velo-none_calving-ismip6_retreat
-    landice/humboldt/mesh-3km_restart_test/velo-none_calving-von_mises_stress_damage-threshold_faceMelting
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_advec-fo_calving-none
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_advec-fo_calving-floating
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_advec-fo_calving-eigencalving
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_advec-fo_calving-specified_calving_velocity
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_advec-fo_calving-von_mises_stress
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_advec-fo_calving-damagecalving
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_advec-fo_calving-ismip6_retreat
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_advec-fo_calving-von_mises_stress_damage-threshold_faceMelting
+    landice/humboldt/mesh-3km_restart_test/velo-none_advec-fo_calving-none
+    landice/humboldt/mesh-3km_restart_test/velo-none_advec-fo_calving-floating
+    landice/humboldt/mesh-3km_restart_test/velo-none_advec-fo_calving-eigencalving
+    landice/humboldt/mesh-3km_restart_test/velo-none_advec-fo_calving-specified_calving_velocity
+    landice/humboldt/mesh-3km_restart_test/velo-none_advec-fo_calving-von_mises_stress
+    landice/humboldt/mesh-3km_restart_test/velo-none_advec-fo_calving-damagecalving
+    landice/humboldt/mesh-3km_restart_test/velo-none_advec-fo_calving-ismip6_retreat
+    landice/humboldt/mesh-3km_restart_test/velo-none_advec-fo_calving-von_mises_stress_damage-threshold_faceMelting
 
 .. _landice_suite_humboldt_calving_tests_fo:
 
@@ -106,22 +137,22 @@ The suite includes:
 
 .. code-block:: none
 
-    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-none
-    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-floating
-    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-eigencalving
-    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-specified_calving_velocity
-    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-von_mises_stress
-    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-damagecalving
-    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-ismip6_retreat
-    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-von_mises_stress_damage-threshold_faceMelting
-    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-none
-    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-floating
-    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-eigencalving
-    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-specified_calving_velocity
-    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress
-    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-damagecalving
-    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-ismip6_retreat
-    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress_damage-threshold_faceMelting
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_advec-fo_calving-none
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_advec-fo_calving-floating
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_advec-fo_calving-eigencalving
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_advec-fo_calving-specified_calving_velocity
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_advec-fo_calving-von_mises_stress
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_advec-fo_calving-damagecalving
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_advec-fo_calving-ismip6_retreat
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_advec-fo_calving-von_mises_stress_damage-threshold_faceMelting
+    landice/humboldt/mesh-3km_restart_test/velo-fo_advec-fo_calving-none
+    landice/humboldt/mesh-3km_restart_test/velo-fo_advec-fo_calving-floating
+    landice/humboldt/mesh-3km_restart_test/velo-fo_advec-fo_calving-eigencalving
+    landice/humboldt/mesh-3km_restart_test/velo-fo_advec-fo_calving-specified_calving_velocity
+    landice/humboldt/mesh-3km_restart_test/velo-fo_advec-fo_calving-von_mises_stress
+    landice/humboldt/mesh-3km_restart_test/velo-fo_advec-fo_calving-damagecalving
+    landice/humboldt/mesh-3km_restart_test/velo-fo_advec-fo_calving-ismip6_retreat
+    landice/humboldt/mesh-3km_restart_test/velo-fo_advec-fo_calving-von_mises_stress_damage-threshold_faceMelting
 
 .. _calving_dt_convergence.txt:
 

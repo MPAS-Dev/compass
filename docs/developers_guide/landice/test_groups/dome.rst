@@ -78,6 +78,20 @@ This step is not run by default by adding it with ``run_by_default=False``:
     step = Visualize(test_case=self, mesh_type=mesh_type)
     self.add_step(step, run_by_default=False)
 
+.. _dev_landice_dome_advection:
+
+advection_type
+--------------
+
+Each of the test cases below takes an ``advection_type`` argument, either
+``'fo'`` (first-order upwind, the default MALI scheme) or ``'fct'``
+(flux-corrected transport).  The advection type is included in the name of the
+test case, which has the form ``velo-<solver>_advec-<scheme>_<test>``.  For
+``'fct'``, the function
+:py:func:`compass.landice.util.add_advection_namelist_options` adds the namelist
+options for FCT thickness and tracer advection and ``runge_kutta`` time
+integration to the model run steps.
+
 .. _dev_landice_dome_smoke_test:
 
 SmokeTest

@@ -1,8 +1,9 @@
-from compass.validate import compare_variables
-from compass.testcase import TestCase
-from compass.landice.tests.dome.setup_mesh import SetupMesh
 from compass.landice.tests.dome.run_model import RunModel
+from compass.landice.tests.dome.setup_mesh import SetupMesh
 from compass.landice.tests.dome.visualize import Visualize
+from compass.landice.util import add_advection_namelist_options
+from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class DecompositionTest(TestCase):
@@ -15,9 +16,12 @@ class DecompositionTest(TestCase):
     ----------
     mesh_type : str
         The resolution or type of mesh of the test case
+
+    advection_type : {'fo', 'fct'}
+        The type of advection to use for thickness and tracers
     """
 
-    def __init__(self, test_group, velo_solver, mesh_type):
+    def __init__(self, test_group, velo_solver, mesh_type, advection_type):
         """
         Create the test case
 
@@ -31,11 +35,16 @@ class DecompositionTest(TestCase):
 
         mesh_type : str
             The resolution or type of mesh of the test case
+
+        advection_type : {'fo', 'fct'}
+            The type of advection to use for thickness and tracers
         """
         name = 'decomposition_test'
         self.mesh_type = mesh_type
         self.velo_solver = velo_solver
-        subdir = '{}/{}_{}'.format(mesh_type, velo_solver.lower(), name)
+        self.advection_type = advection_type
+        subdir = '{}/velo-{}_advec-{}_{}'.format(
+            mesh_type, velo_solver.lower(), advection_type, name)
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
@@ -44,10 +53,11 @@ class DecompositionTest(TestCase):
 
         for procs in [1, 4]:
             name = '{}proc_run'.format(procs)
-            self.add_step(
-                RunModel(test_case=self, name=name, subdir=name, ntasks=procs,
-                         openmp_threads=1, velo_solver=velo_solver,
-                         mesh_type=mesh_type))
+            step = RunModel(test_case=self, name=name, subdir=name,
+                            ntasks=procs, openmp_threads=1,
+                            velo_solver=velo_solver, mesh_type=mesh_type)
+            add_advection_namelist_options(step, advection_type)
+            self.add_step(step)
 
             input_dir = name
             name = 'visualize_{}'.format(name)
@@ -90,7 +100,9 @@ class DecompositionTest(TestCase):
             # validate normalVelocity
             variable = ['normalVelocity', ]
             if self.mesh_type == 'variable_resolution':
-                l1_norm = 1.0e-17
+                # FCT with RK time integration amplifies the non-BFB noise
+                # from the FO velocity solver slightly
+                l1_norm = 1.0e-16 if self.advection_type == 'fct' else 1.0e-17
                 l2_norm = 1.0e-18
                 linf_norm = 1.0e-19
             elif self.mesh_type == '2000m':

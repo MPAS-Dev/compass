@@ -1,5 +1,8 @@
 from compass.landice.tests.thwaites.run_model import RunModel
-from compass.landice.util import calculate_decomp_core_pair
+from compass.landice.util import (
+    add_advection_namelist_options,
+    calculate_decomp_core_pair,
+)
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
@@ -24,7 +27,7 @@ class DecompositionTest(TestCase):
         The names of the subdirectories for the two decomposition runs
     """
 
-    def __init__(self, test_group, depth_integrated=False):
+    def __init__(self, test_group, advection_type, depth_integrated=False):
         """
         Create the test case
 
@@ -33,15 +36,20 @@ class DecompositionTest(TestCase):
         test_group : compass.landice.tests.thwaites.Thwaites
             The test group that this test case belongs to
 
+        advection_type : {'fo', 'fct'}
+            The type of advection to use for thickness and tracers
+
         depth_integrated  : bool
             Whether the (FO) velocity model is depth integrated
 
         """
         if depth_integrated is True:
-            name = 'fo-depthInt_decomposition_test'
+            velo = 'fo-depthInt'
         else:
-            name = 'fo_decomposition_test'
+            velo = 'fo'
 
+        name = f'velo-{velo}_advec-{advection_type}_decomposition_test'
+        self.advection_type = advection_type
         self.depth_integrated = depth_integrated
         self.proc_list = None
         self.run_dirs = None
@@ -66,10 +74,12 @@ class DecompositionTest(TestCase):
             if name in self.run_dirs:
                 name = '{}_{}'.format(name, len(self.run_dirs) + 1)
             self.run_dirs.append(name)
-            self.add_step(
-                RunModel(test_case=self, name=name,
-                         depth_integrated=self.depth_integrated,
-                         ntasks=procs, min_tasks=procs, openmp_threads=1))
+            step = RunModel(test_case=self, name=name,
+                            depth_integrated=self.depth_integrated,
+                            ntasks=procs, min_tasks=procs, openmp_threads=1)
+            add_advection_namelist_options(step, self.advection_type,
+                                           out_name='namelist.landice')
+            self.add_step(step)
 
     # no run() method is needed
 
@@ -81,13 +91,23 @@ class DecompositionTest(TestCase):
         name1 = self.run_dirs[0]
         name2 = self.run_dirs[1]
         # validate thickness
+        if self.advection_type == 'fct':
+            # FCT with RK time integration amplifies the non-BFB noise
+            # from the FO velocity solver slightly
+            l1_norm = 1.0e-10
+            l2_norm = 1.0e-11
+            linf_norm = 1.0e-11
+        else:
+            l1_norm = 1.0e-11
+            l2_norm = 1.0e-11
+            linf_norm = 1.0e-12
         compare_variables(test_case=self,
                           variables=['thickness', ],
                           filename1='{}/output.nc'.format(name1),
                           filename2='{}/output.nc'.format(name2),
-                          l1_norm=1.0e-11,
-                          l2_norm=1.0e-11,
-                          linf_norm=1.0e-12,
+                          l1_norm=l1_norm,
+                          l2_norm=l2_norm,
+                          linf_norm=linf_norm,
                           quiet=False)
 
         # validate surfaceSpeed
