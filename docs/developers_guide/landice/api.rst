@@ -17,6 +17,7 @@ Utilities
    :toctree: generated/
 
    calculate_decomp_core_pair
+   add_advection_namelist_options
 
 ISMIP7 framework
 ^^^^^^^^^^^^^^^^

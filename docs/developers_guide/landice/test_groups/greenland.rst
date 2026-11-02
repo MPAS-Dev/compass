@@ -46,6 +46,12 @@ The class :py:class:`compass.landice.tests.greenland.mesh.Mesh`
 defines a step for creating a variable resolution Greenland Ice Sheet mesh.
 This is used by the ``mesh_gen`` test case.
 
+The ``smoke_test``, ``decomposition_test`` and ``restart_test`` test cases take
+an ``advection_type`` argument (``'fo'`` or ``'fct'``) that is included in the
+test case name, ``velo-<solver>_advec-<scheme>_<test>``.  The FCT namelist
+options are added to the run steps by
+:py:func:`compass.landice.util.add_advection_namelist_options`.
+
 .. _dev_landice_greenland_smoke_test:
 
 smoke_test
