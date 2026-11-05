@@ -144,6 +144,21 @@
     <var_struct name="timeAveraging"/>
 </stream>
 
+<stream name="output_Hv"
+        clobber_mode="overwrite"
+        output_interval="0000-01-00_00:00:00"
+        reference_time="2000-01-01_00:00:00"
+        filename_interval="005-00-00_00:00:00"
+        filename_template="output/output_H_v_$Y.nc"
+        type="output">
+
+    <var name="xtime"/>
+    <var name="daysSinceStart"/>
+    <var name="simulationStartTime"/>
+    <var name="thickness"/>
+    <var name="surfaceSpeed"/>
+</stream>
+
 <stream name="globalStatsOutput"
         type="output"
         filename_template="output/globalStats_$Y.nc"
