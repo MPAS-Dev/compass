@@ -80,6 +80,7 @@ class SetUpExperiment(Step):
         # 3D thermal-forcing filename_interval default; the chunked case
         # overrides it below when deriving the interval from chunk spacing.
         tf_3d_filename_interval = 'none'
+        tf_3d_reference_time = '2000-01-01_00:00:00'
 
         # --- Determine forcing file paths ---
         if scenario == 'ocx':
@@ -194,6 +195,13 @@ class SetUpExperiment(Step):
                         f"match expected pattern *_YYYY.nc: {f}")
                 start_years.append(int(match.group(1)))
             start_years = sorted(start_years)
+            if len(set(start_years)) != len(start_years):
+                sys.exit(
+                    f"ERROR: Multiple 3D thermal forcing files share a "
+                    f"start year in {ocean_dir}. Keep only one version "
+                    f"of the 3D TF series in this directory.")
+            # Align the stream's file boundaries with the first chunk
+            tf_3d_reference_time = f"{start_years[0]:04d}-01-01_00:00:00"
             sample = os.path.split(tf_3d_list[0])[-1]
             tf_3d_fname = re.sub(r'_\d{4}\.nc$', '_$Y.nc', sample)
             if len(start_years) > 1:
@@ -240,6 +248,7 @@ class SetUpExperiment(Step):
             'forcing_interval_annual': forcing_interval_annual,
             'forcing_interval_TF': forcing_interval_TF,
             'tf_3d_filename_interval': tf_3d_filename_interval,
+            'tf_3d_reference_time': tf_3d_reference_time,
             'use_3d_thermal_forcing': use_3d_thermal_forcing,
         }
 
