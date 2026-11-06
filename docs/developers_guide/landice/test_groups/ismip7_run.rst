@@ -108,8 +108,8 @@ The ``setup`` method sets up the experiment directory by:
 7. Creating a restart symlink for projection experiments pointing to
    the corresponding ESM's historical restart
    (``../historical_{model}/rst.2015-01-01.nc``).
-8. Setting up CTRL2015 experiments with constant-climate forcing
-   (``initial_only`` intervals).
+8. Setting up CTRL2015 experiments like any other ESM experiment, with
+   forcing from ``{forcing_basepath}/{model}_ctrl`` (no special-casing).
 9. Setting up the OCX experiment with reanalysis-based forcing.
 10. If SLM coupling is enabled, adding a ``CreateSlmMappingFiles`` step
     and writing the SLM namelist from the Jinja2 template.

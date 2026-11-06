@@ -173,10 +173,6 @@ All config options should be reviewed and altered as needed.
     reference_surface_path = NotAvailable
     region_mask_path = NotAvailable
 
-   # Climatology files for CTRL2015 experiments
-   ctrl_tf_climatology_path = NotAvailable
-   ctrl_atm_climatology_path = NotAvailable
-
    # OCX forcing path
    ocx_forcing_path = NotAvailable
 
@@ -288,8 +284,9 @@ ISMIP7 uses more forcing fields than ISMIP6, at mixed temporal resolutions:
 * ``ismip6shelfMelt_deltaT``, ``ismip6shelfMelt_basin``,
   ``ismip6shelfMelt_gamma0`` — melt parameterization coefficients
 
-For CTRL2015 experiments, all forcing intervals are set to
-``initial_only`` (constant climate).
+The CTRL2015 experiments use the same forcing layout and forcing
+intervals as the other experiments, with forcing taken from
+``{forcing_basepath}/{model}_ctrl``.
 
 .. _landice_ismip7_run_mask_calving:
 
