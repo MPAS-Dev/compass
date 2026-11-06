@@ -13,7 +13,7 @@
                   filename_interval="output_interval"
                   clobber_mode="overwrite"
                   precision="double"
-                  output_interval="0001-00-00_00:00:00"
+                  output_interval="0000-03-00_00:00:00"
                   reference_time="2000-01-01_00:00:00"
                   filename_template="rst.$Y-$M-$D.nc"
                   input_interval="initial_only"
@@ -78,7 +78,7 @@
         filename_template="{{ input_file_TF_3d_forcing }}"
         filename_interval="{{ tf_3d_filename_interval }}"
         input_interval="{{ forcing_interval_TF }}"
-        reference_time="2000-01-01_00:00:00"
+        reference_time="{{ tf_3d_reference_time }}"
         runtime_format="single_file">
         <var name="ismip6shelfMelt_3dThermalForcing"/>
         <var name="ismip6shelfMelt_zOcean"/>
@@ -142,6 +142,21 @@
     <var name="deltat"/>
     <var name="ismip6shelfMelt_TFdraft"/>
     <var_struct name="timeAveraging"/>
+</stream>
+
+<stream name="output_Hv"
+        clobber_mode="overwrite"
+        output_interval="0000-01-00_00:00:00"
+        reference_time="2000-01-01_00:00:00"
+        filename_interval="005-00-00_00:00:00"
+        filename_template="output/output_H_v_$Y.nc"
+        type="output">
+
+    <var name="xtime"/>
+    <var name="daysSinceStart"/>
+    <var name="simulationStartTime"/>
+    <var name="thickness"/>
+    <var name="surfaceSpeed"/>
 </stream>
 
 <stream name="globalStatsOutput"
