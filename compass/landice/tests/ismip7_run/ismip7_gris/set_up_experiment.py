@@ -287,17 +287,12 @@ class SetUpExperiment(Step):
                 tf_3d_fname = ''
 
         # --- Set up streams ---
-        if scenario == 'ctrl':
-            forcing_interval_monthly = 'initial_only'
-            forcing_interval_annual = 'initial_only'
-            forcing_interval_TF = 'initial_only'
-        else:
-            forcing_interval_monthly = '0000-01-00_00:00:00'
-            forcing_interval_annual = '0001-00-00_00:00:00'
-            # GrIS thermal forcing (2D and 3D) is monthly. The annual
-            # cadence only applies to Antarctica, whose ISMIP7 3D forcing is
-            # provided annually.
-            forcing_interval_TF = forcing_interval_monthly
+        forcing_interval_monthly = '0000-01-00_00:00:00'
+        forcing_interval_annual = '0001-00-00_00:00:00'
+        # GrIS thermal forcing (2D and 3D) is monthly. The annual
+        # cadence only applies to Antarctica, whose ISMIP7 3D forcing is
+        # provided annually.
+        forcing_interval_TF = forcing_interval_monthly
 
         stream_replacements = {
             'input_file_init_cond': init_cond_fname if is_historical
