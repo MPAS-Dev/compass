@@ -5,7 +5,7 @@ import sys
 
 from compass.job import write_job_script
 from compass.load_script import symlink_load_script
-from compass.model import make_graph_file, run_model
+from compass.model import make_graph_file, partition, run_model
 from compass.step import Step
 
 
@@ -315,6 +315,9 @@ class SetUpExperiment(Step):
         make_graph_file(mesh_filename=init_cond_path,
                         graph_filename=os.path.join(self.work_dir,
                                                     'graph.info'))
+        # the job script runs MALI directly, so partition now
+        partition(self.ntasks, self.config, self.logger,
+                  graph_file=os.path.join(self.work_dir, 'graph.info'))
 
         symlink_load_script(self.work_dir)
 
