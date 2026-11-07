@@ -6,6 +6,9 @@ from importlib import resources
 from jinja2 import Template
 
 from compass.job import write_job_script
+from compass.landice.tests.ismip7_run.custom_job_script import (
+    write_custom_job_script,
+)
 from compass.landice.tests.ismip7_run.gia_options import parse_gia_model
 from compass.load_script import symlink_load_script
 from compass.model import make_graph_file, partition, run_model
@@ -415,6 +418,11 @@ class SetUpExperiment(Step):
                          work_dir=self.work_dir,
                          pre_run_commands=pre_run_cmd,
                          post_run_commands=post_run_cmd)
+
+        write_custom_job_script(self.config, 'ismip7_run_ais',
+                                work_dir=self.work_dir,
+                                job_name=f'{self.exp}_ais',
+                                ntasks=self.ntasks)
 
         self.add_model_as_input()
 

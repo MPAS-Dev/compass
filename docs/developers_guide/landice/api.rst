@@ -551,6 +551,7 @@ ismip7_run
 
    Ismip7Run
    gia_options.parse_gia_model
+   custom_job_script.write_custom_job_script
 
    ismip7_ais.Ismip7Ais
    ismip7_ais.Ismip7Ais.configure
