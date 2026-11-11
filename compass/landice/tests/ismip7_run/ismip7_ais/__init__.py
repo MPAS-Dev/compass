@@ -126,10 +126,17 @@ class Ismip7Ais(TestCase):
                       f"{os.path.join(self.work_dir, exp)} and run "
                       "'compass setup' again to recreate.")
             else:
+                exp_info = dict(EXPERIMENTS[exp])
+                # projections restart from their model's historical run;
+                # experiments without one (e.g., ocx) start the SLM
+                # themselves
+                hist_info = EXPERIMENTS.get(f"historical_{exp_info['model']}",
+                                            exp_info)
+                exp_info['slm_start_time'] = hist_info['start_time']
                 self.add_step(
                     SetUpExperiment(test_case=self, name=exp,
                                     subdir=exp, exp=exp,
-                                    exp_info=EXPERIMENTS[exp]))
+                                    exp_info=exp_info))
 
         # Do not add experiments to steps_to_run;
         # each experiment (step) should be submitted manually

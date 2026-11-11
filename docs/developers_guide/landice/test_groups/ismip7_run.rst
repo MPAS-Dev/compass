@@ -112,7 +112,13 @@ The ``setup`` method sets up the experiment directory by:
    (``initial_only`` intervals).
 9. Setting up the OCX experiment with reanalysis-based forcing.
 10. If SLM coupling is enabled, adding a ``CreateSlmMappingFiles`` step
-    and writing the SLM namelist from the Jinja2 template.
+    and writing the SLM namelist from the Jinja2 template, with the SLM
+    ``starttime`` set to the start year of the corresponding historical run
+    (``slm_start_time`` in ``exp_info``, added in ``Ismip7Ais.configure``)
+    for all experiments, including projections.  At run time, projection
+    and CTRL2015 experiments copy ``OUTPUT_SLM`` and ``ICELOAD_SLM`` from
+    the historical run (see ``_copy_slm_history``), unless they already
+    contain files, so that resubmitted jobs keep their progress.
 11. If FastIsostasy coupling is enabled, adding a
     ``CreateFastIsoMappingFiles`` step; writing the FastIsostasy namelist
     from the Jinja2 template, including ``config_fastisostasy_grid_resolution``

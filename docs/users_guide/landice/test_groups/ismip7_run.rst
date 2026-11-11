@@ -217,6 +217,16 @@ All config options should be reviewed and altered as needed.
 
 .. note::
 
+   When ``gia_model = 1dSLM``, the SLM requires its full history to restart
+   correctly.  Projection and CTRL2015 experiments therefore copy the
+   ``OUTPUT_SLM`` and ``ICELOAD_SLM`` directories from the corresponding
+   historical run when they are run (``compass run`` or the job script), so
+   the historical run must be complete first.  The copy is skipped if those
+   directories already have contents.  The SLM start year is the start year
+   of the historical run (e.g., 2008) for every experiment.
+
+.. note::
+
    ``fastiso_res_km`` sets the resolution (in km) of the regular grid
    FastIsostasy runs on, which should match one of the standard ISMIP7
    grid resolutions (2, 4, 8, or 16 km for AIS). As of this writing,
