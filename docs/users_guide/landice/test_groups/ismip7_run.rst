@@ -173,10 +173,6 @@ All config options should be reviewed and altered as needed.
     reference_surface_path = NotAvailable
     region_mask_path = NotAvailable
 
-   # Climatology files for CTRL2015 experiments
-   ctrl_tf_climatology_path = NotAvailable
-   ctrl_atm_climatology_path = NotAvailable
-
    # OCX forcing path
    ocx_forcing_path = NotAvailable
 
@@ -258,6 +254,35 @@ across multiple year-block files addressed via a ``$Y`` template), plus
 ``ismip6shelfMelt_gamma0`` from the file at ``melt_params_path`` (which must
 be supplied in that case).
 
+.. _landice_ismip7_run_custom_job_script:
+
+Custom job script
+-----------------
+
+Both the AIS and GrIS configs have two options for writing a job script that
+calls the MALI executable directly, instead of ``compass run``:
+
+.. code-block:: cfg
+
+   # None (default, no custom script) or custom
+   custom_job_script = None
+
+   # Single line of environment commands, required if custom_job_script =
+   # custom
+   custom_job_env_cmds = None
+
+With ``custom_job_script = custom``, each experiment directory gets a
+``job_script.custom.sh`` in addition to the standard ``job_script.sh``, which
+is still written by compass. The job name is ``<experiment>_<ais|gris>``, with
+``qos=debug`` and a 30-minute wall time (edit the script for production
+runs). Nodes come from ``ntasks`` and ``cores_per_node``. The script archives
+any existing logs, runs ``custom_job_env_cmds``, and calls
+``<parallel_executable> -n <ntasks> ./landice_model``, so the executable is
+the one linked in the run directory (compass's own MALI or the one given with
+``-p`` to ``compass setup``). Write each literal ``$`` in
+``custom_job_env_cmds`` as ``$$``, since the config parser interpolates
+``$``. ``ismip7_gris_pm_production.cfg`` enables this option.
+
 .. _landice_ismip7_run_forcing_streams:
 
 Forcing Streams
@@ -288,8 +313,9 @@ ISMIP7 uses more forcing fields than ISMIP6, at mixed temporal resolutions:
 * ``ismip6shelfMelt_deltaT``, ``ismip6shelfMelt_basin``,
   ``ismip6shelfMelt_gamma0`` — melt parameterization coefficients
 
-For CTRL2015 experiments, all forcing intervals are set to
-``initial_only`` (constant climate).
+The CTRL2015 experiments use the same forcing layout and forcing
+intervals as the other experiments, with forcing taken from
+``{forcing_basepath}/{model}_ctrl``.
 
 .. _landice_ismip7_run_mask_calving:
 

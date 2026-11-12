@@ -4,8 +4,11 @@ import re
 import sys
 
 from compass.job import write_job_script
+from compass.landice.tests.ismip7_run.custom_job_script import (
+    write_custom_job_script,
+)
 from compass.load_script import symlink_load_script
-from compass.model import make_graph_file, run_model
+from compass.model import make_graph_file, partition, run_model
 from compass.step import Step
 
 
@@ -80,13 +83,12 @@ class SetUpExperiment(Step):
         # 3D thermal-forcing filename_interval default; the chunked case
         # overrides it below when deriving the interval from chunk spacing.
         tf_3d_filename_interval = 'none'
+        tf_3d_reference_time = '2000-01-01_00:00:00'
 
         # --- Determine forcing file paths ---
         if scenario == 'ocx':
             ocx_forcing_path = section.get('ocx_forcing_path')
             forcing_dir = ocx_forcing_path
-        elif scenario == 'ctrl':
-            forcing_dir = None
         else:
             forcing_dir = os.path.join(forcing_basepath,
                                        f"{model}_{scenario}")
@@ -107,197 +109,129 @@ class SetUpExperiment(Step):
                                 os.path.basename(reference_surface_path)))
 
         # --- Find and symlink forcing files ---
-        if scenario == 'ctrl':
-            ctrl_tf_path = section.get('ctrl_tf_climatology_path')
-            ctrl_atm_path = section.get('ctrl_atm_climatology_path')
-            tf_fname = os.path.split(ctrl_tf_path)[-1]
-            os.symlink(ctrl_tf_path,
-                       os.path.join(self.work_dir, tf_fname))
+        atm_dir = os.path.join(forcing_dir, 'atmosphere')
+        ocean_dir = os.path.join(forcing_dir, 'ocean_thermal_forcing')
 
-            # 3D climatology TF (optional, only with use_3d_thermal_forcing)
-            if use_3d_thermal_forcing:
-                ctrl_tf_3d_path = section.get(
-                    'ctrl_tf_3d_climatology_path')
-                if ctrl_tf_3d_path == 'NotAvailable':
-                    raise ValueError(
-                        "ctrl_tf_3d_climatology_path must be supplied when "
-                        "use_3d_thermal_forcing is true for a CTRL run")
-                tf_3d_fname = os.path.split(ctrl_tf_3d_path)[-1]
-                os.symlink(ctrl_tf_3d_path,
-                           os.path.join(self.work_dir, tf_3d_fname))
-            else:
-                tf_3d_fname = ''
-
-            smb_files = glob.glob(os.path.join(ctrl_atm_path, '*SMB*.nc'))
-            smb_files = [f for f in smb_files if 'gradient' not in f]
-            if len(smb_files) == 1:
-                smb_fname = os.path.split(smb_files[0])[-1]
-                os.symlink(smb_files[0],
-                           os.path.join(self.work_dir, smb_fname))
-            else:
-                sys.exit(f"ERROR: Expected 1 SMB climatology file in "
-                         f"{ctrl_atm_path}, found {len(smb_files)}")
-
-            temp_files = glob.glob(
-                os.path.join(ctrl_atm_path, '*temperature*.nc'))
-            temp_files = [f for f in temp_files if 'gradient' not in f]
-            if len(temp_files) == 1:
-                temp_fname = os.path.split(temp_files[0])[-1]
-                os.symlink(temp_files[0],
-                           os.path.join(self.work_dir, temp_fname))
-            else:
-                sys.exit(f"ERROR: Expected 1 temperature climatology file in "
-                         f"{ctrl_atm_path}, found {len(temp_files)}")
-
-            runoff_files = glob.glob(
-                os.path.join(ctrl_atm_path, '*runoff*.nc'))
-            runoff_fname = ''
-            if len(runoff_files) == 1:
-                runoff_fname = os.path.split(runoff_files[0])[-1]
-                os.symlink(runoff_files[0],
-                           os.path.join(self.work_dir, runoff_fname))
-
-            smb_grad_files = glob.glob(
-                os.path.join(ctrl_atm_path, '*SMB_gradient*.nc'))
-            smb_grad_fname = ''
-            if len(smb_grad_files) == 1:
-                smb_grad_fname = os.path.split(smb_grad_files[0])[-1]
-                os.symlink(smb_grad_files[0],
-                           os.path.join(self.work_dir, smb_grad_fname))
-
-            temp_grad_files = glob.glob(
-                os.path.join(ctrl_atm_path, '*temperature_gradient*.nc'))
-            temp_grad_fname = ''
-            if len(temp_grad_files) == 1:
-                temp_grad_fname = os.path.split(temp_grad_files[0])[-1]
-                os.symlink(temp_grad_files[0],
-                           os.path.join(self.work_dir, temp_grad_fname))
-
+        smb_search = os.path.join(atm_dir, '*SMB_*.nc')
+        smb_list = glob.glob(smb_search)
+        smb_list = [f for f in smb_list if 'gradient' not in f]
+        if len(smb_list) == 1:
+            smb_fname = os.path.split(smb_list[0])[-1]
+            os.symlink(smb_list[0],
+                       os.path.join(self.work_dir, smb_fname))
         else:
-            atm_dir = os.path.join(forcing_dir, 'atmosphere')
-            ocean_dir = os.path.join(forcing_dir, 'ocean_thermal_forcing')
+            sys.exit(f"ERROR: Expected 1 SMB file at {smb_search}, "
+                     f"found {len(smb_list)}")
 
-            smb_search = os.path.join(atm_dir, '*SMB_*.nc')
-            smb_list = glob.glob(smb_search)
-            smb_list = [f for f in smb_list if 'gradient' not in f]
-            if len(smb_list) == 1:
-                smb_fname = os.path.split(smb_list[0])[-1]
-                os.symlink(smb_list[0],
-                           os.path.join(self.work_dir, smb_fname))
-            else:
-                sys.exit(f"ERROR: Expected 1 SMB file at {smb_search}, "
-                         f"found {len(smb_list)}")
+        temp_search = os.path.join(atm_dir, '*temperature_*.nc')
+        temp_list = glob.glob(temp_search)
+        temp_list = [f for f in temp_list if 'gradient' not in f]
+        if len(temp_list) == 1:
+            temp_fname = os.path.split(temp_list[0])[-1]
+            os.symlink(temp_list[0],
+                       os.path.join(self.work_dir, temp_fname))
+        else:
+            sys.exit(f"ERROR: Expected 1 temperature file at "
+                     f"{temp_search}, found {len(temp_list)}")
 
-            temp_search = os.path.join(atm_dir, '*temperature_*.nc')
-            temp_list = glob.glob(temp_search)
-            temp_list = [f for f in temp_list if 'gradient' not in f]
-            if len(temp_list) == 1:
-                temp_fname = os.path.split(temp_list[0])[-1]
-                os.symlink(temp_list[0],
-                           os.path.join(self.work_dir, temp_fname))
-            else:
-                sys.exit(f"ERROR: Expected 1 temperature file at "
-                         f"{temp_search}, found {len(temp_list)}")
+        runoff_search = os.path.join(atm_dir, '*runoff_*.nc')
+        runoff_list = glob.glob(runoff_search)
+        runoff_fname = ''
+        if len(runoff_list) == 1:
+            runoff_fname = os.path.split(runoff_list[0])[-1]
+            os.symlink(runoff_list[0],
+                       os.path.join(self.work_dir, runoff_fname))
 
-            runoff_search = os.path.join(atm_dir, '*runoff_*.nc')
-            runoff_list = glob.glob(runoff_search)
-            runoff_fname = ''
-            if len(runoff_list) == 1:
-                runoff_fname = os.path.split(runoff_list[0])[-1]
-                os.symlink(runoff_list[0],
-                           os.path.join(self.work_dir, runoff_fname))
+        smb_grad_search = os.path.join(atm_dir, '*SMB_gradient_*.nc')
+        smb_grad_list = glob.glob(smb_grad_search)
+        smb_grad_fname = ''
+        if len(smb_grad_list) == 1:
+            smb_grad_fname = os.path.split(smb_grad_list[0])[-1]
+            os.symlink(smb_grad_list[0],
+                       os.path.join(self.work_dir, smb_grad_fname))
 
-            smb_grad_search = os.path.join(atm_dir, '*SMB_gradient_*.nc')
-            smb_grad_list = glob.glob(smb_grad_search)
-            smb_grad_fname = ''
-            if len(smb_grad_list) == 1:
-                smb_grad_fname = os.path.split(smb_grad_list[0])[-1]
-                os.symlink(smb_grad_list[0],
-                           os.path.join(self.work_dir, smb_grad_fname))
+        temp_grad_search = os.path.join(atm_dir,
+                                        '*temperature_gradient_*.nc')
+        temp_grad_list = glob.glob(temp_grad_search)
+        temp_grad_fname = ''
+        if len(temp_grad_list) == 1:
+            temp_grad_fname = os.path.split(temp_grad_list[0])[-1]
+            os.symlink(temp_grad_list[0],
+                       os.path.join(self.work_dir, temp_grad_fname))
 
-            temp_grad_search = os.path.join(atm_dir,
-                                            '*temperature_gradient_*.nc')
-            temp_grad_list = glob.glob(temp_grad_search)
-            temp_grad_fname = ''
-            if len(temp_grad_list) == 1:
-                temp_grad_fname = os.path.split(temp_grad_list[0])[-1]
-                os.symlink(temp_grad_list[0],
-                           os.path.join(self.work_dir, temp_grad_fname))
+        # GrIS thermal forcing: always 2D, plus 3D when
+        # use_3d_thermal_forcing is true (see build_3d_thermal_forcing
+        # in landice/ismip7_forcing/ocean_thermal)
 
-            # GrIS thermal forcing: always 2D, plus 3D when
-            # use_3d_thermal_forcing is true (see build_3d_thermal_forcing
-            # in landice/ismip7_forcing/ocean_thermal)
+        # 2D thermal forcing (always)
+        tf_2d_search = os.path.join(ocean_dir, '*2dThermalForcing_*.nc')
+        tf_2d_list = sorted(glob.glob(tf_2d_search))
+        if len(tf_2d_list) != 1:
+            sys.exit(f"ERROR: Expected 1 2D TF file at {tf_2d_search}, "
+                     f"found {len(tf_2d_list)}")
+        tf_fname = os.path.split(tf_2d_list[0])[-1]
+        os.symlink(tf_2d_list[0],
+                   os.path.join(self.work_dir, tf_fname))
 
-            # 2D thermal forcing (always)
-            tf_2d_search = os.path.join(ocean_dir,
-                                        '*2dThermalForcing_*.nc')
-            tf_2d_list = sorted(glob.glob(tf_2d_search))
-            if len(tf_2d_list) != 1:
-                sys.exit(f"ERROR: Expected 1 2D TF file at {tf_2d_search}, "
-                         f"found {len(tf_2d_list)}")
-            tf_fname = os.path.split(tf_2d_list[0])[-1]
-            os.symlink(tf_2d_list[0],
-                       os.path.join(self.work_dir, tf_fname))
-
-            # 3D thermal forcing (optional, only with
-            # use_3d_thermal_forcing)
-            if use_3d_thermal_forcing:
-                tf_3d_search = os.path.join(ocean_dir,
-                                            '*3dThermalForcing_*.nc')
-                tf_3d_list = sorted(glob.glob(tf_3d_search))
-                if len(tf_3d_list) == 0:
-                    sys.exit(f"ERROR: Expected at least 1 3D TF file at "
-                             f"{tf_3d_search}, found 0")
-                # 3D TF is written one file per N-year block, named by the
-                # block start year (..._<YYYY>.nc). Symlink the whole
-                # series and address it with a $Y filename_template plus a
-                # filename_interval so MALI advances across chunk files.
-                for tf_path in tf_3d_list:
-                    tf_base = os.path.split(tf_path)[-1]
-                    os.symlink(tf_path,
-                               os.path.join(self.work_dir, tf_base))
-                start_years = []
-                for f in tf_3d_list:
-                    match = re.search(r'_(\d{4})\.nc$',
-                                      os.path.split(f)[-1])
-                    if not match:
+        # 3D thermal forcing (optional, only with use_3d_thermal_forcing)
+        if use_3d_thermal_forcing:
+            tf_3d_search = os.path.join(ocean_dir, '*3dThermalForcing_*.nc')
+            tf_3d_list = sorted(glob.glob(tf_3d_search))
+            if len(tf_3d_list) == 0:
+                sys.exit(f"ERROR: Expected at least 1 3D TF file at "
+                         f"{tf_3d_search}, found 0")
+            # 3D TF is written one file per N-year block, named by the
+            # block start year (..._<YYYY>.nc). Symlink the whole
+            # series and address it with a $Y filename_template plus a
+            # filename_interval so MALI advances across chunk files.
+            for tf_path in tf_3d_list:
+                tf_base = os.path.split(tf_path)[-1]
+                os.symlink(tf_path,
+                           os.path.join(self.work_dir, tf_base))
+            start_years = []
+            for f in tf_3d_list:
+                match = re.search(r'_(\d{4})\.nc$',
+                                  os.path.split(f)[-1])
+                if not match:
+                    sys.exit(
+                        f"ERROR: 3D thermal forcing file does not "
+                        f"match expected pattern *_YYYY.nc: {f}")
+                start_years.append(int(match.group(1)))
+            start_years = sorted(start_years)
+            if len(set(start_years)) != len(start_years):
+                sys.exit(
+                    f"ERROR: Multiple 3D thermal forcing files share a "
+                    f"start year in {ocean_dir}. Keep only one version "
+                    f"of the 3D TF series in this directory.")
+            # Align the stream's file boundaries with the first chunk
+            tf_3d_reference_time = f"{start_years[0]:04d}-01-01_00:00:00"
+            sample = os.path.split(tf_3d_list[0])[-1]
+            tf_3d_fname = re.sub(r'_\d{4}\.nc$', '_$Y.nc', sample)
+            if len(start_years) > 1:
+                interval_years = start_years[1] - start_years[0]
+                # Validate uniform spacing across all chunks
+                for i in range(2, len(start_years)):
+                    spacing = start_years[i] - start_years[i - 1]
+                    if spacing != interval_years:
                         sys.exit(
-                            f"ERROR: 3D thermal forcing file does not "
-                            f"match expected pattern *_YYYY.nc: {f}")
-                    start_years.append(int(match.group(1)))
-                start_years = sorted(start_years)
-                sample = os.path.split(tf_3d_list[0])[-1]
-                tf_3d_fname = re.sub(r'_\d{4}\.nc$', '_$Y.nc', sample)
-                if len(start_years) > 1:
-                    interval_years = start_years[1] - start_years[0]
-                    # Validate uniform spacing across all chunks
-                    for i in range(2, len(start_years)):
-                        spacing = start_years[i] - start_years[i - 1]
-                        if spacing != interval_years:
-                            sys.exit(
-                                f"ERROR: 3D thermal forcing chunk years "
-                                f"are not uniformly spaced. Expected "
-                                f"interval {interval_years} years, but "
-                                f"chunks {start_years[i - 1]} and "
-                                f"{start_years[i]} are {spacing} years "
-                                f"apart.")
-                    tf_3d_filename_interval = \
-                        f"{interval_years:04d}-00-00_00:00:00"
-            else:
-                tf_3d_fname = ''
+                            f"ERROR: 3D thermal forcing chunk years "
+                            f"are not uniformly spaced. Expected "
+                            f"interval {interval_years} years, but "
+                            f"chunks {start_years[i - 1]} and "
+                            f"{start_years[i]} are {spacing} years "
+                            f"apart.")
+                tf_3d_filename_interval = \
+                    f"{interval_years:04d}-00-00_00:00:00"
+        else:
+            tf_3d_fname = ''
 
         # --- Set up streams ---
-        if scenario == 'ctrl':
-            forcing_interval_monthly = 'initial_only'
-            forcing_interval_annual = 'initial_only'
-            forcing_interval_TF = 'initial_only'
-        else:
-            forcing_interval_monthly = '0000-01-00_00:00:00'
-            forcing_interval_annual = '0001-00-00_00:00:00'
-            # GrIS thermal forcing (2D and 3D) is monthly. The annual
-            # cadence only applies to Antarctica, whose ISMIP7 3D forcing is
-            # provided annually.
-            forcing_interval_TF = forcing_interval_monthly
+        forcing_interval_monthly = '0000-01-00_00:00:00'
+        forcing_interval_annual = '0001-00-00_00:00:00'
+        # GrIS thermal forcing (2D and 3D) is monthly. The annual
+        # cadence only applies to Antarctica, whose ISMIP7 3D forcing is
+        # provided annually.
+        forcing_interval_TF = forcing_interval_monthly
 
         stream_replacements = {
             'input_file_init_cond': init_cond_fname if is_historical
@@ -317,6 +251,7 @@ class SetUpExperiment(Step):
             'forcing_interval_annual': forcing_interval_annual,
             'forcing_interval_TF': forcing_interval_TF,
             'tf_3d_filename_interval': tf_3d_filename_interval,
+            'tf_3d_reference_time': tf_3d_reference_time,
             'use_3d_thermal_forcing': use_3d_thermal_forcing,
         }
 
@@ -383,6 +318,9 @@ class SetUpExperiment(Step):
         make_graph_file(mesh_filename=init_cond_path,
                         graph_filename=os.path.join(self.work_dir,
                                                     'graph.info'))
+        # the job script runs MALI directly, so partition now
+        partition(self.ntasks, self.config, self.logger,
+                  graph_file=os.path.join(self.work_dir, 'graph.info'))
 
         symlink_load_script(self.work_dir)
 
@@ -396,6 +334,11 @@ class SetUpExperiment(Step):
                          work_dir=self.work_dir,
                          pre_run_commands=pre_run_cmd,
                          post_run_commands=post_run_cmd)
+
+        write_custom_job_script(self.config, 'ismip7_run_gris',
+                                work_dir=self.work_dir,
+                                job_name=f'{self.exp}_gris',
+                                ntasks=self.ntasks)
 
         self.add_model_as_input()
 

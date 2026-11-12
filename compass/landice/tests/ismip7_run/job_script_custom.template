@@ -1,0 +1,26 @@
+#!/bin/bash
+#SBATCH  --job-name={{ job_name }}
+{% if account != '' -%}
+#SBATCH  --account={{ account }}
+{%- endif %}
+#SBATCH  --nodes={{ nodes }}
+#SBATCH  --output=slurm.o%j
+#SBATCH  --exclusive
+#SBATCH  --time=00:30:00
+#SBATCH  --qos=debug
+{% if constraint != '' -%}
+#SBATCH  --constraint={{ constraint }}
+{%- endif %}
+
+date
+
+if [[ -f log.landice.0000.out ]]; then
+    LOGDIR="archived_logs_$(date -r log.landice.0000.out '+%Y-%m-%d_%H-%M-%S')"
+    mkdir -- "$LOGDIR"
+    cp log* "$LOGDIR/"
+fi
+
+{{ env_cmds }}
+
+{{ parallel_executable }} -n {{ ntasks }} ./{{ model }}
+date
