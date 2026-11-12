@@ -69,6 +69,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#experiment-matrix">Experiment Matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#custom-job-script">Custom job script</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#forcing-streams">Forcing Streams</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#mask-calving-path-c">Mask Calving (Path C)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ismip7-ais">ismip7_ais</a></li>
@@ -322,10 +323,6 @@ the mapping files already exist.</p>
 <span class="w"> </span><span class="na">reference_surface_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
 <span class="w"> </span><span class="na">region_mask_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
 
-<span class="c1"># Climatology files for CTRL2015 experiments</span>
-<span class="na">ctrl_tf_climatology_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
-<span class="na">ctrl_atm_climatology_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
-
 <span class="c1"># OCX forcing path</span>
 <span class="na">ocx_forcing_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
 
@@ -406,6 +403,30 @@ across multiple year-block files addressed via a <code class="docutils literal n
 <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_gamma0</span></code> from the file at <code class="docutils literal notranslate"><span class="pre">melt_params_path</span></code> (which must
 be supplied in that case).</p>
 </section>
+<section id="custom-job-script">
+<span id="landice-ismip7-run-custom-job-script"></span><h2>Custom job script<a class="headerlink" href="#custom-job-script" title="Link to this heading"></a></h2>
+<p>Both the AIS and GrIS configs have two options for writing a job script that
+calls the MALI executable directly, instead of <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># None (default, no custom script) or custom</span>
+<span class="na">custom_job_script</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+
+<span class="c1"># Single line of environment commands, required if custom_job_script =</span>
+<span class="c1"># custom</span>
+<span class="na">custom_job_env_cmds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+</pre></div>
+</div>
+<p>With <code class="docutils literal notranslate"><span class="pre">custom_job_script</span> <span class="pre">=</span> <span class="pre">custom</span></code>, each experiment directory gets a
+<code class="docutils literal notranslate"><span class="pre">job_script.custom.sh</span></code> in addition to the standard <code class="docutils literal notranslate"><span class="pre">job_script.sh</span></code>, which
+is still written by compass. The job name is <code class="docutils literal notranslate"><span class="pre">&lt;experiment&gt;_&lt;ais|gris&gt;</span></code>, with
+<code class="docutils literal notranslate"><span class="pre">qos=debug</span></code> and a 30-minute wall time (edit the script for production
+runs). Nodes come from <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> and <code class="docutils literal notranslate"><span class="pre">cores_per_node</span></code>. The script archives
+any existing logs, runs <code class="docutils literal notranslate"><span class="pre">custom_job_env_cmds</span></code>, and calls
+<code class="docutils literal notranslate"><span class="pre">&lt;parallel_executable&gt;</span> <span class="pre">-n</span> <span class="pre">&lt;ntasks&gt;</span> <span class="pre">./landice_model</span></code>, so the executable is
+the one linked in the run directory (compass’s own MALI or the one given with
+<code class="docutils literal notranslate"><span class="pre">-p</span></code> to <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code>). Write each literal <code class="docutils literal notranslate"><span class="pre">$</span></code> in
+<code class="docutils literal notranslate"><span class="pre">custom_job_env_cmds</span></code> as <code class="docutils literal notranslate"><span class="pre">$$</span></code>, since the config parser interpolates
+<code class="docutils literal notranslate"><span class="pre">$</span></code>. <code class="docutils literal notranslate"><span class="pre">ismip7_gris_pm_production.cfg</span></code> enables this option.</p>
+</section>
 <section id="forcing-streams">
 <span id="landice-ismip7-run-forcing-streams"></span><h2>Forcing Streams<a class="headerlink" href="#forcing-streams" title="Link to this heading"></a></h2>
 <p>ISMIP7 uses more forcing fields than ISMIP6, at mixed temporal resolutions:</p>
@@ -432,8 +453,9 @@ forcing</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_deltaT</span></code>, <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_basin</span></code>,
 <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_gamma0</span></code> — melt parameterization coefficients</p></li>
 </ul>
-<p>For CTRL2015 experiments, all forcing intervals are set to
-<code class="docutils literal notranslate"><span class="pre">initial_only</span></code> (constant climate).</p>
+<p>The CTRL2015 experiments use the same forcing layout and forcing
+intervals as the other experiments, with forcing taken from
+<code class="docutils literal notranslate"><span class="pre">{forcing_basepath}/{model}_ctrl</span></code>.</p>
 </section>
 <section id="mask-calving-path-c">
 <span id="landice-ismip7-run-mask-calving"></span><h2>Mask Calving (Path C)<a class="headerlink" href="#mask-calving-path-c" title="Link to this heading"></a></h2>

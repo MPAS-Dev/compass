@@ -244,8 +244,8 @@ found, setup fails with an error, since the mask is required whenever
 <li><p>Creating a restart symlink for projection experiments pointing to
 the corresponding ESM’s historical restart
 (<code class="docutils literal notranslate"><span class="pre">../historical_{model}/rst.2015-01-01.nc</span></code>).</p></li>
-<li><p>Setting up CTRL2015 experiments with constant-climate forcing
-(<code class="docutils literal notranslate"><span class="pre">initial_only</span></code> intervals).</p></li>
+<li><p>Setting up CTRL2015 experiments like any other ESM experiment, with
+forcing from <code class="docutils literal notranslate"><span class="pre">{forcing_basepath}/{model}_ctrl</span></code> (no special-casing).</p></li>
 <li><p>Setting up the OCX experiment with reanalysis-based forcing.</p></li>
 <li><p>If SLM coupling is enabled, adding a <code class="docutils literal notranslate"><span class="pre">CreateSlmMappingFiles</span></code> step
 and writing the SLM namelist from the Jinja2 template.</p></li>
@@ -331,6 +331,19 @@ template and <code class="docutils literal notranslate"><span class="pre">filena
 monthly input intervals. When 3D forcing is enabled, the facemelting routine
 still uses the ismip6_2dThermalForcing field to avoid any artificats introduced
 by constructing the 3d fields.</p>
+</section>
+<section id="custom-job-script">
+<h3>custom_job_script<a class="headerlink" href="#custom-job-script" title="Link to this heading"></a></h3>
+<p>The function
+<a class="reference internal" href="../generated/compass.landice.tests.ismip7_run.custom_job_script.write_custom_job_script.html#compass.landice.tests.ismip7_run.custom_job_script.write_custom_job_script" title="compass.landice.tests.ismip7_run.custom_job_script.write_custom_job_script"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_run.custom_job_script.write_custom_job_script()</span></code></a>
+is called at the end of <code class="docutils literal notranslate"><span class="pre">setup()</span></code> in both <code class="docutils literal notranslate"><span class="pre">SetUpExperiment</span></code> classes. If
+<code class="docutils literal notranslate"><span class="pre">custom_job_script</span></code> is <code class="docutils literal notranslate"><span class="pre">custom</span></code>, it renders
+<code class="docutils literal notranslate"><span class="pre">job_script_custom.template</span></code> into <code class="docutils literal notranslate"><span class="pre">job_script.custom.sh</span></code>. The standard
+<code class="docutils literal notranslate"><span class="pre">job_script.sh</span></code> cannot be suppressed from a step, because
+<code class="docutils literal notranslate"><span class="pre">compass/setup.py</span></code> writes it after every step’s <code class="docutils literal notranslate"><span class="pre">setup()</span></code>. The srun line
+uses <code class="docutils literal notranslate"><span class="pre">[parallel]</span> <span class="pre">parallel_executable</span></code> and the <code class="docutils literal notranslate"><span class="pre">./landice_model</span></code> link that
+<code class="docutils literal notranslate"><span class="pre">add_model_as_input()</span></code> creates. <code class="docutils literal notranslate"><span class="pre">qos</span></code> and <code class="docutils literal notranslate"><span class="pre">time</span></code> are fixed in the
+template.</p>
 </section>
 </section>
 </section>

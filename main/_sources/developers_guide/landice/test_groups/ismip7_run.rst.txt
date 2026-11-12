@@ -108,8 +108,8 @@ The ``setup`` method sets up the experiment directory by:
 7. Creating a restart symlink for projection experiments pointing to
    the corresponding ESM's historical restart
    (``../historical_{model}/rst.2015-01-01.nc``).
-8. Setting up CTRL2015 experiments with constant-climate forcing
-   (``initial_only`` intervals).
+8. Setting up CTRL2015 experiments like any other ESM experiment, with
+   forcing from ``{forcing_basepath}/{model}_ctrl`` (no special-casing).
 9. Setting up the OCX experiment with reanalysis-based forcing.
 10. If SLM coupling is enabled, adding a ``CreateSlmMappingFiles`` step
     and writing the SLM namelist from the Jinja2 template.
@@ -199,3 +199,17 @@ template and ``filename_interval``. Both 2D and 3D GrIS thermal forcing use
 monthly input intervals. When 3D forcing is enabled, the facemelting routine
 still uses the ismip6_2dThermalForcing field to avoid any artificats introduced
 by constructing the 3d fields.
+
+custom_job_script
+~~~~~~~~~~~~~~~~~
+
+The function
+:py:func:`compass.landice.tests.ismip7_run.custom_job_script.write_custom_job_script`
+is called at the end of ``setup()`` in both ``SetUpExperiment`` classes. If
+``custom_job_script`` is ``custom``, it renders
+``job_script_custom.template`` into ``job_script.custom.sh``. The standard
+``job_script.sh`` cannot be suppressed from a step, because
+``compass/setup.py`` writes it after every step's ``setup()``. The srun line
+uses ``[parallel] parallel_executable`` and the ``./landice_model`` link that
+``add_model_as_input()`` creates. ``qos`` and ``time`` are fixed in the
+template.
