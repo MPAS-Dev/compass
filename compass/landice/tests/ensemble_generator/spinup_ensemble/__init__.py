@@ -256,7 +256,19 @@ def _compute_delta_t_vec(config, spinup_section, spec_by_name, max_samples,
     iceshelf_area_obs = spinup_section.getfloat('iceshelf_area_obs')
     input_file_path = spinup_section.get('input_file_path')
     TF_file_path = spinup_section.get('TF_file_path')
-    mean_TF, iceshelf_area = calc_mean_TF(input_file_path, TF_file_path)
+    calibration_start_year = spinup_section.getint(
+        'calibration_start_year', fallback=None)
+    calibration_end_year = spinup_section.getint(
+        'calibration_end_year', fallback=None)
+    if calibration_start_year is None and calibration_end_year is None:
+        print('Calibrating deltaT with thermal forcing from the first time '
+              'slice of TF_file_path.')
+    else:
+        print('Calibrating deltaT with thermal forcing averaged over '
+              f'{calibration_start_year}-{calibration_end_year}.')
+    mean_TF, iceshelf_area = calc_mean_TF(
+        input_file_path, TF_file_path, start_year=calibration_start_year,
+        end_year=calibration_end_year)
 
     print(f'IS area: model={iceshelf_area}, Obs={iceshelf_area_obs}')
     area_correction = iceshelf_area / iceshelf_area_obs

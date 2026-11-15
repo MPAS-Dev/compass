@@ -252,6 +252,14 @@ The template-specific spinup config options (from
     # converting target melt flux to deltaT.
     iceshelf_area_obs = 60654.e6
 
+    # Optional year range (inclusive) over which thermal forcing in
+    # TF_file_path is time-averaged when converting meltflux to deltaT.
+    # Years are read from xtime. Runs still use the full time-varying
+    # TF_file_path. If both are omitted, the first time slice of
+    # TF_file_path is used.
+    # calibration_start_year = 1995
+    # calibration_end_year = 2014
+
 The parameter sampling definitions live in a separate section,
 ``[ensemble.parameters]``.  The order listed sets the sampling
 dimension ordering, special parameters are unprefixed, and namelist
