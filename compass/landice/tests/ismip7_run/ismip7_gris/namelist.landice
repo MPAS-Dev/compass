@@ -1,9 +1,15 @@
     config_velocity_solver = 'FO'
-    config_fem_extension_method = 'ismip7-era'
     config_do_velocity_reconstruction_for_external_dycore = .false.
     config_unrealistic_velocity = 00.00159
     config_nonconvergence_error = .false.
     config_flowParamA_calculation = 'PB1982'
+
+    config_fem_extension_method = 'terrestrial-only'
+    config_fem_velocity_extrapolation_method = 'flowline'
+    config_fem_velocity_extrapolation_target = 'cells'
+    config_fem_velocity_extrapolation_limiter = 'relaxed'
+    config_fem_terrestrial_node_velocity = 'zero'
+    config_mask_floating_dynamic_persistence = .true.
 
     config_thickness_advection = 'fct'
     config_tracer_advection = 'fct'
