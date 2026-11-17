@@ -60,7 +60,10 @@ The landice framework module ``compass/landice/iceshelf_melt.py`` provides
 functionality related to ice-shelf basal melting.  Currently, there is a
 single function ``calc_mean_TF`` that calculated the mean thermal forcing
 along the ice-shelf draft in a domain for a given geometry file and thermal
-forcing file.
+forcing file.  By default, the first time slice of the thermal forcing is
+used.  If ``start_year`` and ``end_year`` are given, the 3D thermal forcing
+is averaged over all time slices whose ``xtime`` year falls in that
+inclusive range before it is interpolated to the ice draft.
 
 mesh
 ~~~~
