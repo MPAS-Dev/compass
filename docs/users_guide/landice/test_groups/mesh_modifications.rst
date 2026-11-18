@@ -96,6 +96,9 @@ the test case.
     # optional forcing files that could also be interpolated
     # e.g. SMB or TF files
     # interpolating these files requires using the 'ncremap' interp_method
+    # Any number of extra_fileN options may be set (e.g. extra_file6,
+    # extra_file7, ...); they are processed in order of increasing N. Paths
+    # are checked for existence before the step does any other work.
     extra_file1 = None
     extra_file2 = None
     extra_file3 = None

@@ -1,4 +1,5 @@
 import os
+import re
 import shutil
 import sys
 
@@ -59,11 +60,16 @@ class ExtractRegion(Step):
         extend_mesh = section.getboolean('extend_ocean_buffer')
         grow_iters = section.getint('grow_iters')
         interp_method = section.get('interp_method')
-        extra_file1 = section.get('extra_file1')
-        extra_file2 = section.get('extra_file2')
-        extra_file3 = section.get('extra_file3')
-        extra_file4 = section.get('extra_file4')
-        extra_file5 = section.get('extra_file5')
+        extra_files = _get_extra_files(section)
+
+        if extra_files and interp_method != 'ncremap':
+            sys.exit('Error: interpolating ancillary files is only '
+                     'supported when interp_method=ncremap')
+        missing_files = [f for f in extra_files if not os.path.exists(f)]
+        if missing_files:
+            raise FileNotFoundError(
+                'The following extra_fileN paths do not exist: '
+                f'{", ".join(missing_files)}')
 
         # create a tmp dir for intermediate files
         tmpdir = os.path.join(self.work_dir, 'tmp')
@@ -236,19 +242,40 @@ class ExtractRegion(Step):
         make_graph_file(mesh_filename=dest_file_name,
                         graph_filename='graph.info')
 
-        for extra_file in [extra_file1, extra_file2, extra_file3,
-                           extra_file4, extra_file5]:
-            if extra_file != "None":
-                if interp_method != "ncremap":
-                    sys.exit("Error: interpolating ancillary files is only "
-                             "supported when interp_method=ncremap")
-                dst_file = \
-                    f'{dest_file_rootname}_{os.path.basename(extra_file)}'
-                _remap_with_ncremap(extra_file,
-                                    dst_file,
-                                    mapping_filename,
-                                    logger, tmpdir)
-                logger.info(f'Created {dst_file}')
+        for extra_file in extra_files:
+            dst_file = \
+                f'{dest_file_rootname}_{os.path.basename(extra_file)}'
+            _remap_with_ncremap(extra_file,
+                                dst_file,
+                                mapping_filename,
+                                logger, tmpdir)
+            logger.info(f'Created {dst_file}')
+
+
+def _get_extra_files(section):
+    """
+    Collect ``extra_fileN`` options from the ``[subdomain]`` config
+    section, for any ``N``, in order of increasing ``N``
+
+    Parameters
+    ----------
+    section : configparser.SectionProxy
+        the ``[subdomain]`` config section
+
+    Returns
+    -------
+    extra_files : list of str
+        paths of configured extra files, excluding any set to ``None``
+    """
+    extra_files = []
+    for option in section:
+        match = re.fullmatch(r'extra_file(\d+)', option)
+        if match is None:
+            continue
+        path = section.get(option)
+        if path != 'None':
+            extra_files.append((int(match.group(1)), path))
+    return [path for _, path in sorted(extra_files)]
 
 
 def _remap_with_ncremap(src_path, dst_file, mapping_filename, logger,
