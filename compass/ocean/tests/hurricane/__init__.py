@@ -1,3 +1,4 @@
+from compass.ocean.tests.hurricane.files_for_e3sm import FilesForE3SM
 from compass.ocean.tests.hurricane.forward import Forward
 from compass.ocean.tests.hurricane.init import Init
 from compass.ocean.tests.hurricane.mesh import Mesh
@@ -43,3 +44,8 @@ class Hurricane(TestGroup):
                                       use_lts=use_lts,
                                       wetdry=wetdry)
                     self.add_test_case(forward)
+
+                    if not use_lts:
+                        files_for_e3sm = FilesForE3SM(test_group=self,
+                                                      mesh=mesh)
+                        self.add_test_case(files_for_e3sm)

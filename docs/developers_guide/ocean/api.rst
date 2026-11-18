@@ -438,6 +438,16 @@ test cases and steps
    analysis.Analysis.plot_hwm
    analysis.Analysis.run
 
+   files_for_e3sm.FilesForE3SM
+   files_for_e3sm.FilesForE3SM.configure
+   files_for_e3sm.FilesForE3SM.run
+   files_for_e3sm.forcing_maps.ForcingMaps
+   files_for_e3sm.forcing_maps.ForcingMaps.setup
+   files_for_e3sm.forcing_maps.ForcingMaps.run
+   files_for_e3sm.domain_files.DomainFiles
+   files_for_e3sm.domain_files.DomainFiles.setup
+   files_for_e3sm.domain_files.DomainFiles.run
+
    lts.mesh.lts_regions.LTSRegionsStep
    lts.mesh.lts_regions.LTSRegionsStep.setup
    lts.mesh.lts_regions.LTSRegionsStep.run
