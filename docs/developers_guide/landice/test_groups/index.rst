@@ -19,6 +19,7 @@ Test groups
    humboldt
    hydro_radial
    ismip6_forcing
+   ismip6_GrIS_forcing
    ismip6_run
    ismip7_calibration
    ismip7_forcing
