@@ -1,42 +1,84 @@
-{%- set compiler = "gcc@13.3.0" %}
-{%- set mpi = "openmpi@4.1.6" %}
+{%- set compiler = "gcc@15.2.0" %}
+{%- set mpi = "openmpi@5.0.10" %}
 spack:
   specs:
-  - {{ compiler }}
-  - {{ mpi }}%{{ compiler }}
+  - {{ mpi }}
 {%- for spec in specs %}
-  - "{{ spec }}%{{ compiler }}"
+  - "{{ spec }}"
 {%- endfor %}
   concretizer:
     unify: true
+  toolchains:
+    mache:
+    - spec: "%c={{ compiler }}"
+      when: "%c"
+    - spec: "%cxx={{ compiler }}"
+      when: "%cxx"
+    - spec: "%fortran={{ compiler }}"
+      when: "%fortran"
   packages:
     all:
-      compiler: [{{ compiler }}]
+      require: ["%mache"]
       providers:
-        mpi: [{{ mpi }}%{{ compiler }}]
+        mpi: [{{ mpi }}]
+    autoconf:
+      externals:
+      - spec: autoconf@2.72
+        prefix: /usr
+      buildable: false
+    automake:
+      externals:
+      - spec: automake@1.18.1
+        prefix: /usr
+      buildable: false
+    diffutils:
+      externals:
+      - spec: diffutils@3.12
+        prefix: /usr
+      buildable: false
+    git:
+      externals:
+      - spec: git@2.53.0
+        prefix: /usr
+      buildable: false
+    gmake:
+      externals:
+      - spec: gmake@4.4.1
+        prefix: /usr
+      buildable: false
+    m4:
+      externals:
+      - spec: m4@1.4.21
+        prefix: /usr
+      buildable: false
+    perl:
+      externals:
+      - spec: perl@5.40.1
+        prefix: /usr
+      buildable: false
+    tar:
+      externals:
+      - spec: tar@1.35
+        prefix: /usr
+      buildable: false
     gcc:
       externals:
-      - spec: {{ compiler }}
+      - spec: {{ compiler }} languages='c,c++,fortran'
         prefix: /usr
+        extra_attributes:
+          compilers:
+            c: /usr/bin/gcc
+            cxx: /usr/bin/g++
+            fortran: /usr/bin/gfortran
       buildable: false
     openmpi:
       externals:
-      - spec: {{ mpi }}%{{ compiler }}
+      - spec: {{ mpi }}
         prefix: /usr
+        # mache builds the environment under `env -i`, and the Open MPI 5
+        # compiler wrappers fail when HOME is unset
+        extra_attributes:
+          environment:
+            set:
+              HOME: /home/xylar
       buildable: false
-  config:
-    install_missing_compilers: false
-  compilers:
-  - compiler:
-      spec: {{ compiler }}
-      paths:
-        cc: /usr/bin/gcc
-        cxx: /usr/bin/g++
-        f77: /usr/bin/gfortran
-        fc: /usr/bin/gfortran
-      flags: {}
-      operating_system: ubuntu24.04
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []

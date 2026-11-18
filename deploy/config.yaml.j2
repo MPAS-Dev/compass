@@ -164,6 +164,15 @@ spack:
   # excluding `hdf5_netcdf`.
   exclude_packages: []
 
+  # Overrides for the Spack sources pinned by mache (mache/spack/pins.yaml).
+  # e3sm-spack-packages is pinned past mache 5.2.0's v2026.06.2 for the
+  # trilinos-for-albany and albany fixes in E3SM-Project/e3sm-spack-packages#4,
+  # until a mache release pins a tag that includes them.
+  pins:
+    repos:
+      e3sm:
+        commit: 65739a6a79f45acffbf0ac24b754f4841ed2065a
+
 jigsaw:
   # If true, build/install JIGSAW + JIGSAW-Python into the pixi env
   enabled: true
