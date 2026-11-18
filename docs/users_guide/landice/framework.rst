@@ -36,6 +36,11 @@ may omit the associated options entirely:
 * ``use_bed = True`` requires ``high_dist_bed``, ``low_dist_bed``,
   ``high_bed``, and ``low_bed``.
 
+An additional optional option, ``min_spac_geojson`` (default ``None``), is
+independent of the density-function toggles. When set to the path of a lon/lat
+geojson hull (Polygon or MultiPolygon), cell spacing is set to ``min_spac``
+everywhere the bed is below sea level within that hull.
+
 .. code-block:: cfg
 
     # config options for humboldt test cases
