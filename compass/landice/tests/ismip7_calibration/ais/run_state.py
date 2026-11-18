@@ -7,6 +7,11 @@ import os
 import xarray as xr
 from mpas_tools.io import write_netcdf
 
+from compass.landice.tests.ismip7_calibration.configure import (
+    is_ismip7,
+    mali_melt_method,
+    uses_spatial_slope,
+)
 from compass.model import run_model
 from compass.step import Step
 
@@ -14,15 +19,31 @@ from compass.step import Step
 #: Compass only *warns* when an option is missing from the defaults, so
 #: without an explicit check a MALI build without the ISMIP7 melt method
 #: would silently drop these and produce a plausible but wrong calibration.
+#: The ismip7_const form requires only the base ISMIP7 options (no PR #195
+#: slope options), so it can run on an older MALI build; ismip7_slope requires
+#: the full set including the five slope options from PR #195.
 REQUIRED_OPTIONS = {
-    'ismip7': ['config_ismip7_melt_sin_slope', 'config_ismip7_melt_coriolis',
-               'config_ismip7_melt_salinity',
-               'config_ismip7_melt_salinity_source'],
+    'ismip7_const': ['config_ismip7_melt_sin_slope',
+                     'config_ismip7_melt_coriolis',
+                     'config_ismip7_melt_salinity',
+                     'config_ismip7_melt_salinity_source',
+                     'config_basal_mass_bal_float'],
+    'ismip7_slope': ['config_ismip7_melt_sin_slope',
+                     'config_ismip7_melt_coriolis',
+                     'config_ismip7_melt_salinity',
+                     'config_ismip7_melt_salinity_source',
+                     'config_basal_mass_bal_float',
+                     'config_ismip7_melt_spatially_variable_slope',
+                     'config_ismip7_melt_max_slope',
+                     'config_ismip7_melt_slope_smoothing_iterations',
+                     'config_ismip7_melt_slope_method',
+                     'config_ismip7_melt_slope_stencil_rings'],
     'ismip6': ['config_basal_mass_bal_float'],
 }
 
 #: the input-stream variable each melt form reads its parameter from
-PARAMETER_VARIABLE = {'ismip7': 'ismip7shelfMelt_K',
+PARAMETER_VARIABLE = {'ismip7_const': 'ismip7shelfMelt_K',
+                      'ismip7_slope': 'ismip7shelfMelt_K',
                       'ismip6': 'ismip6shelfMelt_gamma0'}
 
 
@@ -96,6 +117,7 @@ class RunState(Step):
         timestep = section.get('timestep')
 
         _check_namelist_options(config, self.melt_form)
+        _validate_slope_config(config, self.melt_form)
 
         self.add_input_file(filename='mesh.nc',
                             target=os.path.join(base_path_mali,
@@ -119,7 +141,8 @@ class RunState(Step):
         self.add_namelist_file(resource_location, 'namelist.landice',
                                out_name='namelist.landice')
 
-        options = {'config_basal_mass_bal_float': f"'{self.melt_form}'",
+        mali_method = mali_melt_method(self.melt_form)
+        options = {'config_basal_mass_bal_float': f"'{mali_method}'",
                    'config_dt': f"'{timestep}'",
                    'config_run_duration': f"'{timestep}'"}
         options.update(_melt_namelist_options(config, self.melt_form,
@@ -175,15 +198,32 @@ class RunState(Step):
 def _melt_namelist_options(config, melt_form, parameter_scale=1.0):
     """The namelist options specific to one melt form."""
     section = config['ismip7_calibration_melt']
-    if melt_form == 'ismip7':
-        return {
+    if is_ismip7(melt_form):
+        # Base ISMIP7 options (all forms)
+        options = {
             'config_ismip7_melt_sin_slope':
                 repr(section.getfloat('sin_slope')),
             'config_ismip7_melt_coriolis':
                 repr(section.getfloat('coriolis')),
             'config_ismip7_melt_salinity_source': "'constant'",
             'config_ismip7_melt_salinity':
-                repr(section.getfloat('salinity'))}
+                repr(section.getfloat('salinity')),
+        }
+        # Slope options (ismip7_slope only)
+        if uses_spatial_slope(melt_form):
+            options.update({
+                'config_ismip7_melt_spatially_variable_slope': '.true.',
+                'config_ismip7_melt_max_slope':
+                    repr(section.getfloat('max_slope')),
+                'config_ismip7_melt_slope_smoothing_iterations':
+                    repr(section.getint('slope_smoothing_iterations')),
+                'config_ismip7_melt_slope_method':
+                    f"'{section.get('slope_method')}'",
+                'config_ismip7_melt_slope_stencil_rings':
+                    repr(section.getint('slope_stencil_rings'))})
+        else:
+            options['config_ismip7_melt_spatially_variable_slope'] = '.false.'
+        return options
     return {}
 
 
@@ -196,16 +236,16 @@ def reference_parameter(config, melt_form):
     config : compass.config.CompassConfigParser
         Configuration options for the test case
 
-    melt_form : {'ismip7', 'ismip6'}
+    melt_form : {'ismip7_const', 'ismip7_slope', 'ismip6'}
         The melt form
 
     Returns
     -------
     value : float
-        ``reference_k`` or ``reference_gamma0``
+        ``reference_k`` for ISMIP7 forms or ``reference_gamma0`` for ISMIP6
     """
     section = config['ismip7_calibration_melt']
-    if melt_form == 'ismip7':
+    if is_ismip7(melt_form):
         return section.getfloat('reference_k')
     return section.getfloat('reference_gamma0')
 
@@ -253,12 +293,60 @@ def _check_namelist_options(config, melt_form):
     missing = [option for option in REQUIRED_OPTIONS[melt_form]
                if option not in text]
     if missing:
+        mali_method = mali_melt_method(melt_form)
         raise ValueError(
             f"MALI's default namelist at\n  {defaults}\ndoes not contain "
-            f"{', '.join(missing)}, so this build does not support "
-            f"config_basal_mass_bal_float = '{melt_form}'.\n"
+            f"{', '.join(missing)}, so this build does not support the "
+            f"'{melt_form}' form "
+            f"(config_basal_mass_bal_float = '{mali_method}').\n"
             f"Compass only warns about namelist options it cannot find, so "
             f"without this check the run would silently use MALI's defaults "
             f"and produce a plausible but wrong calibration.\n"
             f"Build MALI from a branch that has the ISMIP7 melt "
             f"parameterization and point [paths] mpas_model at it.")
+
+
+def _validate_slope_config(config, melt_form):
+    """
+    Validate the slope configuration options for the ismip7_slope form.
+
+    Parameters
+    ----------
+    config : compass.config.CompassConfigParser
+        Configuration options for the test case
+
+    melt_form : str
+        The melt form
+
+    Raises
+    ------
+    ValueError
+        If any slope config option is invalid
+    """
+    if not uses_spatial_slope(melt_form):
+        return  # Only validate for the ismip7_slope form
+    section = config['ismip7_calibration_melt']
+
+    slope_method = section.get('slope_method')
+    if slope_method not in {'local', 'polyfit'}:
+        raise ValueError(
+            f"config slope_method must be 'local' or 'polyfit', but is "
+            f"'{slope_method}'")
+
+    max_slope = section.getfloat('max_slope')
+    if max_slope <= 0.0:
+        raise ValueError(
+            f"config max_slope must be positive, but is {max_slope}")
+
+    slope_smoothing_iterations = section.getint('slope_smoothing_iterations')
+    if slope_smoothing_iterations < 0:
+        raise ValueError(
+            f"config slope_smoothing_iterations must be non-negative, but is "
+            f"{slope_smoothing_iterations}")
+
+    if slope_method == 'polyfit':
+        slope_stencil_rings = section.getint('slope_stencil_rings')
+        if slope_stencil_rings < 1:
+            raise ValueError(
+                f"config slope_stencil_rings must be >= 1 for polyfit method, "
+                f"but is {slope_stencil_rings}")

@@ -185,11 +185,18 @@ MALI mesh.
 
 ``verify_melt``
     Checks MALI's melt against the Python reference evaluated on MALI's *own*
-    ``TFdraft``, which isolates the melt expression from the vertical
-    interpolation; checks that interpolation against an independent
-    implementation written from the protocol, over all four of MALI's code
-    paths; and measures the linearity in the melt parameter from the scaled
-    runs above.
+    ``TFdraft`` (and, for ISMIP7 spatial-slope mode, MALI's diagnosed
+    ``ismip7shelfMelt_shelfBaseSlope``), which isolates the melt expression
+    from the vertical interpolation (and from the geometric slope calculation);
+    checks that interpolation against an independent implementation written
+    from the protocol, over all four of MALI's code paths; and measures the
+    linearity in the melt parameter from the scaled runs above.  In spatial-slope
+    mode the melt-expression check verifies the melt *equation* given MALI's
+    thermal forcing and slope — it explicitly does **not** re-verify how MALI
+    computed the geometric slope.  Slope is treated like ``TFdraft``: an
+    intermediate MALI supplies.  Slope diagnostics (min/median/mean/max, and
+    fraction of cells at the ``max_slope`` cap) are logged for spatial mode
+    as a development aid.
 
     The comparison is restricted to the cells MALI itself computes melt for
     -- floating *and* connected to the open ocean.  MALI leaves ``TFdraft``
@@ -252,12 +259,19 @@ MALI mesh.
 melt forms and salinity
 -----------------------
 
-Two melt forms are calibrated, selected with the ``melt_forms`` config
+Three melt forms can be calibrated, selected with the ``melt_forms`` config
 option:
 
-``ismip7``
-    The Burgard et al. (2022) **local** quadratic of protocol Eq. (1),
-    calibrating ``K``.
+``ismip7_const``
+    The Burgard et al. (2022) **local** quadratic of protocol Eq. (1) with a
+    constant Antarctic-mean slope, calibrating ``K``. This reproduces the
+    published calibration and runs on MALI builds with or without PR #195.
+
+``ismip7_slope``
+    The Burgard et al. (2022) **local** quadratic with MALI's per-cell
+    shelf-base slope diagnosed from ice geometry, calibrating ``K``. Requires
+    MALI PR #195. Uses a finer K grid (``slope_k_min/max/step``) since the
+    p5-to-p95 span is narrower with spatial slope.
 
 ``ismip6``
     The **non-local** quadratic MALI already had, calibrating ``gamma0``.
@@ -265,6 +279,11 @@ option:
     *semi-local* form of protocol Eq. (2) -- only the decomposition of the
     constant differs -- so this is how the semi-local form is calibrated,
     rather than as a third melt module.
+
+The two ISMIP7 forms produce calibrated ``K`` values that are **not
+interchangeable** — a projection must use parameters from a calibration with
+the same slope configuration. Each form gets its own output files, baselines,
+and K grid, so side-by-side comparison is straightforward.
 
 **The calibration uses a constant salinity**, set by the ``salinity`` config
 option and passed to MALI as
@@ -279,13 +298,24 @@ against the constant 34.5, so this shifts the calibrated parameter by roughly
 1%.  Note that the published ``K`` was obtained with a locally varying
 salinity, so comparison with it is approximate at about that level.
 
+**For the ismip7_slope form**, MALI's ``ismip7shelfMelt_shelfBaseSlope``
+field is sin(θ) computed from ice geometry, occupying the same slot in the
+melt coefficient as the scalar ``sin_slope``.  COMPASS reads this diagnosed
+field via
+:py:func:`~compass.landice.tests.ismip7_calibration.ais.melt_model.ismip7_slope`
+(converting to an angle array for the Python reference) rather than
+recomputing the geometry slope — it treats slope like ``TFdraft``, an
+intermediate MALI supplies.  Slope-configuration provenance is stamped into
+output NetCDF attributes via
+:py:func:`~compass.landice.tests.ismip7_calibration.ais.melt_model.slope_metadata`.
+
 using a MALI build with the ISMIP7 melt method
 ----------------------------------------------
 
-The ``ismip7`` melt form needs a MALI build that has
-``config_basal_mass_bal_float = 'ismip7'``, which the compass ``MALI-Dev``
-submodule has had since MALI-Dev/E3SM#191.  An older build can still be
-pointed at with
+The ISMIP7 melt forms (``ismip7_const`` and ``ismip7_slope``) need a MALI
+build that has ``config_basal_mass_bal_float = 'ismip7'``, which the compass
+``MALI-Dev`` submodule has had since MALI-Dev/E3SM#191.  An older build can
+still be pointed at with
 
 .. code-block:: cfg
 
@@ -295,6 +325,16 @@ pointed at with
 Compass only *warns* when a namelist option is missing from the model's
 defaults, so a build without the ISMIP7 melt method would silently drop
 ``config_ismip7_melt_sin_slope`` and produce a plausible but wrong
-calibration.  The
-``run_state`` step therefore checks the default namelist at setup and fails
-with a clear message instead.
+calibration.  The ``run_state`` step therefore checks the default namelist at
+setup and fails with a clear message instead.
+
+The ``ismip7_const`` form requires only the base ISMIP7 options
+(``config_ismip7_melt_sin_slope``, ``config_ismip7_melt_coriolis``,
+``config_ismip7_melt_salinity``, ``config_ismip7_melt_salinity_source``), so
+it can run on MALI builds with or without PR #195. The ``ismip7_slope`` form
+additionally requires ``config_ismip7_melt_spatially_variable_slope``,
+``config_ismip7_melt_max_slope``,
+``config_ismip7_melt_slope_smoothing_iterations``,
+``config_ismip7_melt_slope_method``, and
+``config_ismip7_melt_slope_stencil_rings`` from MALI-Dev/E3SM#195; a build
+lacking them fails at setup with the same validation mechanism.
