@@ -114,13 +114,27 @@ The other test cases do not use config options.
 smoke_test
 ----------
 
-The smoke-test variants are ``landice/greenland/sia_smoke_test`` and
-``landice/greenland/fo_smoke_test``.  They perform short (5-day) test runs.
+The test case names have the form ``velo-<solver>_advec-<scheme>_<test>``,
+where ``<solver>`` is the velocity solver (``sia`` or ``fo``) and ``<scheme>``
+is the advection scheme used for thickness and tracers: first-order upwind
+(``fo``) or flux-corrected transport (``fct``).  FCT variants also use
+the ``runge_kutta`` time integration scheme.
+
+The smoke-test variants are ``landice/greenland/velo-sia_advec-fo_smoke_test``,
+``landice/greenland/velo-sia_advec-fct_smoke_test``,
+``landice/greenland/velo-fo_advec-fo_smoke_test`` and
+``landice/greenland/velo-fo_advec-fct_smoke_test``.  They perform short
+(5-day) test runs.
 
 decomposition_test
 ------------------
 
-``landice/greenland/decomposition_test`` runs short (5-day) integrations of the
+The decomposition-test variants are
+``landice/greenland/velo-sia_advec-fo_decomposition_test``,
+``landice/greenland/velo-sia_advec-fct_decomposition_test``,
+``landice/greenland/velo-fo_advec-fo_decomposition_test`` and
+``landice/greenland/velo-fo_advec-fct_decomposition_test``.  They run
+short (5-day) integrations of the
 model forward in time with two different decompositions. The larger run
 targets 32 tasks (or fewer if fewer are available), and the smaller run uses
 roughly half as many tasks. The resulting prognostic variables are compared
@@ -129,8 +143,11 @@ between the two runs to make sure they are bit-for-bit identical.
 restart_test
 ------------
 
-The restart-test variants are ``landice/greenland/sia_restart_test`` and
-``landice/greenland/fo_restart_test``.  Each first runs a short (5-day)
+The restart-test variants are
+``landice/greenland/velo-sia_advec-fo_restart_test``,
+``landice/greenland/velo-sia_advec-fct_restart_test``,
+``landice/greenland/velo-fo_advec-fo_restart_test`` and
+``landice/greenland/velo-fo_advec-fct_restart_test``.  Each first runs a short (5-day)
 integration of the model forward in time (``full_run`` step).  Then, a second
 step (``restart_run``) performs a 3-day run and then a 2-day run, where the
 second begins from a restart file saved by the first.  Prognostic variables

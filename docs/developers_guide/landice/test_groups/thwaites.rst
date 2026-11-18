@@ -36,6 +36,11 @@ has an attribute ``suffixes``, which is a list of suffixes for the these
 namelist and streams files.  The model runs once for each suffix.  The default
 is just ``landice``.
 
+The test cases take an ``advection_type`` argument (``'fo'`` or ``'fct'``) that
+is included in the test case name, ``velo-<solver>_advec-<scheme>_<test>``.
+The FCT namelist options are added to the run steps by
+:py:func:`compass.landice.util.add_advection_namelist_options`.
+
 .. _dev_landice_thwaites_decomposition_test:
 
 decomposition_test

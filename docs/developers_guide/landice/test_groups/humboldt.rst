@@ -48,6 +48,12 @@ configuration.  It is called by
 and
 :py:class:`compass.landice.tests.humboldt.restart_test.RestartTest`.
 
+Both test cases take an ``advection_type`` argument (``'fo'`` or ``'fct'``)
+that is included in the subdirectory name, which has the form
+``velo-<solver>_advec-<scheme>_calving-<law>``.  The FCT namelist options are
+added to the run steps by
+:py:func:`compass.landice.util.add_advection_namelist_options`.
+
 decomposition_test
 ------------------
 :py:class:`compass.landice.tests.humboldt.decomposition_test.DecompositionTest`

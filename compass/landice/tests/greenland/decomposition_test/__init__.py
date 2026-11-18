@@ -1,5 +1,8 @@
 from compass.landice.tests.greenland.run_model import RunModel
-from compass.landice.util import calculate_decomp_core_pair
+from compass.landice.util import (
+    add_advection_namelist_options,
+    calculate_decomp_core_pair,
+)
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
@@ -23,7 +26,7 @@ class DecompositionTest(TestCase):
         The names of the subdirectories for the two decomposition runs
     """
 
-    def __init__(self, test_group, velo_solver):
+    def __init__(self, test_group, velo_solver, advection_type):
         """
         Create the test case
 
@@ -34,12 +37,17 @@ class DecompositionTest(TestCase):
 
         velo_solver : {'sia', 'FO'}
             The velocity solver to use for the test case
+
+        advection_type : {'fo', 'fct'}
+            The type of advection to use for thickness and tracers
         """
         name = 'decomposition_test'
         self.velo_solver = velo_solver
+        self.advection_type = advection_type
         self.proc_list = None
         self.run_dirs = None
-        subdir = '{}_{}'.format(velo_solver.lower(), name)
+        subdir = 'velo-{}_advec-{}_{}'.format(
+            velo_solver.lower(), advection_type, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
     def configure(self):
@@ -68,11 +76,14 @@ class DecompositionTest(TestCase):
             if name in self.run_dirs:
                 name = '{}_{}'.format(name, len(self.run_dirs) + 1)
             self.run_dirs.append(name)
-            self.add_step(
-                RunModel(test_case=self, velo_solver=self.velo_solver,
-                         name=name,
-                         subdir=name, ntasks=procs, min_tasks=procs,
-                         openmp_threads=1))
+            step = RunModel(
+                test_case=self, velo_solver=self.velo_solver,
+                name=name,
+                subdir=name, ntasks=procs, min_tasks=procs,
+                openmp_threads=1)
+            add_advection_namelist_options(step, self.advection_type,
+                                           out_name='namelist.landice')
+            self.add_step(step)
 
     # no run() method is needed
 

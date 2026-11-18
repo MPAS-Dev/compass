@@ -1,5 +1,8 @@
 from compass.landice.tests.humboldt.run_model import RunModel
-from compass.landice.util import calculate_decomp_core_pair
+from compass.landice.util import (
+    add_advection_namelist_options,
+    calculate_decomp_core_pair,
+)
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
@@ -43,8 +46,8 @@ class DecompositionTest(TestCase):
     """
 
     def __init__(self, test_group, velo_solver, calving_law, mesh_type,
-                 damage=None, face_melt=False, depth_integrated=False,
-                 hydro=False):
+                 advection_type, damage=None, face_melt=False,
+                 depth_integrated=False, hydro=False):
         """
         Create the test case
 
@@ -62,6 +65,9 @@ class DecompositionTest(TestCase):
         mesh_type : {'1km', '3km'}
             The resolution or type of mesh of the test case
 
+        advection_type : {'fo', 'fct'}
+            The type of advection to use for thickness and tracers
+
         damage : str
             The damage method used for the test case
 
@@ -77,6 +83,7 @@ class DecompositionTest(TestCase):
         name = 'decomposition_test'
         self.mesh_type = mesh_type
         self.velo_solver = velo_solver
+        self.advection_type = advection_type
         assert self.velo_solver in {'sia', 'FO', 'none'}, \
             "Value of velo_solver must be one of {'sia', 'FO', 'none'}"
         self.calving_law = calving_law
@@ -95,6 +102,7 @@ class DecompositionTest(TestCase):
                  mesh_type, velo_solver.lower())
         if velo_solver == 'FO' and depth_integrated is True:
             subdir += '-depthInt'
+        subdir += '_advec-{}'.format(advection_type)
         subdir += '_calving-{}'.format(calving_law.lower())
         # append damage and facemelt if provided
         if damage is not None:
@@ -134,16 +142,19 @@ class DecompositionTest(TestCase):
             if name in self.run_dirs:
                 name = '{}_{}'.format(name, len(self.run_dirs) + 1)
             self.run_dirs.append(name)
-            self.add_step(
-                RunModel(test_case=self, name=name, subdir=name, ntasks=procs,
-                         min_tasks=procs,
-                         openmp_threads=1, velo_solver=self.velo_solver,
-                         calving_law=self.calving_law,
-                         damage=self.damage,
-                         face_melt=self.face_melt,
-                         depth_integrated=self.depth_integrated,
-                         hydro=self.hydro,
-                         mesh_type=self.mesh_type))
+            step = RunModel(test_case=self, name=name, subdir=name,
+                            ntasks=procs,
+                            min_tasks=procs,
+                            openmp_threads=1, velo_solver=self.velo_solver,
+                            calving_law=self.calving_law,
+                            damage=self.damage,
+                            face_melt=self.face_melt,
+                            depth_integrated=self.depth_integrated,
+                            hydro=self.hydro,
+                            mesh_type=self.mesh_type)
+            add_advection_namelist_options(step, self.advection_type,
+                                           out_name='namelist.landice')
+            self.add_step(step)
 
     # no run() method is needed
 

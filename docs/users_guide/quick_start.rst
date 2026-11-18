@@ -104,15 +104,15 @@ and you get output like this:
 .. code-block:: none
 
    0: landice/circular_shelf/decomposition_test
-   1: landice/dome/2000m/sia_smoke_test
-   2: landice/dome/2000m/sia_decomposition_test
-   3: landice/dome/2000m/sia_restart_test
-   4: landice/dome/2000m/fo_smoke_test
-   5: landice/dome/2000m/fo_decomposition_test
-   6: landice/dome/2000m/fo_restart_test
-   7: landice/dome/variable_resolution/sia_smoke_test
-   8: landice/dome/variable_resolution/sia_decomposition_test
-   9: landice/dome/variable_resolution/sia_restart_test
+   1: landice/dome/2000m/velo-sia_advec-fo_smoke_test
+   2: landice/dome/2000m/velo-sia_advec-fo_decomposition_test
+   3: landice/dome/2000m/velo-sia_advec-fo_restart_test
+   4: landice/dome/2000m/velo-sia_advec-fct_smoke_test
+   5: landice/dome/2000m/velo-sia_advec-fct_decomposition_test
+   6: landice/dome/2000m/velo-sia_advec-fct_restart_test
+   7: landice/dome/2000m/velo-fo_advec-fo_smoke_test
+   8: landice/dome/2000m/velo-fo_advec-fo_decomposition_test
+   9: landice/dome/2000m/velo-fo_advec-fo_restart_test
    ...
 
 The list is long, so it will likely be useful to filter for particular
@@ -124,13 +124,19 @@ content:
 
 .. code-block:: none
 
-  39: landice/greenland/sia_smoke_test
-  40: landice/greenland/sia_decomposition_test
-  41: landice/greenland/sia_restart_test
-  42: landice/greenland/fo_smoke_test
-  43: landice/greenland/fo_decomposition_test
-  44: landice/greenland/fo_restart_test
-  45: landice/greenland/mesh_gen
+  39: landice/greenland/velo-sia_advec-fo_smoke_test
+  40: landice/greenland/velo-sia_advec-fo_decomposition_test
+  41: landice/greenland/velo-sia_advec-fo_restart_test
+  42: landice/greenland/velo-sia_advec-fct_smoke_test
+  43: landice/greenland/velo-sia_advec-fct_decomposition_test
+  44: landice/greenland/velo-sia_advec-fct_restart_test
+  45: landice/greenland/velo-fo_advec-fo_smoke_test
+  46: landice/greenland/velo-fo_advec-fo_decomposition_test
+  47: landice/greenland/velo-fo_advec-fo_restart_test
+  48: landice/greenland/velo-fo_advec-fct_smoke_test
+  49: landice/greenland/velo-fo_advec-fct_decomposition_test
+  50: landice/greenland/velo-fo_advec-fct_restart_test
+  51: landice/greenland/mesh_gen
 
 See :ref:`dev_compass_list` for more information.
 
@@ -139,7 +145,7 @@ test case:
 
 .. code-block:: bash
 
-    compass setup -t landice/greenland/sia_smoke_test \
+    compass setup -t landice/greenland/velo-sia_advec-fo_smoke_test \
         -w <workdir> -p <mpas_path>
 
 or you can replace the ``-t`` flag with the simple shortcut: ``-n 15``.  You

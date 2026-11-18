@@ -18,14 +18,22 @@ Thwaites mesh at different resolutions and using different data sources.
    FO velocity solution visualized in Paraview.  Grounding line position
    shown with a white line.
 
-The test group includes four FO-based model test cases, each with one or more
+The test group includes eight FO-based model test cases, each with one or more
 steps that are variants on ``run_model`` (given other names in the
 decomposition and restart test cases to distinguish multiple model runs),
-which performs time integration of the model.  These are
-``fo_decomposition_test``, ``fo-depthInt_decomposition_test``,
-``fo_restart_test`` and ``fo-depthInt_restart_test``.  There is also a
+which performs time integration of the model.  Test case names have the form
+``velo-<solver>_advec-<scheme>_<test>``, where ``<solver>`` is ``fo`` or
+``fo-depthInt`` (depth-integrated FO) and ``<scheme>`` is the advection scheme
+used for thickness and tracers: first-order upwind (``fo``) or flux-corrected
+transport (``fct``).  FCT variants also use the ``runge_kutta`` time
+integration scheme.  The test cases are
+``velo-fo_advec-fo_decomposition_test``,
+``velo-fo-depthInt_advec-fo_decomposition_test``,
+``velo-fo_advec-fo_restart_test``,
+``velo-fo-depthInt_advec-fo_restart_test`` and the four corresponding
+``advec-fct`` variants.  There is also a
 ``mesh_gen`` test case.  There is not an explicit smoke test, but the
-``full_run`` step of either restart test can be used as a smoke test.
+``full_run`` step of any restart test can be used as a smoke test.
 
 The model test cases in this test group can only be run with FO velocity
 solvers. Running with FO requires a build of MALI that includes Albany. There
@@ -92,7 +100,10 @@ The other test cases do not use config options.
 decomposition_test
 ------------------
 
-``landice/thwaites/decomposition_test`` runs short (2-day) integrations of the
+The decomposition-test variants are
+``landice/thwaites/velo-fo_advec-fo_decomposition_test``,
+``landice/thwaites/velo-fo-depthInt_advec-fo_decomposition_test`` and the
+corresponding ``advec-fct`` variants.  They run short (2-day) integrations of the
 model forward in time with two different decompositions. The larger run
 targets 32 tasks (or fewer if fewer are available, with a minimum of 10), and
 the smaller run uses roughly half as many tasks. The resulting prognostic
@@ -102,8 +113,10 @@ bit-for-bit identical.
 restart_test
 ------------
 
-The restart-test variants are ``landice/thwaites/fo_restart_test`` and
-``landice/thwaites/fo-depthInt_restart_test``.  Each first runs a short
+The restart-test variants are
+``landice/thwaites/velo-fo_advec-fo_restart_test``,
+``landice/thwaites/velo-fo-depthInt_advec-fo_restart_test`` and the
+corresponding ``advec-fct`` variants.  Each first runs a short
 (5-day) integration of the model forward in time (``full_run`` step).  Then,
 a second step (``restart_run``) performs two subsequent 2- and 3-day
 integrations, where the second begins from a restart file saved by the first.
