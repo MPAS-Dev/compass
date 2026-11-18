@@ -91,11 +91,16 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.python-version }}-pixi-${{ env.CACHE_NUMBER }}-${{ hashFiles('deploy.py', 'deploy/**', 'pyproject.toml') }}
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
+        name: Cache JIGSAW build
+        uses: ./.github/actions/cache-jigsaw
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Install compass
         run: |
           git config --global url."https://github.com/".insteadOf "git@github.com:"
           ./deploy.py \
-            --mache-fork xylar/mache --mache-branch add-target-software-cli-flags \
             --no-spack \
             --python ${{ matrix.python-version }} \
             --recreate

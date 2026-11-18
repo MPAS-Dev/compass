@@ -1,7 +1,7 @@
 {
   "meta": {
     "software": "compass",
-    "mache_version": "3.7.1",
+    "mache_version": "5.2.0",
     "description": "Deploy compass environment"
   },
   "arguments": [
@@ -55,6 +55,12 @@
       "flags": ["--spack-path"],
       "dest": "spack_path",
       "help": "Path to the Spack checkout to use (overrides spack.spack_path in deploy/config.yaml.j2).",
+      "route": ["deploy", "run"]
+    },
+    {
+      "flags": ["--spack-pins"],
+      "dest": "spack_pins",
+      "help": "YAML file overriding the pinned Spack, spack-packages and e3sm-spack-packages sources (a tag, commit or branch per repository), for testing unreleased recipes.",
       "route": ["deploy", "run"]
     },
     {
