@@ -47,11 +47,14 @@ def plot_initial_state(input_file_name='initial_state.nc',
     varName = 'maxLevelCell'
     var = ds[varName]
     maxLevelCell = var.values - 1
+    if 'nVertLevels' in var.sizes:
+        for iCell in range(var.sizes['nCells']):
+            var[maxLevelCell[iCell]:, iCell] = np.nan
     xarray.plot.hist(var, bins=nVertLevels - 4)
     plt.ylabel('frequency')
     plt.xlabel(varName)
-    txt = '{}{:9.2e} {:9.2e} {}\n'.format(txt, var.min().values,
-                                          var.max().values, varName)
+    txt = '{}{:9.2e} {:9.2e} {}\n'.format(txt, np.nanmin(var.values),
+                                          np.nanmax(var.values), varName)
 
     plt.subplot(4, 3, 3)
     varName = 'bottomDepth'
