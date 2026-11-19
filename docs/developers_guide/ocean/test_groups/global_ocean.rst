@@ -909,6 +909,15 @@ The topography is remapped in a step defined in the
 class, which descends from
 :py:class:`compass.ocean.mesh.remap_topography.RemapTopography`.
 
+By default, the mapping file from MALI to MPAS-Ocean is computed with
+``mbtempest``.  The ``map_filename`` config option in
+``[remap_mali_topography]`` can instead point to an existing map, such as
+E3SM's glc-to-ocn coupler map.  If ``normalize_land_ice_fractions = True``,
+``landIceFracObserved`` and ``landIceFloatingFracObserved`` are both the
+floating fraction divided by the fraction that is below sea level and not
+grounded, as E3SM's coupler delivers them to the ocean with
+``GLC2OCN_SHELF_MASK=ungrounded``.
+
 .. _dev_ocean_global_ocean_wc14:
 
 WC14 and WCwISC14
