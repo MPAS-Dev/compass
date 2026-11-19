@@ -480,6 +480,19 @@ A version of the SOwISC12to30 mesh also exist with topography that comes
 from a 4-20 km MALI initial condition instead of from GEBCO and BedMachine
 Antarctica.
 
+The test cases in ``SOwISC12to30/MALI_topo_AIS_4to20km/existing_SOwISC12to30E3r4``
+create a new initial condition from the same MALI topography on exactly the
+existing ``SOwISC12to30E3r4`` horizontal mesh from E3SM, so existing E3SM
+mapping and domain files remain valid.  For the same reason, the land-ice
+masks (``landIceMask`` and ``landIceFloatingMask``) are taken unchanged from
+the existing initial condition.  The ``mesh`` test case does not create or cull
+a mesh.  Instead, it takes the horizontal mesh from the file given by
+``mesh_filename`` in the ``[existing_mesh]`` config section.  The MALI
+topography is remapped with E3SM's glc-to-ocn coupler map
+(``map_filename`` in ``[remap_mali_topography]``), and land-ice fractions are
+normalized as the coupler does with ``GLC2OCN_SHELF_MASK=ungrounded``.  The
+default paths for both files are on Chrysalis.
+
 .. image:: images/sowisc12to60.png
    :width: 500 px
    :align: center

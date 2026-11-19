@@ -20,7 +20,10 @@ from mpas_tools.ocean.coastline_alteration import (
     widen_transect_edge_masks,
 )
 from mpas_tools.viz.paraview_extractor import extract_vtk
+from scipy.sparse import coo_matrix
+from scipy.sparse.csgraph import connected_components
 
+from compass.io import symlink
 from compass.model import make_graph_file
 from compass.step import Step
 
@@ -184,6 +187,56 @@ class CullMeshStep(Step):
                   convert_to_cdf5=convert_to_cdf5,
                   latitude_threshold=latitude_threshold,
                   sweep_count=sweep_count)
+
+
+class ExistingCulledMeshStep(CullMeshStep):
+    """
+    A step for using an existing culled MPAS-Ocean mesh (provided as the
+    "base mesh") in place of culling.  The remapped topography is masked in
+    the same way as in :py:class:`compass.ocean.mesh.cull.CullMeshStep` but
+    no cells are culled.
+
+    Land ice that is not connected to the Antarctic Ice Sheet cannot be
+    identified by a flood fill from the South Pole on a culled mesh, so the
+    flood fill is seeded from cells with land ice in the existing mesh file
+    (``landIceFraction > 0`` or, failing that, ``landIceMask == 1``).
+
+    ``landIceMask`` and ``landIceFloatingMask`` are taken unchanged from the
+    existing mesh file, rather than recomputed from the new topography, so
+    that E3SM coupling files (e.g. domain files) that depend on these masks
+    remain valid.
+    """
+
+    def setup(self):
+        """
+        Set up the step in the work directory, including the existing mesh
+        file used to seed the land-ice flood fill
+        """
+        super().setup()
+        if self.with_ice_shelf_cavities:
+            mesh_filename = self.config.get('existing_mesh', 'mesh_filename')
+            self.add_input_file(filename='existing_mesh.nc',
+                                target=os.path.abspath(mesh_filename))
+
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        config = self.config
+        convert_to_cdf5 = config.getboolean('spherical_mesh',
+                                            'convert_culled_mesh_to_cdf5')
+        latitude_threshold = config.getfloat('spherical_mesh',
+                                             'latitude_threshold')
+        sweep_count = config.getint('spherical_mesh', 'sweep_count')
+
+        with LoggingContext(name=__name__, logger=self.logger) as logger:
+            _use_existing_culled_mesh(
+                logger=logger,
+                with_cavities=self.with_ice_shelf_cavities,
+                process_count=self.cpus_per_task,
+                convert_to_cdf5=convert_to_cdf5,
+                latitude_threshold=latitude_threshold,
+                sweep_count=sweep_count)
 
 
 def cull_mesh(with_cavities=False, with_critical_passages=False,
@@ -475,7 +528,8 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 
 
 def _cull_topo(with_cavities, process_count, logger, latitude_threshold,
-               sweep_count, ds_preserve):
+               sweep_count, ds_preserve, land_ice_seed_mask=None,
+               fixed_land_ice_mask=None):
 
     ds_topo = xr.open_dataset('smoothed_topography.nc')
     ds_base = xr.open_dataset('base_mesh.nc')
@@ -499,7 +553,8 @@ def _cull_topo(with_cavities, process_count, logger, latitude_threshold,
         _flood_fill_and_add_land_ice_mask(ds_topo, ds_base,
                                           ds_map_culled_to_base, ds_preserve,
                                           logger, latitude_threshold,
-                                          sweep_count)
+                                          sweep_count, land_ice_seed_mask,
+                                          fixed_land_ice_mask)
         ds_topo['ssh'] = ds_topo['landIceDraftObserved']
 
         write_netcdf(ds_topo, 'topography_with_land_ice_mask.nc')
@@ -537,7 +592,9 @@ def _land_mask_from_topo(with_cavities, topo_filename, mask_filename):
 
 def _flood_fill_and_add_land_ice_mask(ds_topo, ds_base_mesh,
                                       ds_map_culled_to_base, ds_perserve,
-                                      logger, latitude_threshold, sweep_count):
+                                      logger, latitude_threshold, sweep_count,
+                                      land_ice_seed_mask=None,
+                                      fixed_land_ice_mask=None):
 
     # we don't what land ice where we are preserving critical passages
     for ds in ds_perserve:
@@ -560,21 +617,37 @@ def _flood_fill_and_add_land_ice_mask(ds_topo, ds_base_mesh,
     fc_ocean_seed = gf.read(componentName='ocean', objectType='point',
                             tags=['seed_point'])
 
-    fc_south_pole_seed = read_feature_collection('south_pole.geojson')
-
     # flood fill anywhere land ice is present to remove isolated land ice
+    if land_ice_seed_mask is None:
+        fc_south_pole_seed = read_feature_collection('south_pole.geojson')
 
-    ds_mask = compute_mpas_flood_fill_mask(dsMesh=ds_base_mesh,
-                                           daGrow=land_ice_present,
-                                           fcSeed=fc_south_pole_seed,
-                                           logger=logger)
-    land_ice_present = ds_mask.cellSeedMask
+        ds_mask = compute_mpas_flood_fill_mask(dsMesh=ds_base_mesh,
+                                               daGrow=land_ice_present,
+                                               fcSeed=fc_south_pole_seed,
+                                               logger=logger)
+        land_ice_present = ds_mask.cellSeedMask
+    else:
+        land_ice_present = _flood_fill_from_seed_mask(
+            ds_mesh=ds_base_mesh, grow_mask=land_ice_present,
+            seed_mask=land_ice_seed_mask)
+        logger.info(f'  Land ice present in '
+                    f'{int(land_ice_present.sum())} cells after flood fill '
+                    f'from {int(land_ice_seed_mask.sum())} seed cells')
 
     # update land-ice variables and ocean fraction accordingly
     for var in ['landIceFracObserved', 'landIcePressureObserved',
                 'landIceDraftObserved', 'landIceGroundedFracObserved',
                 'landIceFloatingFracObserved', 'landIceThkObserved']:
         ds_topo[var] = ds_topo[var].where(land_ice_present, 0.0)
+
+    if fixed_land_ice_mask is not None:
+        # the land-ice mask is prescribed (e.g. from an existing mesh whose
+        # E3SM coupling files depend on it), so it must not be recomputed
+        land_ice_mask = fixed_land_ice_mask
+        ds_topo['landIceMask'] = land_ice_mask
+        ds_topo['regionCellMasks'] = \
+            land_ice_mask.expand_dims(dim='nRegions', axis=1)
+        return
 
     land_ice_frac = ds_topo.landIceFracObserved
     land_ice_mask = xr.where(land_ice_frac > 0.5, 1, 0)
@@ -667,3 +740,133 @@ def _land_mask_from_geojson(with_cavities, process_count, logger,
             '--format', netcdf_format,
             '--engine', netcdf_engine]
     check_call(args, logger=logger)
+
+
+def _use_existing_culled_mesh(logger, with_cavities, process_count,
+                              convert_to_cdf5, latitude_threshold,
+                              sweep_count):
+    """
+    Use the base mesh as the culled mesh, then mask and "cull" the topography
+    as in ``_cull_mesh_with_logging()``
+    """
+    netcdf_format = mpas_tools.io.default_format
+    netcdf_engine = mpas_tools.io.default_engine
+
+    if convert_to_cdf5:
+        args = ['ncks', '-5', 'base_mesh.nc', 'culled_mesh.nc']
+        check_call(args, logger=logger)
+    else:
+        symlink('base_mesh.nc', 'culled_mesh.nc')
+
+    make_graph_file(mesh_filename='culled_mesh.nc',
+                    graph_filename='culled_graph.info')
+
+    ds_mesh = xr.open_dataset('culled_mesh.nc')
+
+    # land ice is removed from critical passages, as in cull_mesh()
+    gf = GeometricFeatures()
+    fc_crit_passages = gf.read(componentName='ocean', objectType='transect',
+                               tags=['Critical_Passage'])
+    fc_crit_passages.to_geojson('critical_passages.geojson')
+    for mask_filename, mask_types in [
+            ('critical_passages.nc', ['cell', 'edge']),
+            ('critical_passages_mask_final.nc', ['cell'])]:
+        args = ['compute_mpas_transect_masks',
+                '-m', 'culled_mesh.nc',
+                '-g', 'critical_passages.geojson',
+                '-o', mask_filename,
+                '-t'] + mask_types
+        args += ['-s', '10e3',
+                 '--process_count', f'{process_count}',
+                 '--format', netcdf_format,
+                 '--engine', netcdf_engine]
+        check_call(args, logger=logger)
+    ds_crit_pass_mask = xr.open_dataset('critical_passages.nc')
+    ds_crit_pass_mask = widen_transect_edge_masks(
+        ds_crit_pass_mask, ds_mesh, latitude_threshold=latitude_threshold)
+    ds_preserve = [ds_crit_pass_mask]
+
+    land_ice_seed_mask = None
+    ds_land_ice_mask = None
+    if with_cavities:
+        land_ice_seed_mask = _get_existing_land_ice_mask('existing_mesh.nc')
+        ds_land_ice_mask = _get_existing_land_ice_masks('existing_mesh.nc')
+
+    _cull_topo(with_cavities, process_count, logger, latitude_threshold,
+               sweep_count, ds_preserve, land_ice_seed_mask,
+               fixed_land_ice_mask=None if ds_land_ice_mask is None
+               else ds_land_ice_mask.landIceMask)
+
+    if with_cavities:
+        logger.info(f'  Using landIceMask from the existing mesh file: '
+                    f'{int(ds_land_ice_mask.landIceMask.sum())} cells')
+        write_netcdf(ds_land_ice_mask, 'land_ice_mask.nc')
+
+
+def _get_existing_land_ice_mask(filename):
+    """
+    Get a mask of cells with land ice from an existing initial condition
+    """
+    with xr.open_dataset(filename, decode_times=False) as ds:
+        if 'Time' in ds.dims:
+            ds = ds.isel(Time=0)
+        if 'landIceFraction' in ds:
+            mask = ds.landIceFraction > 0.
+        elif 'landIceMask' in ds:
+            mask = ds.landIceMask == 1
+        else:
+            raise ValueError(f'{filename} has neither landIceFraction nor '
+                             f'landIceMask to seed the land-ice flood fill')
+        return xr.where(mask, 1, 0).load()
+
+
+def _get_existing_land_ice_masks(filename):
+    """
+    Get landIceMask and landIceFloatingMask from an existing initial condition
+    """
+    with xr.open_dataset(filename, decode_times=False) as ds:
+        if 'Time' in ds.dims:
+            ds = ds.isel(Time=0)
+        if 'landIceMask' not in ds:
+            raise ValueError(f'{filename} does not contain landIceMask, '
+                             f'which must not change on an existing mesh')
+        ds_mask = xr.Dataset()
+        ds_mask['landIceMask'] = ds.landIceMask.astype(int)
+        if 'landIceFloatingMask' in ds:
+            ds_mask['landIceFloatingMask'] = \
+                ds.landIceFloatingMask.astype(int)
+        else:
+            ds_mask['landIceFloatingMask'] = ds_mask.landIceMask
+        return ds_mask.load()
+
+
+def _flood_fill_from_seed_mask(ds_mesh, grow_mask, seed_mask):
+    """
+    Flood fill within grow_mask from cells in seed_mask by finding the
+    connected regions of grow_mask that contain seed cells
+    """
+    n_cells = ds_mesh.sizes['nCells']
+    cells_on_cell = ds_mesh.cellsOnCell.values - 1
+    max_edges = cells_on_cell.shape[1]
+    n_edges_on_cell = ds_mesh.nEdgesOnCell.values
+    grow = grow_mask.values > 0
+    seed = np.logical_and(seed_mask.values > 0, grow)
+
+    rows = np.repeat(np.arange(n_cells), max_edges)
+    cols = cells_on_cell.ravel()
+    valid = np.logical_and(
+        np.tile(np.arange(max_edges), n_cells) <
+        np.repeat(n_edges_on_cell, max_edges),
+        np.logical_and(cols >= 0, cols < n_cells))
+    rows = rows[valid]
+    cols = cols[valid]
+    connected = np.logical_and(grow[rows], grow[cols])
+    rows = rows[connected]
+    cols = cols[connected]
+
+    graph = coo_matrix((np.ones(len(rows)), (rows, cols)),
+                       shape=(n_cells, n_cells))
+    _, labels = connected_components(graph, directed=False)
+    seed_labels = np.unique(labels[seed])
+    filled = np.logical_and(grow, np.isin(labels, seed_labels))
+    return xr.DataArray(np.where(filled, 1, 0), dims=('nCells',))

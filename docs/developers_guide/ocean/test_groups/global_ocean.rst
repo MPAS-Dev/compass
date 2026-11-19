@@ -918,6 +918,31 @@ floating fraction divided by the fraction that is below sea level and not
 grounded, as E3SM's coupler delivers them to the ocean with
 ``GLC2OCN_SHELF_MASK=ungrounded``.
 
+Existing SOwISC12to30E3r4 mesh with MALI topography
+'''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Test cases in ``SOwISC12to30/MALI_topo_AIS_4to20km/existing_SOwISC12to30E3r4``
+build a new initial condition from MALI topography on exactly the culled
+``SOwISC12to30E3r4`` mesh used in E3SM.  The
+:py:class:`compass.ocean.tests.global_ocean.mesh.Mesh` test case is created
+with ``existing_mesh='SOwISC12to30E3r4'``, which reads config options from
+``compass/ocean/tests/global_ocean/mesh/existing/sowisc12to30e3r4.cfg``.
+
+The ``base_mesh`` step is a
+:py:class:`compass.ocean.tests.global_ocean.mesh.existing.ExistingMeshStep`
+that extracts the horizontal mesh from ``mesh_filename`` in
+``[existing_mesh]``.  Topography is remapped directly to this culled mesh.
+The ``cull_mesh`` step is a
+:py:class:`compass.ocean.mesh.cull.ExistingCulledMeshStep`, which masks the
+topography as :py:class:`compass.ocean.mesh.cull.CullMeshStep` does but
+culls no cells.  The flood fill that removes land ice not connected to the
+Antarctic Ice Sheet is seeded from cells with land ice in the existing file,
+since the culled mesh no longer connects ice shelves through grounded ice.
+``landIceMask`` and ``landIceFloatingMask`` are copied unchanged from the
+existing file rather than recomputed from the new topography, because E3SM
+coupling files such as domain files depend on them.  Only the topography,
+land-ice pressure and land-ice fractions change.
+
 .. _dev_ocean_global_ocean_wc14:
 
 WC14 and WCwISC14
