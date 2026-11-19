@@ -365,6 +365,12 @@ it is useful for low-resolution testing that exercises compass and MPAS-Ocean
 functionality related to ice-shelf cavities and sub-ice-shelf freshwater
 fluxes.
 
+The test cases in ``QUwISC240/MALI_topo_AIS_8to30km/existing_oQU240wLI``
+create a new initial condition from E3SM's 8-30 km MALI initial condition on
+exactly the existing ``oQU240wLI`` mesh from E3SM, keeping that mesh's
+land-ice masks and 60-level vertical grid.  They work the same way as the
+:ref:`existing SOwISC12to30E3r4 test cases <global_ocean_mesh_sowisc12to30>`.
+
 .. _global_ocean_mesh_qu_icos:
 
 QU, Icos, QUwISC and IcoswISC

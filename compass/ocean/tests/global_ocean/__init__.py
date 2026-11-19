@@ -50,6 +50,10 @@ class GlobalOcean(TestGroup):
         self._add_tests(mesh_names=['SOwISC12to30'],
                         mali_ais_topo='AIS_4to20km',
                         existing_mesh='SOwISC12to30E3r4')
+        self._add_tests(mesh_names=['QUwISC240'],
+                        high_res_topography=False,
+                        mali_ais_topo='AIS_8to30km',
+                        existing_mesh='oQU240wLI')
 
         self._add_tests(mesh_names=['WC14', 'WCwISC14'])
 

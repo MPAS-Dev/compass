@@ -918,8 +918,8 @@ floating fraction divided by the fraction that is below sea level and not
 grounded, as E3SM's coupler delivers them to the ocean with
 ``GLC2OCN_SHELF_MASK=ungrounded``.
 
-Existing SOwISC12to30E3r4 mesh with MALI topography
-'''''''''''''''''''''''''''''''''''''''''''''''''''
+Existing E3SM meshes with MALI topography
+'''''''''''''''''''''''''''''''''''''''''
 
 Test cases in ``SOwISC12to30/MALI_topo_AIS_4to20km/existing_SOwISC12to30E3r4``
 build a new initial condition from MALI topography on exactly the culled
@@ -942,6 +942,14 @@ is removed from the topography (neither in critical passages nor by the flood
 fill that removes land ice not connected to the Antarctic Ice Sheet), so the
 land-ice fields match what E3SM's coupler delivers.  Only the topography,
 land-ice pressure and land-ice fractions change.
+
+Test cases in ``QUwISC240/MALI_topo_AIS_8to30km/existing_oQU240wLI`` do the
+same on E3SM's ``oQU240wLI`` mesh with ``existing_mesh='oQU240wLI'``, using
+``existing/oqu240wli.cfg`` and MALI topography from
+``remap_mali_topography/ais_8to30km.cfg``.  ``mali_filename`` may be an
+absolute path instead of a file in the ``mali_topo`` database; here it is
+E3SM's default MALI initial condition for the ais8to30 grid.  The config file
+uses the ``60layerPHC`` vertical grid of the existing initial condition.
 
 .. _dev_ocean_global_ocean_wc14:
 

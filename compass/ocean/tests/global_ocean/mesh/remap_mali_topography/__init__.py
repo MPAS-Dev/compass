@@ -96,10 +96,15 @@ class RemapMaliTopography(RemapTopography):
 
         mali_filename = self.config.get('remap_mali_topography',
                                         'mali_filename')
-        self.add_input_file(
-            filename='mali_topography_orig.nc',
-            target=mali_filename,
-            database='mali_topo')
+        if os.path.isabs(mali_filename):
+            self.add_input_file(
+                filename='mali_topography_orig.nc',
+                target=mali_filename)
+        else:
+            self.add_input_file(
+                filename='mali_topography_orig.nc',
+                target=mali_filename,
+                database='mali_topo')
 
         map_filename = self.config.get('remap_mali_topography',
                                        'map_filename')
