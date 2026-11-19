@@ -246,7 +246,7 @@ class RemapMaliTopography(RemapTopography):
         ds_out = xr.Dataset()
         for var_name in ds_remapped:
             var = ds_remapped[var_name]
-            if 'Frac' in var:
+            if 'Frac' in var_name:
                 # copy the fractional variable, making sure it doesn't
                 # exceed 1
                 var = np.minimum(var, 1.)
@@ -278,7 +278,7 @@ class RemapMaliTopography(RemapTopography):
         ds_bedmachine = xr.open_dataset('bedmachine_topography_remapped.nc')
         ds_bedmachine = ds_bedmachine.reset_coords(['lat', 'lon'], drop=True)
 
-        ds_out = xr.Dataset(ds_bedmachine)
+        ds_out = ds_bedmachine.copy()
         # for now, just use the land-ice pressure, draft and thickness from
         # MALI
         for var in ['landIcePressureObserved', 'landIceDraftObserved',
