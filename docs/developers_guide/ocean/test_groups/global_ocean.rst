@@ -933,14 +933,14 @@ The ``base_mesh`` step is a
 that extracts the horizontal mesh from ``mesh_filename`` in
 ``[existing_mesh]``.  Topography is remapped directly to this culled mesh.
 The ``cull_mesh`` step is a
-:py:class:`compass.ocean.mesh.cull.ExistingCulledMeshStep`, which masks the
-topography as :py:class:`compass.ocean.mesh.cull.CullMeshStep` does but
-culls no cells.  The flood fill that removes land ice not connected to the
-Antarctic Ice Sheet is seeded from cells with land ice in the existing file,
-since the culled mesh no longer connects ice shelves through grounded ice.
-``landIceMask`` and ``landIceFloatingMask`` are copied unchanged from the
-existing file rather than recomputed from the new topography, because E3SM
-coupling files such as domain files depend on them.  Only the topography,
+:py:class:`compass.ocean.mesh.cull.ExistingCulledMeshStep`, which writes the
+same outputs as :py:class:`compass.ocean.mesh.cull.CullMeshStep` but culls
+nothing.  ``landIceMask`` and ``landIceFloatingMask`` are copied unchanged
+from the existing file rather than recomputed from the new topography,
+because E3SM coupling files such as domain files depend on them.  No land ice
+is removed from the topography (neither in critical passages nor by the flood
+fill that removes land ice not connected to the Antarctic Ice Sheet), so the
+land-ice fields match what E3SM's coupler delivers.  Only the topography,
 land-ice pressure and land-ice fractions change.
 
 .. _dev_ocean_global_ocean_wc14:
