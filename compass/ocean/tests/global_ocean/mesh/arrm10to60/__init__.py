@@ -4,13 +4,13 @@ import matplotlib.pyplot as plt
 import mpas_tools.mesh.creation.mesh_definition_tools as mdt
 import numpy as np
 from geometric_features import read_feature_collection
-from mpas_tools.cime.constants import constants
 from mpas_tools.mesh.creation.signed_distance import (
     mask_from_geojson,
     signed_distance_from_geojson,
 )
 from mpas_tools.viz.colormaps import register_sci_viz_colormaps
 
+from compass.constants import constants
 from compass.mesh import QuasiUniformSphericalMeshStep
 
 

@@ -2,11 +2,11 @@ import os
 
 import numpy as np
 import xarray as xr
-from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from pyremap import MpasCellMeshDescriptor
 
+from compass.constants import constants
 from compass.io import symlink
 from compass.ocean.mesh.remap_topography import RemapTopography
 from compass.parallel import run_command

@@ -3,11 +3,11 @@ import pathlib
 
 import numpy as np
 import xarray as xr
-from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from pyremap import MpasCellMeshDescriptor
 
+from compass.constants import constants
 from compass.io import symlink
 from compass.parallel import run_command
 from compass.step import Step

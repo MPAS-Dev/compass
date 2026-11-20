@@ -3,10 +3,10 @@ import os
 import jigsawpy
 import netCDF4 as nc
 import numpy as np
-from mpas_tools.cime.constants import constants
 from mpas_tools.logging import check_call
 from skimage.filters import gaussian, scharr
 
+from compass.constants import constants
 from compass.mesh.spherical import QuasiUniformSphericalMeshStep
 
 # from skimage.filters import farid

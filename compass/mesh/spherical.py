@@ -6,13 +6,13 @@ import numpy as np
 import xarray
 import xarray.plot
 from jigsawpy.savejig import savejig
-from mpas_tools.cime.constants import constants
 from mpas_tools.logging import check_call
 from mpas_tools.mesh.creation.jigsaw_to_netcdf import jigsaw_to_netcdf
 from mpas_tools.ocean.inject_meshDensity import inject_spherical_meshDensity
 from mpas_tools.viz.colormaps import register_sci_viz_colormaps
 from mpas_tools.viz.paraview_extractor import extract_vtk
 
+from compass.constants import constants
 from compass.model import make_graph_file
 from compass.step import Step
 

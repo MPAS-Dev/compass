@@ -4,9 +4,9 @@ import subprocess
 
 import numpy
 import xarray
-from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
 
+from compass.constants import constants
 from compass.io import symlink
 from compass.model import partition, run_model
 
