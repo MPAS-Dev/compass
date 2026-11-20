@@ -21,6 +21,7 @@ from mpas_tools.ocean.coastline_alteration import (
 )
 from mpas_tools.viz.paraview_extractor import extract_vtk
 
+from compass.io import symlink
 from compass.model import make_graph_file
 from compass.step import Step
 
@@ -184,6 +185,49 @@ class CullMeshStep(Step):
                   convert_to_cdf5=convert_to_cdf5,
                   latitude_threshold=latitude_threshold,
                   sweep_count=sweep_count)
+
+
+class ExistingCulledMeshStep(CullMeshStep):
+    """
+    A step for using an existing culled MPAS-Ocean mesh (provided as the
+    "base mesh") in place of culling.  It produces the same outputs as
+    :py:class:`compass.ocean.mesh.cull.CullMeshStep` for later steps, but the
+    topography has already been remapped to this mesh, so nothing is culled.
+
+    ``landIceMask`` and ``landIceFloatingMask`` are taken unchanged from the
+    existing mesh file, rather than recomputed from the new topography, so
+    that E3SM coupling files (e.g. domain files) that depend on these masks
+    remain valid.  No land ice is removed from the topography (e.g. by a flood
+    fill), so the land-ice fields match what E3SM's coupler delivers.
+    """
+
+    def setup(self):
+        """
+        Set up the step in the work directory, including the existing mesh
+        file with the land-ice masks
+        """
+        super().setup()
+        # nothing is culled, so there are no critical passages to mask
+        self.outputs = [filename for filename in self.outputs
+                        if filename != 'critical_passages_mask_final.nc']
+        if self.with_ice_shelf_cavities:
+            mesh_filename = self.config.get('existing_mesh', 'mesh_filename')
+            self.add_input_file(filename='existing_mesh.nc',
+                                target=os.path.abspath(mesh_filename))
+
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        config = self.config
+        convert_to_cdf5 = config.getboolean('spherical_mesh',
+                                            'convert_culled_mesh_to_cdf5')
+
+        with LoggingContext(name=__name__, logger=self.logger) as logger:
+            _use_existing_culled_mesh(
+                logger=logger,
+                with_cavities=self.with_ice_shelf_cavities,
+                convert_to_cdf5=convert_to_cdf5)
 
 
 def cull_mesh(with_cavities=False, with_critical_passages=False,
@@ -667,3 +711,76 @@ def _land_mask_from_geojson(with_cavities, process_count, logger,
             '--format', netcdf_format,
             '--engine', netcdf_engine]
     check_call(args, logger=logger)
+
+
+def _use_existing_culled_mesh(logger, with_cavities, convert_to_cdf5):
+    """
+    Use the base mesh (the existing mesh) as the culled mesh.  The topography
+    is already on this mesh, so it is not culled, and the land-ice masks come
+    from the existing mesh file
+    """
+    if convert_to_cdf5:
+        args = ['ncks', '-5', 'base_mesh.nc', 'culled_mesh.nc']
+        check_call(args, logger=logger)
+    else:
+        symlink('base_mesh.nc', 'culled_mesh.nc')
+
+    make_graph_file(mesh_filename='culled_mesh.nc',
+                    graph_filename='culled_graph.info')
+
+    # the existing mesh is both the base and the culled mesh, so the map
+    # between them is the identity
+    ds_mesh = xr.open_dataset('culled_mesh.nc')
+    ds_map_culled_to_base = xr.Dataset()
+    for dim, suffix in [('nCells', 'Cell'),
+                        ('nEdges', 'Edge'),
+                        ('nVertices', 'Vertex')]:
+        ds_map_culled_to_base[f'mapCulledToBase{suffix}'] = \
+            (dim, np.arange(ds_mesh.sizes[dim], dtype=np.int32))
+    write_netcdf(ds_map_culled_to_base, 'map_culled_to_base.nc')
+
+    ds_topo = xr.open_dataset('smoothed_topography.nc')
+
+    if with_cavities:
+        # as in _cull_topo(), use fractions from unsmoothed topography
+        ds_unsmoothed_topo = xr.open_dataset('unsmoothed_topography.nc')
+        for var in ['landIceFracObserved', 'landIceGroundedFracObserved',
+                    'landIceFloatingFracObserved']:
+            ds_topo[var] = ds_unsmoothed_topo[var]
+
+        # No land ice is removed (e.g. by a flood fill), so the land-ice
+        # fields match what E3SM's coupler delivers.  The masks come
+        # unchanged from the existing mesh file because E3SM coupling files
+        # depend on them.
+        ds_land_ice_mask = _get_existing_land_ice_masks('existing_mesh.nc')
+        logger.info(f'  Using landIceMask from the existing mesh file: '
+                    f'{int(ds_land_ice_mask.landIceMask.sum())} cells')
+        write_netcdf(ds_land_ice_mask, 'land_ice_mask.nc')
+
+        land_ice_mask = ds_land_ice_mask.landIceMask
+        ds_topo['landIceMask'] = land_ice_mask
+        ds_topo['regionCellMasks'] = \
+            land_ice_mask.expand_dims(dim='nRegions', axis=1)
+        ds_topo['ssh'] = ds_topo['landIceDraftObserved']
+
+    write_netcdf(ds_topo, 'topography_culled.nc')
+
+
+def _get_existing_land_ice_masks(filename):
+    """
+    Get landIceMask and landIceFloatingMask from an existing initial condition
+    """
+    with xr.open_dataset(filename, decode_times=False) as ds:
+        if 'Time' in ds.dims:
+            ds = ds.isel(Time=0)
+        if 'landIceMask' not in ds:
+            raise ValueError(f'{filename} does not contain landIceMask, '
+                             f'which must not change on an existing mesh')
+        ds_mask = xr.Dataset()
+        ds_mask['landIceMask'] = ds.landIceMask.astype(int)
+        if 'landIceFloatingMask' in ds:
+            ds_mask['landIceFloatingMask'] = \
+                ds.landIceFloatingMask.astype(int)
+        else:
+            ds_mask['landIceFloatingMask'] = ds_mask.landIceMask
+        return ds_mask.load()

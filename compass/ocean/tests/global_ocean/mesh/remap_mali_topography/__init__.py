@@ -2,11 +2,11 @@ import os
 
 import numpy as np
 import xarray as xr
-from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from pyremap import MpasCellMeshDescriptor
 
+from compass.constants import constants
 from compass.io import symlink
 from compass.ocean.mesh.remap_topography import RemapTopography
 from compass.parallel import run_command
@@ -96,10 +96,22 @@ class RemapMaliTopography(RemapTopography):
 
         mali_filename = self.config.get('remap_mali_topography',
                                         'mali_filename')
-        self.add_input_file(
-            filename='mali_topography_orig.nc',
-            target=mali_filename,
-            database='mali_topo')
+        if os.path.isabs(mali_filename):
+            self.add_input_file(
+                filename='mali_topography_orig.nc',
+                target=mali_filename)
+        else:
+            self.add_input_file(
+                filename='mali_topography_orig.nc',
+                target=mali_filename,
+                database='mali_topo')
+
+        map_filename = self.config.get('remap_mali_topography',
+                                       'map_filename')
+        if map_filename != '':
+            self.add_input_file(
+                filename='map_mali_to_mpaso.nc',
+                target=os.path.abspath(map_filename))
 
         if not self.config.has_option('remap_topography', 'ocean_density'):
             raise ValueError(
@@ -123,20 +135,24 @@ class RemapMaliTopography(RemapTopography):
             self._combine_topo()
 
     def _remap_mali_topo(self):
-        in_mesh_name = self.mali_ais_topo
-        in_descriptor = MpasCellMeshDescriptor(
-            filename='mali_topography_orig.nc',
-            mesh_name=in_mesh_name)
-        in_descriptor.format = 'NETCDF3_64BIT'
-        in_descriptor.to_scrip('mali.scrip.nc')
-        self._partition_scrip_file('mali.scrip.nc')
+        if self.config.get('remap_mali_topography', 'map_filename') != '':
+            # use the precomputed mapping file (e.g. the coupler's map)
+            map_filename = 'map_mali_to_mpaso.nc'
+        else:
+            in_mesh_name = self.mali_ais_topo
+            in_descriptor = MpasCellMeshDescriptor(
+                filename='mali_topography_orig.nc',
+                mesh_name=in_mesh_name)
+            in_descriptor.format = 'NETCDF3_64BIT'
+            in_descriptor.to_scrip('mali.scrip.nc')
+            self._partition_scrip_file('mali.scrip.nc')
 
-        out_mesh_name = self.mesh_name
+            out_mesh_name = self.mesh_name
 
-        map_filename = \
-            f'map_{in_mesh_name}_to_{out_mesh_name}_mbtraave.nc'
+            map_filename = \
+                f'map_{in_mesh_name}_to_{out_mesh_name}_mbtraave.nc'
 
-        self._create_mali_to_mpaso_weights(map_filename)
+            self._create_mali_to_mpaso_weights(map_filename)
 
         self._modify_mali_topo()
 
@@ -164,19 +180,21 @@ class RemapMaliTopography(RemapTopography):
 
         draft = - (ice_density / ocean_density) * thickness + sea_level
 
+        # consistent with MALI's cellMask: ice at flotation is floating
         ice_mask = ds_mali.thickness > 0
-        floating_mask = np.logical_and(ice_mask, draft > bed)
+        floating_mask = np.logical_and(ice_mask, draft >= bed)
         grounded_mask = np.logical_and(ice_mask, np.logical_not(floating_mask))
 
         # draft is determined by the bed where the ice is grounded and by
         # flotation where the ice is not grounded (floating or no ice)
         draft = xr.where(grounded_mask, bed, draft)
 
+        # consistent with the E3SM coupler's masks for glc-to-ocn fields
         if self.ocean_includes_grounded:
-            ocean_mask = bed < sea_level
+            ocean_mask = bed <= sea_level
         else:
             ocean_mask = np.logical_and(np.logical_not(grounded_mask),
-                                        bed < sea_level)
+                                        bed <= sea_level)
 
         lithop = ice_density * g * thickness
         ice_frac = xr.where(ice_mask, 1., 0.)
@@ -246,7 +264,7 @@ class RemapMaliTopography(RemapTopography):
         ds_out = xr.Dataset()
         for var_name in ds_remapped:
             var = ds_remapped[var_name]
-            if 'Frac' in var:
+            if 'Frac' in var_name:
                 # copy the fractional variable, making sure it doesn't
                 # exceed 1
                 var = np.minimum(var, 1.)
@@ -278,7 +296,7 @@ class RemapMaliTopography(RemapTopography):
         ds_bedmachine = xr.open_dataset('bedmachine_topography_remapped.nc')
         ds_bedmachine = ds_bedmachine.reset_coords(['lat', 'lon'], drop=True)
 
-        ds_out = xr.Dataset(ds_bedmachine)
+        ds_out = ds_bedmachine.copy()
         # for now, just use the land-ice pressure, draft and thickness from
         # MALI
         for var in ['landIcePressureObserved', 'landIceDraftObserved',
@@ -319,14 +337,38 @@ class RemapMaliTopography(RemapTopography):
             ds_mali.oceanFrac +
             (1.0 - alpha) * ds_bedmachine.oceanFracObserved)
 
-        # limit land ice floatation fraction to ocean fraction -- because of
-        # machine-precision noise in the combined ocean fraciton,
-        # land ice floating fraction can exceed ocean fraction by ~1e-15
-        ds_out['landIceFloatingFracObserved'] = np.minimum(
-            ds_out['landIceFloatingFracObserved'],
-            ds_out['oceanFracObserved']
-        )
+        if self.config.getboolean('remap_mali_topography',
+                                  'normalize_land_ice_fractions'):
+            # land-ice fractions as E3SM's coupler delivers them to the
+            # ocean: floating fraction of the MALI ocean area
+            ds_out['landIceFracObserved'] = _normalize_by_ocean_frac(
+                ds_mali, self.config)
+            ds_out['landIceFloatingFracObserved'] = \
+                ds_out['landIceFracObserved']
+        else:
+            # limit land ice floatation fraction to ocean fraction --
+            # because of machine-precision noise in the combined ocean
+            # fraction, land ice floating fraction can exceed ocean
+            # fraction by ~1e-15
+            ds_out['landIceFloatingFracObserved'] = np.minimum(
+                ds_out['landIceFloatingFracObserved'],
+                ds_out['oceanFracObserved']
+            )
 
         ds_out['ssh'] = ds_out.landIceDraftObserved
 
         write_netcdf(ds_out, 'topography_remapped.nc')
+
+
+def _normalize_by_ocean_frac(ds_mali, config):
+    """
+    Compute the MALI floating fraction normalized by the MALI ocean fraction
+    """
+    renorm_threshold = config.getfloat('remap_topography',
+                                       'renorm_threshold')
+    ocean_frac = ds_mali.oceanFrac
+    floating_frac = ds_mali.landIceFrac - ds_mali.landIceGroundedFrac
+    valid = ocean_frac > renorm_threshold
+    frac = xr.where(valid, floating_frac / ocean_frac.where(valid, 1.), 0.)
+    frac = np.minimum(np.maximum(frac, 0.), 1.)
+    return frac

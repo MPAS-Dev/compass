@@ -288,6 +288,10 @@ test cases and steps
    mesh.remap_mali_topography.RemapMaliTopography.setup
    mesh.remap_mali_topography.RemapMaliTopography.run
 
+   mesh.existing.ExistingMeshStep
+   mesh.existing.ExistingMeshStep.setup
+   mesh.existing.ExistingMeshStep.run
+
    mesh.ec30to60.EC30to60BaseMesh
    mesh.ec30to60.EC30to60BaseMesh.build_cell_width_lat_lon
 
@@ -1085,6 +1089,9 @@ ocean framework
    mesh.cull.CullMeshStep
    mesh.cull.CullMeshStep.setup
    mesh.cull.CullMeshStep.run
+   mesh.cull.ExistingCulledMeshStep
+   mesh.cull.ExistingCulledMeshStep.setup
+   mesh.cull.ExistingCulledMeshStep.run
    mesh.cull.cull_mesh
 
    mesh.floodplain.FloodplainMeshStep

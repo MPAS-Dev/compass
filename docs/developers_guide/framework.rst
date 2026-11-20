@@ -339,6 +339,29 @@ gets downloaded into the bathymetry database (if it's not already there).
 Then, we create a local symlink called ``topography.nc`` to the file in the
 bathymetry database.
 
+.. _dev_constants:
+
+Physical constants
+------------------
+
+Use ``constants`` from ``compass.constants`` (a dictionary with E3SM's
+``SHR_CONST_*`` names) rather than importing ``mpas_tools.cime.constants``
+directly:
+
+.. code-block:: python
+
+    from compass.constants import constants
+
+    gravity = constants['SHR_CONST_G']
+
+E3SM's shared constants now come from the Physical Constants Dictionary
+(PCD), but those in ``mpas_tools`` are out of date
+(`MPAS-Dev/MPAS-Tools#781 <https://github.com/MPAS-Dev/MPAS-Tools/issues/781>`_).
+``compass.constants`` uses the PCD's gravity (9.80665 m s\ :sup:`-2`) so that
+ice-shelf pressures match those from MPAS-Ocean, MALI and E3SM's coupler.
+The other constants, including the Earth radius, are still those from
+``mpas_tools``.
+
 .. _dev_mesh:
 
 Mesh

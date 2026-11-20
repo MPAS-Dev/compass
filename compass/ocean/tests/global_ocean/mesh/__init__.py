@@ -4,10 +4,11 @@ from compass.mesh.spherical import (
     IcosahedralMeshStep,
     QuasiUniformSphericalMeshStep,
 )
-from compass.ocean.mesh.cull import CullMeshStep
+from compass.ocean.mesh.cull import CullMeshStep, ExistingCulledMeshStep
 from compass.ocean.mesh.remap_topography import RemapTopography
 from compass.ocean.tests.global_ocean.mesh.arrm10to60 import ARRM10to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.ec30to60 import EC30to60BaseMesh
+from compass.ocean.tests.global_ocean.mesh.existing import ExistingMeshStep
 from compass.ocean.tests.global_ocean.mesh.fris01to60 import FRIS01to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.fris02to60 import FRIS02to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.fris04to60 import FRIS04to60BaseMesh
@@ -59,10 +60,14 @@ class Mesh(TestCase):
     mali_ais_topo : str
         Short name for the MALI dataset to use for Antarctic Ice Sheet
         topography
+
+    existing_mesh : str
+        The short name of an existing culled mesh (e.g. from E3SM) to use
+        instead of creating and culling a base mesh
     """
 
     def __init__(self, test_group, mesh_name,  # noqa: C901
-                 high_res_topography, mali_ais_topo=None):
+                 high_res_topography, mali_ais_topo=None, existing_mesh=None):
         """
         Create test case for creating a global MPAS-Ocean mesh
 
@@ -81,6 +86,11 @@ class Mesh(TestCase):
         mali_ais_topo : str, optional
             Short name for the MALI dataset to use for Antarctic Ice Sheet
             topography
+
+        existing_mesh : str, optional
+            The short name of an existing culled mesh (e.g. from E3SM) to use
+            instead of creating and culling a base mesh.  Config options for
+            the mesh come from ``existing/<existing_mesh>.cfg``
         """
         name = 'mesh'
         if mali_ais_topo is None:
@@ -88,6 +98,9 @@ class Mesh(TestCase):
         else:
             self.mesh_subdir = os.path.join(mesh_name,
                                             f'MALI_topo_{mali_ais_topo}')
+        if existing_mesh is not None:
+            self.mesh_subdir = os.path.join(self.mesh_subdir,
+                                            f'existing_{existing_mesh}')
 
         subdir = os.path.join(self.mesh_subdir, name)
 
@@ -105,12 +118,15 @@ class Mesh(TestCase):
 
         self.mesh_name = mesh_name
         self.mali_ais_topo = mali_ais_topo
+        self.existing_mesh = existing_mesh
         self.with_ice_shelf_cavities = with_ice_shelf_cavities
         self.high_res_topography = high_res_topography
 
         name = 'base_mesh'
         subdir = None
-        if mesh_name in ['Icos240', 'IcoswISC240']:
+        if existing_mesh is not None:
+            base_mesh_step = ExistingMeshStep(self, name=name, subdir=subdir)
+        elif mesh_name in ['Icos240', 'IcoswISC240']:
             base_mesh_step = IcosahedralMeshStep(
                 self, name=name, subdir=subdir, cell_width=240)
         elif mesh_name in ['QU240', 'QUwISC240']:
@@ -191,7 +207,11 @@ class Mesh(TestCase):
 
             self.add_step(smoothed_topo)
 
-        self.add_step(CullMeshStep(
+        if existing_mesh is None:
+            cull_step_class = CullMeshStep
+        else:
+            cull_step_class = ExistingCulledMeshStep
+        self.add_step(cull_step_class(
             test_case=self, base_mesh_step=base_mesh_step,
             with_ice_shelf_cavities=self.with_ice_shelf_cavities,
             unsmoothed_topo=unsmoothed_topo, smoothed_topo=smoothed_topo))
@@ -228,6 +248,10 @@ class Mesh(TestCase):
                 'kuroshio.cfg', exception=True)
         config.add_from_package(self.package, self.mesh_config_filename,
                                 exception=True)
+        if self.existing_mesh is not None:
+            config.add_from_package(
+                'compass.ocean.tests.global_ocean.mesh.existing',
+                f'{self.existing_mesh.lower()}.cfg', exception=True)
         if self.mesh_name in ['Icos', 'IcoswISC']:
             # add the config options for all kuroshio meshes
             config.add_from_package(

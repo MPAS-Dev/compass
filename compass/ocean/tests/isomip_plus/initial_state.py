@@ -4,9 +4,9 @@ import shutil
 import cmocean  # noqa: F401
 import numpy as np
 import xarray as xr
-from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
 
+from compass.constants import constants
 from compass.ocean.iceshelf import (
     compute_land_ice_draft_from_pressure,
     compute_land_ice_pressure_from_draft,

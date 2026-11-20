@@ -2,8 +2,8 @@ import cmocean
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray
-from mpas_tools.cime.constants import constants
 
+from compass.constants import constants
 from compass.step import Step
 
 

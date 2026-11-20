@@ -5,12 +5,12 @@ import h5py
 import numpy as np
 import pyproj
 import xarray as xr
-from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.cull import write_map_culled_to_base
 from pyremap import MpasCellMeshDescriptor, ProjectionGridDescriptor, Remapper
 from scipy.spatial import KDTree
 
+from compass.constants import constants
 from compass.step import Step
 
 

@@ -909,6 +909,48 @@ The topography is remapped in a step defined in the
 class, which descends from
 :py:class:`compass.ocean.mesh.remap_topography.RemapTopography`.
 
+By default, the mapping file from MALI to MPAS-Ocean is computed with
+``mbtempest``.  The ``map_filename`` config option in
+``[remap_mali_topography]`` can instead point to an existing map, such as
+E3SM's glc-to-ocn coupler map.  If ``normalize_land_ice_fractions = True``,
+``landIceFracObserved`` and ``landIceFloatingFracObserved`` are both the
+floating fraction divided by the fraction that is below sea level and not
+grounded, as E3SM's coupler delivers them to the ocean with
+``GLC2OCN_SHELF_MASK=ungrounded``.
+
+Existing E3SM meshes with MALI topography
+'''''''''''''''''''''''''''''''''''''''''
+
+Test cases in ``SOwISC12to30/MALI_topo_AIS_4to20km/existing_SOwISC12to30E3r4``
+build a new initial condition from MALI topography on exactly the culled
+``SOwISC12to30E3r4`` mesh used in E3SM.  The
+:py:class:`compass.ocean.tests.global_ocean.mesh.Mesh` test case is created
+with ``existing_mesh='SOwISC12to30E3r4'``, which reads config options from
+``compass/ocean/tests/global_ocean/mesh/existing/sowisc12to30e3r4.cfg``.
+
+The ``base_mesh`` step is a
+:py:class:`compass.ocean.tests.global_ocean.mesh.existing.ExistingMeshStep`
+that extracts the horizontal mesh from ``mesh_filename`` in
+``[existing_mesh]``.  Topography is remapped directly to this culled mesh.
+The ``cull_mesh`` step is a
+:py:class:`compass.ocean.mesh.cull.ExistingCulledMeshStep`, which writes the
+same outputs as :py:class:`compass.ocean.mesh.cull.CullMeshStep` but culls
+nothing.  ``landIceMask`` and ``landIceFloatingMask`` are copied unchanged
+from the existing file rather than recomputed from the new topography,
+because E3SM coupling files such as domain files depend on them.  No land ice
+is removed from the topography (neither in critical passages nor by the flood
+fill that removes land ice not connected to the Antarctic Ice Sheet), so the
+land-ice fields match what E3SM's coupler delivers.  Only the topography,
+land-ice pressure and land-ice fractions change.
+
+Test cases in ``QUwISC240/MALI_topo_AIS_8to30km/existing_oQU240wLI`` do the
+same on E3SM's ``oQU240wLI`` mesh with ``existing_mesh='oQU240wLI'``, using
+``existing/oqu240wli.cfg`` and MALI topography from
+``remap_mali_topography/ais_8to30km.cfg``.  ``mali_filename`` may be an
+absolute path instead of a file in the ``mali_topo`` database; here it is
+E3SM's default MALI initial condition for the ais8to30 grid.  The config file
+uses the ``60layerPHC`` vertical grid of the existing initial condition.
+
 .. _dev_ocean_global_ocean_wc14:
 
 WC14 and WCwISC14
