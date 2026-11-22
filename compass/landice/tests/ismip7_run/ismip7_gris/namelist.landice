@@ -1,9 +1,16 @@
     config_velocity_solver = 'FO'
-    config_fem_extension_method = 'ismip7-era'
     config_do_velocity_reconstruction_for_external_dycore = .false.
     config_unrealistic_velocity = 00.00159
     config_nonconvergence_error = .false.
     config_flowParamA_calculation = 'PB1982'
+
+    config_fem_extension_method = 'flat-cliff'
+    config_fem_flat_cliff_slope_limit = 0.05
+    config_fem_land_wall_velocity = 'zero'
+    config_fem_land_wall_slope = 0.1
+    config_fem_flat_cliff_mixed_ramp = .false.
+    config_fem_flat_cliff_freeboard_ramp_start = 50.0
+    config_fem_flat_cliff_freeboard_ramp_end = 100.0
 
     config_thickness_advection = 'fct'
     config_tracer_advection = 'fct'
@@ -18,7 +25,7 @@
     config_apply_calving_mask = .false.
     config_restore_calving_front_prevent_retreat = .false.
     config_calculate_damage = .false.
-    config_damage_calving_threshold = 0.95
+    config_damage_calving_threshold = 1.0
     config_damage_calving_method = 'none'
     config_calving_speed_limit = 0.00063492063
     config_restore_calving_front = .false.
@@ -27,7 +34,7 @@
     config_distribute_unablatedVolumeDynCell = .true.
     config_calving_error_threshold = 100000.0
     config_apply_facemelt_strainrate_enhancement = .true.
-    config_calving_strainrate_scaling = 5.0
+    config_calving_strainrate_scaling = 2.0
     config_calving_strainrate_scaling_source = 'scalar'
     config_crevasse_water_depth_source = 'scalar'
     config_crevasse_water_depth = 0.0
